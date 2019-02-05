@@ -166,7 +166,7 @@ async get_api_responses():
         updated_schedule_data)  # enable or disable a specific schedule
 
     # returns the SwitcherV2DeleteScheduleResponseMSG response
-    schedule_id = SwitcherV2Schedule.schedule_id  # grab from the apropriate schdule object instace
+    schedule_id = SwitcherV2Schedule.schedule_id  # grab from the appropriate schedule object instance
     get_delete_scheudle_response = await swapi.delete_schedule(
         ip_address, phone_id, device_id, device_password,
         schedule_id)  # delete a specific schedule
@@ -205,21 +205,46 @@ The second object is the one representing the device's schedule, [aioswitcher/sc
 
 ### API Response Messages
 The following are the response message objects returning from the API functions.
+The source of the responses can be found [here](aioswitcher/packets/messages.py).
 
-from aioswitcher.packets.messages
+#### SwitcherV2StateResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
+- **state** Returns the state of the device, possible values representation:
+  - *aioswitcher.consts.STATE_ON*
+  - *aioswitcher.consts.STATE_OFF*
+- **time_left** Returns an str value representing the time left on the device.
+- **auto-off** Returns an str value representing the configured auto-off off the device.
+- **power** Returns an int value representing the current power consumption in watts.
+- **current** Returns a float value representing the electric current in amps.
 
-#### SwitcherV2StateResponseMSG
+#### SwitcherV2ControlResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
 
-#### SwitcherV2ControlResponseMSG
+#### SwitcherV2SetAutoOffResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
 
-#### SwitcherV2SetAutoOffResponseMSG
+#### SwitcherV2UpdateNameResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
 
-#### SwitcherV2UpdateNameResponseMSG
+#### SwitcherV2GetScheduleResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
+- **found_schedules** Returns a bool value indicating rather or not any schedules were found on the device.
+- **get_schedules** Return a List of [SwitcherV2Schedule](#switcherc2schedule) instances.</br>
+*Please Note: The Switcher V2 device has only 8 schedules indexed from 0 to 7.*
 
-#### SwitcherV2GetScheduleResponseMSG
+#### SwitcherV2DisableEnableScheduleResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
 
-#### SwitcherV2DisableEnableScheduleResponseMSG
+#### SwitcherV2DeleteScheduleResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
 
-#### SwitcherV2DeleteScheduleResponseMSG
-
-#### SwitcherV2CreateScheduleResponseMSG
+#### SwitcherV2CreateScheduleResponseMSG properties
+- **unparsed_response** Returns a bytes representation of the unparsed response.
+- **successful** Returns a bool value indicating rather or not the request was successful.
