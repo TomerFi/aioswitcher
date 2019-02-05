@@ -1,7 +1,7 @@
 # Switcher Boiler Bridge and API Tools
 Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
-This module was applicable thanks to the amazing R&D preformed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
-This module is *AsyncIO* friendly and [*type-hinted*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
+This module was applicable thanks to the amazing R&D performed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
+This module is *Asyncio* friendly and [*type-hinted*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
 Supports Switcher V2 Only.
 
 ## Current version
@@ -34,7 +34,7 @@ When initiating the bridge, two callables are needed to be passed as callback ar
 The first callback will be called upon arrival of the first broadcast message, the second callable will be called upon any new broadcast message arriving implicating of a change of the device state and status.</br>
 Basically, use the first callback for creating the object representing the device, use the second callback for updating the device state and status.</br>
 - Both callbacks will pass the [SwitcherV2Device](#switcherv2device) as an argument.
-- Both callback will run a thread-safe coroutine within the asyncio event loop passed to the bridge as an argument.
+- Both callbacks will run a thread-safe coroutine within the asyncio event loop passed to the bridge as an argument.
 
 Please Note: this approach will allow you to receive *Real-Time* updates from the device approximately every 4 seconds, yet it will not allow you to control the device, for that you can use the API functions.</br>
 
@@ -76,7 +76,7 @@ v2bridge = SwitcherV2Thread(
 # Start the thread
 v2bridge.start()
 
-"""Run your app or do what ever you need to keep in running here."""
+"""Run your app or do whatever you need to keep in running here."""
 
 
 # Join is only mandatory if the thread's daemon property is set to False.
@@ -127,10 +127,11 @@ device_id = "your_devices's_device_id"
 device_password = "your_devices's_device_password"
 
 async get_api_responses():
-"""Run from the event loop to retirieve the api responses"""
+"""Run from the event loop to retrieve the api responses"""
     # returns the SwitcherV2StateResponseMSG response
     get_state_response = await swapi.get_state_of_device(
         ip_address, phone_id, device_id, device_password)
+
 
     # returns the SwitcherV2ControlResponseMSG response
     get_turn_on_response = await swapi.send_command_to_device(
@@ -158,7 +159,7 @@ async get_api_responses():
         ip_address, phone_id, device_id, device_password)  # set the device's schedules
 
     # returns the SwitcherV2DisableEnableScheduleResponseMSG response
-    schedule_data = SwitcherV2Schedule.schedule_data  # grab from the schdule object instace
+    schedule_data = SwitcherV2Schedule.schedule_data  # grab from the schedule object instance
     updated_schedule_data = (schedule_data[0:2] + ENABLE_SCHEDULE + schedule_data[4:])  # Enable schedule
     # updated_schedule_data = (schedule_data[0:2] + DISABLE_SCHEDULE + schedule_data[4:])  # Disable schedule
     get_enable_disable_scheule_response = await swapi.disable_enable_schedule(
@@ -195,13 +196,43 @@ your_loop.close()
 ~~~
 
 ## Objects and Properties
-The are two main object you need to know about:</br>
+There are two main object you need to know about:</br>
 The first object is the one representing the device, [aioswitcher/devices/SwitcherV2Device](https://github.com/TomerFi/aioswitcher/blob/master/aioswitcher/devices.py#L7).</br>
 The second object is the one representing the device's schedule, [aioswitcher/schedules/SwitcherV2Schedule](https://github.com/TomerFi/aioswitcher/blob/master/aioswitcher/schedules.py#L10).</br>
 
-### SwitcherV2Device
+### SwitcherV2Device properties
+- **device_id** Returns a str value representing the unique identification of the device.
+- **ip_addr** Returns a str value representing the ip address of the device.
+- **mac_addr** Returns a str value representing the mac address of the device.
+- **name** Returns a str value representing the name of the device.
+- **state** Returns a str value representing the name of the device, possible values representation:
+  - *aioswitcher.consts.STATE_ON*
+  - *aioswitcher.consts.STATE_OFF*
+- **remaining_time** Returns a str value representing the time left to off.
+- **auto_off_set** Returns a str value representing the auto-off configuration set.
+- **power_consumption** Returns an int value representing the current power consumption in watts.
+- **electric_current** Returns a float value representing the electric current in amps.
+- **phone_id** Returns a str value representing the device's phone id.
+- **last_data_update** Return a datetime object representing the last update of the devices data.
+- **last_state_change** Return a datetime object representing the last time the state has changed since running the code.
 
-### SwitcherV2Schedule
+### SwitcherV2Schedule properties
+- **schedule_id** Returns a str value representing the schedule id (0-7).
+- **enabled** Returns a bool value representing rather or not the schedule is enabled (includes setter).
+- **recurring** Return a bool value representing rather or not the schedule is a recurring schedule.
+- **days** Returns a List of str values representing the week days in which the schedule is due to run, possible values representations are:
+  - *aioswitcher.consts.MONDAY*
+  - *aioswitcher.consts.TUESDAY*
+  - *aioswitcher.consts.WEDNESDAY*
+  - *aioswitcher.consts.THURSDAY*
+  - *aioswitcher.consts.FRIDAY*
+  - *aioswitcher.consts.SATURDAY*
+  - *aioswitcher.consts.SUNDAY*
+  - *aioswitcher.consts.ALL_DAYS*
+- **start_time** Returns a str value representing the schedule start time in HH:MM format.
+- **end_time** Returns a str value representing the schedule start time in HH:MM format.
+- **duration** Returns a str value representing the schedule duration in minutes.
+- **schedule_data** Returns a str value representing the schedule data from the Switcher device (includes setter).
 
 ### API Response Messages
 The following are the response message objects returning from the API functions.
@@ -213,8 +244,8 @@ The source of the responses can be found [here](aioswitcher/packets/messages.py)
 - **state** Returns the state of the device, possible values representation:
   - *aioswitcher.consts.STATE_ON*
   - *aioswitcher.consts.STATE_OFF*
-- **time_left** Returns an str value representing the time left on the device.
-- **auto-off** Returns an str value representing the configured auto-off off the device.
+- **time_left** Returns a str value representing the time left on the device.
+- **auto-off** Returns a str value representing the configured auto-off off the device.
 - **power** Returns an int value representing the current power consumption in watts.
 - **current** Returns a float value representing the electric current in amps.
 
