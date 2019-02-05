@@ -6,7 +6,7 @@ Supports Switcher V2 Only.
 
 ## Current version
 ```text
-2019.02
+0.2.2
 ```
 
 ## Installation
