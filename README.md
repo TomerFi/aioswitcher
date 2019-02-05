@@ -1,6 +1,6 @@
 # Switcher Boiler Bridge and API Tools
 Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
-This module was applicable thanks to the amazing r&d preformed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
+This module was applicable thanks to the amazing R&D preformed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
 This module is *AsyncIO* friendly and [*type-hinted*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
 Supports Switcher V2 Only.
 
@@ -39,6 +39,7 @@ import asyncio
 from aioswitcher.devices import SwitcherV2Device
 from aioswitcher.bridge import SwitcherV2Thread
 
+
 async def initial_device_cb(
     device_data: SwitcherV2Device) -> None:
     """Use for the initial device creation."""
@@ -57,7 +58,7 @@ your_loop = asyncio.get_event_loop()
 # https://github.com/NightRang3r/Switcher-V2-Python
 phone_id = "your_devices's_phone_id"
 device_id = "your_devices's_device_id"
-device_id = "your_devices's_device_password"
+device_password = "your_devices's_device_password"
 
 # There are two optional arguments for the bridge,
 # in the following order:
@@ -102,14 +103,45 @@ The responses of the functions is covered in the [API Response Messages](#api-re
 ~~~python
 import asyncio
 import aioswitcher.swapi
+from aioswitcher.consts import COMMAND_ON, COMMAND_OFF
+from datetime import timedelta
+
 
 your_loop = asyncio.get_event_loop()
 
-your_loop.run_until_complete(
-    )
+# Instruction on getting this data is in,
+# https://github.com/NightRang3r/Switcher-V2-Python
+ip_address = "your_device's_ip_address"
+phone_id = "your_devices's_phone_id"
+device_id = "your_devices's_device_id"
+device_password = "your_devices's_device_password"
 
-    
-    
+async get_api_responses():
+"""Run from the event loop to retirieve the api responses"""
+    # returns the SwitcherV2StateResponseMSG response
+    get_state_response = await swapi.get_state_of_device(
+        ip_address, phone_id, device_id, device_password)
+
+    # returns the SwitcherV2ControlResponseMSG response
+    get_turn_on_response = await swapi.send_command_to_device(
+        ip_address, phone_id, device_id, device_password,
+        COMMAND_ON)   # turn-on
+    get_turn_off_response = await swapi.send_command_to_device(
+        ip_address, phone_id, device_id, device_password,
+        COMMAND_OFF)   # turn-off
+    get_turn_on_timer_response = await swapi.send_command_to_device(
+        ip_address, phone_id, device_id, device_password,
+        COMMAND_ON, "30")   # turn-on with a 30 minutes timer
+
+    # return the SwitcherV2SetAutoOffResponseMSG response
+    get_set_auto_off_response = await swapi.set_auto_off_to_device(
+        ip_address, phone_id, device_id, device_password,
+        timedelta(hours=1, minutes=30))  # set the auto-off to one hour and 30 minutes
+
+your_loop.run_until_complete(
+    swapi.get_state_of_device(get_api_responses)
+
+your_loop.close()
 ~~~
 
 ## Objects and Properties
@@ -125,8 +157,6 @@ The second object is the one representing the device's schedule, [aioswitcher/sc
 The following are the response message objects returning from the API functions.
 
 from aioswitcher.packets.messages
-
-#### SwitcherV2LoginResponseMSG
 
 #### SwitcherV2StateResponseMSG
 
