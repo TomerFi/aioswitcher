@@ -28,7 +28,7 @@ async def _get_socket_and_timestamp(ip_address: str) -> Tuple[str, socket]:
     raise Exception("failed to get socket connection")
 
 
-async def login_to_device(
+async def _login_to_device(
     sock: socket, phone_id: str, device_id: str,
     device_password: str, timestamp: str) \
         -> Tuple[str, SwitcherV2BaseResponseMSG]:
@@ -54,6 +54,29 @@ async def login_to_device(
 # pylint: enable=invalid-sequence-index
 
 
+async def get_state_of_device(
+    ip_address: str, phone_id: str, device_id: str, device_password: str) \
+        -> SwitcherV2BaseResponseMSG:
+    """Use for getting the current state the switcher v2 device."""
+    sock = None
+    try:
+        timestamp, sock = await _get_socket_and_timestamp(ip_address)
+        # There is no use for the session id when only getting the state.
+        # pylint: disable=unused-variable
+        session_id, response = await _login_to_device(
+            sock, phone_id, device_id, device_password, timestamp)
+        # pylint: enable=unused-variable
+
+        return response
+
+    except Exception as ex:
+        raise Exception("failed to control the device ") from ex
+
+    finally:
+        if sock is not None:
+            close_socket_connection(sock)
+
+
 # noqa'd flake8's 'E252' (missing whitespace around parameter equals),
 # it contradicts pylint's 'C0326' (bad-whitespace).
 async def send_command_to_device(
@@ -64,7 +87,7 @@ async def send_command_to_device(
     sock = None
     try:
         timestamp, sock = await _get_socket_and_timestamp(ip_address)
-        session_id, response = await login_to_device(
+        session_id, response = await _login_to_device(
             sock, phone_id, device_id, device_password, timestamp)
 
         if response.successful:
@@ -94,7 +117,7 @@ async def set_auto_off_to_device(
     sock = None
     try:
         timestamp, sock = await _get_socket_and_timestamp(ip_address)
-        session_id, response = await login_to_device(
+        session_id, response = await _login_to_device(
             sock, phone_id, device_id, device_password, timestamp)
 
         if response.successful:
@@ -121,7 +144,7 @@ async def update_name_of_device(ip_address: str, phone_id: str,
     sock = None
     try:
         timestamp, sock = await _get_socket_and_timestamp(ip_address)
-        session_id, response = await login_to_device(
+        session_id, response = await _login_to_device(
             sock, phone_id, device_id, device_password, timestamp)
 
         if response.successful:
@@ -147,7 +170,7 @@ async def get_schedules(ip_address: str, phone_id: str, device_id: str,
     sock = None
     try:
         timestamp, sock = await _get_socket_and_timestamp(ip_address)
-        session_id, response = await login_to_device(
+        session_id, response = await _login_to_device(
             sock, phone_id, device_id, device_password, timestamp)
 
         if response.successful:
@@ -175,7 +198,7 @@ async def disable_enable_schedule(
     sock = None
     try:
         timestamp, sock = await _get_socket_and_timestamp(ip_address)
-        session_id, response = await login_to_device(
+        session_id, response = await _login_to_device(
             sock, phone_id, device_id, device_password, timestamp)
 
         if response.successful:
@@ -203,7 +226,7 @@ async def delete_schedule(
     sock = None
     try:
         timestamp, sock = await _get_socket_and_timestamp(ip_address)
-        session_id, response = await login_to_device(
+        session_id, response = await _login_to_device(
             sock, phone_id, device_id, device_password, timestamp)
 
         if response.successful:
@@ -231,7 +254,7 @@ async def create_schedule(
     sock = None
     try:
         timestamp, sock = await _get_socket_and_timestamp(ip_address)
-        session_id, response = await login_to_device(
+        session_id, response = await _login_to_device(
             sock, phone_id, device_id, device_password, timestamp)
 
         if response.successful:

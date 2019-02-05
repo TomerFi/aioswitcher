@@ -8,4 +8,4 @@
 name = "aioswitcher"
 # pylint: enable=invalid-name
 
-__all__ = ["bridge", "swapi"]
+__all__ = ["bridge", "swapi", "devices", "packets"]
