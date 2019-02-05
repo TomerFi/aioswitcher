@@ -127,7 +127,7 @@ phone_id = "your_devices's_phone_id"
 device_id = "your_devices's_device_id"
 device_password = "your_devices's_device_password"
 
-async get_api_responses():
+async get_api_responses() -> None:
 """Run from the event loop to retrieve the api responses"""
     # returns the SwitcherV2StateResponseMSG response
     get_state_response = await swapi.get_state_of_device(
@@ -189,6 +189,8 @@ async get_api_responses():
     get_create_schedule_response = await swapi.create_schedule(
         ip_address, phone_id, device_id, device_password,
         schedule_data)  # create a new schedule running every Sunday and Wednesday from 20:30 to 21:00
+
+    return None
 
 
 your_loop.run_until_complete(get_api_responses())
