@@ -234,7 +234,7 @@ The source of the responses can be found [here](aioswitcher/packets/messages.py)
 - **unparsed_response** Returns a bytes representation of the unparsed response.
 - **successful** Returns a bool value indicating rather or not the request was successful.
 - **found_schedules** Returns a bool value indicating rather or not any schedules were found on the device.
-- **get_schedules** Return a List of [SwitcherV2Schedule](#switcherc2schedule) instances.</br>
+- **get_schedules** Return a List of [SwitcherV2Schedule](https://github.com/TomerFi/aioswitcher#switcherv2schedule) instances.</br>
 *Please Note: The Switcher V2 device has only 8 schedules indexed from 0 to 7.*
 
 #### SwitcherV2DisableEnableScheduleResponseMSG properties
