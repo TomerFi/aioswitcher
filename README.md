@@ -220,7 +220,7 @@ The second object is the one representing the device's schedule, [aioswitcher/sc
 ### SwitcherV2Schedule properties
 - **schedule_id** Returns a str value representing the schedule id (0-7).
 - **enabled** Returns a bool value representing rather or not the schedule is enabled (includes setter).
-- **recurring** Return a bool value representing rather or not the schedule is a recurring schedule.
+- **recurring** Returns a bool value representing rather or not the schedule is a recurring schedule.
 - **days** Returns a List of str values representing the week days in which the schedule is due to run, possible values representations are:
   - *aioswitcher.consts.MONDAY*
   - *aioswitcher.consts.TUESDAY*
