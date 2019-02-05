@@ -26,7 +26,7 @@ class SwitcherV2BaseResponseMSG(object):
         return self._unparsed_response
 
     @property
-    def successful(self):
+    def successful(self) -> bool:
         """Return the status of the message."""
         return self._unparsed_response is not None
 
