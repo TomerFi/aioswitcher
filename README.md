@@ -138,8 +138,7 @@ async get_api_responses():
         ip_address, phone_id, device_id, device_password,
         timedelta(hours=1, minutes=30))  # set the auto-off to one hour and 30 minutes
 
-your_loop.run_until_complete(
-    swapi.get_state_of_device(get_api_responses)
+your_loop.run_until_complete(get_api_responses())
 
 your_loop.close()
 ~~~
