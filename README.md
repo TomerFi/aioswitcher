@@ -27,6 +27,7 @@ Switcher V2
 ## Usage
 The package takes two separate approaches for the integration, you can use either one or mix them up.</br>
 The first approach is running a separate thread as a bridge to the device, the thread will constantly watch for broadcast messages from the device and run thread-safe coroutines for creation or update of the device.</br>
+The second approach is basically a set of loosely coupled functions for controlling the device. </br>
 
 ### Threaded bridge
 In this approach, we run a loop which will constantly listen for the device's broadcast message.</br>
@@ -83,7 +84,7 @@ v2bridge.start()
 v2bridge.join(timeout=2)
 
 try:
-    # Gracefully stop the bridge (2 seconds timeout is more the enough)
+    # Gracefully stop the bridge (2 seconds timeout is more then enough)
     your_loop.run_until_complete(
         asyncio.wait_for(v2bridge.stop(), timeout=2))
 except asyncio.TimeoutError:
