@@ -109,8 +109,11 @@ The responses of the functions is covered in the [API Response Messages](#api-re
 import asyncio
 import aioswitcher.swapi
 from aioswitcher.consts import (COMMAND_ON, COMMAND_OFF,
-                                ENABLE_SCHEDULE, DISABLE_SCHEDULE)
+                                ENABLE_SCHEDULE, DISABLE_SCHEDULE,
+                                SUNDAY, WEDNESDAY,
+                                SCHEDULE_CREATE_DATA_FORMAT)
 from aioswitcher.schedules import SwitcherV2Schedule
+from aioswitcher import tools
 from datetime import timedelta
 
 
@@ -146,33 +149,44 @@ async get_api_responses():
         timedelta(hours=1, minutes=30))  # set the auto-off to one hour and 30 minutes
 
     # returns the SwitcherV2UpdateNameResponseMSG response
-    get_set_auto_off_response = await swapi.update_name_of_device(
+    get_set_name_response = await swapi.update_name_of_device(
         ip_address, phone_id, device_id, device_password,
         "new_name")  # set the device name to "new_name"
 
     # return the SwitcherV2GetScheduleResponseMSG response
-    get_set_auto_off_response = await swapi.get_schedules(
+    get_schedules_response = await swapi.get_schedules(
         ip_address, phone_id, device_id, device_password)  # set the device's schedules
 
     # returns the SwitcherV2DisableEnableScheduleResponseMSG response
     schedule_data = SwitcherV2Schedule.schedule_data  # grab from the schdule object instace
     updated_schedule_data = (schedule_data[0:2] + ENABLE_SCHEDULE + schedule_data[4:])  # Enable schedule
     # updated_schedule_data = (schedule_data[0:2] + DISABLE_SCHEDULE + schedule_data[4:])  # Disable schedule
-    get_set_auto_off_response = await swapi.disable_enable_schedule(
+    get_enable_disable_scheule_response = await swapi.disable_enable_schedule(
         ip_address, phone_id, device_id, device_password,
         updated_schedule_data)  # enable or disable a specific schedule
 
     # returns the SwitcherV2DeleteScheduleResponseMSG response
     schedule_id = SwitcherV2Schedule.schedule_id  # grab from the apropriate schdule object instace
-    get_set_auto_off_response = await swapi.delete_schedule(
+    get_delete_scheudle_response = await swapi.delete_schedule(
         ip_address, phone_id, device_id, device_password,
         schedule_id)  # delete a specific schedule
 
     # returns the SwitcherV2CreateScheduleResponseMSG response
-    schedule_data = SwitcherV2Schedule.schedule_id  # grab from the apropriate schdule object instace
-    get_set_auto_off_response = await swapi.create_schedule(
+    requested_days = [0]
+
+    # skip the next part for non-recurring schedules
+    requested_days.append[SUNDAY]
+    requested_days.append[WEDNESDAY]
+
+    weekdays = tools.create_weekdays_value(requested_days)
+    start_time = tools.timedelta_str_to_schedule_time("20:30")
+    end_time = tools.timedelta_str_to_schedule_time("21:00")
+
+    schedule_data = SCHEDULE_CREATE_DATA_FORMAT.format(
+        weekdays, start_time, end_time)
+    get_create_schedule_response = await swapi.create_schedule(
         ip_address, phone_id, device_id, device_password,
-        schedule_id)  # create a new schedule
+        schedule_data)  # create a new schedule running every Sunday and Wednesday from 20:30 to 21:00
 
 
 your_loop.run_until_complete(get_api_responses())
