@@ -127,7 +127,7 @@ phone_id = "your_devices's_phone_id"
 device_id = "your_devices's_device_id"
 device_password = "your_devices's_device_password"
 
-async get_api_responses() -> None:
+async def get_api_responses() -> None:
 """Run from the event loop to retrieve the api responses"""
     # returns the SwitcherV2StateResponseMSG response
     get_state_response = await swapi.get_state_of_device(
