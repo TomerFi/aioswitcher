@@ -4,6 +4,11 @@ This module was applicable thanks to the amazing R&D preformed by Shai and Aviad
 This module is *AsyncIO* friendly and [*type-hinted*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
 Supports Switcher V2 Only.
 
+## Current version
+```text
+2019.02
+```
+
 ## Installation
 ```shell
 pip install aioswitcher
@@ -23,7 +28,7 @@ Switcher V2
 The package takes two separate approaches for the integration, you can use either one or mix them up.</br>
 The first approach is running a separate thread as a bridge to the device, the thread will constantly watch for broadcast messages from the device and run thread-safe coroutines for creation or update of the device.</br>
 
-### Threaded Bridge
+### Threaded bridge
 In this approach, we run a loop which will constantly listen for the device's broadcast message.</br>
 When initiating the bridge, two callables are needed to be passed as callback arguments to the bridge,</br>
 The first callback will be called upon arrival of the first broadcast message, the second callable will be called upon any new broadcast message arriving implicating of a change of the device state and status.</br>
@@ -33,7 +38,7 @@ Basically, use the first callback for creating the object representing the devic
 
 Please Note: this approach will allow you to receive *Real-Time* updates from the device approximately every 4 seconds, yet it will not allow you to control the device, for that you can use the API functions.</br>
 
-#### Example of bridge usage
+#### Example of threaded bridge usage
 ~~~python
 import asyncio
 from aioswitcher.devices import SwitcherV2Device
@@ -103,7 +108,9 @@ The responses of the functions is covered in the [API Response Messages](#api-re
 ~~~python
 import asyncio
 import aioswitcher.swapi
-from aioswitcher.consts import COMMAND_ON, COMMAND_OFF
+from aioswitcher.consts import (COMMAND_ON, COMMAND_OFF,
+                                ENABLE_SCHEDULE, DISABLE_SCHEDULE)
+from aioswitcher.schedules import SwitcherV2Schedule
 from datetime import timedelta
 
 
@@ -133,10 +140,40 @@ async get_api_responses():
         ip_address, phone_id, device_id, device_password,
         COMMAND_ON, "30")   # turn-on with a 30 minutes timer
 
-    # return the SwitcherV2SetAutoOffResponseMSG response
+    # returns the SwitcherV2SetAutoOffResponseMSG response
     get_set_auto_off_response = await swapi.set_auto_off_to_device(
         ip_address, phone_id, device_id, device_password,
         timedelta(hours=1, minutes=30))  # set the auto-off to one hour and 30 minutes
+
+    # returns the SwitcherV2UpdateNameResponseMSG response
+    get_set_auto_off_response = await swapi.update_name_of_device(
+        ip_address, phone_id, device_id, device_password,
+        "new_name")  # set the device name to "new_name"
+
+    # return the SwitcherV2GetScheduleResponseMSG response
+    get_set_auto_off_response = await swapi.get_schedules(
+        ip_address, phone_id, device_id, device_password)  # set the device's schedules
+
+    # returns the SwitcherV2DisableEnableScheduleResponseMSG response
+    schedule_data = SwitcherV2Schedule.schedule_data  # grab from the schdule object instace
+    updated_schedule_data = (schedule_data[0:2] + ENABLE_SCHEDULE + schedule_data[4:])  # Enable schedule
+    # updated_schedule_data = (schedule_data[0:2] + DISABLE_SCHEDULE + schedule_data[4:])  # Disable schedule
+    get_set_auto_off_response = await swapi.disable_enable_schedule(
+        ip_address, phone_id, device_id, device_password,
+        updated_schedule_data)  # enable or disable a specific schedule
+
+    # returns the SwitcherV2DeleteScheduleResponseMSG response
+    schedule_id = SwitcherV2Schedule.schedule_id  # grab from the apropriate schdule object instace
+    get_set_auto_off_response = await swapi.delete_schedule(
+        ip_address, phone_id, device_id, device_password,
+        schedule_id)  # delete a specific schedule
+
+    # returns the SwitcherV2CreateScheduleResponseMSG response
+    schedule_data = SwitcherV2Schedule.schedule_id  # grab from the apropriate schdule object instace
+    get_set_auto_off_response = await swapi.create_schedule(
+        ip_address, phone_id, device_id, device_password,
+        schedule_id)  # create a new schedule
+
 
 your_loop.run_until_complete(get_api_responses())
 
