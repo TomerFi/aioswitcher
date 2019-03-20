@@ -1,50 +1,67 @@
 """Switcher Device Schedule Objects."""
 
-from typing import List
-from datetime import datetime
+from asyncio import AbstractEventLoop, ensure_future, Future
 from binascii import unhexlify
-from aioswitcher.tools import get_days_list_from_bytes, get_time_from_bytes
-from aioswitcher.consts import ALL_DAYS, WEEKDAY_TUP, SUNDAY, MONDAY
+from datetime import datetime
+from typing import List
+
+from .consts import ALL_DAYS, MONDAY, SUNDAY, WAITING_TEXT, WEEKDAY_TUP
+from .tools import get_days_list_from_bytes, get_time_from_bytes
 
 
-class SwitcherV2Schedule(object):
+class SwitcherV2Schedule:
     """Represnation of the switcher version 2 schedule."""
 
-    def __init__(self, idx, schedule_details: List[str]) -> None:
+    def __init__(self, loop: AbstractEventLoop, idx: int,
+                 schedule_details: List[str]) -> None:
         """Initialize the schedule."""
-        self._enabled = self._recurring = False
+        self._loop = loop
+        self._enabled = False
+        self._recurring = False
+        self._schedule_id = str(int(schedule_details[idx][0:2], 16))
         self._days = []  # type: List[str]
-        try:
-            self._schedule_id = str(int(schedule_details[idx][0:2], 16))
-            if int(schedule_details[idx][2:4], 16) == 1:
-                self._enabled = True
-            if not schedule_details[idx][4:6] == "00":
-                self._recurring = True
-                if schedule_details[idx][4:6] == "fe":
-                    self._days.append(ALL_DAYS)
-                else:
-                    self._days = get_days_list_from_bytes(
-                        bytearray(
-                            unhexlify((schedule_details[idx][4:6])))[0])
+        self._schedule_data = WAITING_TEXT
+        self._start_time = WAITING_TEXT
+        self._end_time = WAITING_TEXT
+        self._duration = WAITING_TEXT
+        self._init_future = loop.create_future()
+        ensure_future(self.initialize(idx, schedule_details), loop=loop)
 
-            self._start_time = get_time_from_bytes(schedule_details[idx][8:16])
-            self._end_time = get_time_from_bytes(schedule_details[idx][16:24])
-            self._duration = str(
-                datetime.strptime(
-                    self._end_time, '%H:%M') - datetime.strptime(
-                        self._start_time, '%H:%M'))
+    async def initialize(self, idx: int, schedule_details: List[str]) -> None:
+        """Finish the initialization of the schedule."""
+        if int(schedule_details[idx][2:4], 16) == 1:
+            self._enabled = True
+        if not schedule_details[idx][4:6] == "00":
+            self._recurring = True
+            if schedule_details[idx][4:6] == "fe":
+                self._days.append(ALL_DAYS)
+            else:
+                self._days = await get_days_list_from_bytes(
+                    self._loop,
+                    bytearray(
+                        unhexlify((schedule_details[idx][4:6])))[0])
 
-            time_id = schedule_details[idx][0:2]
-            on_off = schedule_details[idx][2:4]
-            week = schedule_details[idx][4:6]
-            timestate = schedule_details[idx][6:8]
-            start_time = schedule_details[idx][8:16]
-            end_time = schedule_details[idx][16:24]
-            self._schedule_data = (
-                time_id + on_off + week + timestate + start_time + end_time)
+        self._start_time = await get_time_from_bytes(
+            self._loop, schedule_details[idx][8:16])
+        self._end_time = await get_time_from_bytes(
+            self._loop, schedule_details[idx][16:24])
+        self._duration = str(
+            datetime.strptime(
+                self._end_time, '%H:%M') - datetime.strptime(
+                    self._start_time, '%H:%M'))
 
-        except Exception as ex:
-            raise Exception("failed to parse schedule data.") from ex
+        time_id = schedule_details[idx][0:2]
+        on_off = schedule_details[idx][2:4]
+        week = schedule_details[idx][4:6]
+        timestate = schedule_details[idx][6:8]
+        start_time = schedule_details[idx][8:16]
+        end_time = schedule_details[idx][16:24]
+        self._schedule_data = (
+            time_id + on_off + week + timestate + start_time + end_time)
+
+        self._init_future.set_result(self)
+
+        return None
 
     @property
     def schedule_id(self) -> str:
@@ -96,12 +113,17 @@ class SwitcherV2Schedule(object):
         """Setter to set the schedule data for managing the schedule."""
         self._schedule_data = data
 
+    @property
+    def init_future(self) -> Future:
+        """Return the future of the initialization."""
+        return self._init_future
+
     def as_dict(self):
         """Make object json serializable."""
         return self.__dict__
 
 
-def calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
+def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
     """Calculate the next runtime of the schedule."""
     if schedule_details.recurring:
         today_datetime = datetime.now()
@@ -118,8 +140,7 @@ def calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
         if schedule_details.days == [ALL_DAYS]:
             if current_time < start_time:
                 return "Due today at " + schedule_details.start_time
-            else:
-                return "Due tommorow at " + schedule_details.start_time
+            return "Due tommorow at " + schedule_details.start_time
 
         for day in schedule_details.days:
             set_weekday = WEEKDAY_TUP.index(day)
@@ -142,8 +163,8 @@ def calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
     return "Due today at " + schedule_details.start_time
 
 
-def create_schedules_list(schedules_raw: str, schedule_length: int) \
-        -> List[str]:
-    """Convert raw schedules data to list of individual schedules string."""
-    return [schedules_raw[i:i + schedule_length] for i in range(
-        0, len(schedules_raw), schedule_length)]
+async def calc_next_run_for_schedule(
+        loop: AbstractEventLoop, schedule_details: SwitcherV2Schedule) -> str:
+    """Use as async wrapper for calling _calc_next_run_for_schedule."""
+    return await loop.run_in_executor(
+        None, _calc_next_run_for_schedule, schedule_details)

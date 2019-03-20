@@ -1,19 +1,17 @@
 [Master]
-persistent=yes
-ignored-modules=logging,asyncio
+# init-hook='sys.path = ["/usr/local/lib/python3.5/"]'
+init-hook='sys.path = ["/usr/lib/python3.5/"]'
 
 [Message Control]
-disable=broad-except
+disable=locally-disabled,locally-enabled,duplicate-code
 
 [Reports]
 reports=no
+score=no
 output-format=colorized
 
 [Similarities]
 ignore-comments=no
-
-[Logging]
-logging-modules=logging
 
 [Format]
 max-line-length=79
