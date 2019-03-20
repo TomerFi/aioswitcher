@@ -7,7 +7,7 @@ Tested with the Switcher V2 Only.
 
 ## Current version
 ```text
-2019.3.20
+2019.3.21
 ```
 
 ## Installation
@@ -56,7 +56,7 @@ your_loop = asyncio.get_event_loop()
 
 """Use as instance."""
 async def run_as_instance() -> None:
-    v2bridge = await SwitcherV2Bridge(
+    v2bridge = SwitcherV2Bridge(
         your_loop, phone_id, device_id, device_password)
     # start the bridge
     await v2bridge.start()
