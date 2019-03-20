@@ -249,7 +249,7 @@ There are two main objects you need to be aware of:</br>
 The first object is the one representing the device, [aioswitcher/devices/SwitcherV2Device](aioswitcher/devices.py#L7).</br>
 The second object is the one representing the device's schedule, [aioswitcher/schedules/SwitcherV2Schedule](aioswitcher/schedules.py#L10).</br>
 
-### SwitcherV2Device properties
+### SwitcherV2Device
 | Property | Type | Description | Possible Values | Default |
 | -------- | ---- | ----------- | --------------- | ------- |
 | *device_id* | `str` | Return the device id. | ab1c2d||
@@ -266,7 +266,7 @@ The second object is the one representing the device's schedule, [aioswitcher/sc
 | *last_state_change* | `datetime` | Return the timestamp of the state change. | %Y-%m-%dTH:%M:%S.%F ||
 
 
-### SwitcherV2Schedule properties
+### SwitcherV2Schedule
 | Property | Type | Description | Possible Values | Default |
 | -------- | ---- | ----------- | --------------- | ------- |
 | *schedule_id* | `str` | Return the schedule id. | 0, 1, 2, 3, 4, 5, 6, 7 ||
