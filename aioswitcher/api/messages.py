@@ -1,28 +1,40 @@
 """Switcher Packet Response Messages."""
 
+from asyncio import AbstractEventLoop, ensure_future, Future
 from typing import Optional, List
 from binascii import hexlify
+from enum import Enum
+from logging import getLogger
 
-from aioswitcher.consts import ENCODING_CODEC
+from ..tools import convert_seconds_to_iso_time
+from ..consts import (ENCODING_CODEC, STATE_ON, STATE_RESPONSE_ON, STATE_OFF,
+                      STATE_RESPONSE_OFF, STATE_UNKNOWN)
+from ..schedules import SwitcherV2Schedule
 
-from aioswitcher.tools import convert_seconds_to_iso_time
+# pylint: disable=invalid-name
+ResponseMessageType = Enum(
+    'ResponseMessageType',
+    ['AUTO_OFF', 'CONTROL', 'CREATE_SCHEDULE', 'DELETE_SCHEDULE',
+     'DISABLE_ENABLE_SCHEDULE', 'GET_SCHEDULES', 'LOGIN', 'STATE',
+     'UPDATE_NAME'])
+# pylint: enable=invalid-name
 
-from aioswitcher.consts import (STATE_ON, STATE_RESPONSE_ON, STATE_OFF,
-                                STATE_RESPONSE_OFF, STATE_UNKNOWN)
-
-from aioswitcher.schedules import SwitcherV2Schedule, create_schedules_list
+_LOGGER = getLogger(__name__)
 
 
-class SwitcherV2BaseResponseMSG(object):
+class SwitcherV2BaseResponseMSG:
     """Represntation of the switcher v2 base response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes,
+                 msg_type: ResponseMessageType) -> None:
         """Initialize the base object."""
+        self._loop = loop
         self._unparsed_response = response
+        self._msg_type = msg_type
 
     @property
     def unparsed_response(self) -> bytes:
-        """Return the uparsed response message."""
+        """Return the unparsed response message."""
         return self._unparsed_response
 
     @property
@@ -30,13 +42,18 @@ class SwitcherV2BaseResponseMSG(object):
         """Return the status of the message."""
         return self._unparsed_response is not None
 
+    @property
+    def msg_type(self) -> ResponseMessageType:
+        """Return the response message type."""
+        return self._msg_type
+
 
 class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
     """Represntation of the switcher v2 login response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the login response."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.LOGIN)
         try:
             self._session_id = hexlify(response)[16:24].decode(ENCODING_CODEC)
         except Exception as ex:
@@ -51,12 +68,16 @@ class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
 class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
     """represntation of the switcher v2 state response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the state response message."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.STATE)
         self._power_consumption = 0
         self._electric_current = 0.0
+        self._init_future = loop.create_future()
+        ensure_future(self.initialize(response), loop=loop)
 
+    async def initialize(self, response: bytes) -> None:
+        """Finish the initialization of the message."""
         try:
             temp_power = hexlify(response)[154:162]
             self._power_consumption = int(
@@ -69,7 +90,8 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                                          + temp_time_left[4:6]
                                          + temp_time_left[2:4]
                                          + temp_time_left[0:2], 16)
-            self._time_to_auto_off = convert_seconds_to_iso_time(
+            self._time_to_auto_off = await convert_seconds_to_iso_time(
+                self._loop,
                 temp_time_left_seconds)
 
             temp_auto_off = hexlify(response)[194:202]
@@ -77,7 +99,8 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                                         + temp_auto_off[4:6]
                                         + temp_auto_off[2:4]
                                         + temp_auto_off[0:2], 16)
-            self._auto_off_set = convert_seconds_to_iso_time(
+            self._auto_off_set = await convert_seconds_to_iso_time(
+                self._loop,
                 temp_auto_off_seconds)
 
             temp_state = hexlify(response)[150:154].decode(ENCODING_CODEC)
@@ -85,8 +108,11 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                 else STATE_OFF if temp_state == STATE_RESPONSE_OFF \
                 else STATE_UNKNOWN
 
-        except Exception as ex:
-            raise Exception("failed to parse state response message") from ex
+            self.init_future.set_result(self)
+        except (ValueError, IndexError, RuntimeError) as exc:
+            self.init_future.set_exception(exc)
+
+        return None
 
     @property
     def state(self) -> str:
@@ -113,54 +139,56 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
         """Return the power consumption in amps."""
         return self._electric_current
 
+    @property
+    def init_future(self) -> Future:
+        """Return the future of the initialization."""
+        return self._init_future
+
 
 class SwitcherV2ControlResponseMSG(SwitcherV2BaseResponseMSG):
     """Represntation of the switcher v2 control response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Control response message."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.CONTROL)
 
 
 class SwitcherV2SetAutoOffResponseMSG(SwitcherV2BaseResponseMSG):
     """Represntation of the switcher v2 set auto-off response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Set Auto-Off response message."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.AUTO_OFF)
 
 
 class SwitcherV2UpdateNameResponseMSG(SwitcherV2BaseResponseMSG):
     """Represntation of the switcher v2 update name response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Set Name response message."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.UPDATE_NAME)
 
 
 class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
     """represnation of the switcher v2 get schedule message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Set Name response message."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.GET_SCHEDULES)
         self._schedule_list = []  # type: List[SwitcherV2Schedule]
-        try:
-            res = hexlify(response)
-            idx = res[90:-8].decode(ENCODING_CODEC)
 
-            schedules_details = create_schedules_list(idx, 32)
-            if not len(schedules_details) == 0:
-                for i in range(len(schedules_details)):
-                    schedule = SwitcherV2Schedule(i, schedules_details)
-                    self._schedule_list.append(schedule)
-        except Exception as ex:
-            raise Exception(
-                "failed to parse get schedules response message") from ex
+        res = hexlify(response)
+        idx = res[90:-8].decode(ENCODING_CODEC)
+        schedules_details = [idx[i:i + 32] for i in range(0, len(idx), 32)]
+
+        if schedules_details:
+            for i in range(len(schedules_details)):
+                schedule = SwitcherV2Schedule(loop, i, schedules_details)
+                self._schedule_list.append(schedule)
 
     @property
     def found_schedules(self) -> bool:
-        """Return true if found shedules in the response."""
+        """Return true if found schedules in the response."""
         return self._schedule_list != []
 
     @property
@@ -172,22 +200,23 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 class SwitcherV2DisableEnableScheduleResponseMSG(SwitcherV2BaseResponseMSG):
     """Represntation of the switcher v2 dis/en schedule response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the switcher v2 dis/en schedule response message."""
-        super().__init__(response)
+        super().__init__(
+            loop, response, ResponseMessageType.DISABLE_ENABLE_SCHEDULE)
 
 
 class SwitcherV2DeleteScheduleResponseMSG(SwitcherV2BaseResponseMSG):
     """Represntation of the switcher v2 delete schedule response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the switcher v2 delete schedule response message."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.DELETE_SCHEDULE)
 
 
 class SwitcherV2CreateScheduleResponseMSG(SwitcherV2BaseResponseMSG):
     """Represntation of the switcher v2 create schedule response message."""
 
-    def __init__(self, response: bytes) -> None:
+    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the switcher v2 create schedule response message."""
-        super().__init__(response)
+        super().__init__(loop, response, ResponseMessageType.CREATE_SCHEDULE)

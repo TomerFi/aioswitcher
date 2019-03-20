@@ -1,37 +1,53 @@
 """Switcher Bridge Response Messages."""
 
-import binascii as ba
-from struct import pack
+from asyncio import AbstractEventLoop, ensure_future, Future
+from binascii import hexlify
 from socket import inet_ntoa
-from typing import Optional
+from struct import pack
+from typing import Optional, Union
 
-from aioswitcher.consts import (ENCODING_CODEC, STATE_ON, STATE_RESPONSE_ON,
-                                STATE_OFF)
-from aioswitcher.tools import convert_seconds_to_iso_time
+from ..consts import (ENCODING_CODEC, STATE_OFF, STATE_ON,
+                      STATE_RESPONSE_ON, WAITING_TEXT)
+from ..tools import convert_seconds_to_iso_time
 
 
 class SwitcherV2BroadcastMSG():
     """represntation of the switcherv2 broadcast message."""
 
-    def __init__(self, message: bytes) -> None:
+    def __init__(self,
+                 loop: AbstractEventLoop,
+                 message: Union[bytes, str]) -> None:
         """Initialize the broadcast message."""
+        self._loop = loop
         self._verified = self._validated = False
-        self._remaining_time_to_off = None  # type: Optional[str]
         self._power_consumption = 0
         self._electric_current = 0.0
+        self._ip_address = WAITING_TEXT
+        self._mac_address = WAITING_TEXT
+        self._name = WAITING_TEXT
+        self._device_id = WAITING_TEXT
+        self._auto_off_set = WAITING_TEXT
+        self._remaining_time_to_off = WAITING_TEXT
+        self._init_future = loop.create_future()
+        fixed_msg = message \
+            if isinstance(message, bytes) \
+            else message.encode(ENCODING_CODEC)
+        ensure_future(self.initialize(fixed_msg), loop=loop)
 
+    async def initialize(self, message: bytes) -> None:
+        """Finish the initialization of the broadcast message."""
         try:
             self._verified = (
-                ba.hexlify(message)[0:4].decode(ENCODING_CODEC) == 'fef0'
+                hexlify(message)[0:4].decode(ENCODING_CODEC) == 'fef0'
                 and len(message) == 165)
             if self._verified:
-                temp_ip = ba.hexlify(message)[152:160]
+                temp_ip = hexlify(message)[152:160]
                 ip_addr = int(temp_ip[6:8] + temp_ip[4:6]
                               + temp_ip[2:4] + temp_ip[0:2], 16)
                 self._ip_address = inet_ntoa(pack("<L", ip_addr))
 
                 mac = (
-                    ba.hexlify(message)[160:172]
+                    hexlify(message)[160:172]
                     .decode(ENCODING_CODEC).upper())
                 self._mac_address = (
                     mac[0:2] + ':' + mac[2:4] + ':' + mac[4:6] + ':'
@@ -41,40 +57,45 @@ class SwitcherV2BroadcastMSG():
                     message[42:74].decode(ENCODING_CODEC).rstrip('\x00'))
 
                 self._device_id = (
-                    ba.hexlify(message)[36:42].decode(ENCODING_CODEC))
+                    hexlify(message)[36:42].decode(ENCODING_CODEC))
 
                 self._device_state = (
-                    STATE_ON if ba.hexlify(message)[266:270]
+                    STATE_ON if hexlify(message)[266:270]
                     .decode(ENCODING_CODEC) == STATE_RESPONSE_ON
                     else STATE_OFF)
 
-                temp_auto_off_set = ba.hexlify(message)[310:318]
+                temp_auto_off_set = hexlify(message)[310:318]
                 temp_auto_off_set_seconds = int(temp_auto_off_set[6:8]
                                                 + temp_auto_off_set[4:6]
                                                 + temp_auto_off_set[2:4]
                                                 + temp_auto_off_set[0:2], 16)
-                self._auto_off_set = convert_seconds_to_iso_time(
+                self._auto_off_set = await convert_seconds_to_iso_time(
+                    self._loop,
                     temp_auto_off_set_seconds)
 
                 if self._device_state == STATE_ON:
-                    temp_power = ba.hexlify(message)[270:278]
+                    temp_power = hexlify(message)[270:278]
                     self._power_consumption = int(temp_power[2:4]
                                                   + temp_power[0:2], 16)
                     self._electric_current = round((
                         self._power_consumption / float(220)), 1)
 
-                    temp_remaining_time = ba.hexlify(message)[294:302]
+                    temp_remaining_time = hexlify(message)[294:302]
                     temp_remaining_time_seconds = int(
                         temp_remaining_time[6:8]
                         + temp_remaining_time[4:6]
                         + temp_remaining_time[2:4]
                         + temp_remaining_time[0:2], 16)
-                    self._remaining_time_to_off = convert_seconds_to_iso_time(
-                        temp_remaining_time_seconds)
+                    self._remaining_time_to_off = \
+                        await convert_seconds_to_iso_time(
+                            self._loop,
+                            temp_remaining_time_seconds)
 
             self._validated = True
-        except Exception as ex:
-            raise Exception("failed to parse broadcast message") from ex
+            self.init_future.set_result(self)
+        except (ValueError, IndexError, RuntimeError) as ex:
+            self.init_future.set_exception(ex)
+        return None
 
     @property
     def verified(self) -> bool:
@@ -125,3 +146,8 @@ class SwitcherV2BroadcastMSG():
     def current(self) -> float:
         """Return the power consumptionin amps."""
         return self._electric_current
+
+    @property
+    def init_future(self) -> Future:
+        """Return the future of the device initialization."""
+        return self._init_future

@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 
 
-class SwitcherV2Device(object):
+class SwitcherV2Device:
     """Represntation of the switcherv2 data object."""
 
     def __init__(self, device_id: str, ip_address: str, mac_address: str,

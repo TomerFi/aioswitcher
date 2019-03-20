@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="aioswitcher",
-    version="2019.2.6",
+    version="2019.3.20",
     author="Tomer Figenblat",
     author_email="tomer.figenblat@gmail.com",
     description="Switcher Boiler Bridge and API Tools",
