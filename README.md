@@ -247,7 +247,7 @@ your_loop.close()
 ## Objects and Properties
 There are two main objects you need to be aware of:</br>
 The first object is the one representing the device, [aioswitcher/devices/SwitcherV2Device](aioswitcher/devices.py#L7).</br>
-The second object is the one representing the device's schedule, [aioswitcher/schedules/SwitcherV2Schedule](aioswitcher/schedules.py#L10).</br>
+The second object is the one representing the device's schedule, [aioswitcher/schedules/SwitcherV2Schedule](aioswitcher/schedules.py#L12).</br>
 
 ### SwitcherV2Device
 | Property | Type | Description | Possible Values | Default |
