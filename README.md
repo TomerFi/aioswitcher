@@ -64,77 +64,78 @@ async def run_as_instance() -> None:
     # get the Queue
     queue = v2bridge.queue  # type: asyncio.Queue
 
-	# create an event to signal your coroutine to start/stop
-	signal_event = asyncio.Event()
-	signal_event.set()
+    # create an event to signal your coroutine to start/stop
+    signal_event = asyncio.Event()
+    signal_event.set()
 
     # coroutine for getting the device from the queue
-	async def get_device_from_queue() -> None:
-		device = await queue.get()  # type: SwitcherV2Device
-		print("instance state is: {}".format(device.state))
-		print(datetime.now())
-		if signal_event.is_set():
-			your_loop.call_soon(get_device_from_queue)
-		return None
-		
-	# chedule your coroutine which will wait for the device
-	# to be put in the queue, and print the time and its state
-	# afterwards it will call itself again, the result will be
-	# the device state being printed every approximately 4 seconds
-	your_loop.call_soon(get_device_from_queue)
+    async def get_device_from_queue() -> None:
+        device = await queue.get()  # type: SwitcherV2Device
+        print("instance state is: {}".format(device.state))
+        print(datetime.now())
+        if signal_event.is_set():
+            your_loop.call_soon(get_device_from_queue)
+        return None
 
-	# wait for 40 seconds
-	# the state should be printed about 8 to 10 times
-	await asyncio.sleep(40)
+    # chedule your coroutine which will wait for the device
+    # to be put in the queue, and print the time and its state
+    # afterwards it will call itself again, the result will be
+    # the device state being printed every approximately 4 seconds
+    your_loop.call_soon(get_device_from_queue)
 
-	# stop the coroutine
-	signal_event.clear()
+    # wait for 40 seconds
+    # the state should be printed about 8 to 10 times
+    await asyncio.sleep(40)
+
+    # stop the coroutine
+    signal_event.clear()
 
     # stop the bridge
     await v2bridge.stop()
 
-	return None
+    return None
 
 """Use as context manager."""
 async def run_as_context_manager() -> None:
-	async with SwitcherV2Bridge(
+    async with SwitcherV2Bridge(
             your_loop, phone_id, device_id,
             device_password) as v2bridge:
-	    # get the Queue
-	    queue = v2bridge.queue  # type: asyncio.Queue
+        # get the Queue
+        queue = v2bridge.queue  # type: asyncio.Queue
 
-		# create an event to signal your coroutine to start/stop
-		signal_event = asyncio.Event()
-		signal_event.set()
+        # create an event to signal your coroutine to start/stop
+        signal_event = asyncio.Event()
+        signal_event.set()
 
-	    # coroutine for getting the device from the queue
-		async def get_device_from_queue() -> None:
-			device = await queue.get()  # type: SwitcherV2Device
-			print("context manager state is: {}".format(device.state))
-			print(datetime.now())
-			if signal_event.is_set():
-				your_loop.call_soon(get_device_from_queue)
-			return None
-			
-		# schedule your coroutine which will wait for the device
-		# to be put in the queue, and print the time and its state
-		# afterwards it will call itself again, the result will be
-		# the device state being printed every approximately 4 seconds
-		your_loop.call_soon(get_device_from_queue)
+        # coroutine for getting the device from the queue
+        async def get_device_from_queue() -> None:
+            device = await queue.get()  # type: SwitcherV2Device
+            print("context manager state is: {}".format(device.state))
+            print(datetime.now())
+            if signal_event.is_set():
+                your_loop.call_soon(get_device_from_queue)
+            return None
 
-		# wait for 40 seconds
-		# the state should be printed about 8 to 10 times
-		await asyncio.sleep(40)
+        # schedule your coroutine which will wait for the device
+        # to be put in the queue, and print the time and its state
+        # afterwards it will call itself again, the result will be
+        # the device state being printed every approximately 4 seconds
+        your_loop.call_soon(get_device_from_queue)
 
-		# stop the coroutine
-		signal_event.clear()
+        # wait for 40 seconds
+        # the state should be printed about 8 to 10 times
+        await asyncio.sleep(40)
 
-	return None
+        # stop the coroutine
+        signal_event.clear()
+
+    return None
 
 your_loop.run_until_complete(run_as_instance())
 your_loop.run_until_complete(run_as_context_manager())
 
 loop.close()
+
 ~~~
 
 ### TCP Socket API
@@ -175,73 +176,74 @@ device_password = "your_devices's_device_password"
 
 """Use as context manager."""
 async def run_as_context_manager() -> None:
-	async with SwitcherV2Api(your_loop, ip_address, phone_id,
-                             device_id, device_password) as swapi:
+    async with SwitcherV2Api(
+            your_loop, ip_address, phone_id,
+            device_id, device_password) as swapi:
+        # get the device state
+        # response: messages.SwitcherV2StateResponseMSG
+        state_response = await swapi.get_state()
 
-		# get the device state
-		# response: messages.SwitcherV2StateResponseMSG
-		state_response = await swapi.get_state()
+        # control the device: on / off / on + (15/30/45/60) minutes timer
+        # response: messages.SwitcherV2ControlResponseMSG
+        turn_on_response = await swapi.control_device(
+            consts.COMMAND_ON)
+        turn_off_response = await swapi.control_device(
+            consts.COMMAND_OFF)
+        turn_on_30_min_response = await swapi.control_device(
+            consts.COMMAND_ON, '30')
 
-		# control the device: on / off / on + (15/30/45/60) minutes timer
-		# response: messages.SwitcherV2ControlResponseMSG
-		turn_on_response = await swapi.control_device(
-		    consts.COMMAND_ON)
-		turn_off_response = await swapi.control_device(
-		    consts.COMMAND_OFF)
-		turn_on_30_min_response = await swapi.control_device(
-		    consts.COMMAND_ON, '30')
+        # set the limit time to auto-shutdown the device (1 < hours < 24)
+        # response: messages.SwitcherV2SetAutoOffResponseMSG
+        time_to_off = timedelta(hours=1, minutes=30)
+        set_auto_off_response = await swapi.set_auto_shutdown(time_to_off)
 
-		# set the limit time to auto-shutdown the device (1 < hours < 24)
-		# response: messages.SwitcherV2SetAutoOffResponseMSG
-		time_to_off = timedelta(hours=1, minutes=30)
-		set_auto_off_response = await swapi.set_auto_shutdown(time_to_off)
+        # set the device name (2 < length < 33)
+        # response: messages.SwitcherV2UpdateNameResponseMSG
+        set_name_response = await swapi.set_device_name("new device name")
 
-		# set the device name (2 < length < 33)
-		# response: messages.SwitcherV2UpdateNameResponseMSG
-		set_name_response = await swapi.set_device_name("new device name")
+        # get the configured schedules from the device
+        # response: messages.SwitcherV2GetScheduleResponseMSG
+        get_schedules_response = await swapi.get_schedules()
 
-		# get the configured schedules from the device
-		# response: messages.SwitcherV2GetScheduleResponseMSG
-		get_schedules_response = await swapi.get_schedules()
+        # disable or enable a schedule
+        # schedule_data = (SwitcherV2Schedule).schedule_data
+        # response: messages.SwitcherV2DisableEnableScheduleResponseMSG
+        enable_disable_response = await swapi.disable_enable_schedule(
+            schedule_data)
 
-		# disable or enable a schedule
-		# schedule_data = (SwitcherV2Schedule).schedule_data
-		# response: messages.SwitcherV2DisableEnableScheduleResponseMSG
-		enable_disable_response = await swapi.disable_enable_schedule(
-		    schedule_data)
+        # delete a schedule (0 <= schedule_id <= 7)
+        # schedule_id = (SwitcherV2Schedule).schedule_id
+        # response: messages.SwitcherV2DeleteScheduleResponseMSG
+        delete_response = await swapi.delete_schedule(schedule_id)
 
-		# delete a schedule (0 <= schedule_id <= 7)
-		# schedule_id = (SwitcherV2Schedule).schedule_id
-		# response: messages.SwitcherV2DeleteScheduleResponseMSG
-		delete_response = await swapi.delete_schedule(schedule_id)
+        # create a schedule to turn on at 20:30 and off at 21:00
+        # response: messages.SwitcherV2CreateScheduleResponseMSG
+        schedule_days = [0]
+        # append selected days, if non-recurring skip next
+        schedule_days.append(consts.DAY_TO_INT_DICT[consts.SUNDAY])
+        schedule_days.append(consts.DAY_TO_INT_DICT[consts.MONDAY])
+        schedule_days.append(consts.DAY_TO_INT_DICT[consts.TUESDAY])
+        schedule_days.append(consts.DAY_TO_INT_DICT[consts.WEDNESDAY])
+        schedule_days.append(consts.DAY_TO_INT_DICT[consts.THURSDAY])
+        schedule_days.append(consts.DAY_TO_INT_DICT[consts.FRIDAY])
+        schedule_days.append(consts.DAY_TO_INT_DICT[consts.SATURDAY])
+        # skip here if non-recurring
+        weekdays = await tools.create_weekdays_value(
+            your_loop, schedule_days)
+        start_time = await tools.timedelta_str_to_schedule_time(
+            your_loop, timedelta(hours=20, minutes=30))
+        end_time = await tools.timedelta_str_to_schedule_time(
+            your_loop, timedelta(hours=21))
+        schedule_data = consts.SCHEDULE_CREATE_DATA_FORMAT.format(
+            weekdays, start_time, end_time)
+        create_response = await swapi.create_schedule(schedule_data)
 
-		# create a schedule to turn on at 20:30 and off at 21:00
-		# response: messages.SwitcherV2CreateScheduleResponseMSG
-		schedule_days = [0]
-		# append selected days, if non-recurring skip next
-		schedule_days.append(consts.DAY_TO_INT_DICT[consts.SUNDAY])
-		schedule_days.append(consts.DAY_TO_INT_DICT[consts.MONDAY])
-		schedule_days.append(consts.DAY_TO_INT_DICT[consts.TUESDAY])
-		schedule_days.append(consts.DAY_TO_INT_DICT[consts.WEDNESDAY])
-		schedule_days.append(consts.DAY_TO_INT_DICT[consts.THURSDAY])
-		schedule_days.append(consts.DAY_TO_INT_DICT[consts.FRIDAY])
-		schedule_days.append(consts.DAY_TO_INT_DICT[consts.SATURDAY])
-		# skip here if non-recurring
-		weekdays = await tools.create_weekdays_value(
-		    your_loop, schedule_days)
-		start_time = await tools.timedelta_str_to_schedule_time(
-		    your_loop, timedelta(hours=20, minutes=30))
-		end_time = await tools.timedelta_str_to_schedule_time(
-		    your_loop, timedelta(hours=21))
-		schedule_data = consts.SCHEDULE_CREATE_DATA_FORMAT.format(
-		    weekdays, start_time, end_time)
-		create_response = await swapi.create_schedule(schedule_data)
-		
-	return None
+    return None
 
 your_loop.run_until_complete(run_as_context_manager())
 
 your_loop.close()
+
 ~~~
 
 ## Objects and Properties
