@@ -1,7 +1,3 @@
-[Master]
-# init-hook='sys.path = ["/usr/local/lib/python3.5/"]'
-init-hook='sys.path = ["/usr/lib/python3.5/"]'
-
 [Message Control]
 disable=locally-disabled,locally-enabled,duplicate-code
 
