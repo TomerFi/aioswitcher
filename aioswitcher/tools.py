@@ -186,9 +186,9 @@ def _timedelta_str_to_schedule_time(time_value: str) -> str:
         return_time = mktime(strptime(
             strftime("%d/%m/%Y")
             + " "
-            + str(time_value).split(":")[0]
+            + time_value.split(":")[0]
             + ":"
-            + str(time_value).split(":")[1], "%d/%m/%Y %H:%M"))
+            + time_value.split(":")[1], "%d/%m/%Y %H:%M"))
 
         return hexlify(pack(
             STRUCT_PACKING_FORMAT, int(return_time))).decode(ENCODING_CODEC)
