@@ -2,7 +2,7 @@
 # Switcher Boiler Bridge and API Tools [![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher)
 Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
 This module was applicable thanks to the amazing R&D performed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
-This module is *Asyncio* friendly and [*type-hinted*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
+This module is *Asyncio* friendly [*static-typed*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
 Tested with the Switcher V2 Only.
 
 ## Current version
