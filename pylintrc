@@ -1,5 +1,5 @@
 [Message Control]
-disable=locally-disabled,locally-enabled,duplicate-code
+disable=locally-disabled,locally-enabled,ungrouped-imports
 
 [Reports]
 reports=no

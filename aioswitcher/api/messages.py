@@ -1,15 +1,18 @@
 """Switcher Packet Response Messages."""
 
-from asyncio import AbstractEventLoop, ensure_future, Future
-from typing import Optional, List
+from asyncio import ensure_future
 from binascii import hexlify
 from enum import Enum
-from logging import getLogger
+from typing import TYPE_CHECKING
 
 from ..tools import convert_seconds_to_iso_time
 from ..consts import (ENCODING_CODEC, STATE_ON, STATE_RESPONSE_ON, STATE_OFF,
                       STATE_RESPONSE_OFF, STATE_UNKNOWN)
 from ..schedules import SwitcherV2Schedule
+
+if TYPE_CHECKING:
+    from asyncio import AbstractEventLoop, Future
+    from typing import Optional, List
 
 # pylint: disable=invalid-name
 ResponseMessageType = Enum(
@@ -18,8 +21,6 @@ ResponseMessageType = Enum(
      'DISABLE_ENABLE_SCHEDULE', 'GET_SCHEDULES', 'LOGIN', 'STATE',
      'UPDATE_NAME'])
 # pylint: enable=invalid-name
-
-_LOGGER = getLogger(__name__)
 
 
 class SwitcherV2BaseResponseMSG:

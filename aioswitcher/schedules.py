@@ -1,12 +1,16 @@
 """Switcher Device Schedule Objects."""
 
-from asyncio import AbstractEventLoop, ensure_future, Future
+from asyncio import ensure_future
 from binascii import unhexlify
 from datetime import datetime
-from typing import List
+from typing import TYPE_CHECKING
 
 from .consts import ALL_DAYS, MONDAY, SUNDAY, WAITING_TEXT, WEEKDAY_TUP
 from .tools import get_days_list_from_bytes, get_time_from_bytes
+
+if TYPE_CHECKING:
+    from asyncio import AbstractEventLoop, Future
+    from typing import List
 
 
 class SwitcherV2Schedule:
