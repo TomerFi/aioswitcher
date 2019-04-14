@@ -1,10 +1,7 @@
 """Switcher Devices Represntation Classes."""
 
 from datetime import datetime
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from typing import Optional
+from typing import Optional
 
 
 class SwitcherV2Device:

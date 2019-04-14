@@ -1,18 +1,14 @@
 """Switcher Bridge Response Messages."""
 
-from asyncio import ensure_future
+from asyncio import AbstractEventLoop, ensure_future, Future
 from binascii import hexlify
 from socket import inet_ntoa
 from struct import pack
-from typing import TYPE_CHECKING
+from typing import Optional, Union
 
 from ..consts import (ENCODING_CODEC, STATE_OFF, STATE_ON,
                       STATE_RESPONSE_ON, WAITING_TEXT)
 from ..tools import convert_seconds_to_iso_time
-
-if TYPE_CHECKING:
-    from asyncio import AbstractEventLoop, Future
-    from typing import Optional, Union
 
 
 class SwitcherV2BroadcastMSG():

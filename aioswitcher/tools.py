@@ -1,18 +1,14 @@
 """Switcher Tools and Helpers."""
 
+from asyncio import AbstractEventLoop
 from binascii import crc_hqx, hexlify, unhexlify
-from datetime import time as datetime_time
+from datetime import time as datetime_time, timedelta
 from struct import pack
 from time import localtime, mktime, strftime, strptime, time as time_time
-from typing import TYPE_CHECKING
+from typing import List
 
 from .consts import HEX_TO_DAY_DICT, ENCODING_CODEC, REMOTE_KEY
 from .errors import CalculationError, DecodingError, EncodingError
-
-if TYPE_CHECKING:
-    from asyncio import AbstractEventLoop
-    from datetime import timedelta
-    from typing import List
 
 
 def _convert_seconds_to_iso_time(all_seconds: int) -> str:
