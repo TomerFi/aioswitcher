@@ -7,7 +7,8 @@ from struct import pack
 from time import localtime, mktime, strftime, strptime, time as time_time
 from typing import List
 
-from .consts import HEX_TO_DAY_DICT, ENCODING_CODEC, REMOTE_KEY
+from .consts import (HEX_TO_DAY_DICT, ENCODING_CODEC, REMOTE_KEY,
+                     STRUCT_PACKING_FORMAT)
 from .errors import CalculationError, DecodingError, EncodingError
 
 
@@ -59,7 +60,8 @@ async def crc_sign_full_packet_com_key(loop: AbstractEventLoop, data: str) \
 def _convert_minutes_to_timer(minutes: str) -> str:
     """Convert minutes to hex for timer."""
     try:
-        return hexlify(pack('<I', int(minutes) * 60)).decode(ENCODING_CODEC)
+        return hexlify(pack(
+            STRUCT_PACKING_FORMAT, int(minutes) * 60)).decode(ENCODING_CODEC)
     except (ValueError, IndexError, RuntimeError) as ex:
         raise EncodingError(
             "failed to create timer from {} minutes".format(
@@ -79,7 +81,8 @@ def _convert_timedelta_to_auto_off(full_time: timedelta) -> str:
         hours, minutes = divmod(minutes, 60)
         seconds = int(hours) * 3600 + int(minutes) * 60
         if 3599 < seconds < 86341:
-            return hexlify(pack('<I', int(seconds))).decode(ENCODING_CODEC)
+            return hexlify(pack(
+                STRUCT_PACKING_FORMAT, int(seconds))).decode(ENCODING_CODEC)
         raise ValueError("can only handle 1 to 24 hours on auto-off set")
     except (ValueError, ZeroDivisionError, RuntimeError) as ex:
         raise EncodingError(
@@ -150,8 +153,9 @@ async def get_time_from_bytes(loop: AbstractEventLoop, data: str) -> str:
 def _get_timestamp() -> str:
     """Generate timestamp."""
     try:
-        return hexlify(pack('<I', int(round(time_time())))).decode(
-            ENCODING_CODEC)
+        return hexlify(pack(
+            STRUCT_PACKING_FORMAT, int(round(time_time())))).decode(
+                ENCODING_CODEC)
     except (ValueError, RuntimeError) as ex:
         raise EncodingError('failed to generate timestamp') from ex
 
@@ -186,7 +190,8 @@ def _timedelta_str_to_schedule_time(time_value: str) -> str:
             + ":"
             + str(time_value).split(":")[1], "%d/%m/%Y %H:%M"))
 
-        return hexlify(pack('<I', int(return_time))).decode(ENCODING_CODEC)
+        return hexlify(pack(
+            STRUCT_PACKING_FORMAT, int(return_time))).decode(ENCODING_CODEC)
     except (ValueError, IndexError, RuntimeError) as ex:
         raise EncodingError(
             "failed to convert time value to schedule time") from ex

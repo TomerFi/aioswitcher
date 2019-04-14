@@ -41,3 +41,5 @@ WAITING_TEXT = 'waiting_for_data'
 SCHEDULE_DUE_TODAY_FORMAT = "Due today at {}"
 SCHEDULE_DUE_TOMMOROW_FORMAT = "Due tommorow at {}"
 SCHEDULE_DUE_ANOTHER_DAY_FORMAT = "Due next {} at {}"
+
+STRUCT_PACKING_FORMAT = '<I'  # little-endian unsigned int
