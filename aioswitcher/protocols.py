@@ -1,8 +1,8 @@
 """SwitcherV2 network protocols."""
 
 from asyncio import (AbstractEventLoop, BaseTransport, DatagramProtocol,
-                     ensure_future, Event, Future, Protocol, Queue,
-                     QueueEmpty, QueueFull, Transport)
+                     ensure_future, Event, Future, Queue, QueueEmpty,
+                     QueueFull, Transport)
 from datetime import datetime
 from functools import partial
 from typing import cast, Optional, Tuple, Union
@@ -104,70 +104,6 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
                     ensure_future(
                         self._queue.put(self._device), loop=self._loop)
         self._accept_datagrams.set()
-
-    @property
-    def factory_future(self) -> Future:
-        """Return a future represnting the factory ending status."""
-        return self._factory_future
-
-# Consider switching the api implmentation to using the asyncio's
-# low-level stream api (below).
-# similiar to the use of the bridge implmentation (above)
-
-
-class SwitcherV2TcpProtocolFactory(Protocol):
-    """Represntation of the Asyncio TCP protocol factory."""
-
-    def __init__(self, loop: AbstractEventLoop) -> None:
-        """Initialize the protocol."""
-        self._loop = loop
-        self._factory_future = self._loop.create_future()
-        self._factory_future.add_done_callback(self.close_transport)
-        self.transport = None  # type: Optional[Transport]
-        self._response = None  # type: Optional[bytes]
-
-    def connection_made(self, transport: BaseTransport) -> None:
-        """Call on connection established."""
-        self.transport = cast(Transport, transport)
-        self.transport.set_write_buffer_limits(high=1024)
-
-    def data_received(self, data: bytes) -> None:
-        """Call on data recieved."""
-        self._response = data
-
-    def eof_received(self) -> None:
-        """Call on end of data."""
-
-    def connection_lost(self, exc: Optional[Exception]) -> None:
-        """Call on connection lost."""
-        if not self.factory_future.done():
-            if exc:
-                self.factory_future.set_exception(exc)
-            else:
-                self.factory_future.set_result(True)
-
-    async def send_packet(self, packet: bytes) -> None:
-        """Use for sending packets to socket."""
-        if self.transport:
-            self.transport.write(packet)
-        return None
-
-    async def disconnect(self) -> None:
-        """Use for disconnecting the socket."""
-        self.factory_future.set_result(True)
-        return None
-
-    # pylint: disable=unused-argument
-    def close_transport(self, future: Future) -> None:
-        """Call for closing the transport."""
-        if self.transport:
-            self.transport.close()
-    # pylint: enable=unused-argument
-
-    @property
-    def response(self) -> bytes:
-        """Return the response recieved."""
-        return self._response if isinstance(self._response, bytes) else b''
 
     @property
     def factory_future(self) -> Future:
