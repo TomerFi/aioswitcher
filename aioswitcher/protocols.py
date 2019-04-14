@@ -34,14 +34,12 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
         """Call on connection established."""
         self.transport = cast(Transport, transport)
         self._accept_datagrams.set()
-        return None
 
     def datagram_received(self, data: Union[bytes, str], addr: Tuple) -> None:
         """Call on datagram recieved."""
         if self._run_factory.is_set() and self._accept_datagrams.is_set():
             ensure_future(
                 self.handle_incoming_messeges(data, addr), loop=self._loop)
-        return None
 
     def error_received(self, exc: Optional[Exception]) -> None:
         """Call on exception recieved."""
@@ -49,19 +47,16 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
             self.factory_future.set_exception(exc)
         else:
             self.factory_future.set_result(None)
-        return None
 
     def connection_lost(self, exc: Optional[Exception]) -> None:
         """Call on connection lost."""
         self.factory_future.set_result(exc if exc else None)
-        return None
 
     # pylint: disable=unused-argument
     def close_transport(self, future: Future) -> None:
         """Call for closing the transport."""
         if self.transport:
             self.transport.close()
-        return None
     # pylint: enable=unused-argument
 
     async def handle_incoming_messeges(
@@ -109,7 +104,6 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
                     ensure_future(
                         self._queue.put(self._device), loop=self._loop)
         self._accept_datagrams.set()
-        return None
 
     @property
     def factory_future(self) -> Future:
@@ -136,16 +130,13 @@ class SwitcherV2TcpProtocolFactory(Protocol):
         """Call on connection established."""
         self.transport = cast(Transport, transport)
         self.transport.set_write_buffer_limits(high=1024)
-        return None
 
     def data_received(self, data: bytes) -> None:
         """Call on data recieved."""
         self._response = data
-        return None
 
     def eof_received(self) -> None:
         """Call on end of data."""
-        pass
 
     def connection_lost(self, exc: Optional[Exception]) -> None:
         """Call on connection lost."""
@@ -154,7 +145,6 @@ class SwitcherV2TcpProtocolFactory(Protocol):
                 self.factory_future.set_exception(exc)
             else:
                 self.factory_future.set_result(True)
-        return None
 
     async def send_packet(self, packet: bytes) -> None:
         """Use for sending packets to socket."""
@@ -172,7 +162,6 @@ class SwitcherV2TcpProtocolFactory(Protocol):
         """Call for closing the transport."""
         if self.transport:
             self.transport.close()
-        return None
     # pylint: enable=unused-argument
 
     @property
