@@ -192,7 +192,7 @@ def _timedelta_str_to_schedule_time(time_value: str) -> str:
 
         return hexlify(pack(
             STRUCT_PACKING_FORMAT, int(return_time))).decode(ENCODING_CODEC)
-    except (ValueError, IndexError, RuntimeError) as ex:
+    except (OverflowError, ValueError, IndexError, RuntimeError) as ex:
         raise EncodingError(
             "failed to convert time value to schedule time") from ex
 
