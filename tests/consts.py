@@ -2,7 +2,7 @@
 
 from datetime import timedelta
 
-from aioswitcher.consts import (DAY_TO_INT_DICT, FRIDAY, MONDAY,  SATURDAY,
+from aioswitcher.consts import (DAY_TO_INT_DICT, FRIDAY, MONDAY, SATURDAY,
                                 SUNDAY, THURSDAY, TUESDAY, WEDNESDAY)
 
 DUMMY_DEVICE_ID = 'a123bc'
