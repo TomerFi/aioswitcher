@@ -16,7 +16,7 @@ from aioswitcher.tools import (
     convert_timedelta_to_auto_off, create_weekdays_value, get_timestamp,
     timedelta_str_to_schedule_time, get_days_list_from_bytes)
 
-from .asserters import assert_seconds_to_iso_time, assert_compare_lists
+from .asserters import assert_seconds_to_iso_time, assert_lists_equal
 from .common import create_random_time
 from .consts import (DUMMY_DEVICE_NAME, DUMMY_DEVICE_ID, DUMMY_SESSION_ID,
                      DUMMY_TIMESTAMP, RESULT_CRC_SIGNATURE,
@@ -116,7 +116,7 @@ async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
     try:
         for test_set in TEST_HEX_WEEKDAYS_SET_LIST:
             result = await get_days_list_from_bytes(event_loop, test_set[0])
-            await assert_compare_lists(result, test_set[1])
+            await assert_lists_equal(result, test_set[1])
     except DecodingError as exc:
         fail("failed converting int to days list, {}".format(exc))
 

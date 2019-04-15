@@ -13,7 +13,7 @@ async def assert_seconds_to_iso_time(total_seconds: int,
     assert calc_seconds == total_seconds
 
 
-async def assert_compare_lists(list1: List[Any], list2: List[Any]) -> None:
+async def assert_lists_equal(list1: List[Any], list2: List[Any]) -> None:
     """Compare two lists."""
     assert len(list1) == len(list2)
     for item in list1:
