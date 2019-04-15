@@ -1,6 +1,9 @@
 """Constants for the Switcher integration tests."""
 
-from aioswitcher.consts import DAY_TO_INT_DICT, MONDAY, SUNDAY, TUESDAY
+from datetime import timedelta
+
+from aioswitcher.consts import (DAY_TO_INT_DICT, MONDAY, TUESDAY, WEDNESDAY,
+                                THURSDAY, FRIDAY, SATURDAY, SUNDAY)
 
 DUMMY_DEVICE_ID = 'a123bc'
 DUMMY_SESSION_ID = '01000000'
@@ -17,3 +20,23 @@ SCHEDULE_WEEKDAY_LIST = [DAY_TO_INT_DICT[MONDAY],
 TEST_SECONDS = 86399  # 23:59:59
 
 TIMESTAMP_COMPARE_FORMAT = "%Y-%m-%d %H"
+
+TEST_MINUTES = "90"
+
+DUMMY_DEVICE_NAME = "Device Name"
+
+TEST_TIMEDELTA_MIN_FAILURE = timedelta(minutes=59, seconds=59)
+TEST_TIMEDELTA_SUCCESS_SECONDS = timedelta(hours=1, minutes=30, seconds=10)
+TEST_TIMEDELTA_SUCCESS_NO_SECONDS = timedelta(hours=1, minutes=30)
+TEST_TIMEDELTA_MAX_FAILURE = timedelta(hours=24)
+
+TEST_HEX_WEEKDAYS_SET_LIST = [
+    (254, [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY]),
+    (126, [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY]),
+    (62, [MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY]),
+    (30, [MONDAY, TUESDAY, WEDNESDAY, THURSDAY]),
+    (14, [MONDAY, TUESDAY, WEDNESDAY]),
+    (6, [MONDAY, TUESDAY]),
+    (2, [MONDAY]),
+    (130, [MONDAY, SUNDAY])
+]
