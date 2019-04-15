@@ -136,7 +136,7 @@ async def get_days_list_from_bytes(loop: AbstractEventLoop, data: int) \
 
 
 def _get_time_from_bytes(data: str) -> str:
-    """Extract start/end time from shcedule bytes."""
+    """Extract start/end time from schedule bytes."""
     try:
         timestamp = int(data[6:8] + data[4:6] + data[2:4] + data[0:2], 16)
 
