@@ -231,9 +231,9 @@ async def run_as_context_manager() -> None:
         weekdays = await tools.create_weekdays_value(
             your_loop, schedule_days)
         start_time = await tools.timedelta_str_to_schedule_time(
-            your_loop, timedelta(hours=20, minutes=30))
+            your_loop, str(timedelta(hours=20, minutes=30)))
         end_time = await tools.timedelta_str_to_schedule_time(
-            your_loop, timedelta(hours=21))
+            your_loop, str(timedelta(hours=21)))
         schedule_data = consts.SCHEDULE_CREATE_DATA_FORMAT.format(
             weekdays, start_time, end_time)
         create_response = await swapi.create_schedule(schedule_data)
