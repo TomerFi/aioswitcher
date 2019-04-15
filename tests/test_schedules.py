@@ -1,4 +1,4 @@
-"""Test cases for the aioswitcher schedules helper functions."""
+"""Test cases for the aioswitcher.schedules module."""
 
 from asyncio import AbstractEventLoop
 

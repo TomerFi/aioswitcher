@@ -1,4 +1,4 @@
-"""Test cases for the aioswitcher helper functions."""
+"""Test cases for the aioswitcher.tools module."""
 
 from asyncio import AbstractEventLoop
 from binascii import unhexlify
