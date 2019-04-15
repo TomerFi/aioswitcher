@@ -8,13 +8,15 @@ from struct import unpack
 from pytest import fail, mark, raises
 
 from aioswitcher.api.packets import GET_STATE_PACKET
-from aioswitcher.consts import ENCODING_CODEC, STRUCT_PACKING_FORMAT
+from aioswitcher.consts import (ENCODING_CODEC, SCHEDULE_CREATE_DATA_FORMAT,
+                                STRUCT_PACKING_FORMAT)
 from aioswitcher.errors import CalculationError, DecodingError, EncodingError
 from aioswitcher.tools import (
     convert_seconds_to_iso_time, crc_sign_full_packet_com_key,
     convert_minutes_to_timer, convert_string_to_device_name,
     convert_timedelta_to_auto_off, create_weekdays_value, get_timestamp,
-    timedelta_str_to_schedule_time, get_days_list_from_bytes)
+    timedelta_str_to_schedule_time, get_days_list_from_bytes,
+    get_time_from_bytes)
 
 from .asserters import assert_seconds_to_iso_time, assert_lists_equal
 from .common import create_random_time
@@ -25,7 +27,8 @@ from .consts import (DUMMY_DEVICE_NAME, DUMMY_DEVICE_ID, DUMMY_SESSION_ID,
                      TEST_TIMEDELTA_SUCCESS_SECONDS,
                      TEST_TIMEDELTA_SUCCESS_NO_SECONDS,
                      TEST_TIMEDELTA_MAX_FAILURE, TEST_SECONDS,
-                     TIMESTAMP_COMPARE_FORMAT, TEST_HEX_WEEKDAYS_SET_LIST)
+                     TIMESTAMP_COMPARE_FORMAT, TEST_HEX_WEEKDAYS_SET_LIST,
+                     DUMMY_START_TIME_SET)
 
 
 @mark.asyncio
@@ -121,13 +124,11 @@ async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
         fail("failed converting int to days list, {}".format(exc))
 
 
-# pylint: disable=unused-argument
 @mark.asyncio
-@mark.skip
 async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
     """Test the get_time_from_bytes tool."""
-    assert True
-# pylint: enable=unused-argument
+    result = await get_time_from_bytes(event_loop, DUMMY_START_TIME_SET[0])
+    assert result == DUMMY_START_TIME_SET[1]
 
 
 @mark.asyncio

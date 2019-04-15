@@ -16,6 +16,7 @@ SCHEDULE_WEEKDAY_LIST = [DAY_TO_INT_DICT[MONDAY],
                          DAY_TO_INT_DICT[TUESDAY],
                          DAY_TO_INT_DICT[SUNDAY]]
 
+DUMMY_START_TIME_SET = ('98bfb45c', '20:30')
 
 TEST_SECONDS = 86399  # 23:59:59
 
