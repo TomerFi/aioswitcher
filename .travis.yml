@@ -4,25 +4,34 @@ matrix:
   fast_finish: true
   include:
     - python: "3.5.3"
+      name: "Python 3.5.3 Lint test (flake8, pydocstyle, pycodestyle)"
       env: TOXENV=lint
     - python: "3.5.3"
+      name: "Python 3.5.3 Pyint test"
       env: TOXENV=pylint
     - python: "3.5.3"
+      name: "Python 3.5.3 Static-Typing test"
       env: TOXENV=typing
     - python: "3.5.3"
-      env: TOXENV=cov
+      name: "Python 3.5.3 Pytest with coverage reports"
+      env:
+        - TOXENV=cov
+        - CI_SOURCE=TravisCI
       after_success: 
         - coveralls
         - codecov
     - python: "3.5.3"
+      name: "Python 3.5.3 Unit test"
       env: TOXENV=py35
     - python: "3.6"
+      name: "Python 3.6 Unit test"
       env: TOXENV=py36
     - python: "3.7"
+      name: "Python 3.7 Unit test"
       env: TOXENV=py37
       dist: xenial
-env:
-  - CI_SOURCE="TravisCI"
+git:
+  quiet: true
 install:
   - travis_retry pip install tox coveralls codecov
 script:
