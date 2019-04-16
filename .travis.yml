@@ -1,5 +1,4 @@
 sudo: false
-dist: xenial
 language: python
 matrix:
   fast_finish: true
@@ -12,7 +11,7 @@ matrix:
       env: TOXENV=typing
     - python: "3.5.3"
       env: TOXENV=cov
-      after_success:
+      after_success: 
         - coveralls
     - python: "3.5.3"
       env: TOXENV=py35
@@ -20,7 +19,8 @@ matrix:
       env: TOXENV=py36
     - python: "3.7"
       env: TOXENV=py37
+      dist: xenial
 install:
-  - travis_retry pip install tox, coveralls
+  - travis_retry pip install tox coveralls
 script:
   - travis_wait tox
