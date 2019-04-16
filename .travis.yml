@@ -12,6 +12,8 @@ matrix:
       env: TOXENV=typing
     - python: "3.5.3"
       env: TOXENV=cov
+      after_success:
+        - coveralls
     - python: "3.5.3"
       env: TOXENV=py35
     - python: "3.6"
@@ -19,8 +21,6 @@ matrix:
     - python: "3.7"
       env: TOXENV=py37
 install:
-  - travis_retry pip install tox
+  - travis_retry pip install tox, coveralls
 script:
   - travis_wait tox
-after_success:
-  - coveralls
