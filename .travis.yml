@@ -7,7 +7,7 @@ matrix:
       name: "Python 3.5.3 Lint tests (flake8, pydocstyle, pycodestyle)"
       env: TOXENV=lint
     - python: "3.5.3"
-      name: "Python 3.5.3 Pyint test"
+      name: "Python 3.5.3 Pylint test"
       env: TOXENV=pylint
     - python: "3.5.3"
       name: "Python 3.5.3 Static-Typing test"
@@ -16,7 +16,7 @@ matrix:
       name: "Python 3.5.3 Pytest with coverage reports"
       env:
         - TOXENV=cov
-        - CI_SOURCE="TravisCI"
+        - CI_SOURCE=TravisCI
       after_success: 
         - coveralls
         - codecov
