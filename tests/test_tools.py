@@ -3,6 +3,7 @@
 from asyncio import AbstractEventLoop
 from binascii import unhexlify
 from datetime import datetime, timedelta
+from os import environ
 from struct import unpack
 
 from pytest import fail, mark, raises
@@ -122,7 +123,8 @@ async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
 
 
 @mark.asyncio
-@mark.skip(reason="works locally only, need re-write.")
+@mark.skipif('TRAVIS' in environ and environ['TRAVIS'] == "true",
+             reason="Works locally only, needs re-write. Skipping on Travis.")
 async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
     """Test the get_time_from_bytes tool."""
     try:
