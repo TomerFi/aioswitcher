@@ -13,6 +13,7 @@ matrix:
       env: TOXENV=cov
       after_success: 
         - coveralls
+        - codecov
     - python: "3.5.3"
       env: TOXENV=py35
     - python: "3.6"
@@ -21,6 +22,6 @@ matrix:
       env: TOXENV=py37
       dist: xenial
 install:
-  - travis_retry pip install tox coveralls
+  - travis_retry pip install tox coveralls codecov
 script:
   - travis_wait tox

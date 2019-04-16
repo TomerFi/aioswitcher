@@ -1,6 +1,8 @@
 
 # Switcher Boiler Bridge and API Tools
+</br>
 [![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher) [![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=unit-tests)](https://travis-ci.org/TomerFi/aioswitcher) [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=unit-tests)](https://coveralls.io/github/TomerFi/aioswitcher?branch=unit-tests)
+</br>
 Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
 This module was applicable thanks to the amazing R&D performed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
 This module is *Asyncio* friendly [*static-typed*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
