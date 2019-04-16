@@ -8,7 +8,7 @@
 [![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher) 
 ![python wheel](https://img.shields.io/pypi/format/aioswitcher.svg) 
 ![python versions](https://img.shields.io/pypi/pyversions/django.svg) 
-![license](https://img.shields.io/github/license/tomerfi/aioswitcher.svg) 
+![license](https://img.shields.io/pypi/l/aioswitcher.svg) 
 
 ![open issues](https://img.shields.io/github/issues-raw/tomerfi/aioswitcher.svg) 
 ![commit activity month](https://img.shields.io/github/commit-activity/m/tomerfi/aioswitcher.svg) 
