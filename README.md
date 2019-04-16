@@ -12,6 +12,7 @@
 
 ![open issues](https://img.shields.io/github/issues-raw/tomerfi/aioswitcher.svg) 
 ![commit activity month](https://img.shields.io/github/commit-activity/m/tomerfi/aioswitcher.svg) 
+![last commit](https://img.shields.io/github/last-commit/tomerfi/aioswitcher.svg) 
 
 
 Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
