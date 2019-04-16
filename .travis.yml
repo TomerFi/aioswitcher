@@ -14,9 +14,7 @@ matrix:
       env: TOXENV=typing
     - python: "3.5.3"
       name: "Python 3.5.3 Pytest with coverage reports"
-      env:
-        - TOXENV=cov
-        - CI_SOURCE=TravisCI
+      env: TOXENV=cov
       after_success: 
         - coveralls
         - codecov
@@ -32,6 +30,9 @@ matrix:
       dist: xenial
 git:
   quiet: true
+env:
+  global:
+     - CI_SOURCE=TravisCI 
 install:
   - travis_retry pip install tox coveralls codecov
 script:
