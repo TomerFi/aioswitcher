@@ -123,7 +123,7 @@ async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
 
 
 @mark.asyncio
-@mark.skipif('CI_SOURCE' in environ and environ['CI_SOURCE'] == "TravisCI",
+@mark.skipIf('CI_SOURCE' in environ and environ['CI_SOURCE'] == 'TravisCI',
              reason="Works locally only, needs re-write. Skipping on Travis.")
 async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
     """Test the get_time_from_bytes tool."""
