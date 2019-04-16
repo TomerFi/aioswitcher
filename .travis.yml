@@ -22,7 +22,7 @@ matrix:
       env: TOXENV=py37
       dist: xenial
 env:
-  - CI_SOURCE=TravisCI
+  - CI_SOURCE='TravisCI'
 install:
   - travis_retry pip install tox coveralls codecov
 script:
