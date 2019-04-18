@@ -15,7 +15,7 @@ class SwitcherV2Schedule:
     """Represnation of the switcher version 2 schedule."""
 
     def __init__(self, loop: AbstractEventLoop, idx: int,
-                 schedule_details: List[str]) -> None:
+                 schedule_details: List[bytes]) -> None:
         """Initialize the schedule."""
         self._loop = loop
         self._enabled = False
