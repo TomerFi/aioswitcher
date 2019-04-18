@@ -3,7 +3,7 @@
 from asyncio import AbstractEventLoop, ensure_future, Future
 from binascii import hexlify
 from enum import Enum
-from typing import Optional, List
+from typing import List
 
 from ..tools import convert_seconds_to_iso_time
 from ..consts import (ENCODING_CODEC, HANDLED_EXCEPTIONS, STATE_ON,
