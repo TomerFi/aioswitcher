@@ -1,6 +1,6 @@
 """Switcher Manager API Functions."""
 
-from asyncio import AbstractEventLoop, Event, open_connection
+from asyncio import AbstractEventLoop, Event, open_connection, wait
 from binascii import unhexlify
 from datetime import timedelta
 from socket import AF_INET
@@ -107,9 +107,10 @@ class SwitcherV2Api():
 
                 response = await self._reader.read(1024)
 
-                return (timestamp, login_response,
-                        messages.SwitcherV2StateResponseMSG(
-                            self._loop, response))
+                state_response = messages.SwitcherV2StateResponseMSG(
+                    self._loop, response)
+                await wait([state_response.init_future])
+                return (timestamp, login_response, state_response)
 
         return timestamp, login_response, None
 
