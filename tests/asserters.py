@@ -2,6 +2,9 @@
 
 from typing import List, Any
 
+from aioswitcher.api.messages import (ResponseMessageType,
+                                      SwitcherV2BaseResponseMSG)
+
 
 async def assert_seconds_to_iso_time(total_seconds: int,
                                      iso_time: str) -> None:
@@ -18,3 +21,11 @@ async def assert_lists_equal(list1: List[Any], list2: List[Any]) -> None:
     assert len(list1) == len(list2)
     for item in list1:
         assert item in list2
+
+
+async def assert_api_messege_base_type(msg: SwitcherV2BaseResponseMSG,
+                                       msg_type: ResponseMessageType) -> None:
+    """Assert the basic aioswitcher.api.messages.SwitcherV2BaseResponseMSG."""
+    assert isinstance(msg.unparsed_response, bytes)
+    assert msg.successful
+    assert msg.msg_type == msg_type

@@ -43,3 +43,7 @@ SCHEDULE_DUE_TOMMOROW_FORMAT = "Due tommorow at {}"
 SCHEDULE_DUE_ANOTHER_DAY_FORMAT = "Due next {} at {}"
 
 STRUCT_PACKING_FORMAT = '<I'  # little-endian unsigned int
+
+HANDLED_EXCEPTIONS = (AttributeError, FloatingPointError, IndexError,
+                      LookupError, OverflowError, TypeError,
+                      UnicodeDecodeError, ValueError, ZeroDivisionError)

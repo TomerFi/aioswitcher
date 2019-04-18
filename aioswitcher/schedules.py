@@ -78,7 +78,10 @@ class SwitcherV2Schedule:
     @enabled.setter
     def enabled(self, value: bool) -> None:
         """Setter to set the device as enabled or disabled."""
-        self._enabled = value
+        if isinstance(value, bool):
+            self._enabled = value
+        else:
+            raise TypeError("enabled is of type bool")
 
     @property
     def recurring(self) -> bool:
@@ -113,7 +116,10 @@ class SwitcherV2Schedule:
     @schedule_data.setter
     def schedule_data(self, data: str) -> None:
         """Setter to set the schedule data for managing the schedule."""
-        self._schedule_data = data
+        if isinstance(data, str):
+            self._schedule_data = data
+        else:
+            raise TypeError("schedeule_data is of type str")
 
     @property
     def init_future(self) -> Future:

@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from os import environ
 from struct import unpack
 
+from asynctest import patch
 from pytest import fail, mark, raises
 
 from aioswitcher.api.packets import GET_STATE_PACKET
@@ -33,6 +34,11 @@ from .consts import (DUMMY_DEVICE_ID, DUMMY_DEVICE_NAME, DUMMY_SESSION_ID,
 async def test_convert_seconds_to_iso_time(
         event_loop: AbstractEventLoop) -> None:
     """Test the convert_seconds_to_iso_time tool."""
+    with raises(CalculationError) as exc_info:
+        await convert_seconds_to_iso_time(event_loop, -1)
+
+    assert exc_info.type is CalculationError
+
     try:
         result = await convert_seconds_to_iso_time(event_loop, TEST_SECONDS)
         await assert_seconds_to_iso_time(TEST_SECONDS, result)
@@ -44,6 +50,11 @@ async def test_convert_seconds_to_iso_time(
 async def test_crc_sign_full_packet_com_key(
         event_loop: AbstractEventLoop) -> None:
     """Test the crc_sign_full_packet_com_key tool."""
+    with raises(EncodingError) as exc_info:
+        await crc_sign_full_packet_com_key(event_loop, "notlongenough")
+
+    assert exc_info.type is EncodingError
+
     try:
         packet = GET_STATE_PACKET.format(
             DUMMY_SESSION_ID, DUMMY_TIMESTAMP, DUMMY_DEVICE_ID)
@@ -57,6 +68,11 @@ async def test_crc_sign_full_packet_com_key(
 @mark.asyncio
 async def test_convert_minutes_to_timer(event_loop: AbstractEventLoop) -> None:
     """Test the convert_minutes_to_timer tool."""
+    with raises(EncodingError) as exc_info:
+        await convert_minutes_to_timer(event_loop, "notintconvertable")
+
+    assert exc_info.type is EncodingError
+
     try:
         result = await convert_minutes_to_timer(event_loop, TEST_MINUTES)
         unpacked = unpack(
@@ -100,6 +116,16 @@ async def test_convert_timedelta_to_auto_off(
 async def test_convert_string_to_device_name(
         event_loop: AbstractEventLoop) -> None:
     """Test the convert_string_to_device_name tool."""
+    with raises(EncodingError) as exc_info_min:
+        await convert_string_to_device_name(event_loop, 'x')
+
+    assert exc_info_min.type is EncodingError
+
+    with raises(EncodingError) as exc_info_max:
+        await convert_string_to_device_name(event_loop, 'x' * 33)
+
+    assert exc_info_max.type is EncodingError
+
     try:
         result = await convert_string_to_device_name(
             event_loop, DUMMY_DEVICE_NAME)
@@ -114,6 +140,12 @@ async def test_convert_string_to_device_name(
 @mark.asyncio
 async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
     """Test the get_days_list_from_bytes tool."""
+    with patch('aioswitcher.tools.HEX_TO_DAY_DICT', 999):
+        with raises(DecodingError) as exc_info:
+            await get_days_list_from_bytes(event_loop, 0)
+
+        assert exc_info.type is DecodingError
+
     try:
         for test_set in TEST_HEX_WEEKDAYS_SET_LIST:
             result = await get_days_list_from_bytes(event_loop, test_set[0])
@@ -127,6 +159,11 @@ async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
              reason="Works locally only, needs re-write. Skipping on Travis.")
 async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
     """Test the get_time_from_bytes tool."""
+    with raises(DecodingError) as exc_info:
+        await get_time_from_bytes(event_loop, "notbytes")
+
+    assert exc_info.type is DecodingError
+
     try:
         result = await get_time_from_bytes(event_loop, DUMMY_START_TIME_SET[0])
         assert result == DUMMY_START_TIME_SET[1]
@@ -137,6 +174,12 @@ async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
 @mark.asyncio
 async def test_get_timestamp(event_loop: AbstractEventLoop) -> None:
     """Test the get_timestamp tool."""
+    with patch('aioswitcher.tools.ENCODING_CODEC', 'bin'):
+        with raises(EncodingError) as exc_info:
+            await get_timestamp(event_loop)
+
+        assert exc_info.type is EncodingError
+
     try:
         result = await get_timestamp(event_loop)
         unpacked = unpack(
@@ -155,6 +198,11 @@ async def test_get_timestamp(event_loop: AbstractEventLoop) -> None:
 @mark.asyncio
 async def test_create_weekdays_value(event_loop: AbstractEventLoop) -> None:
     """Test the create_weekdays_value tool."""
+    with raises(EncodingError) as exc_info:
+        await create_weekdays_value(event_loop, [])
+
+    assert exc_info.type is EncodingError
+
     try:
         result = await create_weekdays_value(event_loop, SCHEDULE_WEEKDAY_LIST)
         assert int(result, 16) == int(sum(SCHEDULE_WEEKDAY_LIST))
@@ -166,6 +214,11 @@ async def test_create_weekdays_value(event_loop: AbstractEventLoop) -> None:
 async def test_timedelta_str_to_schedule_time(
         event_loop: AbstractEventLoop) -> None:
     """Test the timedelta_str_to_schedule_time tool."""
+    with raises(EncodingError) as exc_info:
+        await timedelta_str_to_schedule_time(event_loop, "24:59")
+
+    assert exc_info.type is EncodingError
+
     try:
         random_time = create_random_time()
         result = await timedelta_str_to_schedule_time(event_loop, random_time)
