@@ -32,7 +32,7 @@ git:
   quiet: true
 env:
   global:
-     - CI_SOURCE=TravisCI 
+     - CI_SOURCE=TravisCI
 install:
   - travis_retry pip install tox coveralls codecov
 script:
