@@ -28,6 +28,8 @@ matrix:
       name: "Python 3.7 Unit tests"
       env: TOXENV=py37
       dist: xenial
+      before_install:
+        - sudo timedatectl set-timezone Asia/Jerusalem
 git:
   quiet: true
 env:
