@@ -33,6 +33,8 @@ git:
 env:
   global:
      - CI_SOURCE=TravisCI
+before_install:
+  - export TZ=Asia/Jerusalem
 install:
   - travis_retry pip install codecov coveralls tox
 script:
