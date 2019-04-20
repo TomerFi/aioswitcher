@@ -34,7 +34,8 @@ env:
   global:
      - CI_SOURCE=TravisCI
 before_install:
-  - export TZ=Asia/Jerusalem
+  - echo 'Asia/Jerusalem/Pacific' | sudo tee /etc/timezone
+  - sudo dpkg-reconfigure --frontend noninteractive tzdata
 install:
   - travis_retry pip install codecov coveralls tox
 script:
