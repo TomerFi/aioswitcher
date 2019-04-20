@@ -12,7 +12,8 @@ from aioswitcher.schedules import (
     calc_next_run_for_schedule, SwitcherV2Schedule)
 
 from .asserters import assert_lists_equal
-from .consts import (
+# pylint: disable=unused-import
+from .consts import (  # noqa F401
     DUMMY_FULL_RECCURING_DAYS_LIST, DUMMY_FULL_RECCURING_DURATION,
     DUMMY_FULL_RECCURING_END_TIME, DUMMY_FULL_RECCURING_SCHEDULE_DATA,
     DUMMY_FULL_RECCURING_SCHEDULE_DATA_BYTES, DUMMY_FULL_RECCURING_SCHEDULE_ID,
@@ -26,6 +27,7 @@ from .consts import (
     DUMMY_SELECTIVE_RECCURING_SCHEDULE_DATA_BYTES,
     DUMMY_SELECTIVE_RECCURING_SCHEDULE_ID,
     DUMMY_SELECTIVE_RECCURING_START_TIME)
+# pylint: enable=unused-import
 
 
 @mark.asyncio

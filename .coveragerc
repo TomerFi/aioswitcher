@@ -2,7 +2,7 @@
 source = aioswitcher
 
 [report]
-fail_under = 65.00
+fail_under = 60.00
 precision = 2
 show_missing = true
 skip_covered = true
