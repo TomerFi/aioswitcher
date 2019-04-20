@@ -15,15 +15,24 @@ matrix:
     - python: "3.5.3"
       name: "Python 3.5.3 Pytest with coverage reports"
       env: TOXENV=cov
+      before_install:
+        - echo 'Asia/Jerusalem' | sudo tee /etc/timezone
+        - sudo dpkg-reconfigure --frontend noninteractive tzdata
       after_success: 
         - coveralls
         - codecov
     - python: "3.5.3"
       name: "Python 3.5.3 Unit tests"
       env: TOXENV=py35
+      before_install:
+        - echo 'Asia/Jerusalem' | sudo tee /etc/timezone
+        - sudo dpkg-reconfigure --frontend noninteractive tzdata
     - python: "3.6"
       name: "Python 3.6 Unit tests"
       env: TOXENV=py36
+      before_install:
+        - echo 'Asia/Jerusalem' | sudo tee /etc/timezone
+        - sudo dpkg-reconfigure --frontend noninteractive tzdata
     - python: "3.7"
       name: "Python 3.7 Unit tests"
       env: TOXENV=py37
@@ -32,12 +41,6 @@ matrix:
         - sudo timedatectl set-timezone Asia/Jerusalem
 git:
   quiet: true
-env:
-  global:
-     - CI_SOURCE=TravisCI
-before_install:
-  - echo 'Asia/Jerusalem' | sudo tee /etc/timezone
-  - sudo dpkg-reconfigure --frontend noninteractive tzdata
 install:
   - travis_retry pip install codecov coveralls tox
 script:
