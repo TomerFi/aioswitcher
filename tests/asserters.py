@@ -1,6 +1,6 @@
 """Common assertion tools for use with the Switcher integration test cases."""
 
-from typing import List, Any
+from typing import Any, List, Optional
 
 from aioswitcher.api.messages import (ResponseMessageType,
                                       SwitcherV2BaseResponseMSG)
@@ -23,9 +23,11 @@ async def assert_lists_equal(list1: List[Any], list2: List[Any]) -> None:
         assert item in list2
 
 
-async def assert_api_messege_base_type(msg: SwitcherV2BaseResponseMSG,
-                                       msg_type: ResponseMessageType) -> None:
+async def assert_api_messege_base_type(
+        msg: Optional[SwitcherV2BaseResponseMSG],
+        msg_type: ResponseMessageType) -> None:
     """Assert the basic aioswitcher.api.messages.SwitcherV2BaseResponseMSG."""
+    assert msg
     assert isinstance(msg.unparsed_response, bytes)
     assert msg.successful
     assert msg.msg_type == msg_type

@@ -180,11 +180,13 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
         res = hexlify(response)
         idx = res[90:-8].decode(ENCODING_CODEC)
+        # TODO schdule_detais is yielding List[str] instead of List[bytes]
         schedules_details = [idx[i:i + 32] for i in range(0, len(idx), 32)]
 
         if schedules_details:
             for i in range(len(schedules_details)):
-                schedule = SwitcherV2Schedule(loop, i, schedules_details)
+                schedule = SwitcherV2Schedule(  # type: ignore
+                    loop, i, schedules_details)
                 self._schedule_list.append(schedule)
 
     @property

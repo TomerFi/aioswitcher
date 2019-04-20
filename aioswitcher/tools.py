@@ -136,7 +136,7 @@ async def get_days_list_from_bytes(loop: AbstractEventLoop, data: int) \
     return await loop.run_in_executor(None, _get_days_list_from_bytes, data)
 
 
-def _get_time_from_bytes(data: str) -> str:
+def _get_time_from_bytes(data: bytes) -> str:
     """Extract start/end time from schedule bytes."""
     try:
         timestamp = int(data[6:8] + data[4:6] + data[2:4] + data[0:2], 16)
@@ -146,7 +146,7 @@ def _get_time_from_bytes(data: str) -> str:
         raise DecodingError("failed to extract time from schedule") from ex
 
 
-async def get_time_from_bytes(loop: AbstractEventLoop, data: str) -> str:
+async def get_time_from_bytes(loop: AbstractEventLoop, data: bytes) -> str:
     """Use as async wrapper for calling _get_time_from_bytes."""
     return await loop.run_in_executor(None, _get_time_from_bytes, data)
 

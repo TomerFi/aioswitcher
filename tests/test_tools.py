@@ -160,7 +160,7 @@ async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
 async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
     """Test the get_time_from_bytes tool."""
     with raises(DecodingError) as exc_info:
-        await get_time_from_bytes(event_loop, "notbytes")
+        await get_time_from_bytes(event_loop, "notbytes")  # type: ignore
 
     assert exc_info.type is DecodingError
 

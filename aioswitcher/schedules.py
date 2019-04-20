@@ -22,14 +22,15 @@ class SwitcherV2Schedule:
         self._recurring = False
         self._schedule_id = str(int(schedule_details[idx][0:2], 16))
         self._days = []  # type: List[str]
-        self._schedule_data = WAITING_TEXT
+        self._schedule_data = b''
         self._start_time = WAITING_TEXT
         self._end_time = WAITING_TEXT
         self._duration = WAITING_TEXT
         self._init_future = loop.create_future()
         ensure_future(self.initialize(idx, schedule_details), loop=loop)
 
-    async def initialize(self, idx: int, schedule_details: List[str]) -> None:
+    async def initialize(
+            self, idx: int, schedule_details: List[bytes]) -> None:
         """Finish the initialization of the schedule."""
         if int(schedule_details[idx][2:4], 16) == 1:
             self._enabled = True
@@ -109,17 +110,17 @@ class SwitcherV2Schedule:
         return self._duration
 
     @property
-    def schedule_data(self) -> str:
+    def schedule_data(self) -> bytes:
         """Return the schedule data for managing the schedule."""
         return self._schedule_data
 
     @schedule_data.setter
-    def schedule_data(self, data: str) -> None:
+    def schedule_data(self, data: bytes) -> None:
         """Setter to set the schedule data for managing the schedule."""
-        if isinstance(data, str):
+        if isinstance(data, bytes):
             self._schedule_data = data
         else:
-            raise TypeError("schedeule_data is of type str")
+            raise TypeError("schedeule_data is of type bytes")
 
     @property
     def init_future(self) -> Future:

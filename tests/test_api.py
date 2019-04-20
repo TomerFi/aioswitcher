@@ -30,7 +30,9 @@ async def test_api_login_success(
         reader.read.return_value = api_stage_success_login
         response = await swapi.login()
 
+        assert response
         assert response.session_id == 'f050834e'
+
         await assert_api_messege_base_type(response, ResponseMessageType.LOGIN)
 
 
@@ -65,6 +67,8 @@ async def test_api_get_state_success(
         reader.read.side_effect = api_stage_success_get_state
         response = await swapi.get_state()
 
+        assert response
+
         await wait([response.init_future])
 
         assert response.state == STATE_OFF
@@ -88,6 +92,8 @@ async def test_api_get_state_fail(
         reader = tcp_connection
         reader.read.side_effect = api_stage_fail_get_state
         response = await swapi.get_state()
+
+        assert response
 
         await wait([response.init_future])
 
@@ -161,6 +167,7 @@ async def test_api_get_schedules_success(
             api_stage_success_get_schedules
         response = await swapi.get_schedules()
 
+        assert response
         assert response.found_schedules
 
         futures = []
@@ -192,7 +199,7 @@ async def test_api_delete_schedule_success(
         reader = tcp_connection
         reader.read.side_effect = \
             api_stage_success_delete_schedule
-        response = await swapi.delete_schedule(0)
+        response = await swapi.delete_schedule('0')
 
         await assert_api_messege_base_type(
             response, ResponseMessageType.DELETE_SCHEDULE)
