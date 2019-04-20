@@ -20,9 +20,7 @@ matrix:
         - codecov
     - python: "3.5.3"
       name: "Python 3.5.3 Unit tests"
-      env: 
-        - TOXENV=py35
-        - CI_SOURCE=TravisCI
+      env: TOXENV=py35
     - python: "3.6"
       name: "Python 3.6 Unit tests"
       env: TOXENV=py36
