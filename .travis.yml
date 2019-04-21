@@ -1,7 +1,6 @@
 sudo: false
 language: python
 matrix:
-  fast_finish: true
   include:
     - python: "3.5.3"
       name: "Python 3.5.3 Check sdist manifest"
@@ -43,6 +42,7 @@ matrix:
         - coveralls
         - codecov
 git:
+  depth: 3
   quiet: true
 install:
   - travis_retry pip install codecov coveralls tox

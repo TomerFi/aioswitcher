@@ -1,19 +1,21 @@
 codecov:
-  branch: unit
   notify:
     require_ci_to_pass: yes
 
 coverage:
   precision: 2
   round: down
-  range: "20...100"
+  range: "30...100"
+
+
   status:
     patch: yes
     changes: no
+
     project:
       default:
-        target: 30
-        threshold: 0.09
+        target: 60
+        threshold: 1
 
 parsers:
   gcov:
@@ -25,5 +27,7 @@ parsers:
 
 comment:
   layout: "header, diff"
-  behavior: default
+  behavior: new
   require_changes: no
+  require_base: no
+  require_head: no
