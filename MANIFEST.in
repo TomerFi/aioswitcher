@@ -1,3 +1,15 @@
 include LICENSE
+include MANIFEST.in
 include README.md
-graft aioswitcher
+include requirements.txt
+
+exclude .*
+exclude *.ini
+exclude pylintrc
+exclude requirements_test.txt
+
+global-exclude __pycache__
+global-exclude *.pyc
+
+graft src
+prune tests

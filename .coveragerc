@@ -6,3 +6,5 @@ fail_under = 60.00
 precision = 2
 # show_missing = true
 skip_covered = true
+exclude_lines =
+    if TYPE_CHECKING:
