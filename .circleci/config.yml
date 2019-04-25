@@ -28,7 +28,7 @@ commands:
           command: |
             python -m venv venv
             . venv/bin/activate
-            pip install -q --upgrade pip
+            pip install -q --upgrade pip setuptools
             pip install -q --progress-bar off -r requirements.txt
             pip install -q --progress-bar off -r requirements_test.txt
       - save_cache:
