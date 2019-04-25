@@ -75,6 +75,30 @@ jobs:
       - pre-commands
       - check-manifest
 
+  python35-linters:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - pre-commands
+      - run-linters
+
+  python35-pylint:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - pre-commands
+      - run-pylint
+
+  python35-mypy:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - pre-commands
+      - run-mypy
+
   python35-unittests:
     executor:
       name: python-docker
@@ -110,21 +134,55 @@ jobs:
       - install-test-requirements
       - run-tests
 
+  python35-unittests-coverage-reports:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - pre-commands
+      - install-module
+      - install-requirements
+      - install-test-requirements
+      - run-tests-with-coverage-report
+
 workflows:
   version: "2.1"
   build:
     jobs:
       - python35-manifest
 
-      - python35-unittests:
+      - python35-linters:
           requires:
             - python35-manifest
+
+      - python35-pylint:
+          requires:
+            - python35-manifest
+
+      - python35-mypy:
+          requires:
+            - python35-manifest
+
+      - python35-unittests:
+          requires:
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
 
       - python36-unittests:
           requires:
-            - python35-manifest
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
 
       - python37-unittests:
           requires:
-            - python35-manifest
-        
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
+
+      - python35-unittests-coverage-reports:
+          requires:
+            - python35-unittests
+            - python36-unittests
+            - python37-unittests
