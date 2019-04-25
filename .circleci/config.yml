@@ -71,11 +71,12 @@ commands:
           command: |
             . venv/bin/activate
             mkdir coverage_report
-            pytest -vs --cov --cov-append --cov-config=.coveragerc --cov-report=annotate:coverage_report/cov_annotate
+            pytest -vs --cov --cov-append --cov-config=.coveragerc
+            cp .coverage coverage_report/.coverage
       - persist_to_workspace:
           root: coverage_report/
           paths:
-            - cov_annotate
+            - .coverage
             
 
   run-linters:
@@ -116,7 +117,7 @@ commands:
           name: CodeCov
           command: |
             . venv/bin/activate
-            codecov -v --file ./coverage_report/cov_annotate
+            codecov -v --file coverage_report/.coverage
 
 jobs:
   python35-manifest:
