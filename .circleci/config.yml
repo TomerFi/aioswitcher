@@ -8,7 +8,7 @@ executors:
         default: "3.5.5"
     docker:
       - image: circleci/python:<< parameters.tag >>
-    working_directory: ~/project
+    working_directory: ~/workspace
     environment:
       TZ: "Asia/Jerusalem"
 
@@ -29,8 +29,8 @@ commands:
             python -m venv venv
             . venv/bin/activate
             pip install -q --upgrade pip
-            pip install -q -r requirements.txt
-            pip install -q -r requirements_test.txt
+            pip install -q --progress-bar off -r requirements.txt
+            pip install -q --progress-bar off -r requirements_test.txt
       - save_cache:
           key: modules1--<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
           paths:
@@ -154,8 +154,8 @@ jobs:
     executor:
       name: python-docker
     steps:
-      - prepare-venv
       - checkout
+      - prepare-venv
       - install-module
       - run-tests-with-coverage
 
