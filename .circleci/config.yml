@@ -61,12 +61,12 @@ commands:
           name: Pytest
           command: |
             . venv/bin/activate
-            pytest -vsx  
+            pytest -vs
 
   run-tests-with-coverage:
     description: Run pytest test cases
     steps:
-      - run: pytest -vsx
+      - run:
           name: Pytest
           command: |
             . venv/bin/activate
