@@ -12,10 +12,15 @@ executors:
 
 commands:
   pre-command:
-    description: pre command
+    description: pre commands
     steps:
       - run: sudo pip install --upgrade pip
-      - run: pip install --user setuptools
+      - run: echo 'Asia/Jerusalem' | sudo tee /etc/timezone
+      - run: sudo dpkg-reconfigure --frontend noninteractive tzdata
+
+  install-module:
+    description: install aioswitcher module
+    steps:
       - run: pip install --user .
 
   install-requirements:
@@ -69,6 +74,33 @@ jobs:
     steps:
       - checkout
       - pre-command
+      - install-module
+      - install-requirements
+      - install-test-requirements
+      - run-tests
+
+jobs:
+  python36-unittests:
+    executor:
+      name: python-docker
+      tag: 3.6
+    steps:
+      - checkout
+      - pre-command
+      - install-module
+      - install-requirements
+      - install-test-requirements
+      - run-tests
+
+jobs:
+  python37-unittests:
+    executor:
+      name: python-docker
+      tag: 3.7.1
+    steps:
+      - checkout
+      - pre-command
+      - install-module
       - install-requirements
       - install-test-requirements
       - run-tests
@@ -78,3 +110,5 @@ workflows:
   build:
     jobs:
       - python35-unittests
+      - python36-unittests
+      - python37-unittests
