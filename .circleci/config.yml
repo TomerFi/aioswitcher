@@ -71,6 +71,8 @@ commands:
           command: |
             . venv/bin/activate
             pytest -vs --cov --cov-append --cov-config=.coveragerc
+      - store_artifacts:
+          path: .coverage
 
   run-linters:
     description: Run flake8, pydocstyle and pydocstyle linters
@@ -108,7 +110,7 @@ commands:
           name: CodeCov
           command: |
             . venv/bin/activate
-            codecov
+            codecov -v
 
 jobs:
   python35-manifest:
