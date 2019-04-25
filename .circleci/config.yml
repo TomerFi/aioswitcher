@@ -48,6 +48,8 @@ commands:
     description: run pytest unit testing
     steps:
       - run: python -m pytest -vs --cov --cov-append --cov-config=.coveragerc
+      - run: python -m coveralls
+      - run: python -m codecov
 
   run-linters:
     description: run flake8, pydocstyle and pydocstyle linters

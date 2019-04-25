@@ -1,6 +1,7 @@
 
 # Switcher Boiler Bridge and API Tools
 
+[![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/unit-tests.svg?style=svg)](https://circleci.com/gh/TomerFi/aioswitcher/tree/unit-tests)  
 [![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=unit-tests)](https://travis-ci.org/TomerFi/aioswitcher) 
 [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=unit-tests)](https://coveralls.io/github/TomerFi/aioswitcher?branch=unit-tests) 
 [![codecov](https://codecov.io/gh/TomerFi/aioswitcher/branch/unit-tests/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) 
