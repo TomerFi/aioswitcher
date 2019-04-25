@@ -33,7 +33,7 @@ commands:
     steps:
       - run: pip install --user -r requirements_test.txt
 
-  install-check-manifest:
+  check-manifest:
     description: install check manifest
     steps:
       - run: pip install --user -r check-menifest
@@ -67,9 +67,43 @@ commands:
       - run: python -m mypy --config-file mypy.ini src/ tests/
 
 jobs:
+  python35-manifest:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - check-manifest
+      
+
   python35-unittests:
     executor:
       name: python-docker
+    steps:
+      - checkout
+      - pre-command
+      - install-module
+      - install-requirements
+      - install-test-requirements
+      - run-tests
+
+jobs:
+  python36-unittests:
+    executor:
+      name: python-docker
+      tag: "3.6"
+    steps:
+      - checkout
+      - pre-command
+      - install-module
+      - install-requirements
+      - install-test-requirements
+      - run-tests
+
+jobs:
+  python36-unittests:
+    executor:
+      name: python-docker
+      tag: "3.7.1"
     steps:
       - checkout
       - pre-command
@@ -82,4 +116,17 @@ workflows:
   version: "2.1"
   build:
     jobs:
-      - python35-unittests
+      - python35-manifest
+
+      - python35-unittests:
+          requires:
+            - python35-manifest
+
+      - python36-unittests:
+          requires:
+            - python35-manifest
+
+      - python37-unittests:
+          requires:
+            - python35-manifest
+        
