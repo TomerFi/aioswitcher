@@ -68,3 +68,9 @@ jobs:
       - install-requirements
       - install-test-requirements
       - run-tests
+
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - python35-unittests
