@@ -79,7 +79,6 @@ jobs:
       - install-test-requirements
       - run-tests
 
-jobs:
   python36-unittests:
     executor:
       name: python-docker
@@ -92,7 +91,6 @@ jobs:
       - install-test-requirements
       - run-tests
 
-jobs:
   python37-unittests:
     executor:
       name: python-docker
