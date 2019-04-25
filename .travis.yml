@@ -40,7 +40,7 @@ matrix:
         - sudo dpkg-reconfigure --frontend noninteractive tzdata
       after_success: 
         - coveralls
-        - codecov
+        # - codecov
 git:
   depth: 3
   quiet: true
