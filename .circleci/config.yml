@@ -15,8 +15,7 @@ commands:
     description: pre commands
     steps:
       - run: sudo pip install --upgrade pip
-      - run: echo 'Asia/Jerusalem' | sudo tee /etc/timezone
-      - run: sudo dpkg-reconfigure --frontend noninteractive tzdata
+      - run: sudo timedatectl set-timezone Asia/Jerusalem
 
   install-module:
     description: install aioswitcher module
@@ -78,34 +77,8 @@ jobs:
       - install-test-requirements
       - run-tests
 
-  python36-unittests:
-    executor:
-      name: python-docker
-      tag: "3.6"
-    steps:
-      - checkout
-      - pre-command
-      - install-module
-      - install-requirements
-      - install-test-requirements
-      - run-tests
-
-  python37-unittests:
-    executor:
-      name: python-docker
-      tag: "3.7.1"
-    steps:
-      - checkout
-      - pre-command
-      - install-module
-      - install-requirements
-      - install-test-requirements
-      - run-tests
-
 workflows:
   version: "2.1"
   build:
     jobs:
       - python35-unittests
-      - python36-unittests
-      - python37-unittests
