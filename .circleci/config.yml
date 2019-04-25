@@ -14,7 +14,7 @@ commands:
   pre-command:
     description: pre command
     steps:
-      - run: pip install --user --upgrade pip
+      - run: pip install --user --upgrade pip setuptools
 
   install-requirements:
     description: install requirements.txt
@@ -67,6 +67,7 @@ jobs:
     steps:
       - checkout
       - pre-command
+      - install-requirements
       - install-test-requirements
       - run-tests
 
