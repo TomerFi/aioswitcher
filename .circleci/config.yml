@@ -3,59 +3,59 @@ version: 2.1
 executors:
   python_docker:
     parameters:
-      version:
+      tag:
         type: string
-        default: "3.5.3-jessie"
+        default: 3.5.3-jessie
     docker:
-      image: circleci/python:<< parameters.version >>
+      image: circleci/python:<< parameters.tag >>
     working_directory: ~/project
 
 commands:
   pre-command:
-    description: "update distribution"
+    description: update distribution
     steps:
       - run: sudo apt-get update
 
   install-requirements:
-    description: "install requirements.txt"
+    description: install requirements.txt
     steps:
       - run: pip install -r requirements.txt
 
   install-test-requirements:
-    description: "install requirements_test.txt"
+    description: install requirements_test.txt
     steps:
       - run: pip install -r requirements_test.txt
 
   install-check-manifest:
-    description: "install check manifest"
+    description: install check manifest
     steps:
       - run: pip install -r check-menifest
       - run: check-manifest -v
 
   run-tests:
-    description: "run pytest unit testing"
+    description: run pytest unit testing
     steps:
       - run: pytest -vsx
 
   run-tests-with-coverage-report:
-    description: "run pytest unit testing"
+    description: run pytest unit testing
     steps:
       - run: pytest -vs --cov --cov-append --cov-config=.coveragerc
 
   run-linters:
-    description: "run flake8, pydocstyle and pydocstyle linters"
+    description: run flake8, pydocstyle and pydocstyle linters
     steps:
       - run: flake8 --statistics --count --doctests src/ tests/
       - run: pydocstyle -v --count src/ tests/
       - run: pycodestyle -v --statistics --show-pep8 --count src/ tests/
 
   run-pylint:
-    description: "run pylint"
+    description: run pylint
     steps:
       - run: pylint --disable fixme --rcfile pylintrc src/ tests/
 
   run-mypy:
-    description: "run mypy type checking"
+    description: run mypy type checking
     steps:
       - run: mypy --config-file mypy.ini src/ tests/
 
@@ -63,7 +63,7 @@ jobs:
   python35-unittests:
     executor:
       name: python_docker
-      version: "3.5.3-jessie"
+      tag: 3.5.3-jessie
     steps:
       - checkout
       - install-requirements
