@@ -5,7 +5,7 @@ executors:
     parameters:
       tag:
         type: string
-        default: 3.5.3-jessie
+        default: "3.5.5"
     docker:
       - image: circleci/python:<< parameters.tag >>
     working_directory: ~/project
@@ -70,7 +70,6 @@ jobs:
   python35-unittests:
     executor:
       name: python-docker
-      tag: 3.5.3-jessie
     steps:
       - checkout
       - pre-command
@@ -82,7 +81,7 @@ jobs:
   python36-unittests:
     executor:
       name: python-docker
-      tag: 3.6
+      tag: "3.6"
     steps:
       - checkout
       - pre-command
@@ -94,7 +93,7 @@ jobs:
   python37-unittests:
     executor:
       name: python-docker
-      tag: 3.7.1
+      tag: "3.7.1"
     steps:
       - checkout
       - pre-command
@@ -104,7 +103,7 @@ jobs:
       - run-tests
 
 workflows:
-  version: 2.1
+  version: "2.1"
   build:
     jobs:
       - python35-unittests
