@@ -74,17 +74,15 @@ commands:
           command: |
             . venv/bin/activate
             mkdir coverage_report
-            pytest -vs --cov --cov-append --cov-config=.coveragerc
-            cp .coverage coverage_report/.coverage
-            codecov
+            pytest -vs --cov --cov-append --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
       - persist_to_workspace:
           root: coverage_report/
           paths:
-            - .coverage
+            - coverage.xml
       - store_artifacts:
-          path: .coverage
+          path: coverage.xml
       - store_test_results:
-          path: .coverage
+          path: coverage.xml
 
   run-linters:
     description: Run flake8, pydocstyle and pydocstyle linters
@@ -234,6 +232,6 @@ workflows:
       #      - python35-pylint
       #      - python35-mypy
 
-      #- python35-coverage-reports:
-          #requires:
-            #- python35-unittests
+      - python35-coverage-reports:
+          requires:
+            - python35-unittests
