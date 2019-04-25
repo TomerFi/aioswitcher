@@ -116,7 +116,7 @@ commands:
           name: CodeCov
           command: |
             . venv/bin/activate
-            codecov -v --file coverage_report/cov_annotate
+            codecov -v --file ./coverage_report/cov_annotate
 
 jobs:
   python35-manifest:
