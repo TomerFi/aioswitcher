@@ -12,9 +12,8 @@ executors:
 
 commands:
   pre-command:
-    description: update distribution
+    description: pre command
     steps:
-      - run: sudo apt-get update
       - run: pip install --user --upgrade pip
 
   install-requirements:
