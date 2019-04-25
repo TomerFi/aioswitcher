@@ -36,7 +36,6 @@ commands:
   check-manifest:
     description: install check manifest
     steps:
-      - run: sudo pip install -q --progress-bar off check-manifest
       - run: check-manifest -v
 
   run-tests:
@@ -48,7 +47,7 @@ commands:
     description: run pytest unit testing
     steps:
       - run: pytest -vs --cov --cov-append --cov-config=.coveragerc
-#      - run: coveralls
+      - run: coveralls
       - run: codecov
 
   run-linters:
@@ -75,6 +74,7 @@ jobs:
     steps:
       - checkout
       - pre-commands
+      - install-test-requirements
       - check-manifest
 
   python35-linters:
