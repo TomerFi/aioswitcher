@@ -36,29 +36,29 @@ commands:
   run-tests:
     description: run pytest unit testing
     steps:
-      - run: pytest -vsx
+      - run: python -m pytest -vsx
 
   run-tests-with-coverage-report:
     description: run pytest unit testing
     steps:
-      - run: pytest -vs --cov --cov-append --cov-config=.coveragerc
+      - run: python -m pytest -vs --cov --cov-append --cov-config=.coveragerc
 
   run-linters:
     description: run flake8, pydocstyle and pydocstyle linters
     steps:
-      - run: flake8 --statistics --count --doctests src/ tests/
-      - run: pydocstyle -v --count src/ tests/
-      - run: pycodestyle -v --statistics --show-pep8 --count src/ tests/
+      - run: python -m flake8 --statistics --count --doctests src/ tests/
+      - run: python -m pydocstyle -v --count src/ tests/
+      - run: python -m pycodestyle -v --statistics --show-pep8 --count src/ tests/
 
   run-pylint:
     description: run pylint
     steps:
-      - run: pylint --disable fixme --rcfile pylintrc src/ tests/
+      - run: python -m pylint --disable fixme --rcfile pylintrc src/ tests/
 
   run-mypy:
     description: run mypy type checking
     steps:
-      - run: mypy --config-file mypy.ini src/ tests/
+      - run: python -m mypy --config-file mypy.ini src/ tests/
 
 jobs:
   python35-unittests:
