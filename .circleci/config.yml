@@ -15,21 +15,22 @@ commands:
     description: update distribution
     steps:
       - run: sudo apt-get update
+      - run: pip install --user --upgrade pip
 
   install-requirements:
     description: install requirements.txt
     steps:
-      - run: pip install -r --user requirements.txt
+      - run: pip install --user -r requirements.txt
 
   install-test-requirements:
     description: install requirements_test.txt
     steps:
-      - run: pip install -r --user requirements_test.txt
+      - run: pip install --user -r requirements_test.txt
 
   install-check-manifest:
     description: install check manifest
     steps:
-      - run: pip install -r --user check-menifest
+      - run: pip install --user -r check-menifest
       - run: check-manifest -v
 
   run-tests:
@@ -66,6 +67,7 @@ jobs:
       tag: 3.5.3-jessie
     steps:
       - checkout
+      - pre-command
       - install-requirements
       - install-test-requirements
       - run-tests
