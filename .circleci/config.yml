@@ -81,6 +81,7 @@ jobs:
     steps:
       - checkout
       - pre-commands
+      - install-test-requirements
       - run-linters
 
   python35-pylint:
@@ -89,6 +90,7 @@ jobs:
     steps:
       - checkout
       - pre-commands
+      - install-test-requirements
       - run-pylint
 
   python35-mypy:
@@ -97,6 +99,7 @@ jobs:
     steps:
       - checkout
       - pre-commands
+      - install-test-requirements
       - run-mypy
 
   python35-unittests:
