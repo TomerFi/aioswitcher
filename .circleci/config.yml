@@ -22,7 +22,7 @@ commands:
     steps:
       - restore_cache:
           keys:
-            - modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
+            - v1-modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
       - run:
           name: Create venv for the python modules
           command: |
@@ -32,7 +32,7 @@ commands:
             pip install -q --progress-bar off -r requirements.txt
             pip install -q --progress-bar off -r requirements_test.txt
       - save_cache:
-          key: modules1--<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
+          key: v1-modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
           paths:
             - ./venv
 
@@ -43,7 +43,7 @@ commands:
           name: Install
           command: |
             . venv/bin/activate
-            pip install .
+            pip install -v .
 
   check-manifest:
     description: Run check-manifest test
