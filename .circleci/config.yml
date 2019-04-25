@@ -76,9 +76,9 @@ commands:
           paths:
             - coverage.xml
       - store_artifacts:
-          path: coverage.xml
+          path: coverage_report
       - store_test_results:
-          path: coverage.xml
+          path: coverage_report
 
   run-linters:
     description: Run flake8, pydocstyle and pydocstyle linters
@@ -216,17 +216,17 @@ workflows:
             - python35-pylint
             - python35-mypy
 
-      #- python36-unittests:
-      #    requires:
-      #      - python35-linters
-      #      - python35-pylint
-      #      - python35-mypy
+      - python36-unittests:
+          requires:
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
 
-      #- python37-unittests:
-      #    requires:
-      #      - python35-linters
-      #      - python35-pylint
-      #      - python35-mypy
+      - python37-unittests:
+          requires:
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
 
       - python35-coverage-reports:
           requires:
