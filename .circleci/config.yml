@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  codecov: codecov/codecov@1.0.4
+
 executors:
   python-docker:
     parameters:
@@ -112,7 +115,7 @@ commands:
           name: CodeCov
           command: |
             . venv/bin/activate
-            codecov --file .coverage
+            codecov
 
 jobs:
   python35-manifest:
