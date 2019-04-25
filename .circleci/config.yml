@@ -34,7 +34,7 @@ commands:
       - save_cache:
           key: modules1--<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
           paths:
-            - "venv"
+            - ./venv
 
   install-module:
     description: Install aioswitcher module
@@ -43,7 +43,7 @@ commands:
           name: Install
           command: |
             . venv/bin/activate
-            pip install -q .
+            pip install .
 
   check-manifest:
     description: Run check-manifest test
