@@ -108,7 +108,7 @@ commands:
           name: CodeCov
           command: |
             . venv/bin/activate
-            codecov -v
+            codecov
 
 jobs:
   python35-manifest:
