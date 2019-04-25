@@ -111,7 +111,11 @@ commands:
   publish-codecov:
     description: Publish code coverage to CodeCov
     steps:
-      - run: codecov
+      - run:
+          name: CodeCov
+          command: |
+            . venv/bin/activate
+            codecov
 
 jobs:
   python35-manifest:
