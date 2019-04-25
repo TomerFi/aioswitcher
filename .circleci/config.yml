@@ -16,57 +16,57 @@ commands:
   pre-commands:
     description: pre commands
     steps:
-      - run: sudo pip install --upgrade pip
+      - run: sudo pip install -q --progress-bar off --upgrade pip
 
   install-module:
     description: install aioswitcher module
     steps:
-      - run: pip install --user .
+      - run: sudo pip install -q --progress-bar off .
 
   install-requirements:
     description: install requirements.txt
     steps:
-      - run: pip install --user -r requirements.txt
+      - run: sudo pip install -q --progress-bar off -r requirements.txt
 
   install-test-requirements:
     description: install requirements_test.txt
     steps:
-      - run: pip install --user -r requirements_test.txt
+      - run: sudo pip install -q --progress-bar off -r requirements_test.txt
 
   check-manifest:
     description: install check manifest
     steps:
-      - run: sudo pip install check-manifest
+      - run: sudo pip install -q --progress-bar off check-manifest
       - run: check-manifest -v
 
   run-tests:
     description: run pytest unit testing
     steps:
-      - run: python -m pytest -vsx
+      - run: pytest -vsx
 
   run-tests-with-coverage-report:
     description: run pytest unit testing
     steps:
-      - run: python -m pytest -vs --cov --cov-append --cov-config=.coveragerc
+      - run: pytest -vs --cov --cov-append --cov-config=.coveragerc
       - run: coveralls
       - run: codecov
 
   run-linters:
     description: run flake8, pydocstyle and pydocstyle linters
     steps:
-      - run: python -m flake8 --statistics --count --doctests src/ tests/
-      - run: python -m pydocstyle -v --count src/ tests/
-      - run: python -m pycodestyle -v --statistics --show-pep8 --count src/ tests/
+      - run: flake8 --statistics --count --doctests src/ tests/
+      - run: pydocstyle -v --count src/ tests/
+      - run: pycodestyle -v --statistics --show-pep8 --count src/ tests/
 
   run-pylint:
     description: run pylint
     steps:
-      - run: python -m pylint --disable fixme --rcfile pylintrc src/ tests/
+      - run: pylint --disable fixme --rcfile pylintrc src/ tests/
 
   run-mypy:
     description: run mypy type checking
     steps:
-      - run: python -m mypy --config-file mypy.ini src/ tests/
+      - run: mypy --config-file mypy.ini src/ tests/
 
 jobs:
   python35-manifest:
