@@ -154,8 +154,8 @@ jobs:
     executor:
       name: python-docker
     steps:
-      - checkout
       - prepare-venv
+      - checkout
       - install-module
       - run-tests-with-coverage
 
@@ -212,20 +212,20 @@ workflows:
             - python35-pylint
             - python35-mypy
 
-      - python36-unittests:
-          requires:
-            - python35-linters
-            - python35-pylint
-            - python35-mypy
+      #- python36-unittests:
+      #    requires:
+      #      - python35-linters
+      #      - python35-pylint
+      #      - python35-mypy
 
-      - python37-unittests:
-          requires:
-            - python35-linters
-            - python35-pylint
-            - python35-mypy
+      #- python37-unittests:
+      #    requires:
+      #      - python35-linters
+      #      - python35-pylint
+      #      - python35-mypy
 
       - python35-unittests-coverage-reports:
           requires:
             - python35-unittests
-            - python36-unittests
-            - python37-unittests
+            #- python36-unittests
+            #- python37-unittests
