@@ -73,7 +73,13 @@ commands:
           name: Pytest
           command: |
             . venv/bin/activate
+            mkdir coverage_report
             pytest -vs --cov --cov-append --cov-config=.coveragerc
+            cp .coverage coverage_report/.coverage
+      - persist_to_workspace:
+          root: coverage_report/
+          paths:
+            - .coverage
       - store_artifacts:
           path: .coverage
       - store_test_results:
@@ -111,11 +117,13 @@ commands:
   publish-codecov:
     description: Publish code coverage to CodeCov
     steps:
+      - attach_workspace:
+          at: coverage_report/
       - run:
           name: CodeCov
           command: |
             . venv/bin/activate
-            codecov
+            codecov --file coverage_report/.coverage
 
 jobs:
   python35-manifest:
