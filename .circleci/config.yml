@@ -36,7 +36,7 @@ commands:
   check-manifest:
     description: install check manifest
     steps:
-      - run: pip install --user check-menifest
+      - run: pip install --user check-manifest
       - run: python -m check-manifest -v
 
   run-tests:
