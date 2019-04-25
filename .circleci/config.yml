@@ -7,7 +7,7 @@ executors:
         type: string
         default: 3.5.3-jessie
     docker:
-      image: circleci/python:<< parameters.tag >>
+      - image: circleci/python:<< parameters.tag >>
     working_directory: ~/project
 
 commands:
@@ -71,7 +71,7 @@ jobs:
       - run-tests
 
 workflows:
-  version: 2
+  version: 2.1
   build:
     jobs:
       - python35-unittests
