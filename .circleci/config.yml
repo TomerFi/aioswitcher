@@ -14,7 +14,8 @@ commands:
   pre-command:
     description: pre command
     steps:
-      - run: pip install --user --upgrade pip setuptools
+      - run: sudo pip install --upgrade pip
+      - run: pip install --user setuptools
 
   install-requirements:
     description: install requirements.txt
