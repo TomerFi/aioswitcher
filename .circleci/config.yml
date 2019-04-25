@@ -86,7 +86,6 @@ jobs:
       - install-test-requirements
       - run-tests
 
-jobs:
   python36-unittests:
     executor:
       name: python-docker
@@ -99,8 +98,7 @@ jobs:
       - install-test-requirements
       - run-tests
 
-jobs:
-  python36-unittests:
+  python37-unittests:
     executor:
       name: python-docker
       tag: "3.7.1"

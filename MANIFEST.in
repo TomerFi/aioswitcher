@@ -5,6 +5,7 @@ include requirements.txt
 
 exclude .*
 exclude *.ini
+exclude .circleci/config.yml
 exclude pylintrc
 exclude requirements_test.txt
 
