@@ -67,7 +67,6 @@ jobs:
     steps:
       - checkout
       - pre-command
-      - install-requirements
       - install-test-requirements
       - run-tests
 
