@@ -76,6 +76,7 @@ commands:
             mkdir coverage_report
             pytest -vs --cov --cov-append --cov-config=.coveragerc
             cp .coverage coverage_report/.coverage
+            ls
       - persist_to_workspace:
           root: coverage_report/
           paths:
