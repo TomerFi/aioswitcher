@@ -36,7 +36,7 @@ commands:
   check-manifest:
     description: install check manifest
     steps:
-      - run: pip install --user -r check-menifest
+      - run: pip install --user check-menifest
       - run: python -m check-manifest -v
 
   run-tests:
@@ -74,7 +74,6 @@ jobs:
       - checkout
       - pre-commands
       - check-manifest
-      
 
   python35-unittests:
     executor:
