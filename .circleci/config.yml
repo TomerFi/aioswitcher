@@ -13,7 +13,7 @@ executors:
       TZ: "Asia/Jerusalem"
 
 commands:
-  pre-command:
+  pre-commands:
     description: pre commands
     steps:
       - run: sudo pip install --upgrade pip
@@ -37,7 +37,7 @@ commands:
     description: install check manifest
     steps:
       - run: pip install --user -r check-menifest
-      - run: check-manifest -v
+      - run: python -m check-manifest -v
 
   run-tests:
     description: run pytest unit testing
@@ -72,6 +72,7 @@ jobs:
       name: python-docker
     steps:
       - checkout
+      - pre-commands
       - check-manifest
       
 
@@ -80,7 +81,7 @@ jobs:
       name: python-docker
     steps:
       - checkout
-      - pre-command
+      - pre-commands
       - install-module
       - install-requirements
       - install-test-requirements
@@ -92,7 +93,7 @@ jobs:
       tag: "3.6"
     steps:
       - checkout
-      - pre-command
+      - pre-commands
       - install-module
       - install-requirements
       - install-test-requirements
@@ -104,7 +105,7 @@ jobs:
       tag: "3.7.1"
     steps:
       - checkout
-      - pre-command
+      - pre-commands
       - install-module
       - install-requirements
       - install-test-requirements
