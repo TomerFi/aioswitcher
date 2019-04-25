@@ -9,13 +9,14 @@ executors:
     docker:
       - image: circleci/python:<< parameters.tag >>
     working_directory: ~/project
+    environment:
+      TZ: "Asia/Jerusalem"
 
 commands:
   pre-command:
     description: pre commands
     steps:
       - run: sudo pip install --upgrade pip
-      - run: sudo timedatectl set-timezone Asia/Jerusalem
 
   install-module:
     description: install aioswitcher module
