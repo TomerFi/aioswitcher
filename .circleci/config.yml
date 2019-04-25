@@ -186,7 +186,6 @@ jobs:
     executor:
       name: python-docker
     steps:
-      - prepare-venv
       - publish-codecov
 
 workflows:
