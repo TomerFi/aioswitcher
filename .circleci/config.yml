@@ -1,8 +1,5 @@
 version: 2.1
 
-#orbs:
-  #codecov: codecov/codecov@1.0.4
-
 executors:
   python-docker:
     parameters:
@@ -73,7 +70,6 @@ commands:
           name: Pytest
           command: |
             . venv/bin/activate
-            mkdir coverage_report
             pytest -vs --cov --cov-append --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
       - persist_to_workspace:
           root: coverage_report/
