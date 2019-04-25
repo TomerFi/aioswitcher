@@ -122,7 +122,7 @@ commands:
           name: CodeCov
           command: |
             . venv/bin/activate
-            codecov --file coverage_report/.coverage
+            codecov --file coverage_report/coverage.xml
 
 jobs:
   python35-manifest:
