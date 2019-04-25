@@ -165,7 +165,7 @@ jobs:
       tag: "3.6"
     steps:
       - checkout
-      - prepare-venv
+      - prepare-venv:
           py: "3.6"
       - install-module
       - run-tests
@@ -176,7 +176,7 @@ jobs:
       tag: "3.7.1"
     steps:
       - checkout
-      - prepare-venv
+      - prepare-venv:
           py: "3.7.1"
       - install-module
       - run-tests
