@@ -43,7 +43,7 @@ commands:
           name: Install
           command: |
             . venv/bin/activate
-            pip install -v .
+            pip install .
 
   check-manifest:
     description: Run check-manifest test
@@ -71,11 +71,11 @@ commands:
           command: |
             . venv/bin/activate
             mkdir coverage_report
-            pytest -vs --cov --cov-append --cov-config=.coveragerc
+            pytest -vs --cov --cov-append --cov-config=.coveragerc --cov-report=annotate:coverage_report/cov_annotate
       - persist_to_workspace:
           root: coverage_report/
           paths:
-            - .coverage
+            - cov_annotate
             
 
   run-linters:
