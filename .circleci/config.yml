@@ -48,8 +48,8 @@ commands:
     description: run pytest unit testing
     steps:
       - run: python -m pytest -vs --cov --cov-append --cov-config=.coveragerc
-      - run: python -m coveralls
-      - run: python -m codecov
+      - run: coveralls
+      - run: codecov
 
   run-linters:
     description: run flake8, pydocstyle and pydocstyle linters
@@ -104,17 +104,6 @@ jobs:
       - install-test-requirements
       - run-mypy
 
-  python35-unittests:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - pre-commands
-      - install-module
-      - install-requirements
-      - install-test-requirements
-      - run-tests
-
   python36-unittests:
     executor:
       name: python-docker
@@ -168,12 +157,6 @@ workflows:
           requires:
             - python35-manifest
 
-      - python35-unittests:
-          requires:
-            - python35-linters
-            - python35-pylint
-            - python35-mypy
-
       - python36-unittests:
           requires:
             - python35-linters
@@ -188,6 +171,5 @@ workflows:
 
       - python35-unittests-coverage-reports:
           requires:
-            - python35-unittests
             - python36-unittests
             - python37-unittests
