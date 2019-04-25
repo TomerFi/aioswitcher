@@ -62,8 +62,8 @@ commands:
 jobs:
   python35-unittests:
     executor:
-      name: python_docker
-      tag: 3.5.3-jessie
+      python_docker:
+        tag: 3.5.3-jessie
     steps:
       - checkout
       - install-requirements
