@@ -16,6 +16,7 @@ commands:
     steps:
       - run: sudo pip install --upgrade pip
       - run: pip install --user setuptools
+      - run: python setup.py
 
   install-requirements:
     description: install requirements.txt
