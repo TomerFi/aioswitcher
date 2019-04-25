@@ -70,6 +70,7 @@ commands:
           name: Pytest
           command: |
             . venv/bin/activate
+            mkdir coverage_report
             pytest -vs --cov --cov-append --cov-config=.coveragerc
       - persist_to_workspace:
           root: coverage_report/
