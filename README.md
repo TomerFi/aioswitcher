@@ -1,8 +1,9 @@
 
 # Switcher Boiler Bridge and API Tools
 [![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=unit-tests)](https://travis-ci.org/TomerFi/aioswitcher) [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=unit-tests)](https://coveralls.io/github/TomerFi/aioswitcher?branch=unit-tests) [![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/unit-tests.svg?style=shield)](https://circleci.com/gh/TomerFi/aioswitcher/tree/unit-tests) [![CodeCov](https://codecov.io/gh/TomerFi/aioswitcher/branch/unit-tests/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) [![Requirements Status](https://requires.io/github/TomerFi/aioswitcher/requirements.svg?branch=unit-tests)](https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=unit-tests)  
-***
+
 [![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher) ![Python Wheel](https://img.shields.io/pypi/format/aioswitcher.svg) ![Python Versions](https://img.shields.io/pypi/pyversions/django.svg) ![License](https://img.shields.io/pypi/l/aioswitcher.svg) 
+
 ![Open Issues](https://img.shields.io/github/issues-raw/tomerfi/aioswitcher.svg) ![Commit Activity Month](https://img.shields.io/github/commit-activity/m/tomerfi/aioswitcher.svg) ![Last Commit](https://img.shields.io/github/last-commit/tomerfi/aioswitcher.svg) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)  
 ***
 
