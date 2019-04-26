@@ -1,15 +1,17 @@
 """Switcher Packet Response Messages."""
 
 from asyncio import AbstractEventLoop, ensure_future, Future
-from typing import Optional, List
 from binascii import hexlify
 from enum import Enum
-from logging import getLogger
+from typing import List
 
 from ..tools import convert_seconds_to_iso_time
-from ..consts import (ENCODING_CODEC, STATE_ON, STATE_RESPONSE_ON, STATE_OFF,
-                      STATE_RESPONSE_OFF, STATE_UNKNOWN)
+from ..consts import (ENCODING_CODEC, HANDLED_EXCEPTIONS, STATE_ON,
+                      STATE_RESPONSE_ON, STATE_OFF, STATE_RESPONSE_OFF,
+                      STATE_UNKNOWN)
+from ..errors import DecodingError
 from ..schedules import SwitcherV2Schedule
+
 
 # pylint: disable=invalid-name
 ResponseMessageType = Enum(
@@ -18,8 +20,6 @@ ResponseMessageType = Enum(
      'DISABLE_ENABLE_SCHEDULE', 'GET_SCHEDULES', 'LOGIN', 'STATE',
      'UPDATE_NAME'])
 # pylint: enable=invalid-name
-
-_LOGGER = getLogger(__name__)
 
 
 class SwitcherV2BaseResponseMSG:
@@ -56,8 +56,9 @@ class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
         super().__init__(loop, response, ResponseMessageType.LOGIN)
         try:
             self._session_id = hexlify(response)[16:24].decode(ENCODING_CODEC)
-        except Exception as ex:
-            raise Exception("failed to parse login response message") from ex
+        except HANDLED_EXCEPTIONS as exc:
+            raise DecodingError(
+                "failed to parse login response message") from exc
 
     @property
     def session_id(self) -> str:
@@ -109,7 +110,7 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                 else STATE_UNKNOWN
 
             self.init_future.set_result(self)
-        except (ValueError, IndexError, RuntimeError) as exc:
+        except HANDLED_EXCEPTIONS as exc:
             self.init_future.set_exception(exc)
 
         return None
@@ -130,12 +131,12 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
         return self._auto_off_set
 
     @property
-    def power(self) -> Optional[int]:
+    def power(self) -> int:
         """Return the current power consumption in watts."""
         return self._power_consumption
 
     @property
-    def current(self) -> Optional[float]:
+    def current(self) -> float:
         """Return the power consumption in amps."""
         return self._electric_current
 
@@ -179,11 +180,13 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
         res = hexlify(response)
         idx = res[90:-8].decode(ENCODING_CODEC)
+        # TODO schdule_detais is yielding List[str] instead of List[bytes]
         schedules_details = [idx[i:i + 32] for i in range(0, len(idx), 32)]
 
         if schedules_details:
             for i in range(len(schedules_details)):
-                schedule = SwitcherV2Schedule(loop, i, schedules_details)
+                schedule = SwitcherV2Schedule(  # type: ignore
+                    loop, i, schedules_details)
                 self._schedule_list.append(schedule)
 
     @property

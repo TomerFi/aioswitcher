@@ -5,7 +5,9 @@ from binascii import unhexlify
 from datetime import datetime
 from typing import List
 
-from .consts import ALL_DAYS, MONDAY, SUNDAY, WAITING_TEXT, WEEKDAY_TUP
+from .consts import (ALL_DAYS, MONDAY, SCHEDULE_DUE_ANOTHER_DAY_FORMAT,
+                     SCHEDULE_DUE_TODAY_FORMAT, SCHEDULE_DUE_TOMMOROW_FORMAT,
+                     SUNDAY, WAITING_TEXT, WEEKDAY_TUP)
 from .tools import get_days_list_from_bytes, get_time_from_bytes
 
 
@@ -13,21 +15,22 @@ class SwitcherV2Schedule:
     """Represnation of the switcher version 2 schedule."""
 
     def __init__(self, loop: AbstractEventLoop, idx: int,
-                 schedule_details: List[str]) -> None:
+                 schedule_details: List[bytes]) -> None:
         """Initialize the schedule."""
         self._loop = loop
         self._enabled = False
         self._recurring = False
         self._schedule_id = str(int(schedule_details[idx][0:2], 16))
         self._days = []  # type: List[str]
-        self._schedule_data = WAITING_TEXT
+        self._schedule_data = b''
         self._start_time = WAITING_TEXT
         self._end_time = WAITING_TEXT
         self._duration = WAITING_TEXT
         self._init_future = loop.create_future()
         ensure_future(self.initialize(idx, schedule_details), loop=loop)
 
-    async def initialize(self, idx: int, schedule_details: List[str]) -> None:
+    async def initialize(
+            self, idx: int, schedule_details: List[bytes]) -> None:
         """Finish the initialization of the schedule."""
         if int(schedule_details[idx][2:4], 16) == 1:
             self._enabled = True
@@ -76,7 +79,10 @@ class SwitcherV2Schedule:
     @enabled.setter
     def enabled(self, value: bool) -> None:
         """Setter to set the device as enabled or disabled."""
-        self._enabled = value
+        if isinstance(value, bool):
+            self._enabled = value
+        else:
+            raise TypeError("enabled is of type bool")
 
     @property
     def recurring(self) -> bool:
@@ -104,14 +110,17 @@ class SwitcherV2Schedule:
         return self._duration
 
     @property
-    def schedule_data(self) -> str:
+    def schedule_data(self) -> bytes:
         """Return the schedule data for managing the schedule."""
         return self._schedule_data
 
     @schedule_data.setter
-    def schedule_data(self, data: str) -> None:
+    def schedule_data(self, data: bytes) -> None:
         """Setter to set the schedule data for managing the schedule."""
-        self._schedule_data = data
+        if isinstance(data, bytes):
+            self._schedule_data = data
+        else:
+            raise TypeError("schedeule_data is of type bytes")
 
     @property
     def init_future(self) -> Future:
@@ -139,14 +148,17 @@ def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
         found_day = -1
         if schedule_details.days == [ALL_DAYS]:
             if current_time < start_time:
-                return "Due today at " + schedule_details.start_time
-            return "Due tommorow at " + schedule_details.start_time
+                return SCHEDULE_DUE_TODAY_FORMAT.format(
+                    schedule_details.start_time)
+            return SCHEDULE_DUE_TOMMOROW_FORMAT.format(
+                schedule_details.start_time)
 
         for day in schedule_details.days:
             set_weekday = WEEKDAY_TUP.index(day)
 
             if set_weekday == current_weekday and current_time < start_time:
-                return "Due today at " + schedule_details.start_time
+                return SCHEDULE_DUE_TODAY_FORMAT.format(
+                    schedule_details.start_time)
 
             if found_day == -1 or found_day > set_weekday:
                 found_day = set_weekday
@@ -155,12 +167,13 @@ def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
                 or (found_day == WEEKDAY_TUP.index(MONDAY)
                     and current_weekday == WEEKDAY_TUP.index(SUNDAY))):
 
-            return "Due tommorow at " + schedule_details.start_time
+            return SCHEDULE_DUE_TOMMOROW_FORMAT.format(
+                schedule_details.start_time)
 
-        return ("Due next " + WEEKDAY_TUP[found_day]
-                + " at " + schedule_details.start_time)
+        return SCHEDULE_DUE_ANOTHER_DAY_FORMAT.format(
+            WEEKDAY_TUP[found_day], schedule_details.start_time)
 
-    return "Due today at " + schedule_details.start_time
+    return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)
 
 
 async def calc_next_run_for_schedule(

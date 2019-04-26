@@ -4,11 +4,13 @@ from asyncio import AbstractEventLoop, Event, Queue
 from functools import partial
 from socket import AF_INET
 from types import TracebackType
-from typing import Optional, Type
+from typing import Optional, Type, TYPE_CHECKING
 
 from ..consts import SOCKET_BIND_TUP
-from ..devices import SwitcherV2Device  # noqa F401
 from ..protocols import SwitcherV2UdpProtocolFactory
+
+if TYPE_CHECKING:
+    from ..devices import SwitcherV2Device
 
 
 class SwitcherV2Bridge():

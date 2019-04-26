@@ -1,0 +1,50 @@
+sudo: false
+language: python
+matrix:
+  include:
+    - python: "3.5.3"
+      name: "Python 3.5.3 Check sdist manifest"
+      env: TOXENV=manifest
+    - python: "3.5.3"
+      name: "Python 3.5.3 Lint tests (flake8, pydocstyle, pycodestyle)"
+      env: TOXENV=lint
+    - python: "3.5.3"
+      name: "Python 3.5.3 Pylint test"
+      env: TOXENV=pylint
+    - python: "3.5.3"
+      name: "Python 3.5.3 Static-Typing test"
+      env: TOXENV=typing
+    - python: "3.5.3"
+      name: "Python 3.5.3 Unit tests"
+      env: TOXENV=py35
+      before_install:
+        - echo 'Asia/Jerusalem' | sudo tee /etc/timezone
+        - sudo dpkg-reconfigure --frontend noninteractive tzdata
+    - python: "3.6"
+      name: "Python 3.6 Unit tests"
+      env: TOXENV=py36
+      before_install:
+        - echo 'Asia/Jerusalem' | sudo tee /etc/timezone
+        - sudo dpkg-reconfigure --frontend noninteractive tzdata
+    - python: "3.7"
+      name: "Python 3.7 Unit tests"
+      env: TOXENV=py37
+      dist: xenial
+      before_install:
+        - sudo timedatectl set-timezone Asia/Jerusalem
+    - python: "3.5.3"
+      name: "Python 3.5.3 Pytest with coverage reports"
+      env: TOXENV=cov
+      before_install:
+        - echo 'Asia/Jerusalem' | sudo tee /etc/timezone
+        - sudo dpkg-reconfigure --frontend noninteractive tzdata
+      after_success: 
+        - coveralls
+        # - codecov
+git:
+  depth: 3
+  quiet: true
+install:
+  - travis_retry pip install codecov coveralls tox
+script:
+  - travis_wait tox

@@ -7,7 +7,8 @@ from struct import pack
 from time import localtime, mktime, strftime, strptime, time as time_time
 from typing import List
 
-from .consts import HEX_TO_DAY_DICT, ENCODING_CODEC, REMOTE_KEY
+from .consts import (HANDLED_EXCEPTIONS, HEX_TO_DAY_DICT, ENCODING_CODEC,
+                     REMOTE_KEY, STRUCT_PACKING_FORMAT)
 from .errors import CalculationError, DecodingError, EncodingError
 
 
@@ -19,8 +20,7 @@ def _convert_seconds_to_iso_time(all_seconds: int) -> str:
 
         return datetime_time(hour=hours, minute=minutes,
                              second=seconds).isoformat()
-    except (ValueError, FloatingPointError,
-            ZeroDivisionError, RuntimeError) as ex:
+    except HANDLED_EXCEPTIONS as ex:
         raise CalculationError("failed to convert seconds to iso time") from ex
 
 
@@ -45,7 +45,7 @@ def _crc_sign_full_packet_com_key(data: str) -> str:
         data = data + crc[6:8] + crc[4:6]
 
         return data
-    except (ValueError, IndexError, RuntimeError) as ex:
+    except HANDLED_EXCEPTIONS as ex:
         raise EncodingError("failed to sign crc") from ex
 
 
@@ -59,8 +59,9 @@ async def crc_sign_full_packet_com_key(loop: AbstractEventLoop, data: str) \
 def _convert_minutes_to_timer(minutes: str) -> str:
     """Convert minutes to hex for timer."""
     try:
-        return hexlify(pack('<I', int(minutes) * 60)).decode(ENCODING_CODEC)
-    except (ValueError, IndexError, RuntimeError) as ex:
+        return hexlify(pack(
+            STRUCT_PACKING_FORMAT, int(minutes) * 60)).decode(ENCODING_CODEC)
+    except HANDLED_EXCEPTIONS as ex:
         raise EncodingError(
             "failed to create timer from {} minutes".format(
                 str(minutes))) from ex
@@ -79,9 +80,10 @@ def _convert_timedelta_to_auto_off(full_time: timedelta) -> str:
         hours, minutes = divmod(minutes, 60)
         seconds = int(hours) * 3600 + int(minutes) * 60
         if 3599 < seconds < 86341:
-            return hexlify(pack('<I', int(seconds))).decode(ENCODING_CODEC)
+            return hexlify(pack(
+                STRUCT_PACKING_FORMAT, int(seconds))).decode(ENCODING_CODEC)
         raise ValueError("can only handle 1 to 24 hours on auto-off set")
-    except (ValueError, ZeroDivisionError, RuntimeError) as ex:
+    except HANDLED_EXCEPTIONS as ex:
         raise EncodingError(
             "failed to create auto-off from {} timedelta".format(
                 str(full_time))) from ex
@@ -97,12 +99,14 @@ async def convert_timedelta_to_auto_off(
 def _convert_string_to_device_name(name: str) -> str:
     """Convert string to device name."""
     try:
-        return (hexlify(name.encode(
-            ENCODING_CODEC)) + ((32 - len(name)) * "00").encode(
-                ENCODING_CODEC)).decode(ENCODING_CODEC)
-    except (ValueError, IndexError, RuntimeError) as ex:
+        if 1 < len(name) < 33:
+            return (hexlify(name.encode(
+                ENCODING_CODEC)) + ((32 - len(name)) * "00").encode(
+                    ENCODING_CODEC)).decode(ENCODING_CODEC)
+        raise ValueError("name length can vary from 2 to 32.")
+    except HANDLED_EXCEPTIONS as ex:
         raise EncodingError(
-            "failed to convert " + name + " to device name") from ex
+            "failed to convert " + str(name) + " to device name") from ex
 
 
 async def convert_string_to_device_name(loop: AbstractEventLoop, name: str) \
@@ -121,7 +125,7 @@ def _get_days_list_from_bytes(data: int) -> List[str]:
                 days_list.append(HEX_TO_DAY_DICT[day])
 
         return days_list
-    except (ValueError, IndexError, RuntimeError) as ex:
+    except HANDLED_EXCEPTIONS as ex:
         raise DecodingError("failed to extract week days from schedule") \
             from ex
 
@@ -132,17 +136,17 @@ async def get_days_list_from_bytes(loop: AbstractEventLoop, data: int) \
     return await loop.run_in_executor(None, _get_days_list_from_bytes, data)
 
 
-def _get_time_from_bytes(data: str) -> str:
-    """Extract start/end time from shcedule bytes."""
+def _get_time_from_bytes(data: bytes) -> str:
+    """Extract start/end time from schedule bytes."""
     try:
         timestamp = int(data[6:8] + data[4:6] + data[2:4] + data[0:2], 16)
 
         return strftime("%H:%M", localtime(timestamp))
-    except (ValueError, IndexError, RuntimeError) as ex:
+    except HANDLED_EXCEPTIONS as ex:
         raise DecodingError("failed to extract time from schedule") from ex
 
 
-async def get_time_from_bytes(loop: AbstractEventLoop, data: str) -> str:
+async def get_time_from_bytes(loop: AbstractEventLoop, data: bytes) -> str:
     """Use as async wrapper for calling _get_time_from_bytes."""
     return await loop.run_in_executor(None, _get_time_from_bytes, data)
 
@@ -150,9 +154,10 @@ async def get_time_from_bytes(loop: AbstractEventLoop, data: str) -> str:
 def _get_timestamp() -> str:
     """Generate timestamp."""
     try:
-        return hexlify(pack('<I', int(round(time_time())))).decode(
-            ENCODING_CODEC)
-    except (ValueError, RuntimeError) as ex:
+        return hexlify(pack(
+            STRUCT_PACKING_FORMAT, int(round(time_time())))).decode(
+                ENCODING_CODEC)
+    except HANDLED_EXCEPTIONS as ex:
         raise EncodingError('failed to generate timestamp') from ex
 
 
@@ -164,8 +169,10 @@ async def get_timestamp(loop: AbstractEventLoop) -> str:
 def _create_weekdays_value(requested_days: List[int]) -> str:
     """Create weekdays value for creating a new schedule."""
     try:
-        return "{:02x}".format(int(sum(requested_days)))
-    except (ValueError, RuntimeError) as ex:
+        if requested_days:
+            return "{:02x}".format(int(sum(requested_days)))
+        raise ValueError("days list is empty")
+    except HANDLED_EXCEPTIONS as ex:
         raise EncodingError('failed to create weekdays value') from ex
 
 
@@ -182,12 +189,13 @@ def _timedelta_str_to_schedule_time(time_value: str) -> str:
         return_time = mktime(strptime(
             strftime("%d/%m/%Y")
             + " "
-            + str(time_value).split(":")[0]
+            + time_value.split(":")[0]
             + ":"
-            + str(time_value).split(":")[1], "%d/%m/%Y %H:%M"))
+            + time_value.split(":")[1], "%d/%m/%Y %H:%M"))
 
-        return hexlify(pack('<I', int(return_time))).decode(ENCODING_CODEC)
-    except (ValueError, IndexError, RuntimeError) as ex:
+        return hexlify(pack(
+            STRUCT_PACKING_FORMAT, int(return_time))).decode(ENCODING_CODEC)
+    except HANDLED_EXCEPTIONS as ex:
         raise EncodingError(
             "failed to convert time value to schedule time") from ex
 

@@ -1,0 +1,233 @@
+version: 2.1
+
+executors:
+  python-docker:
+    parameters:
+      tag:
+        type: string
+        default: "3.5.5"
+    docker:
+      - image: circleci/python:<< parameters.tag >>
+    working_directory: ~/workspace
+    environment:
+      TZ: "Asia/Jerusalem"
+
+commands:
+  prepare-venv:
+    description: Prepare the virtual environment
+    parameters:
+      py:
+        type: string
+        default: "3.5.5"
+    steps:
+      - restore_cache:
+          keys:
+            - v1-modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
+      - run:
+          name: Create venv for the python modules
+          command: |
+            python -m venv venv
+            . venv/bin/activate
+            pip install -q --upgrade pip setuptools
+            pip install -q --progress-bar off -r requirements.txt
+            pip install -q --progress-bar off -r requirements_test.txt
+      - save_cache:
+          key: v1-modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
+          paths:
+            - ./venv
+
+  install-module:
+    description: Install aioswitcher module
+    steps:
+      - run:
+          name: Install
+          command: |
+            . venv/bin/activate
+            pip install .
+
+  check-manifest:
+    description: Run check-manifest test
+    steps:
+      - run:
+          name: Check-manifest
+          command: |
+            . venv/bin/activate
+            check-manifest -v
+
+  run-tests:
+    description: Run pytest test cases
+    steps:
+      - run:
+          name: Pytest
+          command: |
+            . venv/bin/activate
+            pytest -vs
+
+  run-tests-with-coverage:
+    description: Run pytest test cases
+    steps:
+      - run:
+          name: Pytest
+          command: |
+            . venv/bin/activate
+            pytest -vs --cov --cov-append --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+      - persist_to_workspace:
+          root: coverage_report/
+          paths:
+            - coverage.xml
+      - store_artifacts:
+          path: coverage_report
+      - store_test_results:
+          path: coverage_report
+
+  run-linters:
+    description: Run flake8, pydocstyle and pydocstyle linters
+    steps:
+      - run:
+          name: Linters
+          command: |
+            . venv/bin/activate
+            flake8 --statistics --count --doctests src/ tests/
+            pydocstyle -v --count src/ tests/
+            pycodestyle -v --statistics --show-pep8 --count src/ tests/
+
+  run-pylint:
+    description: Run pylint
+    steps:
+      - run:
+          name: Pylint
+          command: |
+            . venv/bin/activate
+            pylint --disable fixme --rcfile pylintrc src/ tests/
+
+  run-mypy:
+    description: Run mypy type checking
+    steps:
+      - run:
+          name: Mypy
+          command: |
+            . venv/bin/activate
+            mypy --config-file mypy.ini src/ tests/
+
+  publish-codecov:
+    description: Publish code coverage to CodeCov
+    steps:
+      - attach_workspace:
+          at: coverage_report/
+      - run:
+          name: CodeCov
+          command: |
+            . venv/bin/activate
+            codecov --file coverage_report/coverage.xml
+
+jobs:
+  python35-manifest:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - check-manifest
+
+  python35-linters:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - run-linters
+
+  python35-pylint:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - run-pylint
+
+  python35-mypy:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - run-mypy
+
+  python35-unittests:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - install-module
+      - run-tests-with-coverage
+
+  python36-unittests:
+    executor:
+      name: python-docker
+      tag: "3.6"
+    steps:
+      - checkout
+      - prepare-venv:
+          py: "3.6"
+      - install-module
+      - run-tests
+
+  python37-unittests:
+    executor:
+      name: python-docker
+      tag: "3.7.1"
+    steps:
+      - checkout
+      - prepare-venv:
+          py: "3.7.1"
+      - install-module
+      - run-tests
+
+  python35-coverage-reports:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - publish-codecov
+
+workflows:
+  version: "2.1"
+  build:
+    jobs:
+      - python35-manifest
+
+      - python35-linters:
+          requires:
+            - python35-manifest
+
+      - python35-pylint:
+          requires:
+            - python35-manifest
+
+      - python35-mypy:
+          requires:
+            - python35-manifest
+
+      - python35-unittests:
+          requires:
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
+
+      - python36-unittests:
+          requires:
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
+
+      - python37-unittests:
+          requires:
+            - python35-linters
+            - python35-pylint
+            - python35-mypy
+
+      - python35-coverage-reports:
+          requires:
+            - python35-unittests

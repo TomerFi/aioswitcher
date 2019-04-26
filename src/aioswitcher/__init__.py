@@ -4,4 +4,4 @@
 name = 'aioswitcher'
 # pylint: enable=invalid-name
 
-__all__ = ['api', 'bridge', 'devices', 'schedules']
+__all__ = ['api', 'bridge', 'devices', 'schedules', 'tools']

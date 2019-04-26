@@ -1,0 +1,16 @@
+include LICENSE
+include MANIFEST.in
+include README.md
+include requirements.txt
+
+exclude .*
+exclude *.ini
+exclude .circleci/config.yml
+exclude pylintrc
+exclude requirements_test.txt
+
+global-exclude __pycache__
+global-exclude *.pyc
+
+graft src
+prune tests

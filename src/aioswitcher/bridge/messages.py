@@ -123,6 +123,11 @@ class SwitcherV2BroadcastMSG():
         return self._device_id
 
     @property
+    def power(self) -> int:
+        """Return the power consumptionin watts."""
+        return self._power_consumption
+
+    @property
     def device_state(self) -> str:
         """Return the state of the device."""
         return self._device_state
@@ -133,19 +138,14 @@ class SwitcherV2BroadcastMSG():
         return self._remaining_time_to_off
 
     @property
-    def auto_off_set(self) -> str:
-        """Return the auto-off configuration value."""
-        return self._auto_off_set
-
-    @property
-    def power(self) -> int:
-        """Return the power consumptionin watts."""
-        return self._power_consumption
-
-    @property
     def current(self) -> float:
         """Return the power consumptionin amps."""
         return self._electric_current
+
+    @property
+    def auto_off_set(self) -> str:
+        """Return the auto-off configuration value."""
+        return self._auto_off_set
 
     @property
     def init_future(self) -> Future:
