@@ -5,7 +5,6 @@
 [![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher) ![Python Wheel](https://img.shields.io/pypi/format/aioswitcher.svg) ![Python Versions](https://img.shields.io/pypi/pyversions/django.svg) ![License](https://img.shields.io/pypi/l/aioswitcher.svg) 
 
 ![Open Issues](https://img.shields.io/github/issues-raw/tomerfi/aioswitcher.svg) ![Commit Activity Month](https://img.shields.io/github/commit-activity/m/tomerfi/aioswitcher.svg) ![Last Commit](https://img.shields.io/github/last-commit/tomerfi/aioswitcher.svg) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)  
-***
 
 Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
 This module was applicable thanks to the amazing R&D performed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
