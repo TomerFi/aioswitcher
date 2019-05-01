@@ -214,8 +214,16 @@ async def run_as_context_manager() -> None:
         # disable or enable a schedule
         # schedule_data = (SwitcherV2Schedule).schedule_data
         # response: messages.SwitcherV2DisableEnableScheduleResponseMSG
+        #
+        # the following will enable the schedule:
+        # updated_schedule_data = (
+        #    schedule_data[0:2] + consts.ENABLE_SCHEDULE + schedule_data[4:])
+        #
+        # the following will disable the schedule:
+        # updated_schedule_data = (
+        #    schedule_data[0:2] + consts.DISABLE_SCHEDULE + schedule_data[4:])
         enable_disable_response = await swapi.disable_enable_schedule(
-            schedule_data)
+            updated_schedule_data)
 
         # delete a schedule (0 <= schedule_id <= 7)
         # schedule_id = (SwitcherV2Schedule).schedule_id
