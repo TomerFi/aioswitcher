@@ -1,5 +1,5 @@
 
-# Switcher Boiler Bridge and API Tools
+# Switcher Boiler Bridge and Unofficial API Tools
 [![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=master)](https://travis-ci.org/TomerFi/aioswitcher) [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=master)](https://coveralls.io/github/TomerFi/aioswitcher?branch=master) [![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/master.svg?style=shield)](https://circleci.com/gh/TomerFi/aioswitcher/tree/master) [![CodeCov](https://codecov.io/gh/TomerFi/aioswitcher/branch/master/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) [![Requirements Status](https://requires.io/github/TomerFi/aioswitcher/requirements.svg?branch=master)](https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=master)  
 
 [![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher) ![Python Wheel](https://img.shields.io/pypi/format/aioswitcher.svg) ![Python Versions](https://img.shields.io/pypi/pyversions/django.svg) ![License](https://img.shields.io/pypi/l/aioswitcher.svg) 
@@ -320,7 +320,7 @@ Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Cla
 | *auto_off* | `str` | Return the auto-off configuration value. |
 | *power* | `Optional[int]` | Return the current power consumption in watts. |
 | *current* | `Optional[float]` | Return the power consumption in amps. |
-| *init_future* | `asyncio.Future` | Return the future of the initialization. As the initiliazation of this message requires some asyncronous actions, please use `await init_future.result()` to get the message object. |
+| *init_future* | `asyncio.Future` | Return the future of the initialization. As the initiliazation of this message requires some asyncronous actions, please use `init_future.result()` to get the message object. |
 
 #### SwitcherV2ControlResponseMSG (SwitcherV2BaseResponseMSG)
 - *ResponseMessageType.CONTROL*
