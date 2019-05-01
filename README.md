@@ -1,5 +1,5 @@
 
-# Switcher Boiler Bridge and Unofficial API Tools
+# Switcher Boiler Unofficial Bridge and API Tools
 [![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=master)](https://travis-ci.org/TomerFi/aioswitcher) [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=master)](https://coveralls.io/github/TomerFi/aioswitcher?branch=master) [![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/master.svg?style=shield)](https://circleci.com/gh/TomerFi/aioswitcher/tree/master) [![CodeCov](https://codecov.io/gh/TomerFi/aioswitcher/branch/master/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) [![Requirements Status](https://requires.io/github/TomerFi/aioswitcher/requirements.svg?branch=master)](https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=master)  
 
 [![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher) ![Python Wheel](https://img.shields.io/pypi/format/aioswitcher.svg) ![Python Versions](https://img.shields.io/pypi/pyversions/django.svg) ![License](https://img.shields.io/pypi/l/aioswitcher.svg) 
