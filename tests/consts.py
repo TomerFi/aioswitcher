@@ -1,7 +1,9 @@
 """Constants for the Switcher integration tests."""
 
 from datetime import timedelta
+# pylint: disable=unused-import
 from typing import List
+# pylint: enable=unused-import
 
 from aioswitcher.consts import (DAY_TO_INT_DICT, FRIDAY, MONDAY, SATURDAY,
                                 SUNDAY, THURSDAY, TUESDAY, WEDNESDAY)
