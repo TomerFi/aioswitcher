@@ -6,14 +6,14 @@ matrix:
       name: "Python 3.5.3 Check sdist manifest"
       env: TOXENV=manifest
     - python: "3.5.3"
-      name: "Python 3.5.3 Lint tests (flake8, pydocstyle, pycodestyle)"
+      name: "Python 3.5.3 Lint tests (flake8, pydocstyle, pycodestyle, pylint)"
       env: TOXENV=lint
-    - python: "3.5.3"
-      name: "Python 3.5.3 Pylint test"
-      env: TOXENV=pylint
     - python: "3.5.3"
       name: "Python 3.5.3 Static-Typing test"
       env: TOXENV=typing
+    - python: "3.5.3"
+      name: "Python 3.5.3 Code security tests (bandit)"
+      env: TOXENV=codesec
     - python: "3.5.3"
       name: "Python 3.5.3 Unit tests"
       env: TOXENV=py35
