@@ -110,8 +110,8 @@ commands:
             . venv/bin/activate
             mypy --config-file mypy.ini src/ tests/
 
-  publish-codecov:
-    description: Publish code coverage to CodeCov
+  publish-codverage:
+    description: Publish code coverage to CodeCov and Codacy
     steps:
       - attach_workspace:
           at: coverage_report/
@@ -120,6 +120,7 @@ commands:
           command: |
             . venv/bin/activate
             codecov --file coverage_report/coverage.xml
+            python-codacy-coverage -r coverage_report/coverage.xml
 
 jobs:
   python35-manifest:
@@ -191,7 +192,7 @@ jobs:
     steps:
       - checkout
       - prepare-venv
-      - publish-codecov
+      - publish-codverage
 
 workflows:
   version: "2.1"
