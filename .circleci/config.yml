@@ -214,20 +214,20 @@ workflows:
       - python35-unittests:
           requires:
             - python35-linters
-            - python35-pylint
             - python35-mypy
+            - python35-security
 
       - python36-unittests:
           requires:
             - python35-linters
-            - python35-pylint
             - python35-mypy
+            - python35-security
 
       - python37-unittests:
           requires:
             - python35-linters
-            - python35-pylint
             - python35-mypy
+            - python35-security
 
       - python35-coverage-reports:
           requires:
