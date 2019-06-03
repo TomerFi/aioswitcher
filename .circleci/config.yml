@@ -79,7 +79,7 @@ commands:
           name: Pytest
           command: |
             . venv/bin/activate
-            pytest -vs --cov --cov-append --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+            pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
       - persist_to_workspace:
           root: coverage_report/
           paths:
@@ -116,11 +116,11 @@ commands:
       - attach_workspace:
           at: coverage_report/
       - run:
-          name: CodeCov
+          name: Coverage report publish
           command: |
             . venv/bin/activate
             codecov --file coverage_report/coverage.xml
-            python-codacy-coverage -r coverage_report/coverage.xml
+            python-codacy-coverage -vr coverage_report/coverage.xml
 
 jobs:
   python35-manifest:
