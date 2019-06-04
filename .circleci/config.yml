@@ -216,7 +216,7 @@ jobs:
 workflows:
   version: "2"
 
-  build_test_deploy_test:
+  build_test:
     jobs:
       - python35-manifest
 
@@ -262,5 +262,6 @@ workflows:
             #branches:
             #  only: master
             tags:
-              only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
+              only: /.*/
+              #only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
 
