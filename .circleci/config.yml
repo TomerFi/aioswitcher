@@ -131,7 +131,7 @@ commands:
           name: Bash shellscripts/pypi-depoly
           command: |
             . venv/bin/activate
-            if [ -z "$CIRCLE_TAG" ]; then bash shellscripts/pypi-depoly.sh "$CIRCLE_TAG" "$PYPY_USER" "$PYPI_PASSWORD" "$PWD/setup.cfg;" fi
+            if [ -z "$CIRCLE_TAG" ]; then bash shellscripts/pypi-depoly.sh "$CIRCLE_TAG" "$PYPY_USER" "$PYPI_PASSWORD" "$PWD/setup.cfg"; fi
 
 jobs:
   python35-manifest:
