@@ -256,8 +256,9 @@ workflows:
 
   deploy:
     jobs:
-      - hold
-        type: approval
+      - hold:
+          type: approval
+
       - deploy-package-to-pypi:
           context: tomerfi-pypi-credentials
           requires:
