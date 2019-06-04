@@ -214,7 +214,7 @@ jobs:
       - pypi-deploy
 
 workflows:
-  version: "2
+  version: "2"
 
   build_test_deploy_test:
     jobs:
