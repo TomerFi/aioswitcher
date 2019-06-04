@@ -216,7 +216,7 @@ jobs:
 workflows:
   version: "2"
 
-  build_test:
+  build_test_deploy:
     jobs:
       - python35-manifest
 
@@ -254,19 +254,15 @@ workflows:
           requires:
             - python35-unittests
 
-  deploy:
-    jobs:
-      - hold:
-          type: approval
-
       - deploy-package-to-pypi:
           context: tomerfi-pypi-credentials
           requires:
-            - hold
+            - python35-coverage-reports
+            - python36-unittests
+            - python37-unittests
           filters:
             branches:
               only: master
             #tags:
             #  only:
             #    /v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}/
-
