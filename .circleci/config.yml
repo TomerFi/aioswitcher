@@ -214,9 +214,9 @@ jobs:
       - pypi-deploy
 
 workflows:
-  version: "2"
+  version: "2
 
-  build_test:
+  build_test_deploy_test:
     jobs:
       - python35-manifest
 
@@ -261,6 +261,6 @@ workflows:
           filters:
             branches:
               only: master
-            tags:
-              only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
+            #tags:
+            #  only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
 
