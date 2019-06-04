@@ -8,6 +8,9 @@ exclude *.ini
 exclude .circleci/config.yml
 exclude pylintrc
 exclude requirements_test.txt
+exclude shellscripts
+
+recursive-exclude shellscripts *.sh
 
 global-exclude __pycache__
 global-exclude *.pyc
