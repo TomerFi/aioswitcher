@@ -254,5 +254,6 @@ workflows:
             - python35-unittests
 
       - deploy-package-to-pypi:
+          context: tomerfi-pypi-credentials
           requires:
             - python35-coverage-reports
