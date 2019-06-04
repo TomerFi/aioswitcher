@@ -4,6 +4,7 @@ include README.md
 include requirements.txt
 
 exclude .*
+exclude shellscript/*
 exclude *.ini
 exclude .circleci/config.yml
 exclude pylintrc

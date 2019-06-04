@@ -124,6 +124,15 @@ commands:
             sed -i 's#venv/lib/python3.5/site-packages#src#g' coverage_report/coverage_codacy.xml
             python-codacy-coverage -vr coverage_report/coverage_codacy.xml
 
+  pypi-deploy:
+    description: Deploy package to pypi
+    steps:
+      - run:
+          name: Bash shellscripts/pypi-depoly
+          command: |
+            . venv/bin/activate
+            bash shellscripts/pypi-depoly.sh "$CIRCLE_TAG" "$PYPY_USER" "$PYPI_PASSWORD" "$PWD/setup.cfg"
+
 jobs:
   python35-manifest:
     executor:
@@ -196,6 +205,14 @@ jobs:
       - prepare-venv
       - publish-codverage
 
+  deploy-package-to-pypi:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - pypi-deploy
+
 workflows:
   version: "2.1"
   build:
@@ -235,3 +252,7 @@ workflows:
       - python35-coverage-reports:
           requires:
             - python35-unittests
+
+      - deploy-package-to-pypi:
+          requires:
+            - python35-coverage-reports
