@@ -214,8 +214,9 @@ jobs:
       - pypi-deploy
 
 workflows:
-  version: "2.1"
-  build:
+  version: "2"
+
+  build_test:
     jobs:
       - python35-manifest
 
@@ -262,7 +263,4 @@ workflows:
               only: master
             tags:
               only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
-          requires:
-            - python35-coverage-reports
-            - python36-unittests
-            - python37-unittests
+
