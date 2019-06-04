@@ -253,9 +253,13 @@ workflows:
           requires:
             - python35-unittests
 
+  deploy:
+    jobs:
       - deploy-package-to-pypi:
           context: tomerfi-pypi-credentials
           filters:
+            branches:
+              only: master
             tags:
               only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
           requires:
