@@ -255,6 +255,9 @@ workflows:
 
       - deploy-package-to-pypi:
           context: tomerfi-pypi-credentials
+          filters:
+            tags:
+              only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
           requires:
             - python35-coverage-reports
             - python36-unittests
