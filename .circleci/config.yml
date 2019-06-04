@@ -54,6 +54,15 @@ commands:
             . venv/bin/activate
             check-manifest -v
 
+  check-security:
+    description: Run bandit tests
+    steps:
+      - run:
+          name: Code-security
+          command: |
+            . venv/bin/activate
+            bandit -rvc .bandit src tests -l -ii
+
   run-tests:
     description: Run pytest test cases
     steps:
@@ -70,7 +79,7 @@ commands:
           name: Pytest
           command: |
             . venv/bin/activate
-            pytest -vs --cov --cov-append --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+            pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
       - persist_to_workspace:
           root: coverage_report/
           paths:
@@ -81,7 +90,7 @@ commands:
           path: coverage_report
 
   run-linters:
-    description: Run flake8, pydocstyle and pydocstyle linters
+    description: Run flake8, pydocstyle, pydocstyle and pylint linters
     steps:
       - run:
           name: Linters
@@ -90,14 +99,6 @@ commands:
             flake8 --statistics --count --doctests src/ tests/
             pydocstyle -v --count src/ tests/
             pycodestyle -v --statistics --show-pep8 --count src/ tests/
-
-  run-pylint:
-    description: Run pylint
-    steps:
-      - run:
-          name: Pylint
-          command: |
-            . venv/bin/activate
             pylint --disable fixme --rcfile pylintrc src/ tests/
 
   run-mypy:
@@ -109,16 +110,17 @@ commands:
             . venv/bin/activate
             mypy --config-file mypy.ini src/ tests/
 
-  publish-codecov:
-    description: Publish code coverage to CodeCov
+  publish-codverage:
+    description: Publish code coverage to CodeCov and Codacy
     steps:
       - attach_workspace:
           at: coverage_report/
       - run:
-          name: CodeCov
+          name: Coverage report publish
           command: |
             . venv/bin/activate
             codecov --file coverage_report/coverage.xml
+            python-codacy-coverage -vr coverage_report/coverage.xml
 
 jobs:
   python35-manifest:
@@ -137,14 +139,6 @@ jobs:
       - prepare-venv
       - run-linters
 
-  python35-pylint:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - run-pylint
-
   python35-mypy:
     executor:
       name: python-docker
@@ -152,6 +146,14 @@ jobs:
       - checkout
       - prepare-venv
       - run-mypy
+
+  python35-security:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-venv
+      - check-security
 
   python35-unittests:
     executor:
@@ -190,7 +192,7 @@ jobs:
     steps:
       - checkout
       - prepare-venv
-      - publish-codecov
+      - publish-codverage
 
 workflows:
   version: "2.1"
@@ -202,31 +204,31 @@ workflows:
           requires:
             - python35-manifest
 
-      - python35-pylint:
+      - python35-mypy:
           requires:
             - python35-manifest
 
-      - python35-mypy:
+      - python35-security:
           requires:
             - python35-manifest
 
       - python35-unittests:
           requires:
             - python35-linters
-            - python35-pylint
             - python35-mypy
+            - python35-security
 
       - python36-unittests:
           requires:
             - python35-linters
-            - python35-pylint
             - python35-mypy
+            - python35-security
 
       - python37-unittests:
           requires:
             - python35-linters
-            - python35-pylint
             - python35-mypy
+            - python35-security
 
       - python35-coverage-reports:
           requires:

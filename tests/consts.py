@@ -1,7 +1,9 @@
 """Constants for the Switcher integration tests."""
 
 from datetime import timedelta
+# pylint: disable=unused-import
 from typing import List
+# pylint: enable=unused-import
 
 from aioswitcher.consts import (DAY_TO_INT_DICT, FRIDAY, MONDAY, SATURDAY,
                                 SUNDAY, THURSDAY, TUESDAY, WEDNESDAY)
@@ -44,7 +46,7 @@ TEST_HEX_WEEKDAYS_SET_LIST = [
 ]
 
 DUMMY_PHONE_ID = '1234'
-DUMMY_DEVICE_PASSWORD = '12345678'
+DUMMY_DEVICE_PASSWORD = '12345678'  # nosec
 DUMMY_IP_ADDRESS = '192.168.100.157'
 
 DUMMY_CONTROL_RESPONSE = (

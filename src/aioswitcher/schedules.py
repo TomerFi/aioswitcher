@@ -32,37 +32,40 @@ class SwitcherV2Schedule:
     async def initialize(
             self, idx: int, schedule_details: List[bytes]) -> None:
         """Finish the initialization of the schedule."""
-        if int(schedule_details[idx][2:4], 16) == 1:
-            self._enabled = True
-        if not schedule_details[idx][4:6] == "00":
-            self._recurring = True
-            if schedule_details[idx][4:6] == "fe":
-                self._days.append(ALL_DAYS)
-            else:
-                self._days = await get_days_list_from_bytes(
-                    self._loop,
-                    bytearray(
-                        unhexlify((schedule_details[idx][4:6])))[0])
+        try:
+            if int(schedule_details[idx][2:4], 16) == 1:
+                self._enabled = True
+            if not schedule_details[idx][4:6] == "00":
+                self._recurring = True
+                if schedule_details[idx][4:6] == "fe":
+                    self._days.append(ALL_DAYS)
+                else:
+                    self._days = await get_days_list_from_bytes(
+                        self._loop,
+                        bytearray(
+                            unhexlify((schedule_details[idx][4:6])))[0])
 
-        self._start_time = await get_time_from_bytes(
-            self._loop, schedule_details[idx][8:16])
-        self._end_time = await get_time_from_bytes(
-            self._loop, schedule_details[idx][16:24])
-        self._duration = str(
-            datetime.strptime(
-                self._end_time, '%H:%M') - datetime.strptime(
-                    self._start_time, '%H:%M'))
+            self._start_time = await get_time_from_bytes(
+                self._loop, schedule_details[idx][8:16])
+            self._end_time = await get_time_from_bytes(
+                self._loop, schedule_details[idx][16:24])
+            self._duration = str(
+                datetime.strptime(
+                    self._end_time, '%H:%M') - datetime.strptime(
+                        self._start_time, '%H:%M'))
 
-        time_id = schedule_details[idx][0:2]
-        on_off = schedule_details[idx][2:4]
-        week = schedule_details[idx][4:6]
-        timestate = schedule_details[idx][6:8]
-        start_time = schedule_details[idx][8:16]
-        end_time = schedule_details[idx][16:24]
-        self._schedule_data = (
-            time_id + on_off + week + timestate + start_time + end_time)
+            time_id = schedule_details[idx][0:2]
+            on_off = schedule_details[idx][2:4]
+            week = schedule_details[idx][4:6]
+            timestate = schedule_details[idx][6:8]
+            start_time = schedule_details[idx][8:16]
+            end_time = schedule_details[idx][16:24]
+            self._schedule_data = (
+                time_id + on_off + week + timestate + start_time + end_time)
 
-        self._init_future.set_result(self)
+            self.init_future.set_result(self)
+        except RuntimeError as exc:
+            self.init_future.set_exception(exc)
 
         return None
 

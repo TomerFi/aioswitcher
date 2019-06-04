@@ -18,6 +18,8 @@ max-args=15
 min-public-methods=1
 max-public-methods=25
 max-attributes=15
+argument-rgx=[a-z_][a-z0-9_]{2,40}$
+function-rgx=[a-z_][a-z0-9_]{2,50}$
 
 [Basic]
 include-naming-hint=yes
