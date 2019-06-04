@@ -257,3 +257,5 @@ workflows:
           context: tomerfi-pypi-credentials
           requires:
             - python35-coverage-reports
+            - python36-unittests
+            - python37-unittests
