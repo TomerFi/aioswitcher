@@ -131,7 +131,7 @@ commands:
           name: Bash shellscripts/pypi-depoly
           command: |
             . venv/bin/activate
-            bash shellscripts/pypi-depoly.sh "$CIRCLE_TAG" "$PYPY_USER" "$PYPI_PASSWORD" "$PWD/setup.cfg"
+            if [ -z "$CIRCLE_TAG" ]; then bash shellscripts/pypi-depoly.sh "$CIRCLE_TAG" "$PYPY_USER" "$PYPI_PASSWORD" "$PWD/setup.cfg;" fi
 
 jobs:
   python35-manifest:
@@ -258,11 +258,10 @@ workflows:
     jobs:
       - deploy-package-to-pypi:
           context: tomerfi-pypi-credentials
-          filters:
+          #filters:
             #branches:
             #  only: master
-            tags:
-              only:
-                /.*/
-              #only: v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}
+            #tags:
+            #  only:
+            #    /v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}/
 
