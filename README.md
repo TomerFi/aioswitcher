@@ -1,4 +1,3 @@
-
 # Switcher Boiler Unofficial Bridge and API Tools
 [![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=master)](https://travis-ci.org/TomerFi/aioswitcher) [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=master)](https://coveralls.io/github/TomerFi/aioswitcher?branch=master) [![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/master.svg?style=shield)](https://circleci.com/gh/TomerFi/aioswitcher/tree/master) [![CodeCov](https://codecov.io/gh/TomerFi/aioswitcher/branch/master/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) [![Requirements Status](https://requires.io/github/TomerFi/aioswitcher/requirements.svg?branch=master)](https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=master)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/49a3c3b0987e4d9a8f400eb49db423d8)](https://www.codacy.com/app/TomerFi/aioswitcher?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomerFi/aioswitcher&amp;utm_campaign=Badge_Grade)  
 
@@ -42,7 +41,7 @@ The bridge can be used as a `Context Manager` as well as being instantiated and 
 Please Note: this integration will allow you to receive *Real-Time* updates from the device approximately every 4 seconds, yet it will not allow you to control the device, for that you can use the API integration.</br>
 
 #### Example of UDP Bridge usage
-~~~python
+```python
 import asyncio
 from datetime import datetime
 from aioswitcher.bridge import SwitcherV2Bridge
@@ -139,7 +138,7 @@ your_loop.run_until_complete(run_as_context_manager())
 
 loop.close()
 
-~~~
+```
 
 ### TCP Socket API
 This integration provides the following abilities:
@@ -156,7 +155,7 @@ For use as an instance (which will not be covered here), you can rely on the `UD
 The various responses are covered in the [API Response Messages](#api-response-messages) section.
 
 #### Example of TCP Socket API usage
-~~~python
+```python
 import asyncio
 from datetime import timedelta
 from aioswitcher import consts, tools
@@ -255,7 +254,7 @@ your_loop.run_until_complete(run_as_context_manager())
 
 your_loop.close()
 
-~~~
+```
 
 ## Objects and Properties
 There are two main objects you need to be aware of:</br>
@@ -277,7 +276,6 @@ The second object is the one representing the device's schedule, [aioswitcher/sc
 | *phone_id*          | `str `     | Return the the phone id.                  | 1234                |                  |
 | *last_data_update*  | `datetime` | Return the timestamp of the last update.  | %Y-%m-%dTH:%M:%S.%F |                  |
 | *last_state_change* | `datetime` | Return the timestamp of the state change. | %Y-%m-%dTH:%M:%S.%F |                  |
-
 
 ### SwitcherV2Schedule
 | Property        | Type             | Description                                         | Possible Values    | Default          |
@@ -301,7 +299,6 @@ The second object is the one representing the device's schedule, [aioswitcher/sc
 
 -   *enabled* has a setter for manipulating the schedule status.
 -   *schedule_data* has a setter for manipulating the schedule data.
-
 
 ### API Response Messages
 The following are the response message objects returning from the API functions.
