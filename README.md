@@ -263,34 +263,42 @@ The first object is the one representing the device, [aioswitcher/devices/Switch
 The second object is the one representing the device's schedule, [aioswitcher/schedules/SwitcherV2Schedule](aioswitcher/schedules.py#L12).</br>
 
 ### SwitcherV2Device
-| Property | Type | Description | Possible Values | Default |
-| -------- | ---- | ----------- | --------------- | ------- |
-| *device_id* | `str` | Return the device id. | ab1c2d||
-| *ip_addr* | `str` | Return the ip address. | 192.168.100.157 | waiting_for_data |
-| *mac_addr* | `str` | Return the mac address. | A1:B2:C3:45:67:D8 | waiting_for_data |
-| *name* | `str` | Return the device name. | device name | waiting_for_data |
-| *state* | `str` | Return the device state. | on, off ||
-| *remaining_time* | `str` | Return the auto-off configuration value. | %H:%M:%S | waiting_for_data|
-| *auto_off_set* | `str` | Return the time left to auto-off. | %H:%M:%S | waiting_for_data |
-| *power_consumption* | `int` | Return the power consumption in watts. | 2780 | 0 |
-| *electric_current* | `float` | Return the power consumption in amps. | 12.8 | 0.0 |
-| *phone_id* | `str ` | Return the the phone id. | 1234 ||
-| *last_data_update* | `datetime` | Return the timestamp of the last update. | %Y-%m-%dTH:%M:%S.%F ||
-| *last_state_change* | `datetime` | Return the timestamp of the state change. | %Y-%m-%dTH:%M:%S.%F ||
+| Property            | Type       | Description                               | Possible Values     | Default Value    |
+| ------------------- | ---------- | ----------------------------------------- | ------------------- | ---------------- |
+| *device_id*         | `str`      | Return the device id.                     | ab1c2d              |                  |
+| *ip_addr*           | `str`      | Return the ip address.                    | 192.168.100.157     | waiting_for_data |
+| *mac_addr*          | `str`      | Return the mac address.                   | A1:B2:C3:45:67:D8   | waiting_for_data |
+| *name*              | `str`      | Return the device name.                   | device name         | waiting_for_data |
+| *state*             | `str`      | Return the device state.                  | on, off             |                  |
+| *remaining_time*    | `str`      | Return the auto-off configuration value.  | %H:%M:%S            | waiting_for_data |
+| *auto_off_set*      | `str`      | Return the time left to auto-off.         | %H:%M:%S            | waiting_for_data |
+| *power_consumption* | `int`      | Return the power consumption in watts.    | 2780                | 0                |
+| *electric_current*  | `float`    | Return the power consumption in amps.     | 12.8                | 0.0              |
+| *phone_id*          | `str `     | Return the the phone id.                  | 1234                |                  |
+| *last_data_update*  | `datetime` | Return the timestamp of the last update.  | %Y-%m-%dTH:%M:%S.%F |                  |
+| *last_state_change* | `datetime` | Return the timestamp of the state change. | %Y-%m-%dTH:%M:%S.%F |                  |
 
 
 ### SwitcherV2Schedule
-| Property | Type | Description | Possible Values | Default |
-| -------- | ---- | ----------- | --------------- | ------- |
-| *schedule_id* | `str` | Return the schedule id. | 0, 1, 2, 3, 4, 5, 6, 7 ||
-| *enabled* | `bool` | Return true if enabled. | True, False | False |
-| *recurring* | `bool` | Return true if recurring. | True, False | False |
-| *days* | `List[str]` | Return the weekdays of the schedule. | Sunday, Monday, Tuesday, Wednesday,  Thursday, Friday,  Saturday or **Every day** ||
-| *start_time* | `str` | Return the start time of the schedule. | %H:%M | waiting_for_data |
-| *end_time* | `str` | Return the end time of the schedule. | %H:%M | waiting_for_data |
-| *duration* | `str` | Return the duration of the schedule. | 0:30:00 | waiting_for_data |
-| *schedule_data* | `str` | Return the schedule data for managing the schedule. | Any | waiting_for_data |
-| *init_future* | `asyncio.Future` | Return the future of the initialization. | SwitcherV2Schedule ||
+| Property        | Type             | Description                                         | Possible Values    | Default          |
+| --------------- | ---------------- | --------------------------------------------------- | ------------------ | ---------------- |
+| *schedule_id*   | `str`            | Return the schedule id.                             | 0-7                |                  |
+| *enabled*       | `bool`           | Return true if enabled.                             | True, False        | False            |
+| *recurring*     | `bool`           | Return true if recurring.                           | True, False        | False            |
+| *days*          | `List[str]`      | Return the weekdays of the schedule.                | - Sunday           |                  |
+|                 |                  |                                                     | - Monday           |                  |
+|                 |                  |                                                     | - Tuesday          |                  |
+|                 |                  |                                                     | - Wednesday        |                  |
+|                 |                  |                                                     | - Thursday         |                  |
+|                 |                  |                                                     | - Friday           |                  |
+|                 |                  |                                                     | - Saturday         |                  |
+|                 |                  |                                                     | - **Every day**    |                  |
+| *start_time*    | `str`            | Return the start time of the schedule.              | %H:%M              | waiting_for_data |
+| *end_time*      | `str`            | Return the end time of the schedule.                | %H:%M              | waiting_for_data |
+| *duration*      | `str`            | Return the duration of the schedule.                | 0:30:00            | waiting_for_data |
+| *schedule_data* | `str`            | Return the schedule data for managing the schedule. | Any                | waiting_for_data |
+| *init_future*   | `asyncio.Future` | Return the future of the initialization.            | SwitcherV2Schedule |                  |
+
 - *enabled* has a setter for manipulating the schedule status.
 - *schedule_data* has a setter for manipulating the schedule data.
 
@@ -309,23 +317,27 @@ Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Cla
 - *UPDATE_NAME*
 
 #### SwitcherV2BaseResponseMSG
-| Property | Type | Description |
-| -------- | ---- | ----------- |
-| *unparsed_response* | `bytes` | Return the unparsed response message. |
-| *successful* | `bool` | Return the status of the message. |
-| *msg_type* | `ResponseMessageType` | Return the response message type. |
+| Property            | Type                  | Description                           |
+| ------------------- | --------------------- | ------------------------------------- |
+| *unparsed_response* | `bytes`               | Return the unparsed response message. |
+| *successful*        | `bool`                | Return the status of the message.     |
+| *msg_type*          | `ResponseMessageType` | Return the response message type.     |
 
 #### SwitcherV2StateResponseMSG (SwitcherV2BaseResponseMSG)
 - *ResponseMessageType.STATE*
  
-| Property | Type | Description |
-| -------- | ---- | ----------- |
-| *state* | `str` | Return the state. Values will be `STATE_ON` or `STATE_OFF` located in [aioswitcher.consts](aioswitcher/consts.py)  |
-| *time_left* | `str` | Return the time left to auto-off. |
-| *auto_off* | `str` | Return the auto-off configuration value. |
-| *power* | `Optional[int]` | Return the current power consumption in watts. |
-| *current* | `Optional[float]` | Return the power consumption in amps. |
-| *init_future* | `asyncio.Future` | Return the future of the initialization. As the initiliazation of this message requires some asyncronous actions, please use `init_future.result()` to get the message object. |
+| Property      | Type              | Description                                                |
+| ------------- | ----------------- | ---------------------------------------------------------- |
+| *state*       | `str`             | Return the state. Values will be `STATE_ON` or `STATE_OFF` |
+|               |                   | located in [aioswitcher.consts](aioswitcher/consts.py)     |
+| *time_left*   | `str`             | Return the time left to auto-off.                          |
+| *auto_off*    | `str`             | Return the auto-off configuration value.                   |
+| *power*       | `Optional[int]`   | Return the current power consumption in watts.             |
+| *current*     | `Optional[float]` | Return the power consumption in amps.                      |
+| *init_future* | `asyncio.Future`  | Return the future of the initialization.                   |
+|               |                   | As the initiliazation of this message requires some        |
+|               |                   | asyncronous actions, please use `init_future.result()`     |
+|               |                   | to get the message object.                                 |
 
 #### SwitcherV2ControlResponseMSG (SwitcherV2BaseResponseMSG)
 - *ResponseMessageType.CONTROL*
@@ -339,10 +351,10 @@ Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Cla
 #### SwitcherV2GetScheduleResponseMSG (SwitcherV2BaseResponseMSG)
 - *ResponseMessageType.GET_SCHEDULES*
 
-| Property | Type | Description |
-| -------- | ---- | ----------- |
-| *found_schedules* | `bool` | Return true if found schedules in the response. | 
-| *get_schedules* | `List[SwitcherV2Schedule]` | Return a list of [SwitcherV2Schedule](#switcherv2schedule). |
+| Property          | Type                       | Description                                                 |
+| ----------------- | -------------------------- | ----------------------------------------------------------- |
+| *found_schedules* | `bool`                     | Return true if found schedules in the response.             | 
+| *get_schedules*   | `List[SwitcherV2Schedule]` | Return a list of [SwitcherV2Schedule](#switcherv2schedule). |
 
 #### SwitcherV2DisableEnableScheduleResponseMSG (SwitcherV2BaseResponseMSG)
 - *ResponseMessageType.DISABLE_ENABLE_SCHEDULE*
