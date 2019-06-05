@@ -143,12 +143,12 @@ loop.close()
 
 ### TCP Socket API
 This integration provides the following abilities:
-- Get the device status
-- Control the device
-- Get the schedules from the device
-- Set the device name
-- Set the device Auto-Off configuration
-- Create/Delete/Enable/Disable schedules on the device.</br>
+-   Get the device status
+-   Control the device
+-   Get the schedules from the device
+-   Set the device name
+-   Set the device Auto-Off configuration
+-   Create/Delete/Enable/Disable schedules on the device.</br>
 
 Although this API is applicable as a `context manager` and as an instance of an object, it is preferable to use it as a `context manager` due to the nature of the `tcp` connection (you don't want to occupy a connection slot on the device any longer then you have to or you'll start seeing `TimeOutErrors`).</br>
 For use as an instance (which will not be covered here), you can rely on the `UDP Bridge` example and substitute  `start()` and `stop()` with `connect()` and `disconnect()`.</br>
@@ -299,22 +299,22 @@ The second object is the one representing the device's schedule, [aioswitcher/sc
 | *schedule_data* | `str`            | Return the schedule data for managing the schedule. | Any                | waiting_for_data |
 | *init_future*   | `asyncio.Future` | Return the future of the initialization.            | SwitcherV2Schedule |                  |
 
-- *enabled* has a setter for manipulating the schedule status.
-- *schedule_data* has a setter for manipulating the schedule data.
+-   *enabled* has a setter for manipulating the schedule status.
+-   *schedule_data* has a setter for manipulating the schedule data.
 
 
 ### API Response Messages
 The following are the response message objects returning from the API functions.
 The source of the responses can be found [here](aioswitcher/api/messages.py).</br>
 Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Class* for identifying the response message types:
-- *AUTO_OFF*
-- *CONTROL*
-- *CREATE_SCHEDULE*
-- *DELETE_SCHEDULE*
-- *DISABLE_ENABLE_SCHEDULE*
-- *GET_SCHEDULES*
-- *STATE*
-- *UPDATE_NAME*
+-   *AUTO_OFF*
+-   *CONTROL*
+-   *CREATE_SCHEDULE*
+-   *DELETE_SCHEDULE*
+-   *DISABLE_ENABLE_SCHEDULE*
+-   *GET_SCHEDULES*
+-   *STATE*
+-   *UPDATE_NAME*
 
 #### SwitcherV2BaseResponseMSG
 | Property            | Type                  | Description                           |
@@ -324,7 +324,7 @@ Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Cla
 | *msg_type*          | `ResponseMessageType` | Return the response message type.     |
 
 #### SwitcherV2StateResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.STATE*
+-   *ResponseMessageType.STATE*
  
 | Property      | Type              | Description                                                |
 | ------------- | ----------------- | ---------------------------------------------------------- |
@@ -340,16 +340,16 @@ Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Cla
 |               |                   | to get the message object.                                 |
 
 #### SwitcherV2ControlResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.CONTROL*
+-   *ResponseMessageType.CONTROL*
 
 #### SwitcherV2SetAutoOffResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.AUTO_OFF*
+-   *ResponseMessageType.AUTO_OFF*
 
 #### SwitcherV2UpdateNameResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.UPDATE_NAME*
+-   *ResponseMessageType.UPDATE_NAME*
 
 #### SwitcherV2GetScheduleResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.GET_SCHEDULES*
+-   *ResponseMessageType.GET_SCHEDULES*
 
 | Property          | Type                       | Description                                                 |
 | ----------------- | -------------------------- | ----------------------------------------------------------- |
@@ -357,10 +357,10 @@ Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Cla
 | *get_schedules*   | `List[SwitcherV2Schedule]` | Return a list of [SwitcherV2Schedule](#switcherv2schedule). |
 
 #### SwitcherV2DisableEnableScheduleResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.DISABLE_ENABLE_SCHEDULE*
+-   *ResponseMessageType.DISABLE_ENABLE_SCHEDULE*
 
 #### SwitcherV2DeleteScheduleResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.DELETE_SCHEDULE*
+-   *ResponseMessageType.DELETE_SCHEDULE*
 
 #### SwitcherV2CreateScheduleResponseMSG (SwitcherV2BaseResponseMSG)
-- *ResponseMessageType.CREATE_SCHEDULE*
+-   *ResponseMessageType.CREATE_SCHEDULE*
