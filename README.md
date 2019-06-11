@@ -17,14 +17,10 @@ Tested with the Switcher V2 Only.
 pip install aioswitcher
 ```
 
-## Requirements
-```text
-python 3.5+
-```
-
 ## Hardware
 ```text
-Switcher V2
+Switcher V2 - verified by author
+Switcher Touch - verified by users
 ```
 
 ## Usage
