@@ -1,16 +1,15 @@
 # Switcher Boiler Unofficial Bridge and API Tools
-[![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=master)](https://travis-ci.org/TomerFi/aioswitcher) [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=master)](https://coveralls.io/github/TomerFi/aioswitcher?branch=master) [![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/master.svg?style=shield)](https://circleci.com/gh/TomerFi/aioswitcher/tree/master) [![CodeCov](https://codecov.io/gh/TomerFi/aioswitcher/branch/master/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) [![Requirements Status](https://requires.io/github/TomerFi/aioswitcher/requirements.svg?branch=master)](https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=master)  [![Codacy Badge](https://api.codacy.com/project/badge/Grade/49a3c3b0987e4d9a8f400eb49db423d8)](https://www.codacy.com/app/TomerFi/aioswitcher?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomerFi/aioswitcher&amp;utm_campaign=Badge_Grade)  
+[![Build Status](https://travis-ci.org/TomerFi/aioswitcher.svg?branch=master)](https://travis-ci.org/TomerFi/aioswitcher) [![Coverage Status](https://coveralls.io/repos/github/TomerFi/aioswitcher/badge.svg?branch=master)](https://coveralls.io/github/TomerFi/aioswitcher?branch=master) [![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/master.svg?style=shield)](https://circleci.com/gh/TomerFi/aioswitcher/tree/master) [![CodeCov](https://codecov.io/gh/TomerFi/aioswitcher/branch/master/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) [![Requirements Status](https://requires.io/github/TomerFi/aioswitcher/requirements.svg?branch=master)](https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/49a3c3b0987e4d9a8f400eb49db423d8)](https://www.codacy.com/app/TomerFi/aioswitcher?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomerFi/aioswitcher&amp;utm_campaign=Badge_Grade)
 
-[![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://badge.fury.io/py/aioswitcher) ![Python Wheel](https://img.shields.io/pypi/format/aioswitcher.svg) ![Python Versions](https://img.shields.io/pypi/pyversions/django.svg) ![License](https://img.shields.io/pypi/l/aioswitcher.svg) 
+[![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://pypi.org/project/aioswitcher/) [![Python Wheel](https://img.shields.io/pypi/format/aioswitcher.svg)](https://pypi.org/project/aioswitcher/) [![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/)) [![License](https://img.shields.io/pypi/l/aioswitcher.svg)](https://pypi.org/project/aioswitcher/)
 
-![GitHub release](https://img.shields.io/github/release/tomerfi/aioswitcher.svg) ![Open Issues](https://img.shields.io/github/issues-raw/tomerfi/aioswitcher.svg) ![Commit Activity Month](https://img.shields.io/github/commit-activity/m/tomerfi/aioswitcher.svg) ![Last Commit](https://img.shields.io/github/last-commit/tomerfi/aioswitcher.svg) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Naereen/StrapDown.js/graphs/commit-activity)  
+[![GitHub release](https://img.shields.io/github/release/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher/releases) [![Open Issues](https://img.shields.io/github/issues-raw/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher/issues) [![Commit Activity Month](https://img.shields.io/github/commit-activity/m/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher/commits/master) [![Last Commit](https://img.shields.io/github/last-commit/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/TomerFi/aioswitcher)
 
 [![Slack Channel](https://slack.tomfi.info:8443/aioswitcher.svg)](https://tomfi.slack.com/messages/CK3KRBYDP) [![Sourcegraph](https://sourcegraph.com/github.com/tomerfi/aioswitcher/-/badge.svg)](https://sourcegraph.com/github.com/tomerfi/aioswitcher?badge)
 
 Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
 This module was applicable thanks to the amazing R&D performed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
 This module is *Asyncio* friendly [*static-typed*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
-Tested with the Switcher V2 Only.
 
 ## Installation
 ```shell
@@ -25,7 +24,7 @@ Switcher Touch - verified by users
 
 ## Usage
 This module provides two separate integrations with the Switcher device, both fully asynchronous.</br>
-The first integration is a `UDP Bridge`constantly listening to broadcast messages launched from the device every approximately 4 seconds. This integration provides constant device state updates.</br>
+The first integration is a `UDP Bridge`constantly listening to broadcast messages launched from the device approximately every 4 seconds. This integration provides constant device state updates.</br>
 The second integration is a `TCP Socket API`providing the ability to not only get the state of the device, but also control it.</br>
 
 ### UDP Bridge
