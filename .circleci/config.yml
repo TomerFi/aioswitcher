@@ -29,8 +29,7 @@ commands:
             python -m venv venv
             . venv/bin/activate
             pip install -q --upgrade pip setuptools
-            pip install -q --progress-bar off -r requirements.txt
-            pip install -q --progress-bar off -r requirements_test.txt
+            pip install -q -r requirements_test.txt -c requirements.txt
       - save_cache:
           key: v1-modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
           paths:
