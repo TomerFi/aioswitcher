@@ -1,3 +1,9 @@
+[build-system]
+requires = ["setuptools~=41.0.1", "wheel~=0.33.4"]
+build-backend = "setuptools.build_meta"
+
+[tool.tox]
+legacy_tox_ini = """
 [tox]
 envlist =
     manifest
@@ -44,3 +50,4 @@ commands = pytest -vsx
 [testenv:py37]
 skip_install = false
 commands = pytest -vs --cov --cov-config={toxinidir}/.coveragerc
+"""
