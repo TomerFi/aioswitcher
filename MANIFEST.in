@@ -2,12 +2,13 @@ include CODE_OF_CONDUCT.md
 include LICENSE
 include MANIFEST.in
 include README.md
-include requirements.txt
 
 exclude .*
 exclude *.ini
 exclude .circleci/config.yml
 exclude pylintrc
+include requirements.txt
+exclude requirements_docs.txt
 exclude requirements_test.txt
 exclude shellscripts
 
