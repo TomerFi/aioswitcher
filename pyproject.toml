@@ -1,53 +1,136 @@
 [build-system]
-requires = ["setuptools~=41.0.1", "wheel~=0.33.4"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry~=0.12"]
+build-backend = "poetry.masonry.api"
+
+[tool.poetry]
+name = "aioswitcher"
+version = "2019.6.26-dev"
+description = "Switcher Boiler Unofficial Bridge and API"
+license = "MIT"
+authors = ["Tomer Figenblat <tomer.figenblat@gmail.com>"]
+readme = "README.md"
+homepage = "https://pypi.org/project/aioswitcher/"
+repository = "https://github.com/tomerfi/aioswitcher"
+# documentation = "add read the docs when ready"
+keywords = ["home", "automation", "switcher", "water-heater"]
+classifiers = [
+    "Topic :: Framework :: AsyncIO",
+    "Topic :: Framework :: tox",
+    "Topic :: Intended Audience :: Developers",
+    "Topic :: License :: OSI Approved :: MIT License",
+    "Topic :: Operating System :: OS Independent",
+    "Topic :: Programming Language :: Python",
+    "Topic :: Programming Language :: Python :: 3.5",
+    "Topic :: Programming Language :: Python :: 3.6",
+    "Topic :: Programming Language :: Python :: 3.7",
+    "Topic :: Topic :: Home Automation",
+    "Topic :: Typing :: Typed"
+]
+include = [] # CAHNGELOG, LICENSE, README and pyproject.toml are automatically included
+exclude = [
+    ".*",
+    "dist",
+    "docs",
+    "shellscripts",
+    "tests",
+    "CODE_OF_CONDUCT.md",
+    "mypy.ini",
+    "pylintrc",
+    "*__pycache__*",
+    "*.pyc"
+] # poetry.lock is automatically excluded
+
+[tool.poetry.dependencies]
+python = "^3.5 || ^3.6 || ^3.7"
+asynctest = { version = "^0.13.0", optional = true }
+bandit = { version = "^1.6.1", optional = true }
+codacy-coverage = { version = "^1.3.11", optional = true }
+codecov = { version = "^2.0.15", optional = true }
+doc8 = { version = "^0.8.0", optional = true }
+flake8 = { version = "^3.7.7", optional = true }
+flake8-docstrings = { version = "^1.3.0", optional = true }
+mypy = { version = "^0.711", optional = true }
+Pygments = { version = "^2.4.2", optional = true }
+pylint = { version = "^2.3.1", optional = true }
+pytest = { version = "^4.6.3", optional = true }
+pytest-aiohttp = { version = "^0.3.0", optional = true }
+pytest-asyncio = { version = "^0.10.0", optional = true }
+pytest-cov = { version = "^2.7.1", optional = true }
+pytest-sugar = { version = "^0.9.2", optional = true }
+sphinx = { version = "^2.1.2", optional = true }
+sphinx-rtd-theme = { version = "^0.4.3", optional = true }
+
+[tool.poetry.extras]
+codesec = ["bandit"]
+codelint = [
+    "asynctest",
+    "pytest",
+    "flake8",
+    "flake8-docstrings",
+    "pylint"
+]
+unittests = [
+    "asynctest",
+    "pytest",
+    "pytest-aiohttp",
+    "pytest-asyncio",
+    "pytest-cov",
+    "pytest-sugar"
+]
+typing = ["mypy"]
+coverage = ["codacy-coverage", "codecov"]
+docslint = ["doc8"]
+docsbuild = ["Pygments", "sphinx", "sphinx-rtd-theme"]
 
 [tool.tox]
 legacy_tox_ini = """
 [tox]
 envlist =
-    manifest
     codesec
     lint
     typing
     py{35, 36, 37}
+isolated_build = true
+minversion = 3.13.0
+requires = poetry>=0.12
 skip_missing_interpreters = true
+skipdist = true
 
 [testenv]
 basepython = python3.7
 skip_install = true
-deps =
-    {lint,py35,py36,py37}: -r{toxinidir}/requirements_test.txt
-    manifest: check-manifest
-    codesec: bandit
-    typing: mypy
-    -c{toxinidir}/requirements.txt
-
-[testenv:manifest]
-commands = check-manifest -v
+whitelist_externals = poetry
 
 [testenv:codesec]
-commands = bandit -rvc {toxinidir}/.bandit src tests -l -ii
+commands =
+    poetry install -v --extras "codesec"
+    bandit -rvc {toxinidir}/.bandit src tests -l -ii
 
 [testenv:lint]
 commands =
+    poetry install -v --extras "codelint"
     flake8 --statistics --count --doctests {toxinidir}/src/ {toxinidir}/tests/
     pylint --disable fixme --rcfile {toxinidir}/pylintrc {toxinidir}/src/ {toxinidir}/tests/
 
 [testenv:typing]
-commands = mypy --config-file {toxinidir}/mypy.ini {toxinidir}/src/ {toxinidir}/tests/
+commands =
+    poetry install -v --extras "typing"
+    mypy --config-file {toxinidir}/mypy.ini {toxinidir}/src/ {toxinidir}/tests/
 
 [testenv:py35]
 basepython = python3.5
-skip_install = false
-commands = pytest -vsx
+commands =
+    poetry install -v --extras "unittests"
+    poetry run pytest -vsx
 
 [testenv:py36]
 basepython = python3.6
-skip_install = false
-commands = pytest -vsx
+commands =
+    poetry install -v --extras "unittests"
+    poetry run pytest -vsx
 
 [testenv:py37]
-skip_install = false
-commands = pytest -vs --cov --cov-config={toxinidir}/.coveragerc
+commands =
+    poetry install -v --extras "unittests"
+    pytest -vs --cov --cov-config={toxinidir}/.coveragerc
 """

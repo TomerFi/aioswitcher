@@ -1,4 +1,0 @@
-doc8
-Pygments
-sphinx
-sphinx-rtd-theme

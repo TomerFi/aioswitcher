@@ -1,6 +1,5 @@
 [run]
 source = aioswitcher
-omit = src/*
 
 [report]
 fail_under = 60.00
