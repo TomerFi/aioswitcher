@@ -1,5 +1,6 @@
 """Switcher Device Schedule Objects."""
 
+# fmt: off
 from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import unhexlify
 from datetime import datetime
@@ -10,19 +11,22 @@ from .consts import (ALL_DAYS, MONDAY, SCHEDULE_DUE_ANOTHER_DAY_FORMAT,
                      SUNDAY, WAITING_TEXT, WEEKDAY_TUP)
 from .tools import get_days_list_from_bytes, get_time_from_bytes
 
+# fmt: on
+
 
 class SwitcherV2Schedule:
     """Represnation of the switcher version 2 schedule."""
 
-    def __init__(self, loop: AbstractEventLoop, idx: int,
-                 schedule_details: List[bytes]) -> None:
+    def __init__(
+        self, loop: AbstractEventLoop, idx: int, schedule_details: List[bytes]
+    ) -> None:
         """Initialize the schedule."""
         self._loop = loop
         self._enabled = False
         self._recurring = False
         self._schedule_id = str(int(schedule_details[idx][0:2], 16))
         self._days = []  # type: List[str]
-        self._schedule_data = b''
+        self._schedule_data = b""
         self._start_time = WAITING_TEXT
         self._end_time = WAITING_TEXT
         self._duration = WAITING_TEXT
@@ -30,7 +34,8 @@ class SwitcherV2Schedule:
         ensure_future(self.initialize(idx, schedule_details), loop=loop)
 
     async def initialize(
-            self, idx: int, schedule_details: List[bytes]) -> None:
+        self, idx: int, schedule_details: List[bytes]
+    ) -> None:
         """Finish the initialization of the schedule."""
         try:
             if int(schedule_details[idx][2:4], 16) == 1:
@@ -42,17 +47,19 @@ class SwitcherV2Schedule:
                 else:
                     self._days = await get_days_list_from_bytes(
                         self._loop,
-                        bytearray(
-                            unhexlify((schedule_details[idx][4:6])))[0])
+                        bytearray(unhexlify((schedule_details[idx][4:6])))[0],
+                    )
 
             self._start_time = await get_time_from_bytes(
-                self._loop, schedule_details[idx][8:16])
+                self._loop, schedule_details[idx][8:16]
+            )
             self._end_time = await get_time_from_bytes(
-                self._loop, schedule_details[idx][16:24])
+                self._loop, schedule_details[idx][16:24]
+            )
             self._duration = str(
-                datetime.strptime(
-                    self._end_time, '%H:%M') - datetime.strptime(
-                        self._start_time, '%H:%M'))
+                datetime.strptime(self._end_time, "%H:%M")
+                - datetime.strptime(self._start_time, "%H:%M")
+            )
 
             time_id = schedule_details[idx][0:2]
             on_off = schedule_details[idx][2:4]
@@ -61,7 +68,8 @@ class SwitcherV2Schedule:
             start_time = schedule_details[idx][8:16]
             end_time = schedule_details[idx][16:24]
             self._schedule_data = (
-                time_id + on_off + week + timestate + start_time + end_time)
+                time_id + on_off + week + timestate + start_time + end_time
+            )
 
             self.init_future.set_result(self)
         except RuntimeError as exc:
@@ -141,46 +149,55 @@ def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
         today_datetime = datetime.now()
 
         start_time = datetime.strptime(schedule_details.start_time, "%H:%M")
-        current_time = datetime.strptime(("0" + str(today_datetime.hour))[-2:]
-                                         + ":"
-                                         + ("0" + str(
-                                             today_datetime.minute))[-2:],
-                                         "%H:%M")
+        current_time = datetime.strptime(
+            ("0" + str(today_datetime.hour))[-2:]
+            + ":"
+            + ("0" + str(today_datetime.minute))[-2:],
+            "%H:%M",
+        )
 
         current_weekday = today_datetime.weekday()
         found_day = -1
         if schedule_details.days == [ALL_DAYS]:
             if current_time < start_time:
                 return SCHEDULE_DUE_TODAY_FORMAT.format(
-                    schedule_details.start_time)
+                    schedule_details.start_time
+                )
             return SCHEDULE_DUE_TOMMOROW_FORMAT.format(
-                schedule_details.start_time)
+                schedule_details.start_time
+            )
 
         for day in schedule_details.days:
             set_weekday = WEEKDAY_TUP.index(day)
 
             if set_weekday == current_weekday and current_time < start_time:
                 return SCHEDULE_DUE_TODAY_FORMAT.format(
-                    schedule_details.start_time)
+                    schedule_details.start_time
+                )
 
             if found_day == -1 or found_day > set_weekday:
                 found_day = set_weekday
 
-        if (found_day - 1 == current_weekday
-                or (found_day == WEEKDAY_TUP.index(MONDAY)
-                    and current_weekday == WEEKDAY_TUP.index(SUNDAY))):
+        if found_day - 1 == current_weekday or (
+            found_day == WEEKDAY_TUP.index(MONDAY)
+            and current_weekday == WEEKDAY_TUP.index(SUNDAY)
+        ):
 
             return SCHEDULE_DUE_TOMMOROW_FORMAT.format(
-                schedule_details.start_time)
+                schedule_details.start_time
+            )
 
         return SCHEDULE_DUE_ANOTHER_DAY_FORMAT.format(
-            WEEKDAY_TUP[found_day], schedule_details.start_time)
+            WEEKDAY_TUP[found_day], schedule_details.start_time
+        )
 
     return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)
 
 
 async def calc_next_run_for_schedule(
-        loop: AbstractEventLoop, schedule_details: SwitcherV2Schedule) -> str:
+    loop: AbstractEventLoop, schedule_details: SwitcherV2Schedule
+) -> str:
     """Use as async wrapper for calling _calc_next_run_for_schedule."""
     return await loop.run_in_executor(
-        None, _calc_next_run_for_schedule, schedule_details)
+        None, _calc_next_run_for_schedule, schedule_details
+    )

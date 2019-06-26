@@ -133,8 +133,8 @@ commands =
     bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
     isort --check-only --recursive src/ tests/ docs/source/
     flake8 --statistics --count --doctests src/ tests/ docs/source/
-    - black --check src/ tests/ docs/source/
-    mypy --config-file mypy.ini src/ tests/ docs/source/
+    black --check src/ tests/ docs/source/
+    mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
 
 [testenv:py35]
 basepython = python3.5

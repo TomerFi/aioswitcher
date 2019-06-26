@@ -1,5 +1,6 @@
 """SwitcherV2 network protocols."""
 
+# fmt: off
 from asyncio import (AbstractEventLoop, BaseTransport, DatagramProtocol, Event,
                      Future, Queue, QueueEmpty, QueueFull, Transport,
                      ensure_future)
@@ -10,13 +11,21 @@ from typing import Optional, Tuple, Union, cast
 from .bridge.messages import SwitcherV2BroadcastMSG
 from .devices import SwitcherV2Device
 
+# fmt: on
+
 
 class SwitcherV2UdpProtocolFactory(DatagramProtocol):
     """Represntation of the Asyncio UDP protocol factory."""
 
-    def __init__(self, loop: AbstractEventLoop, phone_id: str, device_id: str,
-                 device_password: str, queue: Queue, run_factory_evt: Event) \
-            -> None:
+    def __init__(
+        self,
+        loop: AbstractEventLoop,
+        phone_id: str,
+        device_id: str,
+        device_password: str,
+        queue: Queue,
+        run_factory_evt: Event,
+    ) -> None:
         """Initialize the protocol."""
         self._loop = loop
         self._phone_id = phone_id
@@ -39,7 +48,8 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
         """Call on datagram recieved."""
         if self._run_factory.is_set() and self._accept_datagrams.is_set():
             ensure_future(
-                self.handle_incoming_messeges(data, addr), loop=self._loop)
+                self.handle_incoming_messeges(data, addr), loop=self._loop
+            )
 
     def error_received(self, exc: Optional[Exception]) -> None:
         """Call on exception recieved."""
@@ -52,25 +62,24 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
         """Call on connection lost."""
         self.factory_future.set_result(exc if exc else None)
 
-    # pylint: disable=unused-argument
     def close_transport(self, future: Future) -> None:
         """Call for closing the transport."""
         if self.transport:
             self.transport.close()
-    # pylint: enable=unused-argument
 
     async def handle_incoming_messeges(
-            self, data: Union[bytes, str], addr: Tuple) -> None:
+        self, data: Union[bytes, str], addr: Tuple
+    ) -> None:
         """Use for Handling incoming messages."""
         self._accept_datagrams.clear()
         msg = SwitcherV2BroadcastMSG(self._loop, data)
         msg.init_future.add_done_callback(
-            partial(self.get_device_from_message, addr[0]))
+            partial(self.get_device_from_message, addr[0])
+        )
 
         return None
 
-    def get_device_from_message(
-            self, ip_addr: str, future: Future) -> None:
+    def get_device_from_message(self, ip_addr: str, future: Future) -> None:
         """Use for extracting the device from the broadcast message."""
         msg = future.result()
         if msg.verified:
@@ -78,22 +87,35 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
                 if self._device:
                     # Update known device
                     self._device.update_device_data(
-                        ip_addr, msg.name, msg.device_state,
-                        msg.remaining_time_to_off, msg.auto_off_set,
-                        msg.power, msg.current,
+                        ip_addr,
+                        msg.name,
+                        msg.device_state,
+                        msg.remaining_time_to_off,
+                        msg.auto_off_set,
+                        msg.power,
+                        msg.current,
                         (
                             self._device.last_state_change
                             if msg.device_state == self._device.state
                             else datetime.now()
-                        ))
+                        ),
+                    )
                 else:
                     # New device discoverd
                     self._device = SwitcherV2Device(
-                        msg.device_id, ip_addr, msg.mac_address,
-                        msg.name, msg.device_state,
-                        msg.remaining_time_to_off, msg.auto_off_set,
-                        msg.power, msg.current, self._phone_id.lower(),
-                        self._device_password.lower(), datetime.now())
+                        msg.device_id,
+                        ip_addr,
+                        msg.mac_address,
+                        msg.name,
+                        msg.device_state,
+                        msg.remaining_time_to_off,
+                        msg.auto_off_set,
+                        msg.power,
+                        msg.current,
+                        self._phone_id.lower(),
+                        self._device_password.lower(),
+                        datetime.now(),
+                    )
                 try:
                     self._queue.put_nowait(self._device)
                 except QueueFull:
@@ -102,7 +124,8 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
                     except QueueEmpty:
                         pass
                     ensure_future(
-                        self._queue.put(self._device), loop=self._loop)
+                        self._queue.put(self._device), loop=self._loop
+                    )
         self._accept_datagrams.set()
 
     @property
