@@ -122,15 +122,6 @@ commands:
             codecov --file coverage_report/coverage.xml
             python-codacy-coverage -r coverage_report/coverage.xml
 
-  pypi-deploy:
-    description: Deploy package to pypi
-    steps:
-      - run:
-          name: Bash shellscripts/pypi-depoly
-          command: |
-            . venv/bin/activate
-            if [ ! -z "$CIRCLE_TAG" ]; then bash shellscripts/pypi-depoly.sh "$CIRCLE_TAG" "$PYPY_USER" "$PYPI_PASSWORD" "$PWD/setup.cfg"; fi
-
 jobs:
   python35-manifest:
     executor:
@@ -203,14 +194,6 @@ jobs:
       - prepare-venv
       - publish-codverage
 
-  deploy-package-to-pypi:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - pypi-deploy
-
 workflows:
   version: "2"
 
@@ -253,14 +236,3 @@ workflows:
             - python35-unittests
             - python36-unittests
             - python37-unittests
-
-      - deploy-package-to-pypi:
-          context: tomerfi-pypi-credentials
-          requires:
-            - python35-coverage-reports
-          filters:
-            branches:
-              only: master
-            #tags:
-            #  only:
-            #    /v?[0-9]{4}.[0-9]{1,2}.[0-9]{1,2}/

@@ -14,7 +14,6 @@ display_no_docker_engine() {
 
 display_usage() {
     echo -e "please provide the operation you want to execute.\n"
-    echo "usage: $0 check-shellscripts"
     echo "usage: $0 circleci-validate"
     echo "usage: $0 vale-rstdocs"
 }
@@ -26,11 +25,7 @@ then
         display_usage
         exit 1
     else
-      if [ "$1" = "check-shellscripts" ]
-      then
-        # shellcheck disable=SC2046
-        docker run --rm -it -v "$PWD/shellscripts/:/mnt/:ro" koalaman/shellcheck:v0.6.0 $(ls -A1 shellscripts)
-      elif [ "$1" = "circleci-validate" ]
+      if [ "$1" = "circleci-validate" ]
       then
         docker run --rm -it -v "$PWD/.circleci/:/.circleci/:ro" circleci/circleci-cli:alpine config validate
       elif [ "$1" = "vale-rstdocs" ]
