@@ -2,12 +2,14 @@
 
 from asyncio import AbstractEventLoop
 from binascii import crc_hqx, hexlify, unhexlify
-from datetime import time as datetime_time, timedelta
+from datetime import time as datetime_time
+from datetime import timedelta
 from struct import pack
-from time import localtime, mktime, strftime, strptime, time as time_time
+from time import localtime, mktime, strftime, strptime
+from time import time as time_time
 from typing import List
 
-from .consts import (HANDLED_EXCEPTIONS, HEX_TO_DAY_DICT, ENCODING_CODEC,
+from .consts import (ENCODING_CODEC, HANDLED_EXCEPTIONS, HEX_TO_DAY_DICT,
                      REMOTE_KEY, STRUCT_PACKING_FORMAT)
 from .errors import CalculationError, DecodingError, EncodingError
 

@@ -1,11 +1,11 @@
 """SwitcherV2 network protocols."""
 
-from asyncio import (AbstractEventLoop, BaseTransport, DatagramProtocol,
-                     ensure_future, Event, Future, Queue, QueueEmpty,
-                     QueueFull, Transport)
+from asyncio import (AbstractEventLoop, BaseTransport, DatagramProtocol, Event,
+                     Future, Queue, QueueEmpty, QueueFull, Transport,
+                     ensure_future)
 from datetime import datetime
 from functools import partial
-from typing import cast, Optional, Tuple, Union
+from typing import Optional, Tuple, Union, cast
 
 from .bridge.messages import SwitcherV2BroadcastMSG
 from .devices import SwitcherV2Device

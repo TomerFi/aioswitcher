@@ -1,17 +1,15 @@
 """Switcher Packet Response Messages."""
 
-from asyncio import AbstractEventLoop, ensure_future, Future
+from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import hexlify
 from enum import Enum
 from typing import List
 
-from ..tools import convert_seconds_to_iso_time
-from ..consts import (ENCODING_CODEC, HANDLED_EXCEPTIONS, STATE_ON,
-                      STATE_RESPONSE_ON, STATE_OFF, STATE_RESPONSE_OFF,
-                      STATE_UNKNOWN)
+from ..consts import (ENCODING_CODEC, HANDLED_EXCEPTIONS, STATE_OFF, STATE_ON,
+                      STATE_RESPONSE_OFF, STATE_RESPONSE_ON, STATE_UNKNOWN)
 from ..errors import DecodingError
 from ..schedules import SwitcherV2Schedule
-
+from ..tools import convert_seconds_to_iso_time
 
 # pylint: disable=invalid-name
 ResponseMessageType = Enum(

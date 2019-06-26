@@ -1,6 +1,6 @@
 """Switcher Device Schedule Objects."""
 
-from asyncio import AbstractEventLoop, ensure_future, Future
+from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import unhexlify
 from datetime import datetime
 from typing import List

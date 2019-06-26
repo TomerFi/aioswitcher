@@ -5,13 +5,13 @@ from binascii import unhexlify
 from datetime import timedelta
 from socket import AF_INET
 from types import TracebackType
-from typing import Optional, Tuple, Type, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Tuple, Type
 
-from . import messages, packets
 from ..consts import NO_TIMER_REQUESTED, REMOTE_SESSION_ID, SOCKET_PORT
 from ..tools import (convert_minutes_to_timer, convert_string_to_device_name,
                      convert_timedelta_to_auto_off,
                      crc_sign_full_packet_com_key, get_timestamp)
+from . import messages, packets
 
 if TYPE_CHECKING:
     from asyncio import StreamReader, StreamWriter

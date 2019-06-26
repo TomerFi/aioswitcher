@@ -1,11 +1,11 @@
 """Fixture and objects for the Switcher integration tests."""
 
-from asyncio import (AbstractEventLoop, get_event_loop,
-                     StreamReader, StreamWriter)
+from asyncio import (AbstractEventLoop, StreamReader, StreamWriter,
+                     get_event_loop)
 from binascii import unhexlify
 from typing import Any, Generator, List, Tuple, Union
 
-from asynctest import CoroutineMock, patch, Mock
+from asynctest import CoroutineMock, Mock, patch
 from pytest import fixture
 
 from aioswitcher.consts import ENCODING_CODEC, WEEKDAY_TUP
@@ -13,12 +13,12 @@ from aioswitcher.schedules import SwitcherV2Schedule
 
 from .common import (create_random_time, get_later_time_for_minute_delta,
                      get_weekday_for_day_delta)
-from .consts import (
-    DUMMY_CONTROL_RESPONSE, DUMMY_CREATE_SCHEDULE_RESPONSE,
-    DUMMY_DELETE_SCHEDULE_RESPONSE, DUMMY_DISABLE_ENABLE_SCHEDULE_RESPONSE,
-    DUMMY_GET_SCHEDULES_RESPONSE, DUMMY_GET_STATE_RESPONSE,
-    DUMMY_LOGIN_RESPONSE, DUMMY_SET_AUTO_OFF_RESPONSE,
-    DUMMY_UPDATE_NAME_RESPONSE)
+from .consts import (DUMMY_CONTROL_RESPONSE, DUMMY_CREATE_SCHEDULE_RESPONSE,
+                     DUMMY_DELETE_SCHEDULE_RESPONSE,
+                     DUMMY_DISABLE_ENABLE_SCHEDULE_RESPONSE,
+                     DUMMY_GET_SCHEDULES_RESPONSE, DUMMY_GET_STATE_RESPONSE,
+                     DUMMY_LOGIN_RESPONSE, DUMMY_SET_AUTO_OFF_RESPONSE,
+                     DUMMY_UPDATE_NAME_RESPONSE)
 
 
 @fixture(name='recurring_tommorow_schedule')
