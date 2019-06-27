@@ -1,358 +1,65 @@
-# Switcher Boiler Unofficial Bridge and API Tools
-[![CircleCI](https://circleci.com/gh/TomerFi/aioswitcher/tree/master.svg?style=shield)](https://circleci.com/gh/TomerFi/aioswitcher/tree/master) [![CodeCov](https://codecov.io/gh/TomerFi/aioswitcher/branch/master/graph/badge.svg)](https://codecov.io/gh/TomerFi/aioswitcher) [![Requirements Status](https://requires.io/github/TomerFi/aioswitcher/requirements.svg?branch=master)](https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/49a3c3b0987e4d9a8f400eb49db423d8)](https://www.codacy.com/app/TomerFi/aioswitcher?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomerFi/aioswitcher&amp;utm_campaign=Badge_Grade)
-
-[![PyPI version](https://badge.fury.io/py/aioswitcher.svg)](https://pypi.org/project/aioswitcher/) [![Python Wheel](https://img.shields.io/pypi/format/aioswitcher.svg)](https://pypi.org/project/aioswitcher/) [![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/)) [![License](https://img.shields.io/pypi/l/aioswitcher.svg)](https://pypi.org/project/aioswitcher/)
-
-[![GitHub release](https://img.shields.io/github/release/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher/releases) [![Open Issues](https://img.shields.io/github/issues-raw/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher/issues) [![Commit Activity Month](https://img.shields.io/github/commit-activity/m/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher/commits/master) [![Last Commit](https://img.shields.io/github/last-commit/tomerfi/aioswitcher.svg)](https://github.com/TomerFi/aioswitcher) [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/TomerFi/aioswitcher)
-
-[![Slack Channel](https://slack.tomfi.info:8443/aioswitcher.svg)](https://tomfi.slack.com/messages/CK3KRBYDP) [![Sourcegraph](https://sourcegraph.com/github.com/tomerfi/aioswitcher/-/badge.svg)](https://sourcegraph.com/github.com/tomerfi/aioswitcher?badge)
-
-Python module for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
-This module was applicable thanks to the amazing R&D performed by Shai and Aviad [here](https://github.com/NightRang3r/Switcher-V2-Python).</br>
-This module is *Asyncio* friendly [*static-typed*](https://www.python.org/dev/peps/pep-0484/), it requires the use of *Python 3.5* or above.</br>
-
-## Installation
-```shell
-pip install aioswitcher
-```
-
-## Hardware
-```text
-Switcher V2 - verified by author
-Switcher Touch - verified by users
-```
-
-## Usage
-This module provides two separate integrations with the Switcher device, both fully asynchronous.</br>
-The first integration is a `UDP Bridge`constantly listening to broadcast messages launched from the device approximately every 4 seconds. This integration provides constant device state updates.</br>
-The second integration is a `TCP Socket API`providing the ability to not only get the state of the device, but also control it.</br>
-
-### UDP Bridge
-In this integration, we're constantly listening to messages broadcast from the device and containing information about the device and the device's state.</br>
-The message is being broadcast from the device approximately every 4 seconds, once the message is recieved and verified it will be `put` in an [asyncio.Queue](https://docs.python.org/3.5/library/asyncio-queue.html#queue) with max size of 1, which means the `Queue` always has `1` or `None`  messages waiting, each message will be an updated instance of the [SwitcherV2Device](#switcherv2device) object.</br>
-
-The bridge can be used as a `Context Manager` as well as being instantiated and controlled manually.
-
-Please Note: this integration will allow you to receive *Real-Time* updates from the device approximately every 4 seconds, yet it will not allow you to control the device, for that you can use the API integration.</br>
-
-#### Example of UDP Bridge usage
-```python
-import asyncio
-from datetime import datetime
-from aioswitcher.bridge import SwitcherV2Bridge
-from aioswitcher.devices import SwitcherV2Device
-
-# instructions on getting this data is in,
-# https://github.com/NightRang3r/Switcher-V2-Python
-phone_id = "your_devices's_phone_id"
-device_id = "your_devices's_device_id"
-device_password = "your_devices's_device_password"
-
-# create a new event loop
-your_loop = asyncio.get_event_loop()
-
-"""Use as instance."""
-async def run_as_instance() -> None:
-    v2bridge = SwitcherV2Bridge(
-        your_loop, phone_id, device_id, device_password)
-    # start the bridge
-    await v2bridge.start()
-
-    # get the Queue
-    queue = v2bridge.queue  # type: asyncio.Queue
-
-    # create an event to signal your coroutine to start/stop
-    signal_event = asyncio.Event()
-    signal_event.set()
-
-    # coroutine for getting the device from the queue
-    async def get_device_from_queue() -> None:
-        device = await queue.get()  # type: SwitcherV2Device
-        print("instance state is: {}".format(device.state))
-        print(datetime.now())
-        if signal_event.is_set():
-            your_loop.call_soon(get_device_from_queue)
-        return None
-
-    # chedule your coroutine which will wait for the device
-    # to be put in the queue, and print the time and its state
-    # afterwards it will call itself again, the result will be
-    # the device state being printed every approximately 4 seconds
-    your_loop.call_soon(get_device_from_queue)
-
-    # wait for 40 seconds
-    # the state should be printed about 8 to 10 times
-    await asyncio.sleep(40)
-
-    # stop the coroutine
-    signal_event.clear()
-
-    # stop the bridge
-    await v2bridge.stop()
-
-    return None
-
-"""Use as context manager."""
-async def run_as_context_manager() -> None:
-    async with SwitcherV2Bridge(
-            your_loop, phone_id, device_id,
-            device_password) as v2bridge:
-        # get the Queue
-        queue = v2bridge.queue  # type: asyncio.Queue
-
-        # create an event to signal your coroutine to start/stop
-        signal_event = asyncio.Event()
-        signal_event.set()
-
-        # coroutine for getting the device from the queue
-        async def get_device_from_queue() -> None:
-            device = await queue.get()  # type: SwitcherV2Device
-            print("context manager state is: {}".format(device.state))
-            print(datetime.now())
-            if signal_event.is_set():
-                your_loop.call_soon(get_device_from_queue)
-            return None
-
-        # schedule your coroutine which will wait for the device
-        # to be put in the queue, and print the time and its state
-        # afterwards it will call itself again, the result will be
-        # the device state being printed every approximately 4 seconds
-        your_loop.call_soon(get_device_from_queue)
-
-        # wait for 40 seconds
-        # the state should be printed about 8 to 10 times
-        await asyncio.sleep(40)
-
-        # stop the coroutine
-        signal_event.clear()
-
-    return None
-
-your_loop.run_until_complete(run_as_instance())
-your_loop.run_until_complete(run_as_context_manager())
-
-loop.close()
-
-```
-
-### TCP Socket API
-This integration provides the following abilities:
--   Get the device status
--   Control the device
--   Get the schedules from the device
--   Set the device name
--   Set the device Auto-Off configuration
--   Create/Delete/Enable/Disable schedules on the device.</br>
-
-Although this API is applicable as a `context manager` and as an instance of an object, it is preferable to use it as a `context manager` due to the nature of the `tcp` connection (you don't want to occupy a connection slot on the device any longer then you have to or you'll start seeing `TimeOutErrors`).</br>
-For use as an instance (which will not be covered here), you can rely on the `UDP Bridge` example and substitute  `start()` and `stop()` with `connect()` and `disconnect()`.</br>
-
-The various responses are covered in the [API Response Messages](#api-response-messages) section.
-
-#### Example of TCP Socket API usage
-```python
-import asyncio
-from datetime import timedelta
-from aioswitcher import consts, tools
-from aioswitcher.api import SwitcherV2Api, messages
-from aioswitcher.schedules import SwitcherV2Schedule
-
-
-# create a new event loop
-your_loop = asyncio.get_event_loop()
-
-# if you're also using the udp bridge,
-# the ip address is available at (SwitcherV2Device).ip_addr
-ip_address = "your_device's_ip_address"
-
-# instructions on getting this data is in
-# https://github.com/NightRang3r/Switcher-V2-Python
-phone_id = "your_devices's_phone_id"
-device_id = "your_devices's_device_id"
-device_password = "your_devices's_device_password"
-
-"""Use as context manager."""
-async def run_as_context_manager() -> None:
-    async with SwitcherV2Api(
-            your_loop, ip_address, phone_id,
-            device_id, device_password) as swapi:
-        # get the device state
-        # response: messages.SwitcherV2StateResponseMSG
-        state_response = await swapi.get_state()
-
-        # control the device: on / off / on + (15/30/45/60) minutes timer
-        # response: messages.SwitcherV2ControlResponseMSG
-        turn_on_response = await swapi.control_device(
-            consts.COMMAND_ON)
-        turn_off_response = await swapi.control_device(
-            consts.COMMAND_OFF)
-        turn_on_30_min_response = await swapi.control_device(
-            consts.COMMAND_ON, '30')
-
-        # set the limit time to auto-shutdown the device (1 < hours < 24)
-        # response: messages.SwitcherV2SetAutoOffResponseMSG
-        time_to_off = timedelta(hours=1, minutes=30)
-        set_auto_off_response = await swapi.set_auto_shutdown(time_to_off)
-
-        # set the device name (2 < length < 33)
-        # response: messages.SwitcherV2UpdateNameResponseMSG
-        set_name_response = await swapi.set_device_name("new device name")
-
-        # get the configured schedules from the device
-        # response: messages.SwitcherV2GetScheduleResponseMSG
-        get_schedules_response = await swapi.get_schedules()
-
-        # disable or enable a schedule
-        # schedule_data = (SwitcherV2Schedule).schedule_data
-        # response: messages.SwitcherV2DisableEnableScheduleResponseMSG
-        #
-        # the following will enable the schedule:
-        # updated_schedule_data = (
-        #    schedule_data[0:2] + consts.ENABLE_SCHEDULE + schedule_data[4:])
-        #
-        # the following will disable the schedule:
-        # updated_schedule_data = (
-        #    schedule_data[0:2] + consts.DISABLE_SCHEDULE + schedule_data[4:])
-        enable_disable_response = await swapi.disable_enable_schedule(
-            updated_schedule_data)
-
-        # delete a schedule (0 <= schedule_id <= 7)
-        # schedule_id = (SwitcherV2Schedule).schedule_id
-        # response: messages.SwitcherV2DeleteScheduleResponseMSG
-        delete_response = await swapi.delete_schedule(schedule_id)
-
-        # create a schedule to turn on at 20:30 and off at 21:00
-        # response: messages.SwitcherV2CreateScheduleResponseMSG
-        schedule_days = [0]
-        # append selected days, if non-recurring skip next
-        schedule_days.append(consts.DAY_TO_INT_DICT[consts.SUNDAY])
-        schedule_days.append(consts.DAY_TO_INT_DICT[consts.MONDAY])
-        schedule_days.append(consts.DAY_TO_INT_DICT[consts.TUESDAY])
-        schedule_days.append(consts.DAY_TO_INT_DICT[consts.WEDNESDAY])
-        schedule_days.append(consts.DAY_TO_INT_DICT[consts.THURSDAY])
-        schedule_days.append(consts.DAY_TO_INT_DICT[consts.FRIDAY])
-        schedule_days.append(consts.DAY_TO_INT_DICT[consts.SATURDAY])
-        # skip here if non-recurring
-        weekdays = await tools.create_weekdays_value(
-            your_loop, schedule_days)
-        start_time = await tools.timedelta_str_to_schedule_time(
-            your_loop, str(timedelta(hours=20, minutes=30)))
-        end_time = await tools.timedelta_str_to_schedule_time(
-            your_loop, str(timedelta(hours=21)))
-        schedule_data = consts.SCHEDULE_CREATE_DATA_FORMAT.format(
-            weekdays, start_time, end_time)
-        create_response = await swapi.create_schedule(schedule_data)
-
-    return None
-
-your_loop.run_until_complete(run_as_context_manager())
-
-your_loop.close()
-
-```
-
-## Objects and Properties
-There are two main objects you need to be aware of:</br>
-The first object is the one representing the device, [aioswitcher/devices/SwitcherV2Device](aioswitcher/devices.py#L7).</br>
-The second object is the one representing the device's schedule, [aioswitcher/schedules/SwitcherV2Schedule](aioswitcher/schedules.py#L12).</br>
-
-### SwitcherV2Device
-| Property            | Type       | Description                               | Possible Values     | Default Value    |
-| ------------------- | ---------- | ----------------------------------------- | ------------------- | ---------------- |
-| *device_id*         | `str`      | Return the device id.                     | ab1c2d              |                  |
-| *ip_addr*           | `str`      | Return the ip address.                    | 192.168.100.157     | waiting_for_data |
-| *mac_addr*          | `str`      | Return the mac address.                   | A1:B2:C3:45:67:D8   | waiting_for_data |
-| *name*              | `str`      | Return the device name.                   | device name         | waiting_for_data |
-| *state*             | `str`      | Return the device state.                  | on, off             |                  |
-| *remaining_time*    | `str`      | Return the auto-off configuration value.  | %H:%M:%S            | waiting_for_data |
-| *auto_off_set*      | `str`      | Return the time left to auto-off.         | %H:%M:%S            | waiting_for_data |
-| *power_consumption* | `int`      | Return the power consumption in watts.    | 2780                | 0                |
-| *electric_current*  | `float`    | Return the power consumption in amps.     | 12.8                | 0.0              |
-| *phone_id*          | `str `     | Return the the phone id.                  | 1234                |                  |
-| *last_data_update*  | `datetime` | Return the timestamp of the last update.  | %Y-%m-%dTH:%M:%S.%F |                  |
-| *last_state_change* | `datetime` | Return the timestamp of the state change. | %Y-%m-%dTH:%M:%S.%F |                  |
-
-### SwitcherV2Schedule
-| Property        | Type             | Description                                         | Possible Values    | Default          |
-| --------------- | ---------------- | --------------------------------------------------- | ------------------ | ---------------- |
-| *schedule_id*   | `str`            | Return the schedule id.                             | 0-7                |                  |
-| *enabled*       | `bool`           | Return true if enabled.                             | True, False        | False            |
-| *recurring*     | `bool`           | Return true if recurring.                           | True, False        | False            |
-| *days*          | `List[str]`      | Return the weekdays of the schedule.                | - Sunday           |                  |
-|                 |                  |                                                     | - Monday           |                  |
-|                 |                  |                                                     | - Tuesday          |                  |
-|                 |                  |                                                     | - Wednesday        |                  |
-|                 |                  |                                                     | - Thursday         |                  |
-|                 |                  |                                                     | - Friday           |                  |
-|                 |                  |                                                     | - Saturday         |                  |
-|                 |                  |                                                     | - **Every day**    |                  |
-| *start_time*    | `str`            | Return the start time of the schedule.              | %H:%M              | waiting_for_data |
-| *end_time*      | `str`            | Return the end time of the schedule.                | %H:%M              | waiting_for_data |
-| *duration*      | `str`            | Return the duration of the schedule.                | 0:30:00            | waiting_for_data |
-| *schedule_data* | `str`            | Return the schedule data for managing the schedule. | Any                | waiting_for_data |
-| *init_future*   | `asyncio.Future` | Return the future of the initialization.            | SwitcherV2Schedule |                  |
-
--   *enabled* has a setter for manipulating the schedule status.
--   *schedule_data* has a setter for manipulating the schedule data.
-
-### API Response Messages
-The following are the response message objects returning from the API functions.
-The source of the responses can be found [here](aioswitcher/api/messages.py).</br>
-Please note the [ResponseMessageType](aioswitcher/api/messages.py#L15) *Enum Class* for identifying the response message types:
--   *AUTO_OFF*
--   *CONTROL*
--   *CREATE_SCHEDULE*
--   *DELETE_SCHEDULE*
--   *DISABLE_ENABLE_SCHEDULE*
--   *GET_SCHEDULES*
--   *STATE*
--   *UPDATE_NAME*
-
-#### SwitcherV2BaseResponseMSG
-| Property            | Type                  | Description                           |
-| ------------------- | --------------------- | ------------------------------------- |
-| *unparsed_response* | `bytes`               | Return the unparsed response message. |
-| *successful*        | `bool`                | Return the status of the message.     |
-| *msg_type*          | `ResponseMessageType` | Return the response message type.     |
-
-#### SwitcherV2StateResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.STATE*
- 
-| Property      | Type              | Description                                                |
-| ------------- | ----------------- | ---------------------------------------------------------- |
-| *state*       | `str`             | Return the state. Values will be `STATE_ON` or `STATE_OFF` |
-|               |                   | located in [aioswitcher.consts](aioswitcher/consts.py)     |
-| *time_left*   | `str`             | Return the time left to auto-off.                          |
-| *auto_off*    | `str`             | Return the auto-off configuration value.                   |
-| *power*       | `Optional[int]`   | Return the current power consumption in watts.             |
-| *current*     | `Optional[float]` | Return the power consumption in amps.                      |
-| *init_future* | `asyncio.Future`  | Return the future of the initialization.                   |
-|               |                   | As the initiliazation of this message requires some        |
-|               |                   | asyncronous actions, please use `init_future.result()`     |
-|               |                   | to get the message object.                                 |
-
-#### SwitcherV2ControlResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.CONTROL*
-
-#### SwitcherV2SetAutoOffResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.AUTO_OFF*
-
-#### SwitcherV2UpdateNameResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.UPDATE_NAME*
-
-#### SwitcherV2GetScheduleResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.GET_SCHEDULES*
-
-| Property          | Type                       | Description                                                 |
-| ----------------- | -------------------------- | ----------------------------------------------------------- |
-| *found_schedules* | `bool`                     | Return true if found schedules in the response.             | 
-| *get_schedules*   | `List[SwitcherV2Schedule]` | Return a list of [SwitcherV2Schedule](#switcherv2schedule). |
-
-#### SwitcherV2DisableEnableScheduleResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.DISABLE_ENABLE_SCHEDULE*
-
-#### SwitcherV2DeleteScheduleResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.DELETE_SCHEDULE*
-
-#### SwitcherV2CreateScheduleResponseMSG (SwitcherV2BaseResponseMSG)
--   *ResponseMessageType.CREATE_SCHEDULE*
+<!--lint disable maximum-heading-length-->
+# Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![cii-best-practices]][2] 
+
+| Stage     | Badges                                                                            |
+| --------- | --------------------------------------------------------------------------------- |
+| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6] | 
+| `Builds`  | [![circleci]][7] [![read-the-docs]][8]                                            |
+| `Pypi`    | [![requires-io]][9]                                                               |
+| `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![snyk-npm]][12]          |
+
+[![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/)) 
+
+PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).
+Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted with
+[readthedocs.io](https://readthedocs.org/).
+
+This module:
+-   Is packaged with [poetry](https://poetry.eustace.io/).
+
+-   Works concurrently using Python's Asynchronous I/O module [asyncio](https://docs.python.org/3/library/asyncio.html#module-asyncio).
+
+-   Is static typed and checked with [mypy](https://mypy.readthedocs.io/en/latest/index.html) based
+    on [PEP484](https://www.python.org/dev/peps/pep-0484/).
+
+-   Follows [black code style](https://black.readthedocs.io/en/stable/) rules and guidelines.
+
+-   Package is described using [pyproject.toml](pyproject.toml) based on [PEP517](https://www.python.org/dev/peps/pep-0517/)
+    and [PEP518](https://www.python.org/dev/peps/pep-0518/).
+
+Although the [aioswitcher][11] module requires the use of *Python 3.5/3.6/3.7*,
+The use of *Python 3.7* is preferable.
+
+[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/TomerFi)
+
+<!-- Real Links -->
+[0]: https://github.com/TomerFi/aioswitcher
+[1]: https://tomfi.slack.com/messages/CK3KRBYDP
+[2]: https://bestpractices.coreinfrastructure.org/projects/2889
+[3]: https://codecov.io/gh/TomerFi/aioswitcher
+[4]: https://www.codacy.com/app/TomerFi/aioswitcher?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomerFi/aioswitcher&amp;utm_campaign=Badge_Grade
+[5]: https://black.readthedocs.io/en/stable/
+[6]: http://mypy-lang.org/
+[7]: https://circleci.com/gh/TomerFi/aioswitcher
+[8]: https://aioswitcher.readthedocs.io/en/stable
+[9]: https://requires.io/github/TomerFi/aioswitcher/requirements
+[10]: https://david-dm.org/TomerFi/aioswitcher
+[11]: https://pypi.org/project/aioswitcher/
+[12]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=package.json
+
+<!-- Badges Links -->
+[checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
+[cii-best-practices]: https://bestpractices.coreinfrastructure.org/projects/2889/badge
+[circleci]: https://circleci.com/gh/TomerFi/aioswitcher.svg?style=shield
+[codacy]: https://api.codacy.com/project/badge/Grade/49a3c3b0987e4d9a8f400eb49db423d8
+[codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
+[code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
+[david-dm-dev-package-json-dependencies-status]: https://david-dm.org/TomerFi/aioswitcher/status.svg
+[pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
+[pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
+[pypi-version]: https://badge.fury.io/py/aioswitcher.svg
+[read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
+[requires-io]: https://requires.io/github/TomerFi/aioswitcher/requirements.svg
+[self-hosted-slack-channel]: https://slack.tomfi.info:8443/aioswitcher.svg
+[shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
+[snyk-npm]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=package.json

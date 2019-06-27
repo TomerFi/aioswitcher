@@ -30,7 +30,7 @@
   },
   "scripts": {
     "validate-pkg": "pjv --filenmae package.json --spec npm --warnings --recommendations",
-    "lint-md": "remark --rc-path .remarkrc --frail . .github",
+    "lint-md": "remark --rc-path .remarkrc --ignore-path .remarkignore --frail . .github",
     "spell-md-interactive": "mdspell --en-us --ignore-numbers --ignore-acronyms '*.md' '.github/**/*.md'",
     "spell-md-report": "mdspell --en-us --ignore-numbers --ignore-acronyms --report '*.md' '.github/**/*.md'"
   },

@@ -5,8 +5,10 @@
     "remark-preset-lint-consistent",
     "remark-preset-lint-markdown-style-guide",
     "remark-preset-lint-recommended",
+    ["remark-lint-final-definition", false],
     ["remark-lint-maximum-heading-length", 80],
     ["remark-lint-maximum-line-length", 100],
-    ["remark-lint-no-file-name-irregular-characters", false]
+    ["remark-lint-no-file-name-irregular-characters", false],
+    ["remark-lint-no-shortcut-reference-image", false]
   ]
 }
