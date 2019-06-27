@@ -1,11 +1,11 @@
 <!--lint disable maximum-heading-length-->
-# Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![cii-best-practices]][2] 
+# Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![shields-io-cii-best-practices-summary]][2] 
 
 | Stage     | Badges                                                                            |
 | --------- | --------------------------------------------------------------------------------- |
 | `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6] | 
 | `Builds`  | [![circleci]][7] [![read-the-docs]][8]                                            |
-| `Pypi`    | [![requires-io]][9]                                                               |
+| `Pypi`    | [![requires-io]][9] [![snyk-pypi]][13]                                            |
 | `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![snyk-npm]][12]          |
 
 [![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/)) 
@@ -46,10 +46,10 @@ The use of *Python 3.7* is preferable.
 [10]: https://david-dm.org/TomerFi/aioswitcher
 [11]: https://pypi.org/project/aioswitcher/
 [12]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=package.json
+[13]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=requirements.txt
 
 <!-- Badges Links -->
 [checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
-[cii-best-practices]: https://bestpractices.coreinfrastructure.org/projects/2889/badge
 [circleci]: https://circleci.com/gh/TomerFi/aioswitcher.svg?style=shield
 [codacy]: https://api.codacy.com/project/badge/Grade/49a3c3b0987e4d9a8f400eb49db423d8
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
@@ -61,5 +61,7 @@ The use of *Python 3.7* is preferable.
 [read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
 [requires-io]: https://requires.io/github/TomerFi/aioswitcher/requirements.svg
 [self-hosted-slack-channel]: https://slack.tomfi.info:8443/aioswitcher.svg
+[shields-io-cii-best-practices-summary]: https://img.shields.io/cii/summary/2889.svg
 [shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
 [snyk-npm]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=package.json
+[snyk-pypi]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=requirements.txt
