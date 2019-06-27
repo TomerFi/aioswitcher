@@ -4,7 +4,7 @@ from asyncio import AbstractEventLoop, Event, Queue
 from functools import partial
 from socket import AF_INET
 from types import TracebackType
-from typing import Optional, Type, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional, Type
 
 from ..consts import SOCKET_BIND_TUP
 from ..protocols import SwitcherV2UdpProtocolFactory
@@ -13,11 +13,16 @@ if TYPE_CHECKING:
     from ..devices import SwitcherV2Device
 
 
-class SwitcherV2Bridge():
+class SwitcherV2Bridge:
     """Represntation of the SwitcherV2 Bridge."""
 
-    def __init__(self, loop: AbstractEventLoop, phone_id: str,
-                 device_id: str, device_password: str) -> None:
+    def __init__(
+        self,
+        loop: AbstractEventLoop,
+        phone_id: str,
+        device_id: str,
+        device_password: str,
+    ) -> None:
         """Initialize the switcherv2 bridge."""
         self._loop = loop
         self._phone_id = phone_id
@@ -28,18 +33,21 @@ class SwitcherV2Bridge():
         self._running_evt = Event()
         self._queue = Queue(maxsize=1)  # type: Queue
 
-    async def __aenter__(self) -> 'SwitcherV2Bridge':
+    async def __aenter__(self) -> "SwitcherV2Bridge":
         """Enter SwitcherV2Bridge context manager."""
         await self.start()
         return await self.__await__()
 
-    async def __await__(self) -> 'SwitcherV2Bridge':
+    async def __await__(self) -> "SwitcherV2Bridge":
         """Return SwitcherV2Bridge awaitable object."""
         return self
 
-    async def __aexit__(self, exc_type: Optional[Type[BaseException]],
-                        exc_value: Optional[BaseException],
-                        traceback: Optional[TracebackType]) -> None:
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_value: Optional[BaseException],
+        traceback: Optional[TracebackType],
+    ) -> None:
         """Exit SwitcherV2Bridge context manager."""
         return await self.stop()
 
@@ -48,9 +56,18 @@ class SwitcherV2Bridge():
         await self._loop.create_datagram_endpoint(
             partial(
                 SwitcherV2UdpProtocolFactory,
-                *[self._loop, self._phone_id, self._device_id,
-                  self._device_password, self.queue, self._running_evt]),
-            local_addr=SOCKET_BIND_TUP, family=AF_INET)
+                *[
+                    self._loop,
+                    self._phone_id,
+                    self._device_id,
+                    self._device_password,
+                    self.queue,
+                    self._running_evt,
+                ],
+            ),
+            local_addr=SOCKET_BIND_TUP,
+            family=AF_INET,
+        )
 
         self._running_evt.set()
         return None

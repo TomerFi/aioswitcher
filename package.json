@@ -1,0 +1,48 @@
+{
+  "name": "aioswitcher",
+  "version": "2019.6.26-dev",
+  "description": "Switcher Boiler Unofficial Bridge and API.",
+  "keywords": [
+    "home",
+    "automation",
+    "switcher",
+    "water-heater"
+  ],
+  "homepage": "https://pypi.org/project/aioswitcher/",
+  "bugs": {
+    "url": "https://github.com/TomerFi/aioswitcher/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Tomer Figenblat",
+    "email": "tomer.figenblat@gmail.com",
+    "url": "https://github.com/TomerFi"
+  },
+  "contributors": [],
+  "engines": {},
+  "files": [
+    ".remarkrc"
+  ],
+  "directories": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TomerFi/aioswitcher.git"
+  },
+  "scripts": {
+    "validate-pkg": "pjv --filenmae package.json --spec npm --warnings --recommendations",
+    "lint-md": "remark --rc-path .remarkrc --ignore-path .remarkignore --frail . .github",
+    "spell-md-interactive": "mdspell --en-us --ignore-numbers --ignore-acronyms '*.md' '.github/**/*.md'",
+    "spell-md-report": "mdspell --en-us --ignore-numbers --ignore-acronyms --report '*.md' '.github/**/*.md'"
+  },
+  "dependencies": {
+    "markdown-spellcheck": "1.3.1",
+    "package-json-validator": "0.6.3",
+    "remark-cli": "6.0.1",
+    "remark-frontmatter": "1.3.2",
+    "remark-lint": "6.0.5",
+    "remark-preset-lint-consistent": "2.0.3",
+    "remark-preset-lint-markdown-style-guide": "2.1.3",
+    "remark-preset-lint-recommended": "3.0.3"
+  },
+  "private": true
+}

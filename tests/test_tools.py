@@ -1,5 +1,6 @@
 """Test cases for the aioswitcher.tools module."""
 
+# fmt: off
 from asyncio import AbstractEventLoop
 from binascii import unhexlify
 from datetime import datetime, timedelta
@@ -11,12 +12,14 @@ from pytest import fail, mark, raises
 from aioswitcher.api.packets import GET_STATE_PACKET
 from aioswitcher.consts import ENCODING_CODEC, STRUCT_PACKING_FORMAT
 from aioswitcher.errors import CalculationError, DecodingError, EncodingError
-from aioswitcher.tools import (
-    convert_minutes_to_timer, convert_seconds_to_iso_time,
-    convert_string_to_device_name, convert_timedelta_to_auto_off,
-    crc_sign_full_packet_com_key, create_weekdays_value,
-    get_days_list_from_bytes, get_time_from_bytes, get_timestamp,
-    timedelta_str_to_schedule_time)
+from aioswitcher.tools import (convert_minutes_to_timer,
+                               convert_seconds_to_iso_time,
+                               convert_string_to_device_name,
+                               convert_timedelta_to_auto_off,
+                               crc_sign_full_packet_com_key,
+                               create_weekdays_value, get_days_list_from_bytes,
+                               get_time_from_bytes, get_timestamp,
+                               timedelta_str_to_schedule_time)
 
 from .asserters import assert_lists_equal, assert_seconds_to_iso_time
 from .common import create_random_time
@@ -28,10 +31,13 @@ from .consts import (DUMMY_DEVICE_ID, DUMMY_DEVICE_NAME, DUMMY_SESSION_ID,
                      TEST_TIMEDELTA_SUCCESS_NO_SECONDS,
                      TEST_TIMEDELTA_SUCCESS_SECONDS, TIMESTAMP_COMPARE_FORMAT)
 
+# fmt: on
+
 
 @mark.asyncio
 async def test_convert_seconds_to_iso_time(
-        event_loop: AbstractEventLoop) -> None:
+    event_loop: AbstractEventLoop
+) -> None:
     """Test the convert_seconds_to_iso_time tool."""
     with raises(CalculationError) as exc_info:
         await convert_seconds_to_iso_time(event_loop, -1)
@@ -47,7 +53,8 @@ async def test_convert_seconds_to_iso_time(
 
 @mark.asyncio
 async def test_crc_sign_full_packet_com_key(
-        event_loop: AbstractEventLoop) -> None:
+    event_loop: AbstractEventLoop
+) -> None:
     """Test the crc_sign_full_packet_com_key tool."""
     with raises(EncodingError) as exc_info:
         await crc_sign_full_packet_com_key(event_loop, "notlongenough")
@@ -56,7 +63,8 @@ async def test_crc_sign_full_packet_com_key(
 
     try:
         packet = GET_STATE_PACKET.format(
-            DUMMY_SESSION_ID, DUMMY_TIMESTAMP, DUMMY_DEVICE_ID)
+            DUMMY_SESSION_ID, DUMMY_TIMESTAMP, DUMMY_DEVICE_ID
+        )
         result = await crc_sign_full_packet_com_key(event_loop, packet)
         assert packet == result[:-8]
         assert RESULT_CRC_SIGNATURE == result[-8:]
@@ -75,8 +83,8 @@ async def test_convert_minutes_to_timer(event_loop: AbstractEventLoop) -> None:
     try:
         result = await convert_minutes_to_timer(event_loop, TEST_MINUTES)
         unpacked = unpack(
-            STRUCT_PACKING_FORMAT,
-            unhexlify(result.encode(ENCODING_CODEC)))
+            STRUCT_PACKING_FORMAT, unhexlify(result.encode(ENCODING_CODEC))
+        )
         assert TEST_MINUTES == str(int(unpacked[0] / 60))
     except EncodingError as exc:
         fail(str(exc))
@@ -84,26 +92,30 @@ async def test_convert_minutes_to_timer(event_loop: AbstractEventLoop) -> None:
 
 @mark.asyncio
 async def test_convert_timedelta_to_auto_off(
-        event_loop: AbstractEventLoop) -> None:
+    event_loop: AbstractEventLoop
+) -> None:
     """Test the convert_timedelta_to_auto_off tool."""
     with raises(EncodingError) as exc_info_min:
         await convert_timedelta_to_auto_off(
-            event_loop, TEST_TIMEDELTA_MIN_FAILURE)
+            event_loop, TEST_TIMEDELTA_MIN_FAILURE
+        )
 
     assert exc_info_min.type is EncodingError
 
     with raises(EncodingError) as exc_info_max:
         await convert_timedelta_to_auto_off(
-            event_loop, TEST_TIMEDELTA_MAX_FAILURE)
+            event_loop, TEST_TIMEDELTA_MAX_FAILURE
+        )
 
     assert exc_info_max.type is EncodingError
 
     try:
         result = await convert_timedelta_to_auto_off(
-            event_loop, TEST_TIMEDELTA_SUCCESS_SECONDS)
+            event_loop, TEST_TIMEDELTA_SUCCESS_SECONDS
+        )
         unpacked = unpack(
-            STRUCT_PACKING_FORMAT,
-            unhexlify(result.encode(ENCODING_CODEC)))
+            STRUCT_PACKING_FORMAT, unhexlify(result.encode(ENCODING_CODEC))
+        )
         new_timedelta = timedelta(seconds=int(unpacked[0]))
         assert new_timedelta != TEST_TIMEDELTA_SUCCESS_SECONDS
         assert new_timedelta == TEST_TIMEDELTA_SUCCESS_NO_SECONDS
@@ -113,23 +125,26 @@ async def test_convert_timedelta_to_auto_off(
 
 @mark.asyncio
 async def test_convert_string_to_device_name(
-        event_loop: AbstractEventLoop) -> None:
+    event_loop: AbstractEventLoop
+) -> None:
     """Test the convert_string_to_device_name tool."""
     with raises(EncodingError) as exc_info_min:
-        await convert_string_to_device_name(event_loop, 'x')
+        await convert_string_to_device_name(event_loop, "x")
 
     assert exc_info_min.type is EncodingError
 
     with raises(EncodingError) as exc_info_max:
-        await convert_string_to_device_name(event_loop, 'x' * 33)
+        await convert_string_to_device_name(event_loop, "x" * 33)
 
     assert exc_info_max.type is EncodingError
 
     try:
         result = await convert_string_to_device_name(
-            event_loop, DUMMY_DEVICE_NAME)
-        unhexed = \
-            unhexlify(result).decode(ENCODING_CODEC)[:len(DUMMY_DEVICE_NAME)]
+            event_loop, DUMMY_DEVICE_NAME
+        )
+        unhexed = unhexlify(result).decode(ENCODING_CODEC)[
+            : len(DUMMY_DEVICE_NAME)
+        ]
         assert len(result) == 64
         assert DUMMY_DEVICE_NAME == unhexed
     except EncodingError as exc:
@@ -139,7 +154,7 @@ async def test_convert_string_to_device_name(
 @mark.asyncio
 async def test_get_days_list_from_bytes(event_loop: AbstractEventLoop) -> None:
     """Test the get_days_list_from_bytes tool."""
-    with patch('aioswitcher.tools.HEX_TO_DAY_DICT', 999):
+    with patch("aioswitcher.tools.HEX_TO_DAY_DICT", 999):
         with raises(DecodingError) as exc_info:
             await get_days_list_from_bytes(event_loop, 0)
 
@@ -171,7 +186,7 @@ async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
 @mark.asyncio
 async def test_get_timestamp(event_loop: AbstractEventLoop) -> None:
     """Test the get_timestamp tool."""
-    with patch('aioswitcher.tools.ENCODING_CODEC', 'bin'):
+    with patch("aioswitcher.tools.ENCODING_CODEC", "bin"):
         with raises(EncodingError) as exc_info:
             await get_timestamp(event_loop)
 
@@ -180,13 +195,14 @@ async def test_get_timestamp(event_loop: AbstractEventLoop) -> None:
     try:
         result = await get_timestamp(event_loop)
         unpacked = unpack(
-            STRUCT_PACKING_FORMAT,
-            unhexlify(result.encode(ENCODING_CODEC)))
+            STRUCT_PACKING_FORMAT, unhexlify(result.encode(ENCODING_CODEC))
+        )
 
         approx_datetime = datetime.fromtimestamp(unpacked[0])
 
-        assert approx_datetime.strftime(TIMESTAMP_COMPARE_FORMAT) == \
-            datetime.now().strftime(TIMESTAMP_COMPARE_FORMAT)
+        assert approx_datetime.strftime(
+            TIMESTAMP_COMPARE_FORMAT
+        ) == datetime.now().strftime(TIMESTAMP_COMPARE_FORMAT)
 
     except EncodingError as exc:
         fail(str(exc))
@@ -209,7 +225,8 @@ async def test_create_weekdays_value(event_loop: AbstractEventLoop) -> None:
 
 @mark.asyncio
 async def test_timedelta_str_to_schedule_time(
-        event_loop: AbstractEventLoop) -> None:
+    event_loop: AbstractEventLoop
+) -> None:
     """Test the timedelta_str_to_schedule_time tool."""
     with raises(EncodingError) as exc_info:
         await timedelta_str_to_schedule_time(event_loop, "24:59")
@@ -221,14 +238,15 @@ async def test_timedelta_str_to_schedule_time(
         result = await timedelta_str_to_schedule_time(event_loop, random_time)
 
         unpacked = unpack(
-            STRUCT_PACKING_FORMAT,
-            unhexlify(result.encode(ENCODING_CODEC)))
+            STRUCT_PACKING_FORMAT, unhexlify(result.encode(ENCODING_CODEC))
+        )
 
         approx_datetime = datetime.fromtimestamp(unpacked[0])
 
-        assert random_time == '{}:{}'.format(
-            '00{}'.format(approx_datetime.hour)[-2:],
-            '00{}'.format(approx_datetime.minute)[-2:])
+        assert random_time == "{}:{}".format(
+            "00{}".format(approx_datetime.hour)[-2:],
+            "00{}".format(approx_datetime.minute)[-2:],
+        )
 
         assert approx_datetime.date() == datetime.now().date()
 

@@ -7,24 +7,48 @@ from typing import Optional
 class SwitcherV2Device:
     """Represntation of the switcherv2 data object."""
 
-    def __init__(self, device_id: str, ip_address: str, mac_address: str,
-                 name: str, state: str, remaining_time: Optional[str],
-                 auto_off_set: str, power_consumption: int,
-                 electric_current: float, phone_id: str,
-                 device_password: str, last_state_change: datetime) -> None:
+    def __init__(
+        self,
+        device_id: str,
+        ip_address: str,
+        mac_address: str,
+        name: str,
+        state: str,
+        remaining_time: Optional[str],
+        auto_off_set: str,
+        power_consumption: int,
+        electric_current: float,
+        phone_id: str,
+        device_password: str,
+        last_state_change: datetime,
+    ) -> None:
         """Initialize the Switcher V2 Device."""
         self._device_id = device_id
         self._mac_addr = mac_address
         self._phone_id = phone_id
         self._device_password = device_password
-        self.update_device_data(ip_address, name, state, remaining_time,
-                                auto_off_set, power_consumption,
-                                electric_current, last_state_change)
+        self.update_device_data(
+            ip_address,
+            name,
+            state,
+            remaining_time,
+            auto_off_set,
+            power_consumption,
+            electric_current,
+            last_state_change,
+        )
 
-    def update_device_data(self, ip_address: str, name: str, state: str,
-                           remaining_time: Optional[str], auto_off_set: str,
-                           power_consumption: int, electric_current: float,
-                           last_state_change: datetime) -> None:
+    def update_device_data(
+        self,
+        ip_address: str,
+        name: str,
+        state: str,
+        remaining_time: Optional[str],
+        auto_off_set: str,
+        power_consumption: int,
+        electric_current: float,
+        last_state_change: datetime,
+    ) -> None:
         """Update device data."""
         self._ip_address = ip_address
         self._name = name

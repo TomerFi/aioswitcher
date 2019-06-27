@@ -1,22 +1,25 @@
 """Switcher Bridge Response Messages."""
 
-from asyncio import AbstractEventLoop, ensure_future, Future
+# fmt: off
+from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import hexlify
 from socket import inet_ntoa
 from struct import pack
 from typing import Optional, Union
 
-from ..consts import (ENCODING_CODEC, STATE_OFF, STATE_ON,
-                      STATE_RESPONSE_ON, WAITING_TEXT)
+from ..consts import (ENCODING_CODEC, STATE_OFF, STATE_ON, STATE_RESPONSE_ON,
+                      WAITING_TEXT)
 from ..tools import convert_seconds_to_iso_time
 
+# fmt: on
 
-class SwitcherV2BroadcastMSG():
+
+class SwitcherV2BroadcastMSG:
     """represntation of the switcherv2 broadcast message."""
 
-    def __init__(self,
-                 loop: AbstractEventLoop,
-                 message: Union[bytes, str]) -> None:
+    def __init__(
+        self, loop: AbstractEventLoop, message: Union[bytes, str]
+    ) -> None:
         """Initialize the broadcast message."""
         self._loop = loop
         self._verified = self._validated = False
@@ -29,67 +32,91 @@ class SwitcherV2BroadcastMSG():
         self._auto_off_set = WAITING_TEXT
         self._remaining_time_to_off = WAITING_TEXT
         self._init_future = loop.create_future()
-        fixed_msg = message \
-            if isinstance(message, bytes) \
+        fixed_msg = (
+            message
+            if isinstance(message, bytes)
             else message.encode(ENCODING_CODEC)
+        )
         ensure_future(self.initialize(fixed_msg), loop=loop)
 
     async def initialize(self, message: bytes) -> None:
         """Finish the initialization of the broadcast message."""
         try:
             self._verified = (
-                hexlify(message)[0:4].decode(ENCODING_CODEC) == 'fef0'
-                and len(message) == 165)
+                hexlify(message)[0:4].decode(ENCODING_CODEC) == "fef0"
+                and len(message) == 165
+            )
             if self._verified:
                 temp_ip = hexlify(message)[152:160]
-                ip_addr = int(temp_ip[6:8] + temp_ip[4:6]
-                              + temp_ip[2:4] + temp_ip[0:2], 16)
+                ip_addr = int(
+                    temp_ip[6:8] + temp_ip[4:6] + temp_ip[2:4] + temp_ip[0:2],
+                    16,
+                )
                 self._ip_address = inet_ntoa(pack("<L", ip_addr))
 
-                mac = (
-                    hexlify(message)[160:172]
-                    .decode(ENCODING_CODEC).upper())
+                mac = hexlify(message)[160:172].decode(ENCODING_CODEC).upper()
                 self._mac_address = (
-                    mac[0:2] + ':' + mac[2:4] + ':' + mac[4:6] + ':'
-                    + mac[6:8] + ':' + mac[8:10] + ':' + mac[10:12])
+                    mac[0:2]
+                    + ":"
+                    + mac[2:4]
+                    + ":"
+                    + mac[4:6]
+                    + ":"
+                    + mac[6:8]
+                    + ":"
+                    + mac[8:10]
+                    + ":"
+                    + mac[10:12]
+                )
 
                 self._name = (
-                    message[42:74].decode(ENCODING_CODEC).rstrip('\x00'))
+                    message[42:74].decode(ENCODING_CODEC).rstrip("\x00")
+                )
 
-                self._device_id = (
-                    hexlify(message)[36:42].decode(ENCODING_CODEC))
+                self._device_id = hexlify(message)[36:42].decode(
+                    ENCODING_CODEC
+                )
 
                 self._device_state = (
-                    STATE_ON if hexlify(message)[266:270]
-                    .decode(ENCODING_CODEC) == STATE_RESPONSE_ON
-                    else STATE_OFF)
+                    STATE_ON
+                    if hexlify(message)[266:270].decode(ENCODING_CODEC)
+                    == STATE_RESPONSE_ON
+                    else STATE_OFF
+                )
 
                 temp_auto_off_set = hexlify(message)[310:318]
-                temp_auto_off_set_seconds = int(temp_auto_off_set[6:8]
-                                                + temp_auto_off_set[4:6]
-                                                + temp_auto_off_set[2:4]
-                                                + temp_auto_off_set[0:2], 16)
+                temp_auto_off_set_seconds = int(
+                    temp_auto_off_set[6:8]
+                    + temp_auto_off_set[4:6]
+                    + temp_auto_off_set[2:4]
+                    + temp_auto_off_set[0:2],
+                    16,
+                )
                 self._auto_off_set = await convert_seconds_to_iso_time(
-                    self._loop,
-                    temp_auto_off_set_seconds)
+                    self._loop, temp_auto_off_set_seconds
+                )
 
                 if self._device_state == STATE_ON:
                     temp_power = hexlify(message)[270:278]
-                    self._power_consumption = int(temp_power[2:4]
-                                                  + temp_power[0:2], 16)
-                    self._electric_current = round((
-                        self._power_consumption / float(220)), 1)
+                    self._power_consumption = int(
+                        temp_power[2:4] + temp_power[0:2], 16
+                    )
+                    self._electric_current = round(
+                        (self._power_consumption / float(220)), 1
+                    )
 
                     temp_remaining_time = hexlify(message)[294:302]
                     temp_remaining_time_seconds = int(
                         temp_remaining_time[6:8]
                         + temp_remaining_time[4:6]
                         + temp_remaining_time[2:4]
-                        + temp_remaining_time[0:2], 16)
-                    self._remaining_time_to_off = \
-                        await convert_seconds_to_iso_time(
-                            self._loop,
-                            temp_remaining_time_seconds)
+                        + temp_remaining_time[0:2],
+                        16,
+                    )
+                    # TODO: black keeps pushing this lengthy line, why?
+                    self._remaining_time_to_off = await convert_seconds_to_iso_time(  # noqa E501
+                        self._loop, temp_remaining_time_seconds
+                    )
 
             self._validated = True
             self.init_future.set_result(self)
