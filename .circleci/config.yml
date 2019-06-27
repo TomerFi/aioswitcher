@@ -136,27 +136,27 @@ commands:
           name: Bandit
           command: |
             . venv/bin/activate
-            bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
+            bandit -rvc .bandit src/ tests/ docs/source/ pyscripts/ -l -ii
       - run:
           name: Isort
           command: |
             . venv/bin/activate
-            isort --check-only --recursive src/ tests/ docs/source/
+            isort --check-only --recursive src/ tests/ docs/source/ pyscripts/
       - run:
           name: Flake8
           command: |
             . venv/bin/activate
-            flake8 --statistics --count --doctests src/ tests/ docs/source/
+            flake8 --statistics --count --doctests src/ tests/ docs/source/ pyscripts/
       - run:
           name: Black
           command: |
             . venv/bin/activate
-            black --diff src/ tests/ docs/source/
+            black --diff src/ tests/ docs/source/ pyscripts/
       - run:
           name: Mypy
           command: |
             . venv/bin/activate
-            mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
+            mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/ pyscripts/
 
   unit-tests-no-coverage:
     description: Run pytest test-cases for python code (python environment)
