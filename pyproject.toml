@@ -58,6 +58,7 @@ pytest-aiohttp = { version = "^0.3.0", optional = true }
 pytest-asyncio = { version = "^0.10.0", optional = true }
 pytest-cov = { version = "^2.7.1", optional = true }
 pytest-sugar = { version = "^0.9.2", optional = true }
+scspell3k = { version = "^2.2", optional = true }
 sphinx = { version = "^2.1.2", optional = true }
 sphinx-rtd-theme = { version = "^0.4.3", optional = true }
 toml = { version = "0.10.0", optional = true }
@@ -65,7 +66,7 @@ yamllint = { version = "^1.16.0", optional = true }
 
 [tool.poetry.extras]
 coverage = ["codacy-coverage", "codecov"]
-docslint = ["doc8"]
+docslint = ["doc8", "scspell3k"]
 docsbuild = ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
 nodeenv = ["nodeenv"]
 python-checkers = [
@@ -95,7 +96,7 @@ line_length = 79
 
 [tool.black]
 line-length = 79
-target-version = ['py37']
+target-version = ["py37"]
 
 [tool.tox]
 legacy_tox_ini = """
@@ -113,7 +114,9 @@ skipdist = true
 [testenv]
 basepython = python3.7
 skip_install = true
-whitelist_externals = poetry
+whitelist_externals =
+    bash
+    poetry
 
 [testenv:npm-checkers]
 commands = 
@@ -136,6 +139,7 @@ commands =
     black --diff src/ tests/ docs/source/
     mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
     doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
+    bash -c "for fil in docs/source/*.rst; do scspell --report-only  --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done"
     sphinx-build -W -b html -d {envtmpdir}/doctrees docs/source {envtmpdir}/html
 
 [testenv:py35]
@@ -143,14 +147,14 @@ basepython = python3.5
 commands =
     python --version
     poetry install -v --extras "unittests"
-    poetry run pytest -vsx
+    pytest -vs
 
 [testenv:py36]
 basepython = python3.6
 commands =
     python --version
     poetry install -v --extras "unittests"
-    poetry run pytest -vsx
+    pytest -vs
 
 [testenv:py37]
 commands =

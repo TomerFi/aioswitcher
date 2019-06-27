@@ -7,7 +7,7 @@ This module:
 -   Is packaged with poetry_.
 -   Works concurrently using Python's Asynchronous I/O module asyncio_.
 -   Is static typed and checked with mypy_ based on PEP484_.
--   Follows black_ code style rules and guidlines.
+-   Follows black_ code style rules and guidelines.
 -   Package is described using ``pyproject.toml`` based on PEP517_ and PEP518_.
 
 Although the aioswitcher_ module requires the use of *Python 3.5/3.6/3.7*,

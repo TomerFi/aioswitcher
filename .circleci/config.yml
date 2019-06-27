@@ -1,85 +1,179 @@
+# yamllint disable rule:line-length
 version: 2.1
 
+#####################
+##### Executors #####
+#####################
 executors:
+  # Used for executing npm modules.
+  node-docker:
+    docker:
+      - image: "circleci/node:lts"
+    working_directory: ~/workspace
+
+  # Used for starting python programs.
   python-docker:
     parameters:
       tag:
         type: string
-        default: "3.5.5"
+        default: "3.7.3"  # 3.5.7/3.6.8/3.7.3
     docker:
-      - image: circleci/python:<< parameters.tag >>
+      - image: "circleci/python:<< parameters.tag >>-stretch"
     working_directory: ~/workspace
     environment:
       TZ: "Asia/Jerusalem"
 
+#####################
+##### Commands ######
+#####################
 commands:
-  prepare-venv:
-    description: Prepare the virtual environment
-    parameters:
-      py:
-        type: string
-        default: "3.5.5"
+  ##################################################################
+  ### Commands for creating environments and save/restore caches ###
+  ##################################################################
+
+  # Node packages are installed here and then saved to cache.
+  # Use with the node-docker executer as preparation before executing npm modules.
+  prepare-node-environment:
+    description: Prepare node environment
     steps:
       - restore_cache:
           keys:
-            - v1-modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
+            - v1-aioswitcher-node-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
       - run:
-          name: Create venv for the python modules
+          name: Install npm packages
+          command: npm install
+      - save_cache:
+          key: v1-aioswitcher-node-{{ .Branch }}-{{ checksum "package.json" }}-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+
+  # Pypi packages are installed here with poetry into a venv that is saved to cache.
+  # Use with the python-docker executer as preparaton before starting python programs.
+  prepare-python-environment:
+    description: Prepare python environment
+    parameters:
+      pyversion:
+        type: string
+        default: "3.7.3"  # 3.5.7/3.6.8/3.7.3
+    steps:
+      - restore_cache:
+          keys:
+            - v1-aioswitcher-python-<< parameters.pyversion >>-{{ .Branch }}-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
+      - run:
+          name: Create the venv, install poetry packages
           command: |
             python -m venv venv
             . venv/bin/activate
-            pip install -q --upgrade pip setuptools
-            pip install -q -r requirements_test.txt -c requirements.txt
+            poetry install -v --extras "coverage" --extras "docslint" --extras "docsbuild" --extras "python-checkers" --extras "unittests"
       - save_cache:
-          key: v1-modules1-<< parameters.py >>-{{ .Branch }}-{{ checksum "MANIFEST.in" }}
+          key: v1-aioswitcher-python-<< parameters.pyversion >>-{{ .Branch }}-{{ checksum "pyproject.toml" }}-{{ checksum "poetry.lock" }}
           paths:
             - ./venv
+            - /home/circleci/.cache/pypoetry/virtualenvs
 
-  install-module:
-    description: Install aioswitcher module
+  ######################################################################################################
+  ###### Commands running inside the node-docker executer after running the prepare-node command #######
+  ######################################################################################################
+  pkg-validator:
+    description: Validate package.json file (node environment)
     steps:
       - run:
-          name: Install
+          name: Pjv - package.json
+          command: npm run validate-pkg
+
+  md-checkers:
+    description: Lint and spellcheck markdown files (node environment)
+    steps:
+      - run:
+          name: Remark - md lint
+          command: npm run lint-md
+      - run:
+          name: Markdown Spellcheck
+          command: npm run spell-md-report
+
+  ######################################################################################################
+  #### Commands running inside the python-docker executer after running the prepare-python command #####
+  ######################################################################################################
+  yaml-linter:
+    description: Validate yaml configuration files (python environment)
+    steps:
+      - run:
+          name: Yamllint
           command: |
             . venv/bin/activate
-            pip install .
+            yamllint --config-file .yamllint --format colored --strict .
 
-  check-manifest:
-    description: Run check-manifest test
+  docs-checkers:
+    description: Lint and spellcheck restructuredText files (python environment)
     steps:
       - run:
-          name: Check-manifest
+          name: Doc8
           command: |
             . venv/bin/activate
-            check-manifest -v
-
-  check-security:
-    description: Run bandit tests
-    steps:
+            doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
       - run:
-          name: Code-security
+          name: Scspell3k
           command: |
             . venv/bin/activate
-            bandit -rvc .bandit src tests -l -ii
+            bash -c "for fil in docs/source/*.rst; do scspell --report-only  --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done"
 
-  run-tests:
-    description: Run pytest test cases
+  sphinx-builder:
+    description: Temp build the documantation site with sphinx (python environment)
     steps:
       - run:
-          name: Pytest
+          name: Sphinx-build
+          command: |
+            . venv/bin/activate
+            mkdir sphinxtemp
+            sphinx-build -W -b html -d sphinxtemp/doctrees docs/source sphinxtemp/html
+            rm -r sphinxtemp
+
+  code-checkers:
+    description: Lint, check and validate the python code (python environment)
+    steps:
+      - run:
+          name: Bandit
+          command: |
+            . venv/bin/activate
+            bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
+      - run:
+          name: Isort
+          command: |
+            . venv/bin/activate
+            isort --check-only --recursive src/ tests/ docs/source/
+      - run:
+          name: Flake8
+          command: |
+            . venv/bin/activate
+            flake8 --statistics --count --doctests src/ tests/ docs/source/
+      - run:
+          name: Black
+          command: |
+            . venv/bin/activate
+            black --diff src/ tests/ docs/source/
+      - run:
+          name: Mypy
+          command: |
+            . venv/bin/activate
+            mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
+
+  unit-tests-no-coverage:
+    description: Run pytest test-cases for python code (python environment)
+    steps:
+      - run:
+          name: Unit-tests
           command: |
             . venv/bin/activate
             pytest -vs
 
-  run-tests-with-coverage:
-    description: Run pytest test cases
+  unit-tests-with-coverage:
+    description: Run pytest test-cases for python code and create a coverage report (python environment)
     steps:
       - run:
-          name: Pytest
+          name: Unit-tests with coverage
           command: |
             . venv/bin/activate
             pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
-            sed -i 's#venv/lib/python3.5/site-packages#src#g' coverage_report/coverage.xml
       - persist_to_workspace:
           root: coverage_report/
           paths:
@@ -89,150 +183,150 @@ commands:
       - store_test_results:
           path: coverage_report
 
-  run-linters:
-    description: Run flake8, pydocstyle, pydocstyle and pylint linters
+#####################
+####### Jobs ########
+#####################
+jobs:
+  #############################################
+  ### Jobs for the validate-config workflow ###
+  #############################################
+  pkg-validator-job:
+    executor:
+      name: node-docker
     steps:
-      - run:
-          name: Linters
-          command: |
-            . venv/bin/activate
-            flake8 --statistics --count --doctests src/ tests/
-            pydocstyle -v --count src/ tests/
-            pycodestyle -v --statistics --show-pep8 --count src/ tests/
-            pylint --disable fixme --rcfile pylintrc src/ tests/
+      - checkout
+      - prepare-node-environment
+      - pkg-validator
 
-  run-mypy:
-    description: Run mypy type checking
+  yaml-linter-job:
+    executor:
+      name: python-docker
     steps:
-      - run:
-          name: Mypy
-          command: |
-            . venv/bin/activate
-            mypy --config-file mypy.ini src/ tests/
+      - checkout
+      - prepare-python-environment
+      - yaml-linter
 
-  publish-codverage:
-    description: Publish code coverage to CodeCov and Codacy
+  #############################################
+  ### Jobs for the docs-lint-build workflow ###
+  #############################################
+  md-checkers-job:
+    executor:
+      name: node-docker
     steps:
+      - checkout
+      - prepare-node-environment
+      - md-checkers
+
+  docs-checkers-job:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-python-environment
+      - docs-checkers
+
+  sphinx-builder-job:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-python-environment
+      - sphinx-builder
+
+  #############################################
+  ### Jobs for the code-lint-test workflow ####
+  #############################################
+  code-checkers-job:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-python-environment
+      - code-checkers
+
+  python35-unittests-no-coverage-job:
+    executor:
+      name: python-docker
+      tag: "3.5.7"
+    steps:
+      - checkout
+      - prepare-python-environment:
+          pyversion: "3.5.7"
+      - unit-tests-no-coverage
+
+  python36-unittests-no-coverage-job:
+    executor:
+      name: python-docker
+      tag: "3.6.8"
+    steps:
+      - checkout
+      - prepare-python-environment:
+          pyversion: "3.6.8"
+      - unit-tests-no-coverage
+
+  python37-unittests-with-coverage-report-job:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-python-environment
+      - unit-tests-with-coverage
+
+  coverage-reports-upload-job:
+    executor:
+      name: python-docker
+    steps:
+      - checkout
+      - prepare-python
       - attach_workspace:
           at: coverage_report/
       - run:
-          name: Coverage report publish
+          name: CodeCov
           command: |
             . venv/bin/activate
             codecov --file coverage_report/coverage.xml
+      - run:
+          name: Codacy
+          command: |
+            . venv/bin/activate
             python-codacy-coverage -r coverage_report/coverage.xml
 
-jobs:
-  python35-manifest:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - check-manifest
-
-  python35-linters:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - run-linters
-
-  python35-mypy:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - run-mypy
-
-  python35-security:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - check-security
-
-  python35-unittests:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - install-module
-      - run-tests-with-coverage
-
-  python36-unittests:
-    executor:
-      name: python-docker
-      tag: "3.6"
-    steps:
-      - checkout
-      - prepare-venv:
-          py: "3.6"
-      - install-module
-      - run-tests
-
-  python37-unittests:
-    executor:
-      name: python-docker
-      tag: "3.7.1"
-    steps:
-      - checkout
-      - prepare-venv:
-          py: "3.7.1"
-      - install-module
-      - run-tests
-
-  python35-coverage-reports:
-    executor:
-      name: python-docker
-    steps:
-      - checkout
-      - prepare-venv
-      - publish-codverage
-
+#####################
+##### Workslows #####
+#####################
 workflows:
   version: "2"
 
-  build_test_deploy:
+  # validate configuration files
+  validate-config:
     jobs:
-      - python35-manifest
+      - pkg-validator-job
+      - yaml-linter-job
 
-      - python35-linters:
+  # Lint and build the documantation site files
+  docs-lint-build:
+    jobs:
+      - md-checkers-job
+      - docs-checkers-job
+      - sphinx-builder-job:
           requires:
-            - python35-manifest
+            - md-checkers-job
+            - docs-checkers-job
 
-      - python35-mypy:
+  # Lint and the test the code and scripts
+  code-lint-test:
+    jobs:
+      - code-checkers-job
+      - python35-unittests-no-coverage-job:
           requires:
-            - python35-manifest
-
-      - python35-security:
+            - code-checkers-job
+      - python36-unittests-no-coverage-job:
           requires:
-            - python35-manifest
-
-      - python35-unittests:
+            - code-checkers-job
+      - python37-unittests-with-coverage-report-job:
           requires:
-            - python35-linters
-            - python35-mypy
-            - python35-security
-
-      - python36-unittests:
+            - python35-unittests-no-coverage-job
+            - python36-unittests-no-coverage-job
+      - coverage-reports-upload-job:
           requires:
-            - python35-linters
-            - python35-mypy
-            - python35-security
-
-      - python37-unittests:
-          requires:
-            - python35-linters
-            - python35-mypy
-            - python35-security
-
-      - python35-coverage-reports:
-          requires:
-            - python35-unittests
-            - python36-unittests
-            - python37-unittests
+            - python37-unittests-with-coverage-report-job

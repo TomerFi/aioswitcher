@@ -20,7 +20,7 @@ With this integration, we're constantly listening to messages broadcast from the
 containing information about the device and the device's state.
 
 The message is being broadcast from the device approximately every 4 seconds,
-once the message is recieved and verified it will be ``put`` in an `asyncio.Queue`_ with the max
+once the message is received and verified it will be ``put`` in an `asyncio.Queue`_ with the max
 size of 1, which means the ``Queue`` always has ``1`` or ``None``  messages waiting.
 
 Each message will be an updated instance of the SwitcherV2Device_ object.
@@ -79,7 +79,7 @@ Example of UDP Bridge usage
                your_loop.call_soon(get_device_from_queue)
            return None
 
-       # chedule your coroutine which will wait for the device
+       # schedule your coroutine which will wait for the device
        # to be put in the queue, and print the time and its state
        # afterwards it will call itself again, the result will be
        # the device state being printed every approximately 4 seconds
@@ -439,8 +439,8 @@ SwitcherV2StateResponseMSG (SwitcherV2BaseResponseMSG)
 +-----------------+---------------------+-----------------------------------------------------+
 | **init_future** | ``asyncio.Future``  | Return the future of the initialization.            |
 |                 |                     |                                                     |
-|                 |                     | As the initiliazation of this message requires some |
-|                 |                     | asyncronous actions, please use                     |
+|                 |                     | As the initialization of this message requires some |
+|                 |                     | asynchronous actions, please use                    |
 |                 |                     | ``init_future.result()`` to get the message object. |
 +-----------------+---------------------+-----------------------------------------------------+
 
