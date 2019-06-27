@@ -115,7 +115,8 @@ commands:
           name: Scspell3k
           command: |
             . venv/bin/activate
-            bash -c "for fil in docs/source/*.rst; do scspell --report-only  --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done"
+            RST_FILES=$(find "$(pwd)/docs/source" -type f -name "*.rst")
+            scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $RST_FILES
 
   sphinx-builder:
     description: Temp build the documantation site with sphinx (python environment)
