@@ -1,4 +1,8 @@
-"""SwitcherV2 network protocols."""
+"""Switcher water heater unofficial API and bridge, Network protocols.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 # fmt: off
 from asyncio import (AbstractEventLoop, BaseTransport, DatagramProtocol, Event,

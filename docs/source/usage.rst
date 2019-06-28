@@ -332,7 +332,7 @@ SwitcherV2Device
 | **last_state_change** | ``datetime`` | Return the     | %Y-%m-%dTH:%M:%S.%F |                  |
 |                       |              | timestamp of   |                     |                  |
 |                       |              | the last       |                     |                  |
-|                       |              | change.        |                     |                  |
+|                       |              | state change.  |                     |                  |
 +-----------------------+--------------+----------------+---------------------+------------------+
 
 SwitcherV2Schedule

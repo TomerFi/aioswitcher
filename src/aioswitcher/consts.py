@@ -1,4 +1,8 @@
-"""Switcher Constants."""
+"""Switcher water heater unofficial API and bridge, Global constants.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 ENCODING_CODEC = "utf-8"
 REMOTE_SESSION_ID = "00000000"
