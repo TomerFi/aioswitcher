@@ -1,18 +1,20 @@
 Projects using this module
 **************************
 
--  Home Assistant's ``switcher_kis`` component:
-   -  `switcher_kis code`_
-   -  `switcher_kis documentation`_
+*  Home Assistant's ``switcher_kis`` component:
 
--  Switcher Boiler unofficial docker-based WebAPI:
-   -  `webapi code`_
-   -  `webapi documentation`_
+   *  `switcher_kis code`_
+   *  `switcher_kis documentation`_
+
+*  Switcher Boiler unofficial docker-based WebAPI:
+
+   *  `webapi code`_
+   *  `webapi documentation`_
 
 .. note::
 
    If you use this module in your open-source project and you want it to be listed here,
-   please let me know (or add it yourself).
+   please let me know (or add it yourself via github).
 
 .. _webapi code: https://github.com/TomerFi/switcher_webapi
 .. _webapi documentation: https://switcher-webapi.readthedocs.io/en/stable/
