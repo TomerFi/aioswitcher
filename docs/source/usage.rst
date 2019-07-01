@@ -6,7 +6,7 @@ This module provides two separate integrations with the Switcher device, both fu
 The first integration is a `UDP Bridge`_ constantly listening to broadcast messages launched from
 the device approximately every 4 seconds. This integration provides constant device state updates.
 
-The second integration is a `TCP Socket API`_ providing the ability to not only get the current
+The second integration is a `TCP Socket API`_ providing the ability, to not only get the current
 state of the device, but also control it.
 
 .. contents:: TOC
@@ -16,12 +16,13 @@ state of the device, but also control it.
 UDP Bridge
 ^^^^^^^^^^
 
-With this integration, we're constantly listening to messages broadcast from the device and
-containing information about the device and the device's state.
+With the `UDP Bridge`_ integration, we're constantly listening to messages broadcast from the
+device containing information about the device and the device's state.
 
 The message is being broadcast from the device approximately every 4 seconds,
-once the message is received and verified it will be ``put`` in an `asyncio.Queue`_ with the max
-size of 1, which means the ``Queue`` always has ``1`` or ``None``  messages waiting.
+once the message is received and verified it will be ``put`` in a `asyncio.Queue`_ with the max
+size of 1, which means the ``Queue`` always has ``1`` or ``None``  messages waiting, containing the
+latest state received.
 
 Each message will be an updated instance of the SwitcherV2Device_ object.
 
@@ -33,7 +34,7 @@ manually.
    The `UDP Bridge`_ integration will allow you to receive **Real-Time** updates from the device
    approximately every 4 seconds, yet it will not allow you to control the device.
 
-   For controlling the device you can use the `TCP Socket API`_ integration. (Both can work
+   For controlling the device you can use the `TCP Socket API`_ integration. (Both work
    simultaneously).
 
 Example of UDP Bridge usage
@@ -144,21 +145,26 @@ Example of UDP Bridge usage
 TCP Socket API
 ^^^^^^^^^^^^^^
 
-With this integration we gain the following abilities:
--  Get the device status
--  Control the device
--  Get the schedules from the device
--  Set the device name
--  Set the device Auto-Off configuration
--  Create/Delete/Enable/Disable schedules on the device.
+With `TCP Socket API`_ integration we gain the following abilities:
 
-Although the `TCP Socket API`_ is applicable as a ``context manager`` and as an instance of an
-object. It is preferable to use it as a ``context manager`` due to the nature of the
-``tcp connection`` (you don't want to occupy a connection slot on the device any longer then you
-have to or you'll start seeing ``TimeOutErrors``).
+.. hlist::
+   :columns: 1
 
-To use as an instance (which will not be covered here), you can rely on the ``UDP Bridge`` example
-and just substitute ``start()`` and ``stop()`` with ``connect()`` and ``disconnect()``.
+   * Get the device status
+   * Control the device
+   * Get the schedules from the device
+   * Set the device name
+   * Set the device Auto-Off configuration
+   * Create/Delete/Enable/Disable schedules on the device.
+
+.. note::
+   Although the `TCP Socket API`_ is applicable as a ``context manager`` and as an instance of an
+   object, It is preferable to use it as a ``context manager`` due to the nature of the
+   ``tcp connection`` (you don't want to occupy a connection slot on the device any longer then you
+   have to or you'll start seeing ``TimeOutErrors``).
+
+   To use as an instance (which will not be covered here), you can rely on the ``UDP Bridge``
+   example and just substitute ``start()`` and ``stop()`` with ``connect()`` and ``disconnect()``.
 
 The various responses are covered in the `API Response Messages`_ section.
 
@@ -269,10 +275,10 @@ Objects and Properties
 
 There are two main objects you need to be aware of:
 
--  The first object is the one representing the device itself,
+*  The first object is the one representing the device itself,
    ``aioswitcher.devices.SwitcherV2Device`` SwitcherV2Device_.
 
--  The second object is the one representing the device's schedule,
+*  The second object is the one representing the device's schedule,
    ``aioswitcher.schedules.SwitcherV2Schedule`` SwitcherV2Schedule_.
 
 SwitcherV2Device
@@ -326,7 +332,7 @@ SwitcherV2Device
 | **last_state_change** | ``datetime`` | Return the     | %Y-%m-%dTH:%M:%S.%F |                  |
 |                       |              | timestamp of   |                     |                  |
 |                       |              | the last       |                     |                  |
-|                       |              | change.        |                     |                  |
+|                       |              | state change.  |                     |                  |
 +-----------------------+--------------+----------------+---------------------+------------------+
 
 SwitcherV2Schedule
@@ -395,14 +401,18 @@ The source of the responses can be found ``aioswitcher.api.messages``.
 
 Please note the ``aioswitcher.api.messagesResponseMessageType`` *Enum Class* for identifying the
 response message types:
--  *AUTO_OFF*
--  *CONTROL*
--  *CREATE_SCHEDULE*
--  *DELETE_SCHEDULE*
--  *DISABLE_ENABLE_SCHEDULE*
--  *GET_SCHEDULES*
--  *STATE*
--  *UPDATE_NAME*
+
+.. hlist::
+   :columns: 4
+
+   * *AUTO_OFF*
+   * *CONTROL*
+   * *CREATE_SCHEDULE*
+   * *DELETE_SCHEDULE*
+   * *DISABLE_ENABLE_SCHEDULE*
+   * *GET_SCHEDULES*
+   * *STATE*
+   * *UPDATE_NAME*
 
 SwitcherV2BaseResponseMSG
 -------------------------
@@ -417,17 +427,20 @@ SwitcherV2BaseResponseMSG
 | **msg_type**          | ``ResponseMessageType`` | Return the response message type.     |
 +-----------------------+-------------------------+---------------------------------------+
 
-SwitcherV2StateResponseMSG (SwitcherV2BaseResponseMSG)
-------------------------------------------------------
+SwitcherV2StateResponseMSG
+--------------------------
 
-``ResponseMessageType.STATE``
+:Extends: SwitcherV2BaseResponseMSG_
+
+:Response Type: ``ResponseMessageType.STATE``
 
 +-----------------+---------------------+-----------------------------------------------------+
 | Property        | Type                | Description                                         |
 +=================+=====================+=====================================================+
 | **state**       | ``str``             | Return the state. Possible values are:              |
-|                 |                     | -  ``aioswitcher.consts.STATE_ON``                  |
-|                 |                     | -  ``aioswitcher.consts.STATE_OFF``                 |
+|                 |                     |                                                     |
+|                 |                     |    * ``aioswitcher.consts.STATE_ON``                |
+|                 |                     |    * ``aioswitcher.consts.STATE_OFF``               |
 +-----------------+---------------------+-----------------------------------------------------+
 | **time_left**   | ``str``             | Return the time left to auto-off.                   |
 +-----------------+---------------------+-----------------------------------------------------+
@@ -444,25 +457,45 @@ SwitcherV2StateResponseMSG (SwitcherV2BaseResponseMSG)
 |                 |                     | ``init_future.result()`` to get the message object. |
 +-----------------+---------------------+-----------------------------------------------------+
 
-SwitcherV2ControlResponseMSG (SwitcherV2BaseResponseMSG)
---------------------------------------------------------
+SwitcherV2ControlResponseMSG
+----------------------------
 
-``ResponseMessageType.CONTROL``
+:Extends: SwitcherV2BaseResponseMSG_
 
-SwitcherV2SetAutoOffResponseMSG (SwitcherV2BaseResponseMSG)
------------------------------------------------------------
+:Response Type: ``ResponseMessageType.CONTROL``
 
-``ResponseMessageType.AUTO_OFF``
+::
 
-SwitcherV2UpdateNameResponseMSG (SwitcherV2BaseResponseMSG)
------------------------------------------------------------
+   No properties are added by object.
 
-``ResponseMessageType.UPDATE_NAME``
+SwitcherV2SetAutoOffResponseMSG
+-------------------------------
 
-SwitcherV2GetScheduleResponseMSG (SwitcherV2BaseResponseMSG)
-------------------------------------------------------------
+:Extends: SwitcherV2BaseResponseMSG_
 
-``ResponseMessageType.GET_SCHEDULES``
+:Response Type: ``ResponseMessageType.AUTO_OFF``
+
+::
+
+   No properties are added by object.
+
+SwitcherV2UpdateNameResponseMSG
+-------------------------------
+
+:Extends: SwitcherV2BaseResponseMSG_
+
+:Response Type: ``ResponseMessageType.UPDATE_NAME``
+
+::
+
+   No properties are added by object.
+
+SwitcherV2GetScheduleResponseMSG
+--------------------------------
+
+:Extends: SwitcherV2BaseResponseMSG_
+
+:Response Type: ``ResponseMessageType.GET_SCHEDULES``
 
 +---------------------+------------------------------+---------------------------------------+
 | Property            | Type                         | Description                           |
@@ -473,19 +506,37 @@ SwitcherV2GetScheduleResponseMSG (SwitcherV2BaseResponseMSG)
 | **get_schedules**   | ``List[SwitcherV2Schedule]`` | Return a list of SwitcherV2Schedule_. |
 +---------------------+------------------------------+---------------------------------------+
 
-SwitcherV2DisableEnableScheduleResponseMSG (SwitcherV2BaseResponseMSG)
-----------------------------------------------------------------------
+SwitcherV2DisableEnableScheduleResponseMSG
+------------------------------------------
 
-``ResponseMessageType.DISABLE_ENABLE_SCHEDULE``
+:Extends: SwitcherV2BaseResponseMSG_
 
-SwitcherV2DeleteScheduleResponseMSG (SwitcherV2BaseResponseMSG)
----------------------------------------------------------------
+:Response Type: ``ResponseMessageType.DISABLE_ENABLE_SCHEDULE``
 
-```ResponseMessageType.DELETE_SCHEDULE```
+::
 
-SwitcherV2CreateScheduleResponseMSG (SwitcherV2BaseResponseMSG)
----------------------------------------------------------------
+   No properties are added by object.
 
-``ResponseMessageType.CREATE_SCHEDULE``
+SwitcherV2DeleteScheduleResponseMSG
+-----------------------------------
+
+:Extends: SwitcherV2BaseResponseMSG_
+
+:Response Type: ``ResponseMessageType.DELETE_SCHEDULE``
+
+::
+
+   No properties are added by object.
+
+SwitcherV2CreateScheduleResponseMSG
+-----------------------------------
+
+:Extends: SwitcherV2BaseResponseMSG_
+
+:Response Type: ``ResponseMessageType.CREATE_SCHEDULE``
+
+::
+
+   No properties are added by object.
 
 .. _asyncio.Queue: https://docs.python.org/3.5/library/asyncio-queue.html#queue

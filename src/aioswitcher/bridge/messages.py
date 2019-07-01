@@ -15,7 +15,16 @@ from ..tools import convert_seconds_to_iso_time
 
 
 class SwitcherV2BroadcastMSG:
-    """represntation of the switcherv2 broadcast message."""
+    """Represntation of the SwitcherV2 broadcast message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      message: the raw message from the device.
+
+    Todo:
+      * replace ``init_future`` attribute with ``get_init_future`` method.
+
+    """
 
     def __init__(
         self, loop: AbstractEventLoop, message: Union[bytes, str]
@@ -40,7 +49,12 @@ class SwitcherV2BroadcastMSG:
         ensure_future(self.initialize(fixed_msg), loop=loop)
 
     async def initialize(self, message: bytes) -> None:
-        """Finish the initialization of the broadcast message."""
+        """Finish the initialization and update the future object.
+
+        Args:
+          message: the raw message from the device.
+
+        """
         try:
             self._verified = (
                 hexlify(message)[0:4].decode(ENCODING_CODEC) == "fef0"
@@ -126,55 +140,55 @@ class SwitcherV2BroadcastMSG:
 
     @property
     def verified(self) -> bool:
-        """Return rather or not the message is a switcher v2 message."""
+        """bool: Return whether or not the message is a SwitcherV2 message."""
         return self._verified if self._validated else self._validated
 
     @property
     def ip_address(self) -> str:
-        """Return the ip address."""
+        """str: Return the ip address."""
         return self._ip_address
 
     @property
     def mac_address(self) -> str:
-        """Return the mac address."""
+        """str: Return the mac address."""
         return self._mac_address
 
     @property
     def name(self) -> str:
-        """Return the device name."""
+        """str: Return the device name."""
         return self._name
 
     @property
     def device_id(self) -> str:
-        """Return the device id."""
+        """str: Return the device id."""
         return self._device_id
 
     @property
     def power(self) -> int:
-        """Return the power consumptionin watts."""
+        """int: Return the power consumptionin watts."""
         return self._power_consumption
 
     @property
     def device_state(self) -> str:
-        """Return the state of the device."""
+        """str: Return the state of the device."""
         return self._device_state
 
     @property
     def remaining_time_to_off(self) -> Optional[str]:
-        """Return the time left to auto-off."""
+        """str: Return the time left to auto-off."""
         return self._remaining_time_to_off
 
     @property
     def current(self) -> float:
-        """Return the power consumptionin amps."""
+        """float: Return the power consumptionin amps."""
         return self._electric_current
 
     @property
     def auto_off_set(self) -> str:
-        """Return the auto-off configuration value."""
+        """str: Return the auto-off configuration value."""
         return self._auto_off_set
 
     @property
     def init_future(self) -> Future:
-        """Return the future of the device initialization."""
+        """asyncio.Future: Return the future of the device initialization."""
         return self._init_future

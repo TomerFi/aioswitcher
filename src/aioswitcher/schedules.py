@@ -1,4 +1,8 @@
-"""Switcher Device Schedule Objects."""
+"""Switcher water heater unofficial API and bridge, Schedules.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 # fmt: off
 from asyncio import AbstractEventLoop, Future, ensure_future
@@ -15,7 +19,17 @@ from .tools import get_days_list_from_bytes, get_time_from_bytes
 
 
 class SwitcherV2Schedule:
-    """Represnation of the switcher version 2 schedule."""
+    """Represnation of the SwitcherV2 schedule slot.
+
+    Args:
+      loop: the event loop to perform schedule operation in.
+      idx: the index of the schedule slot (0-7).
+      schedule_details: the string raw schedule data details.
+
+    Todo:
+      * Replace ``init_future`` attribute with ``get_init_future`` method.
+
+    """
 
     def __init__(
         self, loop: AbstractEventLoop, idx: int, schedule_details: List[bytes]
@@ -79,12 +93,12 @@ class SwitcherV2Schedule:
 
     @property
     def schedule_id(self) -> str:
-        """Return the schedule id."""
+        """str: Return the schedule id."""
         return self._schedule_id
 
     @property
     def enabled(self) -> bool:
-        """Return true if enabled."""
+        """bool: Return true if enabled, setter included."""
         return self._enabled
 
     @enabled.setter
@@ -97,32 +111,32 @@ class SwitcherV2Schedule:
 
     @property
     def recurring(self) -> bool:
-        """Return true if recurring."""
+        """bool: Return true if recurring."""
         return self._recurring
 
     @property
     def days(self) -> List[str]:
-        """Return the weekdays of the schedule."""
+        """list(str): Return the weekdays of the schedule."""
         return self._days
 
     @property
     def start_time(self) -> str:
-        """Return the start time of the schedule."""
+        """str: Return the start time of the schedule."""
         return self._start_time
 
     @property
     def end_time(self) -> str:
-        """Return the end time of the schedule."""
+        """str: Return the end time of the schedule."""
         return self._end_time
 
     @property
     def duration(self) -> str:
-        """Return the duration of the schedule."""
+        """str: Return the duration of the schedule."""
         return self._duration
 
     @property
     def schedule_data(self) -> bytes:
-        """Return the schedule data for managing the schedule."""
+        """bytes: Return the schedule data, setter included."""
         return self._schedule_data
 
     @schedule_data.setter
@@ -135,16 +149,36 @@ class SwitcherV2Schedule:
 
     @property
     def init_future(self) -> Future:
-        """Return the future of the initialization."""
+        """asyncio.Future: Return the future of the initialization."""
         return self._init_future
 
     def as_dict(self):
-        """Make object json serializable."""
+        """Return as dict.
+
+        Returns:
+          A dictionary represntation of the object properties.
+          Used to make the object json serializable.
+
+        """
         return self.__dict__
 
 
 def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
-    """Calculate the next runtime of the schedule."""
+    """Calculate the next runtime of the schedule.
+
+    Args:
+      schedule_details: ``SwitcherV2Schedule`` representing the schedule slot.
+
+    Returns:
+      A pretty string describing the next due run.
+      e.g. "Due tommorow at 17:00".
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``calc_next_run_for_schedule`` (without the `_`),
+      to schedule as a task on the event loop.
+
+    """
     if schedule_details.recurring:
         today_datetime = datetime.now()
 
@@ -197,7 +231,20 @@ def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
 async def calc_next_run_for_schedule(
     loop: AbstractEventLoop, schedule_details: SwitcherV2Schedule
 ) -> str:
-    """Use as async wrapper for calling _calc_next_run_for_schedule."""
+    """Asynchronous wrapper for _calc_next_run_for_schedule.
+
+    Use as async wrapper for calling _calc_next_run_for_schedule,
+    calculating the next runtime of the schedule.
+
+    Args:
+      loop: the event loop to execute the function in.
+      schedule_details: ``SwitcherV2Schedule`` representing the schedule slot.
+
+    Returns:
+      A pretty string describing the next due run.
+      e.g. "Due tommorow at 17:00".
+
+    """
     return await loop.run_in_executor(
         None, _calc_next_run_for_schedule, schedule_details
     )

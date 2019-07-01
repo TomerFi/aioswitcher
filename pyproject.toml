@@ -160,4 +160,5 @@ commands =
     python --version
     poetry install -v --extras "unittests"
     pytest -vs --cov --cov-config=.coveragerc
+
 """

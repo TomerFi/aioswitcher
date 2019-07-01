@@ -1,4 +1,8 @@
-"""Switcher API Bridges."""
+"""Switcher water heater unofficial API and bridge, Bridge Object.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 from asyncio import AbstractEventLoop, Event, Queue
 from functools import partial
@@ -14,7 +18,18 @@ if TYPE_CHECKING:
 
 
 class SwitcherV2Bridge:
-    """Represntation of the SwitcherV2 Bridge."""
+    """Represntation of the SwitcherV2 Bridge object.
+
+    Args:
+      loop: the event loop for the factory to run in.
+      phone_id: the phone id of the desired device.
+      device_id: the id of the desired device.
+      device_password: the password of the desired device.
+
+    Todo:
+      * replace ``queue`` attribute with ``get_queue`` method.
+
+    """
 
     def __init__(
         self,
@@ -34,12 +49,23 @@ class SwitcherV2Bridge:
         self._queue = Queue(maxsize=1)  # type: Queue
 
     async def __aenter__(self) -> "SwitcherV2Bridge":
-        """Enter SwitcherV2Bridge context manager."""
+        """Enter SwitcherV2Bridge asynchronous context manager.
+
+        Returns:
+          This instance of ``aioswitcher.bridge.SwitcherV2Bridge`` as an
+          awaitable.
+
+        """
         await self.start()
         return await self.__await__()
 
     async def __await__(self) -> "SwitcherV2Bridge":
-        """Return SwitcherV2Bridge awaitable object."""
+        """Return SwitcherV2Bridge awaitable object.
+
+        Returns:
+          This instance of ``aioswitcher.bridge.SwitcherV2Bridge``.
+
+        """
         return self
 
     async def __aexit__(
@@ -48,11 +74,11 @@ class SwitcherV2Bridge:
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
-        """Exit SwitcherV2Bridge context manager."""
+        """Exit the SwitcherV2Bridge asynchronous context manager."""
         return await self.stop()
 
     async def start(self) -> None:
-        """Create the connection and start the bridge."""
+        """Create an asynchronous listenr and start the bridge event."""
         await self._loop.create_datagram_endpoint(
             partial(
                 SwitcherV2UdpProtocolFactory,
@@ -73,16 +99,16 @@ class SwitcherV2Bridge:
         return None
 
     async def stop(self) -> None:
-        """Stop the bridge."""
+        """Stop the asynchronous bridge."""
         self._running_evt.clear()
         return None
 
     @property
     def running(self) -> bool:
-        """Return true if bridge is running."""
+        """bool: Return true if bridge is running."""
         return self._running_evt.is_set()
 
     @property
     def queue(self) -> Queue:
-        """Return the queue containing the SwitcherV2 updated device object."""
+        """asyncio.Queue: Return the queue storing updated device objects."""
         return self._queue

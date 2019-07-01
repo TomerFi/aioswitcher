@@ -11,7 +11,7 @@ Welcome to ``aioswitcher`` documentation!
    license
    changelog
    credits
-   others
+   projects
    conduct
    contributing
    codedocs

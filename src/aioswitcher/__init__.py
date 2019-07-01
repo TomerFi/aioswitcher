@@ -1,4 +1,8 @@
-"""Switcher Unofficial API and bridge."""
+"""Switcher water heater unofficial API and bridge.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 name = "aioswitcher"
 

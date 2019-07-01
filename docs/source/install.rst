@@ -10,6 +10,5 @@ That's it!
 
 .. note::
 
-   As for supported hardware:
-   -   ``Switcher V2`` was verified by the author
-   -   ``Switcher Touch`` has been verified by various users
+   * ``Switcher V2`` was verified by the author of this project.
+   * ``Switcher Touch`` has been verified by various users of this project.

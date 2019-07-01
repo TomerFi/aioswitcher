@@ -1,11 +1,31 @@
-"""Switcher Devices Represntation Classes."""
+"""Switcher water heater unofficial API and bridge, Device classes.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 from datetime import datetime
 from typing import Optional
 
 
 class SwitcherV2Device:
-    """Represntation of the switcherv2 data object."""
+    """Represntation of the switcherv2 device.
+
+    Args:
+      device_id: the id retrieved from the device.
+      ip_address: the ip address assigned to the device.
+      mac_address: the mac address assigned to the device.
+      name: the name of the device.
+      state: the current state of the device (in/off).
+      remaining_time: remaining time (if on).
+      auto_off_set: configured value for auto shutdown.
+      power_consumption: the current power consumpstion in watts.
+      electric_current: the current power consumpstion in amps.
+      phone_id: the phone id retrieved from the device.
+      device_password: the password retrieved from the device.
+      last_state_change: datetime of the last state change.
+
+    """
 
     def __init__(
         self,
@@ -49,7 +69,19 @@ class SwitcherV2Device:
         electric_current: float,
         last_state_change: datetime,
     ) -> None:
-        """Update device data."""
+        """Update the device state and data.
+
+        Args:
+          ip_address: the ip address assigned to the device.
+          name: the name of the device.
+          state: the current state of the device (on/off).
+          remaining_time: remaining time (if on).
+          auto_off_set: configured value for auto shutdown.
+          power_consumption: the current power consumpstion in watts.
+          electric_current: the current power consumpstion in amps.
+          last_state_change: datetime of the last state change.
+
+        """
         self._ip_address = ip_address
         self._name = name
         self._state = state
@@ -62,69 +94,76 @@ class SwitcherV2Device:
 
     @property
     def device_id(self) -> str:
-        """Return the device id."""
+        """str: Returns the device id."""
         return self._device_id
 
     @property
     def ip_addr(self) -> str:
-        """Return the ip address."""
+        """str: Returns the ip address."""
         return self._ip_address
 
     @property
     def mac_addr(self) -> str:
-        """Return the mac address."""
+        """str: Returns the mac address."""
         return self._mac_addr
 
     @property
     def name(self) -> str:
-        """Return the device name."""
+        """str: Returns the device name."""
         return self._name
 
     @property
     def state(self) -> str:
-        """Return the device state."""
+        """str: Returns the device state."""
         return self._state
 
     @property
     def remaining_time(self) -> Optional[str]:
-        """Return the time left to auto-off."""
+        """str: Returns the time left to auto shutdown."""
         return self._remaining_time
 
     @property
     def auto_off_set(self) -> str:
-        """Return the auto-off configuration value."""
+        """str: Returns the auto-off configuration value."""
         return self._auto_off_set
 
     @property
     def power_consumption(self) -> int:
-        """Return the power consumption in watts."""
+        """int: Returns the power consumption in watts."""
         return self._power_consumption
 
     @property
     def electric_current(self) -> float:
-        """Return the power consumption in amps."""
+        """float: returns the power consumption in amps."""
         return self._electric_current
 
     @property
     def phone_id(self) -> str:
-        """Return the phone id."""
+        """str: Returns the phone id."""
         return self._phone_id
 
     @property
     def device_password(self) -> str:
-        """Return the device password."""
+        """str: Returns the device password."""
         return self._device_password
 
     @property
     def last_data_update(self) -> datetime:
-        """Return the timestamp of the last update."""
+        """datetime: Returns timestamp of the last update."""
         return self._last_data_update
 
     @property
     def last_state_change(self) -> datetime:
-        """Return the timestamp of the state change."""
+        """datetime: Returns timestamp of the last state change."""
         return self._last_state_change
 
     def as_dict(self):
-        """Make object json serializable."""
+        """Return as dict.
+
+        Returns:
+          A dictionary represntation of the object properties.
+          Used to make the object json serializable.
+
+
+        """
         return self.__dict__

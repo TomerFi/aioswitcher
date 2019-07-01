@@ -4,11 +4,15 @@ What
 PyPi module named aioswitcher_ for integrating with the `Switcher Water Heater`_.
 
 This module:
--   Is packaged with poetry_.
--   Works concurrently using Python's Asynchronous I/O module asyncio_.
--   Is static typed and checked with mypy_ based on PEP484_.
--   Follows black_ code style rules and guidelines.
--   Package is described using ``pyproject.toml`` based on PEP517_ and PEP518_.
+
+.. hlist::
+   :columns: 1
+
+   * Is packaged with poetry_.
+   * Works concurrently using Python's Asynchronous I/O module asyncio_.
+   * Is static typed and checked with mypy_ based on PEP484_.
+   * Follows black_ code style rules and guidelines.
+   * Package is described using ``pyproject.toml`` based on PEP517_ and PEP518_.
 
 Although the aioswitcher_ module requires the use of *Python 3.5/3.6/3.7*,
 The use of *Python 3.7* is preferable.

@@ -1,11 +1,12 @@
 """Configuration file for Sphinx Documentation Generator."""
 
 from os import path as os_path
+from sys import path as sys_path
 
 from toml import load as toml_load
 
-# Considering we're in aioswitcher/docs/source
-# We need to go back twice to reach aioswitcher/pyproject.toml
+sys_path.insert(0, os_path.abspath("../../src"))
+
 toml_path = "{}/pyproject.toml".format(os_path.abspath("../.."))
 parsed_toml = toml_load(toml_path)
 
@@ -14,7 +15,12 @@ copyright = "2019, Tomer Figenblat"
 author = "Tomer Figenblat"
 version = parsed_toml["tool"]["poetry"]["version"]
 release = version
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.todo", "sphinx.ext.viewcode"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.todo",
+    "sphinx.ext.viewcode",
+]
 templates_path = ["_templates"]
 source_suffix = ".rst"
 master_doc = "index"
@@ -24,9 +30,8 @@ pygments_style = "sphinx"
 # html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
 language = "en"
-
-show_authors = True
+show_authors = False
 linkcheck_anchors = True
 
-# autodoc configuration
-# autodoc_mock_imports = []
+# sphinx.ext.todo configuration
+todo_include_todos = True

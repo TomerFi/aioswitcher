@@ -1,4 +1,8 @@
-"""Switcher Devices Error and Exception Classes."""
+"""Switcher water heater unofficial API and bridge, Exception classes.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 
 class CalculationError(Exception):
