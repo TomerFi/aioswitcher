@@ -32,7 +32,15 @@ ResponseMessageType = Enum(
 
 
 class SwitcherV2BaseResponseMSG:
-    """Represntation of the switcher v2 base response message."""
+    """Represntation of the switcher v2 base response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+      msg_type: the message type as described in the ''ResponseMessageType''
+        Enum class.
+
+    """
 
     def __init__(
         self,
@@ -47,22 +55,28 @@ class SwitcherV2BaseResponseMSG:
 
     @property
     def unparsed_response(self) -> bytes:
-        """Return the unparsed response message."""
+        """bytes: Return The raw response from the device."""
         return self._unparsed_response
 
     @property
     def successful(self) -> bool:
-        """Return the status of the message."""
+        """bool: Indicating whether or not the request was successful."""
         return self._unparsed_response is not None
 
     @property
     def msg_type(self) -> ResponseMessageType:
-        """Return the response message type."""
+        """aioswitcher.api.messages.ResponseMessageType: the message type."""
         return self._msg_type
 
 
 class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 login response message."""
+    """Represntation of the switcher v2 login response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the login response."""
@@ -76,12 +90,21 @@ class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
 
     @property
     def session_id(self) -> str:
-        """Return the retrieved session id."""
+        """str: Return the retrieved session id."""
         return self._session_id
 
 
 class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
-    """represntation of the switcher v2 state response message."""
+    """Represntation of the switcher v2 state response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    Todo:
+      * replace ``init_future`` attribute with ``get_init_future`` method.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the state response message."""
@@ -92,7 +115,12 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
         ensure_future(self.initialize(response), loop=loop)
 
     async def initialize(self, response: bytes) -> None:
-        """Finish the initialization of the message."""
+        """Finish the initialization of the message and update the future object.
+
+        Args:
+          response: the raw response from the device.
+
+        """
         try:
             temp_power = hexlify(response)[154:162]
             self._power_consumption = int(
@@ -143,37 +171,43 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
 
     @property
     def state(self) -> str:
-        """Return the state."""
+        """str: Return the state."""
         return self._state
 
     @property
     def time_left(self) -> str:
-        """Return the time left to auto-off."""
+        """str: Return the time left to auto-off."""
         return self._time_to_auto_off
 
     @property
     def auto_off(self) -> str:
-        """Return the auto-off configuration value."""
+        """str: Return the auto-off configuration value."""
         return self._auto_off_set
 
     @property
     def power(self) -> int:
-        """Return the current power consumption in watts."""
+        """int: Return the current power consumption in watts."""
         return self._power_consumption
 
     @property
     def current(self) -> float:
-        """Return the power consumption in amps."""
+        """float: Return the power consumption in amps."""
         return self._electric_current
 
     @property
     def init_future(self) -> Future:
-        """Return the future of the initialization."""
+        """asyncio.Future: Return the future of the initialization."""
         return self._init_future
 
 
 class SwitcherV2ControlResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 control response message."""
+    """Represntation of the switcher v2 control response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Control response message."""
@@ -181,7 +215,13 @@ class SwitcherV2ControlResponseMSG(SwitcherV2BaseResponseMSG):
 
 
 class SwitcherV2SetAutoOffResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 set auto-off response message."""
+    """Represntation of the switcher v2 set auto-off response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Set Auto-Off response message."""
@@ -189,7 +229,13 @@ class SwitcherV2SetAutoOffResponseMSG(SwitcherV2BaseResponseMSG):
 
 
 class SwitcherV2UpdateNameResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 update name response message."""
+    """Represntation of the switcher v2 update name response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Set Name response message."""
@@ -197,7 +243,18 @@ class SwitcherV2UpdateNameResponseMSG(SwitcherV2BaseResponseMSG):
 
 
 class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """represnation of the switcher v2 get schedule message."""
+    """represnation of the switcher v2 get schedule message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    Todo:
+      * the ``get_schedules`` attribute should be a method.
+      * ``schdule_detais`` is ``__init__`` is yielding List[str] instead of
+        List[bytes], that's not supposed to happen.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Set Name response message."""
@@ -206,7 +263,6 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
         res = hexlify(response)
         idx = res[90:-8].decode(ENCODING_CODEC)
-        # TODO schdule_detais is yielding List[str] instead of List[bytes]
         schedules_details = [
             idx[i : i + 32] for i in range(0, len(idx), 32)  # noqa E203
         ]
@@ -220,17 +276,23 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
     @property
     def found_schedules(self) -> bool:
-        """Return true if found schedules in the response."""
+        """bool: Return true if found schedules in the response."""
         return self._schedule_list != []
 
     @property
     def get_schedules(self) -> List[SwitcherV2Schedule]:
-        """Return the schedules list."""
+        """list(aioswitcher.schedules.SwitcherV2Schedule): Return schedules."""
         return self._schedule_list
 
 
 class SwitcherV2DisableEnableScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 dis/en schedule response message."""
+    """Represntation of the switcher v2 dis/en schedule response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the switcher v2 dis/en schedule response message."""
@@ -240,7 +302,13 @@ class SwitcherV2DisableEnableScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
 
 class SwitcherV2DeleteScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 delete schedule response message."""
+    """Represntation of the switcher v2 delete schedule response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the switcher v2 delete schedule response message."""
@@ -248,7 +316,13 @@ class SwitcherV2DeleteScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
 
 class SwitcherV2CreateScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 create schedule response message."""
+    """Represntation of the switcher v2 create schedule response message.
+
+    Args:
+      loop: the event loop to perform actions in.
+      response: the raw response from the device.
+
+    """
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the switcher v2 create schedule response message."""

@@ -19,7 +19,21 @@ from .devices import SwitcherV2Device
 
 
 class SwitcherV2UdpProtocolFactory(DatagramProtocol):
-    """Represntation of the Asyncio UDP protocol factory."""
+    """Represntation of the Asyncio UDP protocol factory.
+
+    Args:
+      loop: the event loop for the factory to run in.
+      phone_id: the phone id of the desired device.
+      device_id: the id of the desired device.
+      device_password: the password of the desired device.
+      queue: a ``asyncio.Queue`` for the factory to save messages in.
+      run_factory_evt ``asyncio.Event`` for signaling the factory to run.
+
+    Todo:
+      * replace ``factory_future`` attribute with ``get_factory_future``
+        method.
+
+    """
 
     def __init__(
         self,
@@ -52,7 +66,7 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
         """Call on datagram recieved."""
         if self._run_factory.is_set() and self._accept_datagrams.is_set():
             ensure_future(
-                self.handle_incoming_messeges(data, addr), loop=self._loop
+                self.handle_incoming_messages(data, addr), loop=self._loop
             )
 
     def error_received(self, exc: Optional[Exception]) -> None:
@@ -71,7 +85,7 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
         if self.transport:
             self.transport.close()
 
-    async def handle_incoming_messeges(
+    async def handle_incoming_messages(
         self, data: Union[bytes, str], addr: Tuple
     ) -> None:
         """Use for Handling incoming messages."""
@@ -134,5 +148,5 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
 
     @property
     def factory_future(self) -> Future:
-        """Return a future represnting the factory ending status."""
+        """asyncio.Future: Representing the initialization status."""
         return self._factory_future

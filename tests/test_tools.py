@@ -187,10 +187,10 @@ async def test_get_time_from_bytes(event_loop: AbstractEventLoop) -> None:
 async def test_get_timestamp(event_loop: AbstractEventLoop) -> None:
     """Test the get_timestamp tool."""
     with patch("aioswitcher.tools.ENCODING_CODEC", "bin"):
-        with raises(EncodingError) as exc_info:
+        with raises(DecodingError) as exc_info:
             await get_timestamp(event_loop)
 
-        assert exc_info.type is EncodingError
+        assert exc_info.type is DecodingError
 
     try:
         result = await get_timestamp(event_loop)

@@ -25,21 +25,6 @@ class SwitcherV2Device:
       device_password: the password retrieved from the device.
       last_state_change: datetime of the last state change.
 
-    Attributes:
-      auto_off_set(str): returns the auto-off configuration value.
-      device_id(str): returns the device id.
-      device_password(str): returns the device password.
-      electric_current(float): returns the power consumption in amps.
-      ip_addr(str): returns the ip address.
-      last_data_update(datetime): returns the timestamp of the last update received.
-      last_state_change(datetime): returns the timestamp of the last state change.
-      mac_addr(str): returns the mac address.
-      name(str): returns the device name.
-      phone_id(str): returns the phone id.
-      power_consumption(int):  returns the power consumption in watts.
-      remaining_time(Optional[str]): returns the time left to auto shutdown.
-      state(str): returns the device state (on/off).
-
     """
 
     def __init__(
@@ -109,74 +94,76 @@ class SwitcherV2Device:
 
     @property
     def device_id(self) -> str:
-        """Returns the device id."""
+        """str: Returns the device id."""
         return self._device_id
 
     @property
     def ip_addr(self) -> str:
-        """Returns the ip address."""
+        """str: Returns the ip address."""
         return self._ip_address
 
     @property
     def mac_addr(self) -> str:
-        """Returns the mac address."""
+        """str: Returns the mac address."""
         return self._mac_addr
 
     @property
     def name(self) -> str:
-        """Returns the device name."""
+        """str: Returns the device name."""
         return self._name
 
     @property
     def state(self) -> str:
-        """Returns the device state (on/off)."""
+        """str: Returns the device state."""
         return self._state
 
     @property
     def remaining_time(self) -> Optional[str]:
-        """Returns the time left to auto shutdown."""
+        """str: Returns the time left to auto shutdown."""
         return self._remaining_time
 
     @property
     def auto_off_set(self) -> str:
-        """Returns the auto-off configuration value."""
+        """str: Returns the auto-off configuration value."""
         return self._auto_off_set
 
     @property
     def power_consumption(self) -> int:
-        """Returns the power consumption in watts."""
+        """int: Returns the power consumption in watts."""
         return self._power_consumption
 
     @property
     def electric_current(self) -> float:
-        """Returns the power consumption in amps."""
+        """float: returns the power consumption in amps."""
         return self._electric_current
 
     @property
     def phone_id(self) -> str:
-        """Returns the phone id."""
+        """str: Returns the phone id."""
         return self._phone_id
 
     @property
     def device_password(self) -> str:
-        """Returns the device password."""
+        """str: Returns the device password."""
         return self._device_password
 
     @property
     def last_data_update(self) -> datetime:
-        """Returns the timestamp of the last update received."""
+        """datetime: Returns timestamp of the last update."""
         return self._last_data_update
 
     @property
     def last_state_change(self) -> datetime:
-        """Returns the timestamp of the last state change."""
+        """datetime: Returns timestamp of the last state change."""
         return self._last_state_change
 
     def as_dict(self):
-        """
+        """Return as dict.
+
         Returns:
-          A dictionary represntation of the object properties, used to make
-          the object json serializable.
+          A dictionary represntation of the object properties.
+          Used to make the object json serializable.
+
 
         """
         return self.__dict__

@@ -1,4 +1,8 @@
-"""Switcher TCP Packets with format values."""
+"""Switcher water heater unofficial API and bridge, API Packet formats.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 # format values are remote session id, timestamp, phone id, device password
 LOGIN_PACKET = (

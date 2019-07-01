@@ -1,4 +1,8 @@
-"""Switcher Tools and Helpers."""
+"""Switcher water heater unofficial API and bridge, Tools and Helpers.
+
+.. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
+
+"""
 
 # fmt: off
 from asyncio import AbstractEventLoop
@@ -18,7 +22,24 @@ from .errors import CalculationError, DecodingError, EncodingError
 
 
 def _convert_seconds_to_iso_time(all_seconds: int) -> str:
-    """Convert seconds to iso time (%H:%M:%S)."""
+    """Convert seconds to iso time.
+
+    Args:
+      all_seconds: the total number of seconds to convert.
+
+    Return:
+      A string represnting the converted iso time in %H:%M:%S format.
+      e.g. "02:24:37".
+
+    Raises:
+      aioswitcher.erros.CalculationError: when failed to convert the argument.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``convert_seconds_to_iso_time`` (without the `_`),
+      to schedule as a task in the event loop.
+
+    """
     try:
         minutes, seconds = divmod(int(all_seconds), 60)
         hours, minutes = divmod(minutes, 60)
@@ -33,14 +54,43 @@ def _convert_seconds_to_iso_time(all_seconds: int) -> str:
 async def convert_seconds_to_iso_time(
     loop: AbstractEventLoop, all_seconds: int
 ) -> str:
-    """Use as async wrapper for calling _convert_seconds_to_iso_time."""
+    """Asynchronous wrapper for _convert_seconds_to_iso_time.
+
+    Use as async wrapper for calling _convert_seconds_to_iso_time,
+    calculating the next runtime of the schedule.
+
+    Args:
+      loop: the event loop to execute the function in.
+      all_seconds: the total number of seconds to convert.
+
+    Returns:
+      A string represnting the converted iso time in %H:%M:%S format.
+      e.g. "02:24:37".
+
+    """
     return await loop.run_in_executor(
         None, _convert_seconds_to_iso_time, all_seconds
     )
 
 
 def _crc_sign_full_packet_com_key(data: str) -> str:
-    """Crc calculation."""
+    """Calculate the crc for packets before send.
+
+    Args:
+      data: packet data to sign.
+
+    Return:
+      The calculated and signed packet data.
+
+    Raises:
+      aioswitcher.erros.EncodingError: when failed to sign the packet.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``crc_sign_full_packet_com_key``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     try:
         crc = hexlify(pack(">I", crc_hqx(unhexlify(data), 0x1021))).decode(
             ENCODING_CODEC
@@ -62,14 +112,41 @@ def _crc_sign_full_packet_com_key(data: str) -> str:
 async def crc_sign_full_packet_com_key(
     loop: AbstractEventLoop, data: str
 ) -> str:
-    """Use as async wrapper for calling _crc_sign_full_packet_com_key."""
+    """Asynchronous wrapper for _crc_sign_full_packet_com_key.
+
+    Use as async wrapper for calling _crc_sign_full_packet_com_key,
+    performing crc sign to the packet data.
+
+    Args:
+      data: packet data to sign.
+
+    Return:
+      The calculated and signed packet data.
+
+    """
     return await loop.run_in_executor(
         None, _crc_sign_full_packet_com_key, data
     )
 
 
 def _convert_minutes_to_timer(minutes: str) -> str:
-    """Convert minutes to hex for timer."""
+    """Convert on-timer minutes to hexadecimal before sending.
+
+    Args:
+      minutes: on-timer minutes to convert.
+
+    Return:
+      Hexadecimal represntation of the mintues argument.
+
+    Raises:
+      aioswitcher.erros.EncodingError: when failed hexlify.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``convert_minutes_to_timer``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     try:
         return hexlify(pack(STRUCT_PACKING_FORMAT, int(minutes) * 60)).decode(
             ENCODING_CODEC
@@ -83,12 +160,39 @@ def _convert_minutes_to_timer(minutes: str) -> str:
 async def convert_minutes_to_timer(
     loop: AbstractEventLoop, minutes: str
 ) -> str:
-    """Use as async wrapper for calling _convert_minutes_to_timer."""
+    """Asynchronous wrapper for _convert_minutes_to_timer.
+
+    Use as async wrapper for calling _convert_minutes_to_timer,
+    converting on-timer minutes to hexadecimal.
+
+    Args:
+      minutes: on-timer minutes to convert.
+
+    Return:
+      Hexadecimal represntation of the mintues argument.
+
+    """
     return await loop.run_in_executor(None, _convert_minutes_to_timer, minutes)
 
 
 def _convert_timedelta_to_auto_off(full_time: timedelta) -> str:
-    """Convert timedelta seconds to hex for auto-off."""
+    """Convert timedelta object for auto-shutdown to hexadecimal.
+
+    Args:
+      full_time: timedelta object represnting the auto-shutdown time.
+
+    Return:
+      Hexadecimal represntation of the full_time argument.
+
+    Raises:
+      aioswitcher.erros.EncodingError: when failed hexlify.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``convert_timedelta_to_auto_off``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     try:
         minutes = full_time.total_seconds() / 60
         hours, minutes = divmod(minutes, 60)
@@ -109,14 +213,41 @@ def _convert_timedelta_to_auto_off(full_time: timedelta) -> str:
 async def convert_timedelta_to_auto_off(
     loop: AbstractEventLoop, full_time: timedelta
 ) -> str:
-    """Use as async wrapper for calling _convert_timedelta_to_auto_off."""
+    """Asynchronous wrapper for _convert_timedelta_to_auto_off.
+
+    Use as async wrapper for calling _convert_timedelta_to_auto_off,
+    converting timedelta auto-shutdown configuration to hexadecimal.
+
+    Args:
+      full_time: timedelta object represnting the auto-shutdown time.
+
+    Return:
+      Hexadecimal represntation of the full_time argument.
+
+    """
     return await loop.run_in_executor(
         None, _convert_timedelta_to_auto_off, full_time
     )
 
 
 def _convert_string_to_device_name(name: str) -> str:
-    """Convert string to device name."""
+    """Convert string device name to hexadecimal before sending.
+
+    Args:
+      name: the desired name for conerting.
+
+    Return:
+      Hexadecimal represntation of the name argument.
+
+    Raises:
+      aioswitcher.erros.EncodingError: when failed hexlify.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``convert_string_to_device_name``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     try:
         if 1 < len(name) < 33:
             return (
@@ -133,14 +264,42 @@ def _convert_string_to_device_name(name: str) -> str:
 async def convert_string_to_device_name(
     loop: AbstractEventLoop, name: str
 ) -> str:
-    """Use as async wrapper for calling _convert_string_to_device_name."""
+    """Asynchronous wrapper for _convert_string_to_device_name.
+
+    Use as async wrapper for calling _convert_string_to_device_name,
+    converting name to hexadecimal.
+
+    Args:
+      name: the desired name for conerting.
+
+    Return:
+      Hexadecimal represntation of the name argument.
+
+    """
     return await loop.run_in_executor(
         None, _convert_string_to_device_name, name
     )
 
 
 def _get_days_list_from_bytes(data: int) -> List[str]:
-    """Extract week days from shcedule bytes."""
+    """Extract week days from shcedule bytes data.
+
+    Args:
+      data: bytes representing the days list.
+
+    Return:
+      List of string represntation the week days included in the list.
+      See ``aioswitcher.consts`` for days literals.
+
+    Raises:
+      aioswitcher.erros.DecodingError: when failed to analyze the argument.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``get_days_list_from_bytes``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     days_list = []
     try:
         for day in HEX_TO_DAY_DICT:
@@ -157,12 +316,41 @@ def _get_days_list_from_bytes(data: int) -> List[str]:
 async def get_days_list_from_bytes(
     loop: AbstractEventLoop, data: int
 ) -> List[str]:
-    """Use as async wrapper for calling _get_days_list_from_bytes."""
+    """Asynchronous wrapper for _get_days_list_from_bytes.
+
+    Use as async wrapper for calling _get_days_list_from_bytes,
+    extracting week days from shcedule bytes data.
+
+    Args:
+      data: bytes representing the days list.
+
+    Return:
+      List of string represntation the week days included in the list.
+      See ``aioswitcher.consts`` for days literals.
+
+    """
     return await loop.run_in_executor(None, _get_days_list_from_bytes, data)
 
 
 def _get_time_from_bytes(data: bytes) -> str:
-    """Extract start/end time from schedule bytes."""
+    """Extract start/end time from schedule bytes.
+
+    Args:
+      data: bytes representing the start or the end time for the schedule.
+
+    Return:
+      Time string in %H:%M format.
+      e.g. "20:30".
+
+    Raises:
+      aioswitcher.erros.DecodingError: when failed to analyze the argument.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``get_time_from_bytes``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     try:
         timestamp = int(data[6:8] + data[4:6] + data[2:4] + data[0:2], 16)
 
@@ -172,27 +360,79 @@ def _get_time_from_bytes(data: bytes) -> str:
 
 
 async def get_time_from_bytes(loop: AbstractEventLoop, data: bytes) -> str:
-    """Use as async wrapper for calling _get_time_from_bytes."""
+    """Asynchronous wrapper for _get_time_from_bytes.
+
+    Use as async wrapper for calling _get_time_from_bytes,
+    extracting start/end time from schedule bytes data.
+
+    Args:
+      data: bytes representing the start or the end time for the schedule.
+
+    Return:
+      Time string in %H:%M format.
+      e.g. "20:30".
+
+    """
     return await loop.run_in_executor(None, _get_time_from_bytes, data)
 
 
 def _get_timestamp() -> str:
-    """Generate timestamp."""
+    """Generate hexadecimal represntation of the current timestamp.
+
+    Return:
+      Hexadecimal represntation of the current unix time retrieved by
+      ``time.time``.
+
+    Raises:
+      aioswitcher.erros.DecodingError: when failed to analyze the timestamp.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``get_timestamp`` (without the `_`),
+      to schedule as a task in the event loop.
+
+    """
     try:
         return hexlify(
             pack(STRUCT_PACKING_FORMAT, int(round(time_time())))
         ).decode(ENCODING_CODEC)
     except HANDLED_EXCEPTIONS as ex:
-        raise EncodingError("failed to generate timestamp") from ex
+        raise DecodingError("failed to generate timestamp") from ex
 
 
 async def get_timestamp(loop: AbstractEventLoop) -> str:
-    """Use as async wrapper for calling _get_timestamp."""
+    """Asynchronous wrapper for _get_timestamp.
+
+    Use as async wrapper for calling _get_timestamp,
+    creating hexadecimal represntation of the current timestamp.
+
+    Return:
+      Hexadecimal represntation of the current unix time retrieved by
+      ``time.time``.
+
+    """
     return await loop.run_in_executor(None, _get_timestamp)
 
 
 def _create_weekdays_value(requested_days: List[int]) -> str:
-    """Create weekdays value for creating a new schedule."""
+    """Create hex value from list of requested days for schedule updating.
+
+    Args:
+      data: list of integers represnting the requested days.
+            check ``aioswitcher.consts`` for the correct values.
+
+    Return:
+      Hexadecimal representation of the days list.
+
+    Raises:
+      aioswitcher.erros.EncodingError: when failed to convert the argument.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``create_weekdays_value``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     try:
         if requested_days:
             return "{:02x}".format(int(sum(requested_days)))
@@ -204,14 +444,42 @@ def _create_weekdays_value(requested_days: List[int]) -> str:
 async def create_weekdays_value(
     loop: AbstractEventLoop, requested_days: List[int]
 ) -> str:
-    """Use as async wrapper for calling _create_weekdays_value."""
+    """Asynchronous wrapper for _create_weekdays_value.
+
+    Use as async wrapper for calling _create_weekdays_value,
+    creating hex value from list of requested days for schedule updating.
+
+    Args:
+      data: list of integers represnting the requested days.
+            check ``aioswitcher.consts`` for the correct values.
+
+    Return:
+      Hexadecimal representation of the days list.
+
+    """
     return await loop.run_in_executor(
         None, _create_weekdays_value, requested_days
     )
 
 
 def _timedelta_str_to_schedule_time(time_value: str) -> str:
-    """Convert timedelta string to schedule start/end time."""
+    """Convert time string to schedule start/end time to hexadecimale.
+
+    Args:
+      data: time to convert. e.g. "21:00".
+
+    Return:
+      Hexadecimal representation of time_value argument.
+
+    Raises:
+      aioswitcher.erros.EncodingError: when failed to convert the argument.
+
+    Note:
+      This is a private function containing blocking code.
+      Please consider using ``timedelta_str_to_schedule_time``
+      (without the `_`), to schedule as a task in the event loop.
+
+    """
     try:
         return_time = mktime(
             strptime(
@@ -236,7 +504,18 @@ def _timedelta_str_to_schedule_time(time_value: str) -> str:
 async def timedelta_str_to_schedule_time(
     loop: AbstractEventLoop, time_value: str
 ) -> str:
-    """Use as async wrapper for calling timedelta_str_to_schedule_time."""
+    """Asynchronous wrapper for _timedelta_str_to_schedule_time.
+
+    Use as async wrapper for calling _timedelta_str_to_schedule_time,
+    converting time string to schedule start/end time to hexadecimale.
+
+    Args:
+      data: time to convert. e.g. "21:00".
+
+    Return:
+      Hexadecimal representation of time_value argument.
+
+    """
     return await loop.run_in_executor(
         None, _timedelta_str_to_schedule_time, time_value
     )

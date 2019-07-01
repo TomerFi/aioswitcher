@@ -30,9 +30,8 @@ pygments_style = "sphinx"
 # html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
 language = "en"
-
 show_authors = False
 linkcheck_anchors = True
 
-# autodoc configuration
-# autodoc_mock_imports = []
+# sphinx.ext.todo configuration
+todo_include_todos = True
