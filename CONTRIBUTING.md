@@ -249,7 +249,7 @@ The various test-cases is in [tests](tests).
 For automated local tests, use [Tox](https://tox.readthedocs.io/en/latest/).
 
 ## Guidelines
-> **Please Note**: the project [semvar](https://semver.org/) is handled in both [pyproject.toml](pyproject.toml) and [package.json](package.json).
+> **Please Note**: the project [semver](https://semver.org/) is handled in both [pyproject.toml](pyproject.toml) and [package.json](package.json).
 
 Here are some guidelines (recommendations) for contributing to the `aioswitcher` project:
 -   Code docstrings documentation [here](https://aioswitcher.readthedocs.io/en/stable/codedocs.html)

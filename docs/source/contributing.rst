@@ -241,7 +241,7 @@ Guidelines
 
 .. note::
 
-    The project semvar_ is handled in both ``pyproject.toml`` and ``package.json``.
+    The project semver_ is handled in both ``pyproject.toml`` and ``package.json``.
 
 Here are some guidelines (recommendations) for contributing to the ``aioswitcher`` project:
 *   Code docstrings documentation [here](https://aioswitcher.readthedocs.io/en/stable/codedocs.html)
@@ -336,7 +336,7 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _remark-lint: https://github.com/remarkjs/remark-lint
 .. _requires.io: https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=dev
 .. _scspell3k: https://pypi.org/project/scspell3k/
-.. _semvar: https://semver.org/
+.. _semver: https://semver.org/
 .. _slack channel: https://tomfi.slack.com/messages/CK3KRBYDP
 .. _snyk: https://snyk.io
 .. _sphinx: http://www.sphinx-doc.org/en/master/

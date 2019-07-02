@@ -11,6 +11,7 @@ automodule
 aviad
 bandit.yml
 badge_grade
+bestpractices
 change
 changelog
 checked-with-mypy
@@ -21,8 +22,10 @@ codecov
 codedocs
 config.yml
 consts
+coreinfrastructure
 coroutine
 coverage.py
+coveragerc
 cpython
 datagram
 datetime
@@ -33,6 +36,7 @@ docstrings
 e.g.
 eustace
 faq
+fbff
 figenblat
 friday
 flake8
@@ -42,6 +46,9 @@ hlist
 homeassistant
 https
 isort
+krbydp
+linter
+linting
 login
 makefile
 maxdepth
@@ -49,11 +56,13 @@ metadata
 monday
 mypy
 npm
+npmjs
 node.js
 nodeenv
 package.json
 package-lock.json
 package-json-validator
+plugin
 poetry.lock
 poetry-to-requirements
 pre-installed
@@ -70,6 +79,7 @@ pytest
 pytest-cov
 readthedocs
 readthedocs.io
+remarkjs
 remark-cli
 remarkrc
 restructuredText
@@ -79,7 +89,7 @@ requirements.txt
 runtime
 saturday
 scspell3k
-semvar
+semver
 sexualized
 stdout
 sphinx-rtd-theme
@@ -94,6 +104,7 @@ thursday
 timedelta
 toctree
 toml
+tomfi
 tomerfi
 traceback
 tuesday
@@ -101,9 +112,12 @@ unparsed
 utm_campaign
 utm_content
 utm_medium
+validator
 virtualenv
 webapi
 wednesday
 wiki
+workflow
+workflows
 yamllint
 yml
