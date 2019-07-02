@@ -89,6 +89,7 @@ unittests = [
     "pytest-cov",
     "pytest-sugar"
 ]
+toml = ["toml"]
 
 [tool.isort]
 line_length = 79
@@ -158,7 +159,8 @@ commands =
 [testenv:py37]
 commands =
     python --version
-    poetry install -v --extras "unittests"
+    poetry install -v --extras "unittests" --extras "toml"
     pytest -vs --cov --cov-config=.coveragerc
+    python {toxinidir}/pyscripts/poetry-to-requirements.py
 
 """

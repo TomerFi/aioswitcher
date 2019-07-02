@@ -817,10 +817,11 @@ docsbuild = ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
 docslint = ["doc8", "scspell3k"]
 nodeenv = ["nodeenv"]
 python-checkers = ["asynctest", "bandit", "black", "flake8", "flake8-docstrings", "isort", "mypy", "pytest", "toml", "yamllint"]
+toml = ["toml"]
 unittests = ["asynctest", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov", "pytest-sugar"]
 
 [metadata]
-content-hash = "160a8f3e1f8fedc4e43f309d3a5035f893252250875434ccaca94c894af04f41"
+content-hash = "bd544e1f1965cc8c9eb4a02a3a9ea58a7ccd9392d90b5865d38a631f40d0dcf9"
 python-versions = "^3.5 || ^3.6 || ^3.7"
 
 [metadata.hashes]
