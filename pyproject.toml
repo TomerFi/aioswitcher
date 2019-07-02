@@ -14,16 +14,19 @@ repository = "https://github.com/tomerfi/aioswitcher"
 documentation = "https://aioswitcher.readthedocs.io"
 keywords = ["home", "automation", "switcher", "water-heater"]
 classifiers = [
-    "Topic :: Framework :: AsyncIO",
-    "Topic :: Framework :: tox",
-    "Topic :: Intended Audience :: Developers",
-    "Topic :: License :: OSI Approved :: MIT License",
-    "Topic :: Operating System :: OS Independent",
-    "Topic :: Programming Language :: Python :: 3.5",
-    "Topic :: Programming Language :: Python :: 3.6",
-    "Topic :: Programming Language :: Python :: 3.7",
-    "Topic :: Topic :: Home Automation",
-    "Topic :: Typing :: Typed"
+    "Framework :: AsyncIO",
+    "Framework :: tox",
+    "Framework :: Pytest",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.5",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Topic :: Documentation :: Sphinx",
+    "Topic :: Home Automation",
+    "Topic :: Software Development :: Libraries",
+    "Typing :: Typed"
 ]
 include = [] # CAHNGELOG, LICENSE, README and pyproject.toml are automatically included
 exclude = [
