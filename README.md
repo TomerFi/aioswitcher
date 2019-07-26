@@ -1,4 +1,5 @@
 <!--lint disable maximum-heading-length-->
+![tomfi-repo-logo](https://raw.githubusercontent.com/tomerfi/tomerfi.github.io/master/images/TomFiRepoWhite.png)
 # Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![shields-io-cii-best-practices-summary]][2] 
 
 | Stage     | Badges                                                                            |
