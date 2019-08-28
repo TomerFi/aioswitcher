@@ -33,7 +33,6 @@ exclude = [
     ".*",
     "dist",
     "docs",
-    "shellscripts",
     "tests",
     "CODE_OF_CONDUCT.md",
     "mypy.ini",
