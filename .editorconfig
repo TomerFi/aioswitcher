@@ -2,9 +2,13 @@
 root = true
 
 [*]
-end_of_line = lf
 charset = utf-8
+end_of_line = lf
 insert_final_newline = true
+
+[requirements.txt]
+end_of_line = crlf
+trim_trailing_whitespace = false
 
 [**.py]
 end_of_line = crlf

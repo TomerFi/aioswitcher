@@ -1,6 +1,9 @@
 # Normalize text files (crlf -> lf)
 * text=auto
 
+# Project specific
+requirements.txt text eol=crlf
+
 # Language specific
 *.py text eol=crlf diff=python
 *.pyc text eol=crlf diff=python
@@ -8,40 +11,40 @@
 *.java text eol=crlf diff=java
 
 # Documents
-*.csv text
+*.csv text eol=crlf
 *.doc text eol=crlf diff=astextplain
 *.docx text eol=crlf diff=astextplain
 *.pdf text eol=crlf diff=astextplain
 *.rtf text eol=crlf diff=astextplain
 
 # Documentation
-*.markdown text
-*.md text
-*.mdtxt text
-*.mdtext text
-*.txt text
-*.rst text
-CHANGELOG text
-CONTRIBUTING text
-*COPYRIGHT* text
-LICENSE text
-*README* text
+*.markdown text eol=lf
+*.md text eol=lf
+*.mdtxt text eol=lf
+*.mdtext text eol=lf
+*.txt text eol=lf
+*.rst text eol=lf
+CHANGELOG text eol=lf
+CONTRIBUTING text eol=lf
+*COPYRIGHT* text eol=lf
+LICENSE text eol=lf
+*README* text eol=lf
 
 # Configs
-*.cnf text
-*.conf text
-*.config text
+*.cnf text eol=lf
+*.conf text eol=lf
+*.config text eol=lf
 *.lock binary
-*.npmignore text
-*.properties text
-*.toml text
-*.yaml text
-*.yml text
-.editorconfig text
-.env text
+*.npmignore text eol=lf
+*.properties text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+.editorconfig text eol=lf
+.env text eol=lf
 package-lock.json binary
-Makefile text
-makefile text
+Makefile text eol=lf
+makefile text eol=lf
 
 # Graphics
 *.bmp binary
@@ -51,7 +54,7 @@ makefile text
 *.jpeg binary
 *.ico binary
 *.png binary
-*.svg text
+*.svg text eol=lf
 *.svgz binary
 *.tif binary
 *.tiff binary
@@ -78,25 +81,29 @@ makefile text
 *.dockerignore text eol=crlf
 Dockerfile text eol=crlf
 
+# Git
+*.gitattributes text eol=lf
+.gitignore text eol=lf
+
 # Web files
-*.coffee text
-*.css text diff=css
-*.htm text diff=html
-*.html text diff=html
-*.ini text
-*.js text
-*.json text
-*.jsp text
-*.jspf text
-*.jspx text
-*.jsx text
-*.less text
-*.ls text
-*.map text -diff
-*.php text diff=php
-*.scss text diff=css
-*.xml text
-*.xhtml text diff=html
+*.coffee text eol=lf
+*.css text eol=lf diff=css
+*.htm text eol=lf diff=html
+*.html text eol=lf diff=html
+*.ini text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.jsp text eol=lf
+*.jspf text eol=lf
+*.jspx text eol=lf
+*.jsx text eol=lf
+*.less text eol=lf
+*.ls text eol=lf
+*.map binary
+*.php text eol=lf diff=php
+*.scss text eol=lf diff=css
+*.xml text eol=lf
+*.xhtml text eol=lf diff=html
 
 # Binary files
 *.class binary
