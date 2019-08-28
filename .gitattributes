@@ -1,9 +1,6 @@
 # Normalize text files (crlf -> lf)
 * text=auto
 
-# Project specific
-requirements.txt text eol=crlf
-
 # Language specific
 *.py text eol=crlf diff=python
 *.pyc text eol=crlf diff=python
@@ -137,3 +134,6 @@ Dockerfile text eol=crlf
 *.props text eol=crlf
 *.filters text eol=crlf
 *.vcxitems text eol=crlf
+
+# Project specific
+requirements.txt text eol=crlf
