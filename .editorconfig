@@ -30,4 +30,5 @@ max_line_length = 120
 
 [**.rst]
 trim_trailing_whitespace = true
+end_of_line = lf
 max_line_length = 100

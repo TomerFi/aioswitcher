@@ -1,0 +1,4 @@
+## file endings ##
+* text=auto
+*.* text eol=crlf
+*.rst eol=lf
