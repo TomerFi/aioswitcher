@@ -151,7 +151,7 @@ commands:
           name: Black
           command: |
             . venv/bin/activate
-            black --diff src/ tests/ docs/source/ pyscripts/
+            black --check src/ tests/ docs/source/ pyscripts/
       - run:
           name: Mypy
           command: |
