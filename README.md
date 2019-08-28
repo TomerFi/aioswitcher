@@ -1,21 +1,22 @@
 <!--lint disable maximum-heading-length-->
 ![tomfi-repo-logo](https://raw.githubusercontent.com/tomerfi/portfolio/dev/images/TomFiRepoWhite.png)
-# Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![shields-io-cii-best-practices-summary]][2] 
+# Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![shields-io-cii-best-practices-summary]][2]
 
-| Stage     | Badges                                                                            |
-| --------- | --------------------------------------------------------------------------------- |
-| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6] | 
-| `Builds`  | [![circleci]][7] [![read-the-docs]][8]                                            |
-| `Pypi`    | [![requires-io]][9] [![snyk-pypi]][13]                                            |
-| `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![snyk-npm]][12]          |
+| Stage     | Badges                                                                                              |
+| --------- | --------------------------------------------------------------------------------------------------- |
+| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6]                   |
+| `Builds`  | [![circleci]][7] [![read-the-docs]][8]                                                              |
+| `Pypi`    | [![requires-io]][9] [![snyk-pypi]][13]                                                              |
+| `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![snyk-npm]][12] [![greenkeeper-badge]][14] |
 
-[![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/)) 
+[![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/))
 
 PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).
 Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted with
 [readthedocs.io](https://readthedocs.org/).
 
 This module:
+
 -   Is packaged with [poetry](https://poetry.eustace.io/).
 
 -   Works concurrently using Python's Asynchronous I/O module [asyncio](https://docs.python.org/3/library/asyncio.html#module-asyncio).
@@ -48,6 +49,7 @@ The use of *Python 3.7* is preferable.
 [11]: https://pypi.org/project/aioswitcher/
 [12]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=package.json
 [13]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=requirements.txt
+[14]: https://greenkeeper.io/
 
 <!-- Badges Links -->
 [checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
@@ -56,6 +58,7 @@ The use of *Python 3.7* is preferable.
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
 [david-dm-dev-package-json-dependencies-status]: https://david-dm.org/TomerFi/aioswitcher/status.svg
+[greenkeeper-badge]: https://badges.greenkeeper.io/TomerFi/aioswitcher.svg
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
 [pypi-version]: https://badge.fury.io/py/aioswitcher.svg
