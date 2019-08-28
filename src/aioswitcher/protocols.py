@@ -5,9 +5,9 @@
 """
 
 # fmt: off
-from asyncio import (AbstractEventLoop, BaseTransport, DatagramProtocol, Event,
-                     Future, Queue, QueueEmpty, QueueFull, Transport,
-                     ensure_future)
+from asyncio import (
+    AbstractEventLoop, BaseTransport, DatagramProtocol, Event, Future, Queue,
+    QueueEmpty, QueueFull, Transport, ensure_future)
 from datetime import datetime
 from functools import partial
 from typing import Optional, Tuple, Union, cast
