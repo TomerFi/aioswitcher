@@ -27,6 +27,7 @@ coroutine
 coverage.py
 coveragerc
 cpython
+crlf
 datagram
 datetime
 david-dm-dev-package-json-dependencies-status
@@ -34,6 +35,7 @@ dev
 doc8
 docstrings
 e.g.
+editorconfig
 eustace
 faq
 ffdc
