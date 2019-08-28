@@ -136,4 +136,4 @@ Dockerfile text eol=crlf
 *.vcxitems text eol=crlf
 
 # Project specific
-requirements.txt text eol=crlf
+*requirements.txt text eol=crlf
