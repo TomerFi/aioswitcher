@@ -141,7 +141,8 @@ commands =
     black --diff src/ tests/ docs/source/ pyscripts/
     mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/ pyscripts/
     doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
-    bash -c "for fil in docs/source/*.rst; do scspell --report-only  --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done"
+    # bash -c "for fil in $(find "$(pwd)/docs/source" -type f -name "*.rst"); do scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done" # linux
+    # scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $(dir "${pwd}/docs/source/*.rst" -Recurse | foreach  { "$_" }) # windows
     sphinx-build -W -b html -d {envtmpdir}/doctrees docs/source {envtmpdir}/html
 
 [testenv:py35]
