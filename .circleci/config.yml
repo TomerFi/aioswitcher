@@ -141,7 +141,7 @@ commands:
           name: Isort
           command: |
             . venv/bin/activate
-            isort --diff --recursive src/ tests/ docs/source/ pyscripts/
+            isort --check --recursive src/ tests/ docs/source/ pyscripts/
       - run:
           name: Flake8
           command: |

@@ -6,10 +6,11 @@ from asyncio import (AbstractEventLoop, StreamReader, StreamWriter,
 from binascii import unhexlify
 from typing import Any, Generator, List, Tuple, Union
 
-from aioswitcher.consts import ENCODING_CODEC, WEEKDAY_TUP
-from aioswitcher.schedules import SwitcherV2Schedule
 from asynctest import CoroutineMock, Mock, patch
 from pytest import fixture
+
+from aioswitcher.consts import ENCODING_CODEC, WEEKDAY_TUP
+from aioswitcher.schedules import SwitcherV2Schedule
 
 from .common import (create_random_time, get_later_time_for_minute_delta,
                      get_weekday_for_day_delta)

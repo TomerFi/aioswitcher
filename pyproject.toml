@@ -136,9 +136,9 @@ commands =
     poetry install -v --extras "python-checkers" --extras "docslint" --extras "docsbuild"
     yamllint --config-file .yamllint --format colored --strict .
     bandit -rvc .bandit src/ tests/ docs/source/ pyscripts/ -l -ii
-    isort --check-only --recursive src/ tests/ docs/source/ pyscripts/
+    isort --check --recursive src/ tests/ docs/source/ pyscripts/
     flake8 --statistics --count --doctests src/ tests/ docs/source/ pyscripts/
-    black --check src/ tests/ docs/source/ pyscripts/
+    black --diff src/ tests/ docs/source/ pyscripts/
     mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/ pyscripts/
     doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
     bash -c "for fil in docs/source/*.rst; do scspell --report-only  --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done"
