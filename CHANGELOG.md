@@ -1,5 +1,9 @@
 # Change Log
 
+## [2019.8.28](https://github.com/tomerfi/aioswitcher/tree/2019.8.28)
+
+[Full Changelog](https://github.com/tomerfi/aioswitcher/compare/2019.7.2...2019.8.28)
+
 ## [2019.7.2](https://github.com/tomerfi/aioswitcher/tree/2019.7.2)
 
 [Full Changelog](https://github.com/tomerfi/aioswitcher/compare/2019.6.11...2019.7.2)

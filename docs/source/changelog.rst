@@ -1,6 +1,17 @@
 Change Log
 **********
 
+2019.8.28_
+^^^^^^^^^^
+
+`2019.8.28 Full Changelog`_
+
+- Removed transitive dependencies from requirements file.
+- Update dependencies and requirements.
+- Incorporated .editorconfig file.
+- RestructuredText are now LF and not CRLF.
+- Cleanups.
+
 2019.7.2_
 ^^^^^^^^^^
 
@@ -46,6 +57,8 @@ Change Log
 - Continuous integration
 - Code coverage
 
+.. _2019.8.28: https://github.com/tomerfi/aioswitcher/tree/2019.8.28
+.. _2019.8.28 Full Changelog: https://github.com/tomerfi/aioswitcher/compare/2019.7.2...2019.8.28
 .. _2019.7.2: https://github.com/tomerfi/aioswitcher/tree/2019.7.2
 .. _2019.7.2 Full Changelog: https://github.com/tomerfi/aioswitcher/compare/2019.6.11...2019.7.2
 .. _2019.6.11: https://github.com/tomerfi/aioswitcher/tree/2019.6.11
