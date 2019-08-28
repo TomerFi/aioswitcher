@@ -141,7 +141,7 @@ commands =
     flake8 --statistics --count --doctests src/ tests/ docs/source/ pyscripts/
     black --check src/ tests/ docs/source/ pyscripts/
     mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/ pyscripts/
-    doc8 --allow-long-titles --ignore D002,D004 --max-line-length 100 -e rst docs/source
+    doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
     bash -c "for fil in docs/source/*.rst; do scspell --report-only  --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done"
     sphinx-build -W -b html -d {envtmpdir}/doctrees docs/source {envtmpdir}/html
 
