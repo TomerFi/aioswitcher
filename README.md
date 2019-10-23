@@ -1,12 +1,11 @@
 <!--lint disable maximum-heading-length-->
 ![tomfi-repo-logo](https://media.githubusercontent.com/media/TomerFi/portfolio/gh-pages/images/TomFiRepoWhite.png)
 # Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![shields-io-cii-best-practices-summary]][2]
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher?ref=badge_shield)
 
 | Stage     | Badges                                                                                              |
 | --------- | --------------------------------------------------------------------------------------------------- |
 | `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6]                   |
-| `Builds`  | [![circleci]][7] [![read-the-docs]][8]                                                              |
+| `Builds`  | [![circleci]][7] [![read-the-docs]][8] [![license-scan]][15]                                        |
 | `Pypi`    | [![requires-io]][9] [![snyk-pypi]][13]                                                              |
 | `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![snyk-npm]][12] [![greenkeeper-badge]][14] |
 
@@ -51,7 +50,7 @@ The use of *Python 3.7* is preferable.
 [12]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=package.json
 [13]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=requirements.txt
 [14]: https://greenkeeper.io/
-
+[15]: https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher
 <!-- Badges Links -->
 [checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
 [circleci]: https://circleci.com/gh/TomerFi/aioswitcher.svg?style=shield
@@ -60,6 +59,7 @@ The use of *Python 3.7* is preferable.
 [code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
 [david-dm-dev-package-json-dependencies-status]: https://david-dm.org/TomerFi/aioswitcher/status.svg
 [greenkeeper-badge]: https://badges.greenkeeper.io/TomerFi/aioswitcher.svg
+[license-scan]: https://app.fossa.io/api/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher.svg?type=shield
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
 [pypi-version]: https://badge.fury.io/py/aioswitcher.svg
@@ -70,6 +70,3 @@ The use of *Python 3.7* is preferable.
 [shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
 [snyk-npm]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=package.json
 [snyk-pypi]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=requirements.txt
-
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher?ref=badge_large)
