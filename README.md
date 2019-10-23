@@ -1,6 +1,7 @@
 <!--lint disable maximum-heading-length-->
 ![tomfi-repo-logo](https://media.githubusercontent.com/media/TomerFi/portfolio/gh-pages/images/TomFiRepoWhite.png)
 # Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![shields-io-cii-best-practices-summary]][2]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher?ref=badge_shield)
 
 | Stage     | Badges                                                                                              |
 | --------- | --------------------------------------------------------------------------------------------------- |
@@ -69,3 +70,6 @@ The use of *Python 3.7* is preferable.
 [shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
 [snyk-npm]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=package.json
 [snyk-pypi]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=requirements.txt
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher?ref=badge_large)
