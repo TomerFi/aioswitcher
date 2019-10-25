@@ -271,19 +271,6 @@ Then you can execute the scripts from the same path.
 *   ``npm run spell-md-report`` will run `markdown-spellcheck`_ against *markdown* files and print
     the report to stdout.
 
-Best Practices
-^^^^^^^^^^^^^^
-
-This project tries to follow the `CII Best Practices`_ guidelines.
-
-That's not an easy task and I'm not sure achieving 100% is even possible for this specific
-project.
-
-At the time writing this, the project has achieved 14% (The writing of this file was actually
-according one to those guidelines).
-
-Any contribution bumping up this percentage will be gladly embraced.
-
 Code of Conduct
 ^^^^^^^^^^^^^^^
 
@@ -292,7 +279,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _bandit: https://pypi.org/project/bandit/
 .. _bandit common security issues finder: https://github.com/PyCQA/bandit
 .. _black: https://pypi.org/project/black/
-.. _cii best practices: https://bestpractices.coreinfrastructure.org/en/projects/2889
 .. _circleci: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
 .. _circleci Continuous Integration and Deployment Services: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
 .. _codacy: https://app.codacy.com/project/TomerFi/aioswitcher/dashboard

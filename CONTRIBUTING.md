@@ -29,7 +29,6 @@ Please feel free to contribute, even to this contributing guideline file, if you
 - [Testing](#testing)
 - [Guidelines](#guidelines)
   - [NPM Scripts](#npm-scripts)
-- [Best Practices](#best-practices)
 - [Code of Conduct](#code-of-conduct)
 
 ## Items description
@@ -254,16 +253,6 @@ Then you can execute the scripts from the same path.
   against *markdown* files in an interactive manner allowing us to select the appropriate action.
 - `npm run spell-md-report` will run [markdown-spellcheck](https://www.npmjs.com/package/markdown-spellcheck)
   against *markdown* files and print the report to stdout.
-
-## Best Practices
-
-This project tries to follow the [CII Best Practices](https://bestpractices.coreinfrastructure.org/en/projects/2889) guidelines.
-
-That's not an easy task and I'm not sure achieving 100% is even possible for this specific
-project.</br>
-At the time writing this, the project has achieved 14% (The writing of this file was actually
-according one to those guidelines).</br>
-Any contribution bumping up this percentage will be gladly embraced.
 
 ## Code of Conduct
 

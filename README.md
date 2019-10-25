@@ -1,5 +1,5 @@
 <!--lint disable maximum-heading-length-->
-# Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![shields-io-cii-best-practices-summary]][2]
+# Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11]
 
 | Stage     | Badges                                                                                                |
 | --------- | ----------------------------------------------------------------------------------------------------- |
@@ -28,7 +28,6 @@ The use of *Python 3.7* is preferable.
 
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher
-[2]: https://bestpractices.coreinfrastructure.org/projects/2889
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [4]: https://www.codacy.com/app/TomerFi/aioswitcher?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomerFi/aioswitcher&amp;utm_campaign=Badge_Grade
 [5]: https://black.readthedocs.io/en/stable/
@@ -54,5 +53,4 @@ The use of *Python 3.7* is preferable.
 [pypi-version]: https://badge.fury.io/py/aioswitcher.svg
 [read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
 [requires-io]: https://requires.io/github/TomerFi/aioswitcher/requirements.svg
-[shields-io-cii-best-practices-summary]: https://img.shields.io/cii/summary/2889.svg
 [shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
