@@ -1,5 +1,4 @@
-<!--lint disable maximum-heading-length-->
-![tomfi-repo-logo](https://media.githubusercontent.com/media/TomerFi/portfolio/gh-pages/images/TomFiRepoWhite.png)
+<!--lint disable maximum-heading-length list-item-indent-->
 # Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![self-hosted-slack-channel]][1] [![shields-io-cii-best-practices-summary]][2]
 
 | Stage     | Badges                                                                                              |
@@ -17,17 +16,17 @@ Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted 
 
 This module:
 
--   Is packaged with [poetry](https://poetry.eustace.io/).
+- Is packaged with [poetry](https://poetry.eustace.io/).
 
--   Works concurrently using Python's Asynchronous I/O module [asyncio](https://docs.python.org/3/library/asyncio.html#module-asyncio).
+- Works concurrently using Python's Asynchronous I/O module [asyncio](https://docs.python.org/3/library/asyncio.html#module-asyncio).
 
--   Is static typed and checked with [mypy](https://mypy.readthedocs.io/en/latest/index.html) based
-    on [PEP484](https://www.python.org/dev/peps/pep-0484/).
+- Is static typed and checked with [mypy](https://mypy.readthedocs.io/en/latest/index.html) based
+  on [PEP484](https://www.python.org/dev/peps/pep-0484/).
 
--   Follows [black code style](https://black.readthedocs.io/en/stable/) rules and guidelines.
+- Follows [black code style](https://black.readthedocs.io/en/stable/) rules and guidelines.
 
--   Package is described using [pyproject.toml](pyproject.toml) based on [PEP517](https://www.python.org/dev/peps/pep-0517/)
-    and [PEP518](https://www.python.org/dev/peps/pep-0518/).
+- Package is described using [pyproject.toml](pyproject.toml) based on [PEP517](https://www.python.org/dev/peps/pep-0517/)
+  and [PEP518](https://www.python.org/dev/peps/pep-0518/).
 
 Although the [aioswitcher][11] module requires the use of *Python 3.5/3.6/3.7*,
 The use of *Python 3.7* is preferable.
