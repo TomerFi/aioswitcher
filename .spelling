@@ -1,7 +1,8 @@
 aioswitcher
 asyncio
+badge_grade
 bandit.yml
-circlci
+circleci
 codacy
 code_of_conduct.md
 codecov
@@ -32,6 +33,8 @@ pyproject.toml
 pyscripts
 pytest
 pytest-cov
+python3.5
+python3.7
 pypi
 pypi-downloads
 pypi-license
@@ -42,6 +45,7 @@ remarkrc
 restructuredText
 requirements.txt
 requires-io
+requires.io
 runtime
 scspell3k
 semver
@@ -50,6 +54,10 @@ shields-io-maintenance
 sphinx-rtd-theme
 stdout
 testenv
+tomerfi
+utm_campaign
+utm_content
+utm_medium
 virtualenv
 yamllint
 yml
