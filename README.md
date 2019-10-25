@@ -1,12 +1,11 @@
-<!--lint disable maximum-heading-length list-item-indent-->
+<!--lint disable maximum-heading-length-->
 # Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![shields-io-cii-best-practices-summary]][2]
 
-| Stage     | Badges                                                                            |
-| --------- | --------------------------------------------------------------------------------- |
-| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6] |
-| `Builds`  | [![circleci]][7] [![read-the-docs]][8] [![license-scan]][15]                      |
-| `Pypi`    | [![requires-io]][9]                                                               |
-| `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![greenkeeper-badge]][14] |
+| Stage     | Badges                                                                                                |
+| --------- | ----------------------------------------------------------------------------------------------------- |
+| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6]                     |
+| `Build`   | [![circleci]][7] [![read-the-docs]][8] [![license-scan]][15]                                          |
+| `Package` | [![requires-io]][9] [![david-dm-dev-package-json-dependencies-status]][10] [![greenkeeper-badge]][14] |
 
 [![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/))
 
@@ -17,14 +16,10 @@ Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted 
 This module:
 
 - Is packaged with [poetry](https://poetry.eustace.io/).
-
 - Works concurrently using Python's Asynchronous I/O module [asyncio](https://docs.python.org/3/library/asyncio.html#module-asyncio).
-
 - Is static typed and checked with [mypy](https://mypy.readthedocs.io/en/latest/index.html) based
   on [PEP484](https://www.python.org/dev/peps/pep-0484/).
-
 - Follows [black code style](https://black.readthedocs.io/en/stable/) rules and guidelines.
-
 - Package is described using [pyproject.toml](pyproject.toml) based on [PEP517](https://www.python.org/dev/peps/pep-0517/)
   and [PEP518](https://www.python.org/dev/peps/pep-0518/).
 
