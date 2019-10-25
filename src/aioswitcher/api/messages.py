@@ -269,8 +269,8 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
         if schedules_details:
             for i in range(len(schedules_details)):
-                schedule = SwitcherV2Schedule(  # type: ignore
-                    loop, i, schedules_details
+                schedule = SwitcherV2Schedule(
+                    loop, i, schedules_details  # type: ignore
                 )
                 self._schedule_list.append(schedule)
 
