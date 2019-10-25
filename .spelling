@@ -11,7 +11,7 @@ automodule
 aviad
 bandit.yml
 badge_grade
-bestpractices
+bgithub
 change
 changelog
 checked-with-mypy
@@ -37,12 +37,14 @@ docstrings
 e.g.
 editorconfig
 eustace
+faioswitcher
 faq
 ffdc
 fbff
 figenblat
 friday
 flake8
+fossa
 github
 golan
 greenkeeper-badge
@@ -95,13 +97,9 @@ saturday
 scspell3k
 semver
 sexualized
-shields-io-cii-best-practices-summary
 shields-io-maintenance
 stdout
 sphinx-rtd-theme
-snyk
-snyk-npm
-snyk-pypi
 sublicense
 sunday
 swapi

@@ -60,7 +60,7 @@ Requirement files
 *   ``requirements.txt`` has noting to do directly with the package structure. We use poetry_ for
     packaging and building. This file is actually being manually build with
     ``pyscripts/poetry-to-requirements.py`` from the content of ``poetry.lock`` file for legacy
-    support (e.g. `Requires-io`_ and Snyk_).
+    support (e.g. `Requires-io`_).
 
 Package management
 ------------------
@@ -124,11 +124,10 @@ David-DM
 `David-DM`_ is keeping an eye for versions updates upon the *Npm* requirements listed in the
 ``package.json`` file.
 
-Snyk
-----
+FOSSA
+-----
 
-Snyk_ is keeping an eye out for vulnerabilities and in our `npm dependencies`_, our
-`pypi requirements`_.
+Fossa_ is validating the licenses in use.
 
 Continuous Deployment
 ^^^^^^^^^^^^^^^^^^^^^
@@ -231,7 +230,7 @@ Environments and Tools
 Testing
 ^^^^^^^
 
-Testing is performed with `Pytest, Full-featured Python testing tool`_. The various test-cases is
+Testing is performed with `Pytest Full-featured Python testing tool`_. The various test-cases is
 in ``tests``.
 
 For automated local tests, use Tox_.
@@ -277,25 +276,6 @@ Then you can execute the scripts from the same path.
 *   ``npm run spell-md-report`` will run `markdown-spellcheck`_ against *markdown* files and print
     the report to stdout.
 
-Chat
-^^^^
-
-Feel free to join the project's public `Slack Channel`_.
-GitHub is integrated with the channel and keep its members updated.
-
-Best Practices
-^^^^^^^^^^^^^^
-
-This project tries to follow the `CII Best Practices`_ guidelines.
-
-That's not an easy task and I'm not sure achieving 100% is even possible for this specific
-project.
-
-At the time writing this, the project has achieved 14% (The writing of this file was actually
-according one to those guidelines).
-
-Any contribution bumping up this percentage will be gladly embraced.
-
 Code of Conduct
 ^^^^^^^^^^^^^^^
 
@@ -304,7 +284,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _bandit: https://pypi.org/project/bandit/
 .. _bandit common security issues finder: https://github.com/PyCQA/bandit
 .. _black: https://pypi.org/project/black/
-.. _cii best practices: https://bestpractices.coreinfrastructure.org/en/projects/2889
 .. _circleci: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
 .. _circleci Continuous Integration and Deployment Services: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
 .. _codacy: https://app.codacy.com/project/TomerFi/aioswitcher/dashboard
@@ -315,19 +294,18 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _david-dm: https://david-dm.org/TomerFi/aioswitcher
 .. _doc8: https://pypi.org/project/doc8/
 .. _flake8: https://pypi.org/project/flake8/
+.. _Fossa: https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher
 .. _isort: https://pypi.org/project/isort/
 .. _markdown-spellcheck: https://www.npmjs.com/package/markdown-spellcheck
 .. _mypy: https://pypi.org/project/mypy/
 .. _nodeenv: https://pypi.org/project/nodeenv/
 .. _npm: https://docs.npmjs.com/files/package.json
-.. _npm dependencies: https://snyk.io/test/github/TomerFi/aioswitcher?targetFile=package.json
 .. _package-json-validator: https://www.npmjs.com/package/package-json-validator
 .. _pep518: https://www.python.org/dev/peps/pep-0518/
 .. _poetry: https://poetry.eustace.io/
 .. _pypi: https://pypi.org/
-.. _pypi requirements: https://snyk.io/test/github/TomerFi/aioswitcher?targetFile=requirements.txt
 .. _pytest: https://pypi.org/project/pytest/
-.. _pytest, full-featured python testing tool: https://docs.pytest.org/en/latest/
+.. _pytest full-featured python testing tool: https://docs.pytest.org/en/latest/
 .. _pytest-cov plugin: https://pytest-cov.readthedocs.io/en/latest/
 .. _python: https://www.python.org/
 .. _read the docs: https://readthedocs.org/
@@ -337,8 +315,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _requires.io: https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=dev
 .. _scspell3k: https://pypi.org/project/scspell3k/
 .. _semver: https://semver.org/
-.. _slack channel: https://tomfi.slack.com/messages/CK3KRBYDP
-.. _snyk: https://snyk.io
 .. _sphinx: http://www.sphinx-doc.org/en/master/
 .. _sphinx documentation: http://www.sphinx-doc.org/en/master/
 .. _sphinx-rtd-theme: https://pypi.org/project/sphinx-rtd-theme/
