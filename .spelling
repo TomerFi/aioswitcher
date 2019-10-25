@@ -11,6 +11,7 @@ automodule
 aviad
 bandit.yml
 badge_grade
+bgithub
 change
 changelog
 checked-with-mypy
@@ -36,12 +37,14 @@ docstrings
 e.g.
 editorconfig
 eustace
+faioswitcher
 faq
 ffdc
 fbff
 figenblat
 friday
 flake8
+fossa
 github
 golan
 greenkeeper-badge
