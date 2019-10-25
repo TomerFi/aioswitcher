@@ -134,7 +134,8 @@ the npm requirements listed in the *package.json* file.
 
 ### FOSSA
 
-[FOSSA](https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher) is validating the licenses in use.
+[FOSSA](https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher) is validating the
+licenses in use.
 
 ## Continuous Deployment
 
