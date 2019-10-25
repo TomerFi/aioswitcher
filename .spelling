@@ -1,3 +1,4 @@
+NATURAL:
 aioswitcher
 asyncio
 badge_grade
@@ -14,6 +15,7 @@ cpython
 david-dm-dev-package-json-dependencies-status
 dev
 doc8
+docstrings
 e.g.
 faq
 flake8
@@ -22,6 +24,7 @@ isort
 makefile
 metadata
 mypy
+node.js
 nodeenv
 npm
 package-json-validator
