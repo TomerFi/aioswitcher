@@ -286,11 +286,6 @@ Then you can execute the scripts from the same path.
 -   `npm run spell-md-report` will run [markdown-spellcheck](https://www.npmjs.com/package/markdown-spellcheck)
     against *markdown* files and print the report to stdout.
 
-## Chat
-Feel free to join the project's public
-[Slack Channel](https://tomfi.slack.com/messages/CK3KRBYDP).</br>
-GitHub is integrated with the channel and keep its members updated.
-
 ## Best Practices
 This project tries to follow the [CII Best Practices](https://bestpractices.coreinfrastructure.org/en/projects/2889) guidelines.
 

@@ -277,12 +277,6 @@ Then you can execute the scripts from the same path.
 *   ``npm run spell-md-report`` will run `markdown-spellcheck`_ against *markdown* files and print
     the report to stdout.
 
-Chat
-^^^^
-
-Feel free to join the project's public `Slack Channel`_.
-GitHub is integrated with the channel and keep its members updated.
-
 Best Practices
 ^^^^^^^^^^^^^^
 
@@ -337,7 +331,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _requires.io: https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=dev
 .. _scspell3k: https://pypi.org/project/scspell3k/
 .. _semver: https://semver.org/
-.. _slack channel: https://tomfi.slack.com/messages/CK3KRBYDP
 .. _snyk: https://snyk.io
 .. _sphinx: http://www.sphinx-doc.org/en/master/
 .. _sphinx documentation: http://www.sphinx-doc.org/en/master/
