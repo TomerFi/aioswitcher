@@ -22,6 +22,7 @@ Please feel free to contribute, even to this contributing guideline file, if you
   - [Codacy](#codacy)
   - [Requires-io](#requires-io)
   - [David-DM](#david-dm)
+  - [FOSSA](#fossa)
 - [Continuous Deployment](#continuous-deployment)
   - [Read the Docs](#read-the-docs)
   - [PyPi](#pypi)
@@ -130,6 +131,10 @@ is keeping an eye for versions updates upon the *Python* requirements listed in 
 
 [David-DM](https://david-dm.org/TomerFi/aioswitcher) is keeping an eye for versions updates upon
 the npm requirements listed in the *package.json* file.
+
+### FOSSA
+
+[FOSSA](https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher) is validating the licenses in use.
 
 ## Continuous Deployment
 

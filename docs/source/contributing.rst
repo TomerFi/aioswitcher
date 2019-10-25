@@ -124,6 +124,11 @@ David-DM
 `David-DM`_ is keeping an eye for versions updates upon the *Npm* requirements listed in the
 ``package.json`` file.
 
+FOSSA
+-----
+
+Fossa_ is validating the licenses in use.
+
 Continuous Deployment
 ^^^^^^^^^^^^^^^^^^^^^
 
@@ -289,6 +294,7 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _david-dm: https://david-dm.org/TomerFi/aioswitcher
 .. _doc8: https://pypi.org/project/doc8/
 .. _flake8: https://pypi.org/project/flake8/
+.. _Fossa: https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher
 .. _isort: https://pypi.org/project/isort/
 .. _markdown-spellcheck: https://www.npmjs.com/package/markdown-spellcheck
 .. _mypy: https://pypi.org/project/mypy/
