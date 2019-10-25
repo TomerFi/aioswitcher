@@ -60,7 +60,7 @@ Requirement files
 *   ``requirements.txt`` has noting to do directly with the package structure. We use poetry_ for
     packaging and building. This file is actually being manually build with
     ``pyscripts/poetry-to-requirements.py`` from the content of ``poetry.lock`` file for legacy
-    support (e.g. `Requires-io`_ and Snyk_).
+    support (e.g. `Requires-io`_).
 
 Package management
 ------------------
@@ -123,12 +123,6 @@ David-DM
 
 `David-DM`_ is keeping an eye for versions updates upon the *Npm* requirements listed in the
 ``package.json`` file.
-
-Snyk
-----
-
-Snyk_ is keeping an eye out for vulnerabilities and in our `npm dependencies`_, our
-`pypi requirements`_.
 
 Continuous Deployment
 ^^^^^^^^^^^^^^^^^^^^^
@@ -231,7 +225,7 @@ Environments and Tools
 Testing
 ^^^^^^^
 
-Testing is performed with `Pytest, Full-featured Python testing tool`_. The various test-cases is
+Testing is performed with `Pytest Full-featured Python testing tool`_. The various test-cases is
 in ``tests``.
 
 For automated local tests, use Tox_.
@@ -314,14 +308,12 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _mypy: https://pypi.org/project/mypy/
 .. _nodeenv: https://pypi.org/project/nodeenv/
 .. _npm: https://docs.npmjs.com/files/package.json
-.. _npm dependencies: https://snyk.io/test/github/TomerFi/aioswitcher?targetFile=package.json
 .. _package-json-validator: https://www.npmjs.com/package/package-json-validator
 .. _pep518: https://www.python.org/dev/peps/pep-0518/
 .. _poetry: https://poetry.eustace.io/
 .. _pypi: https://pypi.org/
-.. _pypi requirements: https://snyk.io/test/github/TomerFi/aioswitcher?targetFile=requirements.txt
 .. _pytest: https://pypi.org/project/pytest/
-.. _pytest, full-featured python testing tool: https://docs.pytest.org/en/latest/
+.. _pytest full-featured python testing tool: https://docs.pytest.org/en/latest/
 .. _pytest-cov plugin: https://pytest-cov.readthedocs.io/en/latest/
 .. _python: https://www.python.org/
 .. _read the docs: https://readthedocs.org/
@@ -331,7 +323,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _requires.io: https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=dev
 .. _scspell3k: https://pypi.org/project/scspell3k/
 .. _semver: https://semver.org/
-.. _snyk: https://snyk.io
 .. _sphinx: http://www.sphinx-doc.org/en/master/
 .. _sphinx documentation: http://www.sphinx-doc.org/en/master/
 .. _sphinx-rtd-theme: https://pypi.org/project/sphinx-rtd-theme/

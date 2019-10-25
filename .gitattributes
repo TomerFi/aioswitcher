@@ -1,5 +1,5 @@
-# Normalize text files (crlf -> lf)
-* text=auto
+# Normalize text files (lf -> crlf)
+# * text=auto
 
 # Language specific
 *.py text eol=crlf diff=python

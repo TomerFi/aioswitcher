@@ -1,12 +1,12 @@
 <!--lint disable maximum-heading-length list-item-indent-->
 # Switcher Boiler Unofficial Bridge and API Tools</br>[![shields-io-maintenance]][0] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![shields-io-cii-best-practices-summary]][2]
 
-| Stage     | Badges                                                                                              |
-| --------- | --------------------------------------------------------------------------------------------------- |
-| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6]                   |
-| `Builds`  | [![circleci]][7] [![read-the-docs]][8] [![license-scan]][15]                                        |
-| `Pypi`    | [![requires-io]][9] [![snyk-pypi]][13]                                                              |
-| `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![snyk-npm]][12] [![greenkeeper-badge]][14] |
+| Stage     | Badges                                                                            |
+| --------- | --------------------------------------------------------------------------------- |
+| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6] |
+| `Builds`  | [![circleci]][7] [![read-the-docs]][8] [![license-scan]][15]                      |
+| `Pypi`    | [![requires-io]][9]                                                               |
+| `Npm`     | [![david-dm-dev-package-json-dependencies-status]][10] [![greenkeeper-badge]][14] |
 
 [![Python Versions](https://img.shields.io/pypi/pyversions/django.svg)]((https://pypi.org/project/aioswitcher/))
 
@@ -43,8 +43,6 @@ The use of *Python 3.7* is preferable.
 [9]: https://requires.io/github/TomerFi/aioswitcher/requirements
 [10]: https://david-dm.org/TomerFi/aioswitcher
 [11]: https://pypi.org/project/aioswitcher/
-[12]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=package.json
-[13]: https://snyk.io//test/github/TomerFi/aioswitcher?targetFile=requirements.txt
 [14]: https://greenkeeper.io/
 [15]: https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher
 <!-- Badges Links -->
@@ -63,5 +61,3 @@ The use of *Python 3.7* is preferable.
 [requires-io]: https://requires.io/github/TomerFi/aioswitcher/requirements.svg
 [shields-io-cii-best-practices-summary]: https://img.shields.io/cii/summary/2889.svg
 [shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
-[snyk-npm]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=package.json
-[snyk-pypi]: https://snyk.io//test/github/TomerFi/aioswitcher/badge.svg?targetFile=requirements.txt

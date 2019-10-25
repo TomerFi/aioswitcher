@@ -23,7 +23,6 @@ Please feel free to contribute, even to this contributing guideline file, if you
     -   [Codacy](#codacy)
     -   [Requires-io](#requires-io)
     -   [David-DM](#david-dm)
-    -   [Snyk](#snyk)
 
 -   [Continuous Deployment](#continuous-deployment)
     -   [Read the Docs](#read-the-docs)
@@ -81,8 +80,7 @@ Please feel free to contribute, even to this contributing guideline file, if you
 -   `requirements.txt` has noting to do directly with the package structure. We use
     [poetry](https://poetry.eustace.io/) for packaging and building. This file is actually being
     manually build with [pyscripts/poetry-to-requirements.py](pyscripts/poetry-to-requirements.py)
-    from the content of [poetry.lock](poetry.lock) for legacy support (e.g. [Requires-io](#requires-io)
-    and [Snyk](#snyk)).
+    from the content of [poetry.lock](poetry.lock) for legacy support (e.g. [Requires-io](#requires-io)).
 
 ### Package management
 -   The [package.json](package.json) file specified by [npm](https://docs.npmjs.com/files/package.json)
@@ -139,11 +137,6 @@ is keeping an eye for versions updates upon the *Python* requirements listed in 
 ### David-DM
 [David-DM](https://david-dm.org/TomerFi/aioswitcher) is keeping an eye for versions updates upon
 the npm requirements listed in the *package.json* file.
-
-### Snyk
-[Snyk](https://snyk.io) is keeping an eye out for vulnerabilities and in our
-[npm dependencies](https://snyk.io/test/github/TomerFi/aioswitcher?targetFile=package.json),
-our [pypi requirements](https://snyk.io/test/github/TomerFi/aioswitcher?targetFile=requirements.txt).
 
 ## Continuous Deployment
 ### Read the Docs
