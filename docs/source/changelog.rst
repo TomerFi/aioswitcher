@@ -1,6 +1,13 @@
 Change Log
 **********
 
+2019.10.25_
+^^^^^^^^^^^
+
+`2019.10.25 Full Changelog`_
+
+- Dependencies and requirements version updates.
+
 2019.8.28_
 ^^^^^^^^^^
 
@@ -13,7 +20,7 @@ Change Log
 - Cleanups.
 
 2019.7.2_
-^^^^^^^^^^
+^^^^^^^^^
 
 `2019.7.2 Full Changelog`_
 
@@ -57,6 +64,8 @@ Change Log
 - Continuous integration
 - Code coverage
 
+.. _2019.10.25: https://github.com/tomerfi/aioswitcher/tree/2019.10.25
+.. _2019.10.25 Full Changelog: https://github.com/tomerfi/aioswitcher/compare/2019.8.28...2019.10.25
 .. _2019.8.28: https://github.com/tomerfi/aioswitcher/tree/2019.8.28
 .. _2019.8.28 Full Changelog: https://github.com/tomerfi/aioswitcher/compare/2019.7.2...2019.8.28
 .. _2019.7.2: https://github.com/tomerfi/aioswitcher/tree/2019.7.2
