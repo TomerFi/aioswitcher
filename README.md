@@ -1,11 +1,11 @@
 <!--lint disable maximum-heading-length-->
 # Switcher Boiler Unofficial Bridge and API Tools</br>[![python-versions]][11] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![shields-io-maintenance]][0]
 
-| Stage     | Badges                                                                                                |
-| --------- | ----------------------------------------------------------------------------------------------------- |
-| `Code`    | [![codecov]][3] [![codacy]][4] [![code-style-black]][5] [![checked-with-mypy]][6]                     |
-| `Build`   | [![circleci]][7] [![read-the-docs]][8] [![license-scan]][15]                                          |
-| `Package` | [![requires-io]][9] [![david-dm-dev-package-json-dependencies-status]][10] [![greenkeeper-badge]][14] |
+| Stage     | Badges                                                                        |
+| --------- | ----------------------------------------------------------------------------- |
+| `Build`   | [![circleci]][7] [![read-the-docs]][8] [![codecov]][3] [![codacy]][4]         |
+| `Package` | [![requires-io]][9] [![david-dm-dev-package-json-dependencies-status]][10]    |
+| `Etc`     | [![greenkeeper-badge]][14] [![code-style-black]][5] [![checked-with-mypy]][6] |
 
 PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).
 Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted with
@@ -36,7 +36,6 @@ The use of *Python 3.7* is preferable.
 [10]: https://david-dm.org/TomerFi/aioswitcher
 [11]: https://pypi.org/project/aioswitcher/
 [14]: https://greenkeeper.io/
-[15]: https://app.fossa.io/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher
 <!-- Badges Links -->
 [checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
 [circleci]: https://circleci.com/gh/TomerFi/aioswitcher.svg?style=shield
@@ -45,7 +44,6 @@ The use of *Python 3.7* is preferable.
 [code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
 [david-dm-dev-package-json-dependencies-status]: https://david-dm.org/TomerFi/aioswitcher/status.svg
 [greenkeeper-badge]: https://badges.greenkeeper.io/TomerFi/aioswitcher.svg
-[license-scan]: https://app.fossa.io/api/projects/git%2Bgithub.com%2FTomerFi%2Faioswitcher.svg?type=shield
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
 [pypi-version]: https://badge.fury.io/py/aioswitcher.svg
