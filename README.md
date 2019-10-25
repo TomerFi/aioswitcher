@@ -31,8 +31,6 @@ This module:
 Although the [aioswitcher][11] module requires the use of *Python 3.5/3.6/3.7*,
 The use of *Python 3.7* is preferable.
 
-[![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/TomerFi)
-
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher
 [1]: https://tomfi.slack.com/messages/CK3KRBYDP
