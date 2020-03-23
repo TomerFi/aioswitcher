@@ -31,7 +31,9 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "python-checkers" -E "unittests"
+        run: |
+          pip install poetry
+          poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "python-checkers" -E "unittests"
 
       - name: Lint yaml files
         run: yamllint --config-file .yamllint --format colored --strict .
