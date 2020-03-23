@@ -41,57 +41,40 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
           poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "python-checkers" -E "unittests"
 
       - name: Lint yaml files
-        run: |
-          poetry shell
-          yamllint --config-file .yamllint --format colored --strict .
+        run: yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
-        run: |
-          poetry shell
-          doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
+        run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
 
       - name: Spellcheck rst files
         run: |
-          poetry shell
           RST_FILES=$(find "$(pwd)/docs/source" -type f -name "*.rst")
           scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $RST_FILES
 
       - name: Temp build documantation site
         run: |
-          poetry shell
           mkdir sphinxtemp
           sphinx-build -W -b html -d sphinxtemp/doctrees docs/source sphinxtemp/html
           rm -r sphinxtemp
 
       - name: Security check code with bandit
-        run: |
-          poetry shell
-          bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
+        run: bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
 
       - name: Validate imports with isort
-        run: |
-          poetry shell
-          isort --check-only --recursive src/ tests/ docs/source/
+        run: isort --check-only --recursive src/ tests/ docs/source/
 
       - name: Lint code with flake8
-        run: |
-          poetry shell
-          flake8 --statistics --count --doctests src/ tests/ docs/source/
+        run: flake8 --statistics --count --doctests src/ tests/ docs/source/
 
       - name: Check code style with black
-        run: |
-          poetry shell
-          black --check src/ tests/ docs/source/
+        run: black --check src/ tests/ docs/source/
 
       - name: Check static typing with mypy
-        run: |
-          poetry shell
-          mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
+        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
 
       - name: Perform unit tests with coverage report
-        run: |
-          poetry shell
-          pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
