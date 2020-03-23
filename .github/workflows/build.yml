@@ -40,8 +40,8 @@ jobs:
 
       - name: Install dependencies
         run: |
-          echo "Australia/Melbourne" > /etc/timezone
-          dpkg-reconfigure -f noninteractive tzdata
+          sudo echo "Australia/Melbourne" > /etc/timezone
+          sudo dpkg-reconfigure -f noninteractive tzdata
           pip install --upgrade pip poetry
           poetry config virtualenvs.create false --local
           poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "python-checkers" -E "unittests"
