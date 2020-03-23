@@ -2,10 +2,9 @@ extends: default
 
 ignore: |
   .git/
-  docs/vale_styles/
   .mypy_cache/
   .tox
-  node_modules
+  .github/workflows
 
 rules:
   line-length:

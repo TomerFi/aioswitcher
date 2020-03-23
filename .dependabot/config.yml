@@ -1,0 +1,13 @@
+---
+version: 1
+update_configs:
+  - package_manager: "python"
+    directory: "/"
+    update_schedule: "weekly"
+    target_branch: "dev"
+    default_reviewers:
+      - "TomerFi"
+    default_assignees:
+      - "TomerFi"
+    default_labels:
+      - "dependabot"
