@@ -30,9 +30,6 @@ Configuration files
 
 *   ``.yamllint`` is the configuration for `yamllint A Linter for YAML Files`_ linting yml files.
 
-*   ``.remarkrc`` is the configuration file for `remark-lint`_ plugin for Remark_ linting
-    *markdown* files.
-
 *   ``bandit.yml`` is the configuration file for `Bandit common security issues finder`_ checking
     python scripts.
 
@@ -44,23 +41,6 @@ Python
 
 *   ``src/aioswitcher`` is the *Python* modules making the package.
 *   ``tests`` is where *Python* test-cases are stored and executed with pytest_.
-*   ``pyscripts``` is where *Python* scripts are stored.
-
-Requirement files
------------------
-
-*   ``poetry.lock`` is the lock file describing the module version tree of the pypi modules. This
-    helps locking down working versions of modules, it is part of the poetry_ dependency
-    management.
-
-*   ``package-lock.json`` is the lock file describing the module version tree of the npm modules.
-    This helps locking down working versions of modules, it is part of the npm_ dependency
-    management.
-
-*   ``requirements.txt`` has noting to do directly with the package structure. We use poetry_ for
-    packaging and building. This file is actually being manually build with
-    ``pyscripts/poetry-to-requirements.py`` from the content of ``poetry.lock`` file for legacy
-    support (e.g. `Requires-io`_).
 
 Package management
 ------------------
@@ -88,13 +68,10 @@ CircleCi
 By hook configuration, for every pull request, CircleCi_ will execute the workflows described in
 ``.circleci/config.yml`` and update the PR conversation with the results.
 
-As a final step, CircleCi_ will push the `Coverage.py XML Report`_ to both CodeCov_ for code
-coverage analysis and Codacy_ for code quality analysis.
+As a final step, CircleCi_ will push the `Coverage.py XML Report`_ CodeCov_ for code
+coverage analysis.
 
 Both will of course push their results into the PR conversation.
-
-Please note, Codacy_ is actually getting notified for the PR by a *GitHub* hook. The report being
-uploaded is for the dashboard presentation and does not trigger further action.
 
 Some of the steps are considered required and may prevent the PR from being merged.
 But no worries, everything is fixable.
@@ -104,25 +81,6 @@ CodeCov
 
 CodeCov_ is keeping tabs on our code coverage. When a report is uploaded (by CircleCi_), CodeCov_
 will check our code coverage and push its conclusions to PR conversation.
-
-Codacy
-------
-
-Codacy_ is here to check the quality of our code. When a PR is created or updated, *GitHub* is
-hooked to notify Codacy_ that starts checking the quality of our code and push its conclusions to
-the PR conversation.
-
-Requires-io
------------
-
-`Requires.io`_ is keeping an eye for versions updates upon the *Python* requirements listed in our
-legacy ``requirements.txt`` file.
-
-David-DM
---------
-
-`David-DM`_ is keeping an eye for versions updates upon the *Npm* requirements listed in the
-``package.json`` file.
 
 Continuous Deployment
 ^^^^^^^^^^^^^^^^^^^^^
@@ -172,55 +130,30 @@ Environments and Tools
     but knowing them is important seeing they are key elements for testing with ``Tox`` and/or
     ``CircleCi``.
 
-*   *Python Module*: nodeenv_, a tool that enables us to create a Node.js virtual environment in
-    resemblance to virtualenv_, this tool also allows combining nodeenv_ within virtualenv_, which
-    is exactly what we're doing with ``tox``.
+*   yamllint_ for linting the project yml files. yamllint_ is configured with ``.yamllint``.
 
-*   *NPM Package*: `package-json-validator`_ for validating the ``package.json`` file.
+*   doc8_ for checking restructuredText syntax for files residing in ``docs/source`` used to create
+    the documentation site.
 
-*   *Python Package*: yamllint_ for linting the project yml files.
-    *   yamllint_ is configured with ``.yamllint``.
+*   scspell3k_ for spell checking restructuredText files residing in ``docs/source`` used to create
+    the documentation site. scspell3k_ dictionary file is ``.spelling``.
 
-*   *NPM Package*: `markdown-spellcheck`_ for checking the project *markdown* files for spelling
-    errors.
+*   sphinx_ for building the documentation site from the *restructuredText* files residing in
+    ``docs/source``. It's worth mentioning that `the documentation site`_, hosted with
+    `Read the Docs`_ is based upon the theme `sphinx-rtd-theme`_.
 
-    *   `markdown-spellcheck`_ dictionary file is ``.spelling``.
+*   bandit_ for finding common security issues with against the *Python* files. bandit_ is
+    configured with ``bandit.yml``.
 
-*   *NPM Package*: remark-lint_ which is a plugin for remark_ and the `remark-cli`_ command line
-    tool for linting markdown files residing at the ``base path`` and in ``.github``.
+*   isort_ for sorting *Python* imports. isort_ is configured with ``pyproject.toml``.
 
-    *   `remark-lint`_ uses a couple of presets and tools, all can be found under the dependencies
-        key in ``package.json``.
+*   flake8_ for linting *Python* files.
 
-    *   `remark-lint`_ is configured with ``.remarkrc``.
+*   black_ for formatting *Python* files. black_ is configured with ``pyproject.toml``.
 
-*   *Python Module*: doc8_ for checking restructuredText syntax for files residing in
-    ``docs/source`` used to create the documentation site.
+*   mypy_ for checking static typing in *Python* files.
 
-*   *Python Module*: scspell3k_ for spell checking restructuredText files residing in
-    ``docs/source`` used to create the documentation site.
-    *   scspell3k_ dictionary file is ``.spelling``.
-
-*   *Python Module*: sphinx_ for building the documentation site from the *restructuredText* files
-    residing in ``docs/source``.
-
-    *   It's worth mentioning that `the documentation site`_, hosted with `Read the Docs`_ is based
-        upon the theme `sphinx-rtd-theme`_.
-
-*   *Python Package*: bandit_ for finding common security issues with against the *Python* files.
-    *   bandit_ is configured with ``bandit.yml``.
-
-*   *Python Package*: isort_ for sorting *Python* imports.
-    -   isort_ is configured with ``pyproject.toml``.
-
-*   *Python Package*: flake8_ for linting *Python* files.
-
-*   *Python Package*: black_ for formatting *Python* files.
-    *   black_ is configured with ``pyproject.toml``.
-
-*   *Python Package*: mypy_ for checking static typing in *Python* files.
-
-*   *Python Package*: pytest_ as testing framework for running test-cases written in ``tests``.
+*   pytest_ as testing framework for running test-cases written in ``tests``.
 
 Testing
 ^^^^^^^
@@ -240,36 +173,10 @@ Guidelines
 Here are some guidelines (recommendations) for contributing to the ``aioswitcher`` project:
 *   Code docstrings documentation [here](https://aioswitcher.readthedocs.io/en/stable/codedocs.html)
 
-*   For any change in dependencies, please use ``pyscripts/poetry-to-requirements.py`` for
-    creating a valid ``requirements.txt`` file and add it to your PR. This is also done
-    automatically with the ``py37`` testenv in ``tox``.
-
 *   While not all the test steps in ``CircleCi`` and in ``Tox`` are parallel to each other, most
     of them are, so tests failing with ``Tox`` will probably also fail with ``CircleCi``.
 
 *   If writing *Python* code, please remember to [static type](https://www.python.org/dev/peps/pep-0484/).
-
-*   You can run npm's script ``spell-md-interactive`` for handling all spelling mistakes before
-    testing.
-    You can also choose to run ``spell-md-report`` to print a full report instead of handling the
-    spelling mistakes one-by-one.
-    *   `markdown-spellcheck`_ dictionary is the file ``.spelling``.
-
-NPM Scripts
------------
-
-Before using the scrips, you need to install the dependencies.
-From the ``package.json`` file path, run ``npm install``,
-Then you can execute the scripts from the same path.
-*   ``npm run lint-md`` will run remark_ against *markdown* files.
-
-*   ``npm run validate-pkg`` will run `package-json-validator`_ against the ``package.json`` file.
-
-*   ``npm run spell-md-interactive`` will run `markdown-spellcheck`_ against *markdown* files in
-    an interactive manner allowing us to select the appropriate action.
-
-*   ``npm run spell-md-report`` will run `markdown-spellcheck`_ against *markdown* files and print
-    the report to stdout.
 
 Code of Conduct
 ^^^^^^^^^^^^^^^
@@ -281,12 +188,10 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _black: https://pypi.org/project/black/
 .. _circleci: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
 .. _circleci Continuous Integration and Deployment Services: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
-.. _codacy: https://app.codacy.com/project/TomerFi/aioswitcher/dashboard
 .. _codecov: https://codecov.io/gh/TomerFi/aioswitcher
 .. _codecov code coverage: https://codecov.io/gh/TomerFi/aioswitcher
 .. _coverage.py: https://coverage.readthedocs.io/en/v4.5.x/
 .. _coverage.py xml report: https://coverage.readthedocs.io/en/v4.5.x/
-.. _david-dm: https://david-dm.org/TomerFi/aioswitcher
 .. _doc8: https://pypi.org/project/doc8/
 .. _flake8: https://pypi.org/project/flake8/
 .. _isort: https://pypi.org/project/isort/
@@ -303,10 +208,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _pytest-cov plugin: https://pytest-cov.readthedocs.io/en/latest/
 .. _python: https://www.python.org/
 .. _read the docs: https://readthedocs.org/
-.. _remark: https://remark.js.org/
-.. _remark-cli: https://www.npmjs.com/package/remark-cli
-.. _remark-lint: https://github.com/remarkjs/remark-lint
-.. _requires.io: https://requires.io/github/TomerFi/aioswitcher/requirements/?branch=dev
 .. _scspell3k: https://pypi.org/project/scspell3k/
 .. _semver: https://semver.org/
 .. _sphinx: http://www.sphinx-doc.org/en/master/

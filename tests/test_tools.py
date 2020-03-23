@@ -6,9 +6,6 @@ from binascii import unhexlify
 from datetime import datetime, timedelta
 from struct import unpack
 
-from asynctest import patch
-from pytest import fail, mark, raises
-
 from aioswitcher.api.packets import GET_STATE_PACKET
 from aioswitcher.consts import ENCODING_CODEC, STRUCT_PACKING_FORMAT
 from aioswitcher.errors import CalculationError, DecodingError, EncodingError
@@ -18,6 +15,8 @@ from aioswitcher.tools import (
     crc_sign_full_packet_com_key, create_weekdays_value,
     get_days_list_from_bytes, get_time_from_bytes, get_timestamp,
     timedelta_str_to_schedule_time)
+from asynctest import patch
+from pytest import fail, mark, raises
 
 from .asserters import assert_lists_equal, assert_seconds_to_iso_time
 from .common import create_random_time
@@ -34,7 +33,7 @@ from .consts import (DUMMY_DEVICE_ID, DUMMY_DEVICE_NAME, DUMMY_SESSION_ID,
 
 @mark.asyncio
 async def test_convert_seconds_to_iso_time(
-    event_loop: AbstractEventLoop
+    event_loop: AbstractEventLoop,
 ) -> None:
     """Test the convert_seconds_to_iso_time tool."""
     with raises(CalculationError) as exc_info:
@@ -51,7 +50,7 @@ async def test_convert_seconds_to_iso_time(
 
 @mark.asyncio
 async def test_crc_sign_full_packet_com_key(
-    event_loop: AbstractEventLoop
+    event_loop: AbstractEventLoop,
 ) -> None:
     """Test the crc_sign_full_packet_com_key tool."""
     with raises(EncodingError) as exc_info:
@@ -90,7 +89,7 @@ async def test_convert_minutes_to_timer(event_loop: AbstractEventLoop) -> None:
 
 @mark.asyncio
 async def test_convert_timedelta_to_auto_off(
-    event_loop: AbstractEventLoop
+    event_loop: AbstractEventLoop,
 ) -> None:
     """Test the convert_timedelta_to_auto_off tool."""
     with raises(EncodingError) as exc_info_min:
@@ -123,7 +122,7 @@ async def test_convert_timedelta_to_auto_off(
 
 @mark.asyncio
 async def test_convert_string_to_device_name(
-    event_loop: AbstractEventLoop
+    event_loop: AbstractEventLoop,
 ) -> None:
     """Test the convert_string_to_device_name tool."""
     with raises(EncodingError) as exc_info_min:
@@ -223,7 +222,7 @@ async def test_create_weekdays_value(event_loop: AbstractEventLoop) -> None:
 
 @mark.asyncio
 async def test_timedelta_str_to_schedule_time(
-    event_loop: AbstractEventLoop
+    event_loop: AbstractEventLoop,
 ) -> None:
     """Test the timedelta_str_to_schedule_time tool."""
     with raises(EncodingError) as exc_info:

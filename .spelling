@@ -16,8 +16,8 @@ change
 changelog
 checked-with-mypy
 circleci
-codacy
 CODE_OF_CONDUCT.md
+codacy
 codecov
 codedocs
 config.yml
@@ -30,7 +30,6 @@ cpython
 crlf
 datagram
 datetime
-david-dm-dev-package-json-dependencies-status
 dev
 doc8
 docstrings
@@ -72,7 +71,6 @@ poetry.lock
 poetry-to-requirements
 pre-installed
 py
-pyscripts
 python3.5
 python3.7
 pypi
@@ -84,12 +82,7 @@ pytest
 pytest-cov
 readthedocs
 readthedocs.io
-remarkjs
-remark-cli
-remarkrc
 restructuredText
-requires-io
-requires.io
 requirements.txt
 runtime
 saturday
