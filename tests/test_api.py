@@ -5,12 +5,13 @@ from asyncio import AbstractEventLoop, wait
 from datetime import timedelta
 from typing import List, Tuple
 
+from asynctest import CoroutineMock
+from pytest import mark, raises
+
 from aioswitcher.api import SwitcherV2Api
 from aioswitcher.api.messages import ResponseMessageType
 from aioswitcher.consts import COMMAND_ON, STATE_OFF
 from aioswitcher.errors import DecodingError
-from asynctest import CoroutineMock
-from pytest import mark, raises
 
 from .asserters import assert_api_messege_base_type, assert_lists_equal
 from .consts import (DUMMY_DEVICE_ID, DUMMY_DEVICE_PASSWORD, DUMMY_IP_ADDRESS,

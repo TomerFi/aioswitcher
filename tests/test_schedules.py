@@ -5,13 +5,14 @@ from asyncio import AbstractEventLoop, wait
 from binascii import unhexlify
 from time import gmtime, strftime
 
+from pytest import fail, mark, raises
+
 from aioswitcher.consts import (HANDLED_EXCEPTIONS,
                                 SCHEDULE_DUE_ANOTHER_DAY_FORMAT,
                                 SCHEDULE_DUE_TODAY_FORMAT,
                                 SCHEDULE_DUE_TOMMOROW_FORMAT)
 from aioswitcher.schedules import (SwitcherV2Schedule,
                                    calc_next_run_for_schedule)
-from pytest import fail, mark, raises
 
 from .asserters import assert_lists_equal
 from .consts import (DUMMY_FULL_RECCURING_DAYS_LIST,
@@ -202,7 +203,9 @@ async def test_non_recurring_schedule(event_loop: AbstractEventLoop) -> None:
 
     await assert_lists_equal(schedule.days, DUMMY_NON_RECCURING_DAYS_LIST)
 
-    assert schedule.start_time == DUMMY_NON_RECCURING_START_TIME
-    assert schedule.end_time == DUMMY_NON_RECCURING_END_TIME
+    if strftime("%Z", gmtime()) == "Jerusalem Standard Time":
+        assert schedule.start_time == DUMMY_NON_RECCURING_START_TIME
+        assert schedule.end_time == DUMMY_NON_RECCURING_END_TIME
+
     assert schedule.duration == DUMMY_NON_RECCURING_DURATION
     assert schedule.schedule_data == DUMMY_NON_RECCURING_SCHEDULE_DATA_BYTES
