@@ -65,7 +65,7 @@ jobs:
         run: bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
 
       - name: Validate imports with isort
-        run: isort -vvv --check-only --recursive src/ tests/ docs/source/
+        run: isort --check-only --recursive src/ tests/ docs/source/
 
       - name: Lint code with flake8
         run: flake8 --statistics --count --doctests src/ tests/ docs/source/
