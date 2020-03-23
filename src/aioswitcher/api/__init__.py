@@ -109,7 +109,7 @@ class SwitcherV2Api:
         return None
 
     async def _full_login(
-        self
+        self,
     ) -> Tuple[str, Optional[messages.SwitcherV2LoginResponseMSG]]:
         """Use for sending the login packet to the device.
 
@@ -160,7 +160,7 @@ class SwitcherV2Api:
         return full_login_tuple[1]
 
     async def _full_get_state(
-        self
+        self,
     ) -> Tuple[
         str,
         Optional[messages.SwitcherV2LoginResponseMSG],
@@ -239,9 +239,11 @@ class SwitcherV2Api:
           ``aioswitcher.api.messages.SwitcherV2ControlResponseMSG``.
 
         """
-        timestamp, login_response, get_state_response = (
-            await self._full_get_state()
-        )
+        (
+            timestamp,
+            login_response,
+            get_state_response,
+        ) = await self._full_get_state()
 
         if (
             login_response
@@ -296,9 +298,11 @@ class SwitcherV2Api:
           ``aioswitcher.api.messages.SwitcherV2SetAutoOffResponseMSG``.
 
         """
-        timestamp, login_response, get_state_response = (
-            await self._full_get_state()
-        )
+        (
+            timestamp,
+            login_response,
+            get_state_response,
+        ) = await self._full_get_state()
 
         if (
             login_response
@@ -347,9 +351,11 @@ class SwitcherV2Api:
           ``aioswitcher.api.messages.SwitcherV2UpdateNameResponseMSG``.
 
         """
-        timestamp, login_response, get_state_response = (
-            await self._full_get_state()
-        )
+        (
+            timestamp,
+            login_response,
+            get_state_response,
+        ) = await self._full_get_state()
 
         if (
             login_response
@@ -384,7 +390,7 @@ class SwitcherV2Api:
         return None
 
     async def get_schedules(
-        self
+        self,
     ) -> Optional[messages.SwitcherV2GetScheduleResponseMSG]:
         """Use for retrival of the schedules from the device.
 
@@ -393,9 +399,11 @@ class SwitcherV2Api:
           ``aioswitcher.api.messages.SwitcherV2GetScheduleResponseMSG``.
 
         """
-        timestamp, login_response, get_state_response = (
-            await self._full_get_state()
-        )
+        (
+            timestamp,
+            login_response,
+            get_state_response,
+        ) = await self._full_get_state()
 
         if (
             login_response
@@ -446,9 +454,11 @@ class SwitcherV2Api:
           ``aioswitcher.api.messages.SwitcherV2DisableEnableScheduleResponseMSG``.
 
         """
-        timestamp, login_response, get_state_response = (
-            await self._full_get_state()
-        )
+        (
+            timestamp,
+            login_response,
+            get_state_response,
+        ) = await self._full_get_state()
 
         if (
             login_response
@@ -495,9 +505,11 @@ class SwitcherV2Api:
           ``aioswitcher.api.messages.SwitcherV2DeleteScheduleResponseMSG``.
 
         """
-        timestamp, login_response, get_state_response = (
-            await self._full_get_state()
-        )
+        (
+            timestamp,
+            login_response,
+            get_state_response,
+        ) = await self._full_get_state()
 
         if (
             login_response
@@ -548,9 +560,11 @@ class SwitcherV2Api:
           ``aioswitcher.api.messages.SwitcherV2CreateScheduleResponseMSG``.
 
         """
-        timestamp, login_response, get_state_response = (
-            await self._full_get_state()
-        )
+        (
+            timestamp,
+            login_response,
+            get_state_response,
+        ) = await self._full_get_state()
 
         if (
             login_response

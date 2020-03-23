@@ -106,7 +106,7 @@ async def test_non_recurring_schedule_next_runtime_calc(
 
 @mark.asyncio
 async def test_setters_and_getters_schedule(
-    event_loop: AbstractEventLoop
+    event_loop: AbstractEventLoop,
 ) -> None:
     """Test setters of SwitcherV2Schedule object."""
     schedule = SwitcherV2Schedule(
@@ -139,7 +139,7 @@ async def test_setters_and_getters_schedule(
 
 @mark.asyncio
 async def test_selective_recurring_schedule(
-    event_loop: AbstractEventLoop
+    event_loop: AbstractEventLoop,
 ) -> None:
     """Test selective recurring SwitcherV2Schedule object."""
     schedule = SwitcherV2Schedule(
