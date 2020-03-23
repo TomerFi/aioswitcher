@@ -17,6 +17,7 @@ changelog
 checked-with-mypy
 circleci
 CODE_OF_CONDUCT.md
+codacy
 codecov
 codedocs
 config.yml
@@ -29,7 +30,6 @@ cpython
 crlf
 datagram
 datetime
-david-dm-dev-package-json-dependencies-status
 dev
 doc8
 docstrings
@@ -87,8 +87,6 @@ remarkjs
 remark-cli
 remarkrc
 restructuredText
-requires-io
-requires.io
 requirements.txt
 runtime
 saturday

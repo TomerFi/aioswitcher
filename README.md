@@ -4,7 +4,6 @@
 | Stage     | Badges                                                                     |
 | --------- | -------------------------------------------------------------------------- |
 | `Build`   | [![circleci]][7] [![read-the-docs]][8] [![codecov]][3]                     |
-| `Package` | [![requires-io]][9] [![david-dm-dev-package-json-dependencies-status]][10] |
 | `Etc`     | [![code-style-black]][5] [![checked-with-mypy]][6]                         |
 
 PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).
@@ -31,18 +30,14 @@ The use of *Python 3.7* is preferable.
 [6]: http://mypy-lang.org/
 [7]: https://circleci.com/gh/TomerFi/aioswitcher
 [8]: https://aioswitcher.readthedocs.io/en/stable
-[9]: https://requires.io/github/TomerFi/aioswitcher/requirements
-[10]: https://david-dm.org/TomerFi/aioswitcher
 [11]: https://pypi.org/project/aioswitcher/
 <!-- Badges Links -->
 [checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
 [circleci]: https://circleci.com/gh/TomerFi/aioswitcher.svg?style=shield
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
-[david-dm-dev-package-json-dependencies-status]: https://david-dm.org/TomerFi/aioswitcher/status.svg
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
 [pypi-version]: https://badge.fury.io/py/aioswitcher.svg
 [read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
-[requires-io]: https://requires.io/github/TomerFi/aioswitcher/requirements.svg
 [shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
