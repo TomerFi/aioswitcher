@@ -3,7 +3,7 @@
 
 | Stage     | Badges                                                                     |
 | --------- | -------------------------------------------------------------------------- |
-| `Build`   | [![circleci]][7] [![read-the-docs]][8] [![codecov]][3] [![codacy]][4]      |
+| `Build`   | [![circleci]][7] [![read-the-docs]][8] [![codecov]][3]                     |
 | `Package` | [![requires-io]][9] [![david-dm-dev-package-json-dependencies-status]][10] |
 | `Etc`     | [![code-style-black]][5] [![checked-with-mypy]][6]                         |
 
@@ -27,7 +27,6 @@ The use of *Python 3.7* is preferable.
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
-[4]: https://www.codacy.com/app/TomerFi/aioswitcher?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=TomerFi/aioswitcher&amp;utm_campaign=Badge_Grade
 [5]: https://black.readthedocs.io/en/stable/
 [6]: http://mypy-lang.org/
 [7]: https://circleci.com/gh/TomerFi/aioswitcher
@@ -38,7 +37,6 @@ The use of *Python 3.7* is preferable.
 <!-- Badges Links -->
 [checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
 [circleci]: https://circleci.com/gh/TomerFi/aioswitcher.svg?style=shield
-[codacy]: https://api.codacy.com/project/badge/Grade/49a3c3b0987e4d9a8f400eb49db423d8
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
 [david-dm-dev-package-json-dependencies-status]: https://david-dm.org/TomerFi/aioswitcher/status.svg

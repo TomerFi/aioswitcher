@@ -88,13 +88,10 @@ CircleCi
 By hook configuration, for every pull request, CircleCi_ will execute the workflows described in
 ``.circleci/config.yml`` and update the PR conversation with the results.
 
-As a final step, CircleCi_ will push the `Coverage.py XML Report`_ to both CodeCov_ for code
-coverage analysis and Codacy_ for code quality analysis.
+As a final step, CircleCi_ will push the `Coverage.py XML Report`_ CodeCov_ for code
+coverage analysis.
 
 Both will of course push their results into the PR conversation.
-
-Please note, Codacy_ is actually getting notified for the PR by a *GitHub* hook. The report being
-uploaded is for the dashboard presentation and does not trigger further action.
 
 Some of the steps are considered required and may prevent the PR from being merged.
 But no worries, everything is fixable.
@@ -104,13 +101,6 @@ CodeCov
 
 CodeCov_ is keeping tabs on our code coverage. When a report is uploaded (by CircleCi_), CodeCov_
 will check our code coverage and push its conclusions to PR conversation.
-
-Codacy
-------
-
-Codacy_ is here to check the quality of our code. When a PR is created or updated, *GitHub* is
-hooked to notify Codacy_ that starts checking the quality of our code and push its conclusions to
-the PR conversation.
 
 Requires-io
 -----------
@@ -281,7 +271,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _black: https://pypi.org/project/black/
 .. _circleci: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
 .. _circleci Continuous Integration and Deployment Services: https://circleci.com/gh/TomerFi/aioswitcher/tree/dev
-.. _codacy: https://app.codacy.com/project/TomerFi/aioswitcher/dashboard
 .. _codecov: https://codecov.io/gh/TomerFi/aioswitcher
 .. _codecov code coverage: https://codecov.io/gh/TomerFi/aioswitcher
 .. _coverage.py: https://coverage.readthedocs.io/en/v4.5.x/

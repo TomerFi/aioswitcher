@@ -19,7 +19,6 @@ Please feel free to contribute, even to this contributing guideline file, if you
 - [Continuous Integration](#continuous-integration)
   - [CircleCi](#circleci)
   - [CodeCov](#codecov)
-  - [Codacy](#codacy)
   - [Requires-io](#requires-io)
   - [David-DM](#david-dm)
 - [Continuous Deployment](#continuous-deployment)
@@ -95,17 +94,8 @@ will execute the workflows described in [.circleci/config.yml](.circleci/config.
 and update the PR conversation with the results.
 
 As a final step, [CircleCi](https://circleci.com/gh/TomerFi/aioswitcher/tree/dev) will push the
-[Coverage.py XML Report](https://coverage.readthedocs.io/en/v4.5.x/) to both
-[CodeCov](https://codecov.io/gh/TomerFi/aioswitcher) for code coverage analysis and
-[Codacy](https://app.codacy.com/project/TomerFi/aioswitcher/dashboard) for code quality
-analysis.</br>
-Both will of course push their results into the PR conversation.</br>
-Please note, [Codacy](https://app.codacy.com/project/TomerFi/aioswitcher/dashboard) is actually
-getting notified for the PR by a *GitHub* hook. The report being uploaded is for the
-dashboard presentation and does not trigger further action.
-
-Some of the steps are considered required and may prevent the PR from being merged.
-But no worries, everything is fixable.
+[Coverage.py XML Report](https://coverage.readthedocs.io/en/v4.5.x/) to
+[CodeCov](https://codecov.io/gh/TomerFi/aioswitcher) for code coverage analysis.</br>
 
 ### CodeCov
 
@@ -113,13 +103,6 @@ But no worries, everything is fixable.
 When a report is uploaded (by [CircleCi](https://circleci.com/gh/TomerFi/aioswitcher/tree/dev)),
 [CodeCov](https://codecov.io/gh/TomerFi/aioswitcher) will check our code coverage and push its
 conclusions to the PR conversation.
-
-### Codacy
-
-[Codacy](https://app.codacy.com/project/TomerFi/aioswitcher/dashboard) is here to check the
-quality of our code.
-When a PR is created or updated, *GitHub* is hooked to notify [Codacy](https://app.codacy.com/project/TomerFi/aioswitcher/dashboard)
-that starts checking the quality of our code and push its conclusions to the PR conversation.
 
 ### Requires-io
 

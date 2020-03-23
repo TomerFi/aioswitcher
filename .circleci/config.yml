@@ -286,11 +286,6 @@ jobs:
           command: |
             . venv/bin/activate
             codecov --file coverage_report/coverage.xml
-      - run:
-          name: Codacy
-          command: |
-            . venv/bin/activate
-            python-codacy-coverage -r coverage_report/coverage.xml
 
 #####################
 ##### Workslows #####
