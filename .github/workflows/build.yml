@@ -42,7 +42,6 @@ jobs:
         run: |
           pip install --upgrade pip poetry
           poetry config virtualenvs.create false --local
-          poetry config --list
           poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
 
       - name: Lint yaml files
