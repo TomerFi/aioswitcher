@@ -78,3 +78,8 @@ jobs:
 
       - name: Perform unit tests with coverage report
         run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+
+      - name: Push coverage report to CodeCov
+        uses: codecov/codecov-action@v1.0.6
+        with:
+          file: ./coverage_report/coverage.xml
