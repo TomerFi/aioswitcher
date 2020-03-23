@@ -883,15 +883,15 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "unittest2", "jaraco.itertools", "func-timeout"]
 
 [extras]
+checkers = ["asynctest", "bandit", "black", "flake8", "flake8-docstrings", "isort", "mypy", "pytest", "toml", "yamllint"]
 coverage = ["codecov"]
 docsbuild = ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
 docslint = ["doc8", "scspell3k"]
-python-checkers = ["asynctest", "bandit", "black", "flake8", "flake8-docstrings", "isort", "mypy", "pytest", "toml", "yamllint"]
 toml = ["toml"]
 unittests = ["asynctest", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov", "pytest-sugar"]
 
 [metadata]
-content-hash = "266c77bc4bde9a02541fe1ad793e82e033b62cb089eec613e74dfb33ed6a5bf1"
+content-hash = "ad351b9fa816ffe3a98e2377e93ed706c6013d8dbdbea6e1e31756ce20b8d64c"
 python-versions = "^3.5 || ^3.6 || ^3.7"
 
 [metadata.files]
