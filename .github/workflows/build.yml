@@ -1,0 +1,69 @@
+---
+name: Build
+
+on:
+  pull_request:
+    branch: master
+
+jobs:
+
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [ '3.7' ]
+    name: Verify project with Python ${{ matrix.python }}
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2.0.0
+
+      - name: Cache Pip repository
+        uses: actions/cache@v1.1.2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1.2.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: poetry install -v --extras "coverage" --extras "docslint" --extras "docsbuild" --extras "python-checkers" --extras "unittests"
+
+      - name: Lint yaml files
+        run: yamllint --config-file .yamllint --format colored --strict .
+
+      - name: Lint rst files
+        run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
+
+      - name: Spellcheck rst files
+        run: |
+          RST_FILES=$(find "$(pwd)/docs/source" -type f -name "*.rst")
+          scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $RST_FILES
+
+      - name: Temp build documantation site
+        run: |
+          mkdir sphinxtemp
+          sphinx-build -W -b html -d sphinxtemp/doctrees docs/source sphinxtemp/html
+          rm -r sphinxtemp
+
+      - name: Security check code with bandit
+        run: bandit -rvc .bandit src/ tests/ docs/source/ pyscripts/ -l -ii
+
+      - name: Validate imports with isort
+        run: isort --check-only --recursive src/ tests/ docs/source/ pyscripts/
+
+      - name: Lint code with flake8
+        run: flake8 --statistics --count --doctests src/ tests/ docs/source/ pyscripts/
+
+      - name: Check code style with black
+        run: black --check src/ tests/ docs/source/ pyscripts/
+
+      - name: Check static typing with mypy
+        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/ pyscripts/
+
+      - name: Perform unit tests with coverage report
+        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
