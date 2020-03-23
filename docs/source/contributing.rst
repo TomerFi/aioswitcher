@@ -30,9 +30,6 @@ Configuration files
 
 *   ``.yamllint`` is the configuration for `yamllint A Linter for YAML Files`_ linting yml files.
 
-*   ``.remarkrc`` is the configuration file for `remark-lint`_ plugin for Remark_ linting
-    *markdown* files.
-
 *   ``bandit.yml`` is the configuration file for `Bandit common security issues finder`_ checking
     python scripts.
 
@@ -44,7 +41,6 @@ Python
 
 *   ``src/aioswitcher`` is the *Python* modules making the package.
 *   ``tests`` is where *Python* test-cases are stored and executed with pytest_.
-*   ``pyscripts``` is where *Python* scripts are stored.
 
 Package management
 ------------------
@@ -177,10 +173,6 @@ Guidelines
 Here are some guidelines (recommendations) for contributing to the ``aioswitcher`` project:
 *   Code docstrings documentation [here](https://aioswitcher.readthedocs.io/en/stable/codedocs.html)
 
-*   For any change in dependencies, please use ``pyscripts/poetry-to-requirements.py`` for
-    creating a valid ``requirements.txt`` file and add it to your PR. This is also done
-    automatically with the ``py37`` testenv in ``tox``.
-
 *   While not all the test steps in ``CircleCi`` and in ``Tox`` are parallel to each other, most
     of them are, so tests failing with ``Tox`` will probably also fail with ``CircleCi``.
 
@@ -216,9 +208,6 @@ The code of conduct can be found [here](https://aioswitcher.readthedocs.io/en/st
 .. _pytest-cov plugin: https://pytest-cov.readthedocs.io/en/latest/
 .. _python: https://www.python.org/
 .. _read the docs: https://readthedocs.org/
-.. _remark: https://remark.js.org/
-.. _remark-cli: https://www.npmjs.com/package/remark-cli
-.. _remark-lint: https://github.com/remarkjs/remark-lint
 .. _scspell3k: https://pypi.org/project/scspell3k/
 .. _semver: https://semver.org/
 .. _sphinx: http://www.sphinx-doc.org/en/master/

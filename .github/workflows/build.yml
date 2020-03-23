@@ -31,7 +31,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Install dependencies
-        run: poetry install -v --extras "coverage" --extras "docslint" --extras "docsbuild" --extras "python-checkers" --extras "unittests"
+        run: poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "python-checkers" -E "unittests"
 
       - name: Lint yaml files
         run: yamllint --config-file .yamllint --format colored --strict .
@@ -51,19 +51,19 @@ jobs:
           rm -r sphinxtemp
 
       - name: Security check code with bandit
-        run: bandit -rvc .bandit src/ tests/ docs/source/ pyscripts/ -l -ii
+        run: bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
 
       - name: Validate imports with isort
-        run: isort --check-only --recursive src/ tests/ docs/source/ pyscripts/
+        run: isort --check-only --recursive src/ tests/ docs/source/
 
       - name: Lint code with flake8
-        run: flake8 --statistics --count --doctests src/ tests/ docs/source/ pyscripts/
+        run: flake8 --statistics --count --doctests src/ tests/ docs/source/
 
       - name: Check code style with black
-        run: black --check src/ tests/ docs/source/ pyscripts/
+        run: black --check src/ tests/ docs/source/
 
       - name: Check static typing with mypy
-        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/ pyscripts/
+        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
 
       - name: Perform unit tests with coverage report
         run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml

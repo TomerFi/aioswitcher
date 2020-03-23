@@ -38,8 +38,6 @@ Please feel free to contribute, even to this contributing guideline file, if you
     creating coverage reports with the [pytest-cov plugin](https://pytest-cov.readthedocs.io/en/latest/).
 - `.yamllint` is the configuration for [yamllint A Linter for YAML Files](https://yamllint.readthedocs.io/en/stable/index.html)
   linting yml files.
-- `.remarkrc` is the configuration file for [remark-lint](https://github.com/remarkjs/remark-lint)
-  plugin for [Remark](https://remark.js.org/) linting *markdown* files.
 - `bandit.yml` is the configuration file for [Bandit common security issues finder](https://github.com/PyCQA/bandit)
   checking python scripts.
 - `.spelling` is the dictionary file used by both [markdown-spellcheck](https://www.npmjs.com/package/markdown-spellcheck)
@@ -50,7 +48,6 @@ Please feel free to contribute, even to this contributing guideline file, if you
 
 - `src/aioswitcher` is the *Python* modules making the package.
 - `tests` is where *Python* test-cases are stored and executed with [pytest](https://pypi.org/project/pytest/).
-- `pyscripts` is where *Python* scripts are stored.
 
 ### Package management
 
@@ -172,9 +169,6 @@ For automated local tests, use [Tox](https://tox.readthedocs.io/en/latest/).
 Here are some guidelines (recommendations) for contributing to the `aioswitcher` project:
 
 - Code docstrings documentation [here](https://aioswitcher.readthedocs.io/en/stable/codedocs.html)
-- For any change in dependencies, please use [pyscripts/poetry-to-requirements.py](pyscripts/poetry-to-requirements.py)
-  for creating a valid [requirements.txt](requirements.txt) file and add it to your PR.
-  This is also done automatically with the `py37` testenv in `tox`.
 - While not all the test steps in [CircleCi](.circleci/config.yml) and in
   [Tox](pyproject.toml) are parallel to each other, most of them are, so tests
   failing with `Tox` will probably also fail with `CircleCi`.

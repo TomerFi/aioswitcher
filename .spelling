@@ -71,7 +71,6 @@ poetry.lock
 poetry-to-requirements
 pre-installed
 py
-pyscripts
 python3.5
 python3.7
 pypi
@@ -83,9 +82,6 @@ pytest
 pytest-cov
 readthedocs
 readthedocs.io
-remarkjs
-remark-cli
-remarkrc
 restructuredText
 requirements.txt
 runtime

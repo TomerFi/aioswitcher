@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "aioswitcher"
-version = "2019.10.25"
+version = "2020.03.23"
 description = "Switcher Boiler Unofficial Bridge and API."
 license = "MIT"
 authors = ["Tomer Figenblat <tomer.figenblat@gmail.com>"]
@@ -20,8 +20,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.5",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Topic :: Documentation :: Sphinx",
     "Topic :: Home Automation",
@@ -45,7 +43,7 @@ exclude = [
 python = "^3.5 || ^3.6 || ^3.7"
 asynctest = { version = "0.13.0", optional = true }
 bandit = { version = "1.6.2", optional = true }
-black = { version = "19.10b0", optional = true , python = ">=3.6"}
+black = { version = "19.10b0", optional = true, python = ">=3.6"}
 codecov = { version = "2.0.22", optional = true }
 doc8 = { version = "0.8.0", optional = true }
 flake8 = { version = "3.7.9", optional = true }
@@ -121,14 +119,14 @@ commands =
     python --version
     poetry install -v --extras "python-checkers" --extras "docslint" --extras "docsbuild"
     yamllint --config-file .yamllint --format colored --strict .
-    bandit -rvc .bandit src/ tests/ docs/source/ pyscripts/ -l -ii
-    isort --check-only --recursive src/ tests/ docs/source/ pyscripts/
-    flake8 --statistics --count --doctests src/ tests/ docs/source/ pyscripts/
-    black --check --diff src/ tests/ docs/source/ pyscripts/
-    mypy --follow-imports silent --ignore-missing-imports --show-error-codes src/ tests/ docs/source/ pyscripts/
+    bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
+    isort --check-only --recursive src/ tests/ docs/source/
+    flake8 --statistics --count --doctests src/ tests/ docs/source/
+    black --check --diff src/ tests/ docs/source/
+    mypy --follow-imports silent --ignore-missing-imports --show-error-codes src/ tests/ docs/source/
     doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
     # bash -c "for fil in $(find "$(pwd)/docs/source" -type f -name "*.rst"); do scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done" # linux
-    scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $(dir "${pwd}/docs/source/*.rst" -Recurse | foreach  { "$_" }) # windows
+    # scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $(dir "${pwd}/docs/source/*.rst" -Recurse | foreach  { "$_" }) # windows
     sphinx-build -W -b html -d {envtmpdir}/doctrees docs/source {envtmpdir}/html
 
 [testenv:py37]
