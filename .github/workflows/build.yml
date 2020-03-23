@@ -40,6 +40,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          timedatectl set-timezone Asia/Jerusalem
           pip install --upgrade pip poetry
           poetry config virtualenvs.create false --local
           poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "python-checkers" -E "unittests"
