@@ -17,17 +17,10 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2.0.0
 
-      - name: Get Poetry cache
-        id: poetry-cache
-        run: |
-          python -m pip install --upgrade pip poetry
-          python -c "print('::set-output name=dir::', end='')"
-          poetry config cache-dir
-
       - name: Cache poetry repository
         uses: actions/cache@v1.1.2
         with:
-          path: ${{ steps.poetry-cache.outputs.dir }}
+          path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
             ${{ runner.os }}-poetry-
