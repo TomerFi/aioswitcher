@@ -1,5 +1,5 @@
 <!--lint disable maximum-heading-length-->
-# Switcher Boiler Unofficial Bridge and API Tools</br>[![python-versions]][11] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![shields-io-maintenance]][0]
+# Switcher Boiler Unofficial Bridge and API Tools</br>[![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![shields-io-maintenance]][0]
 
 | Stage     | Badges                                                                     |
 | --------- | -------------------------------------------------------------------------- |
@@ -43,7 +43,6 @@ The use of *Python 3.7* is preferable.
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
 [pypi-version]: https://badge.fury.io/py/aioswitcher.svg
-[python-versions]: https://img.shields.io/pypi/pyversions/django.svg
 [read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
 [requires-io]: https://requires.io/github/TomerFi/aioswitcher/requirements.svg
 [shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
