@@ -389,14 +389,6 @@ version = "0.4.3"
 
 [[package]]
 category = "main"
-description = "Node.js virtual environment builder"
-name = "nodeenv"
-optional = true
-python-versions = "*"
-version = "1.3.5"
-
-[[package]]
-category = "main"
 description = "Core utilities for Python packages"
 name = "packaging"
 optional = true
@@ -894,13 +886,12 @@ testing = ["pathlib2", "unittest2", "jaraco.itertools", "func-timeout"]
 coverage = ["codecov"]
 docsbuild = ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
 docslint = ["doc8", "scspell3k"]
-nodeenv = ["nodeenv"]
 python-checkers = ["asynctest", "bandit", "black", "flake8", "flake8-docstrings", "isort", "mypy", "pytest", "toml", "yamllint"]
 toml = ["toml"]
 unittests = ["asynctest", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov", "pytest-sugar"]
 
 [metadata]
-content-hash = "c9e0a9fc7fedb863b64339ce6bcff01e5c2dd6e822aac74e9938130084c4f040"
+content-hash = "266c77bc4bde9a02541fe1ad793e82e033b62cb089eec613e74dfb33ed6a5bf1"
 python-versions = "^3.5 || ^3.6 || ^3.7"
 
 [metadata.files]
@@ -1153,9 +1144,6 @@ mypy = [
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
     {file = "mypy_extensions-0.4.3.tar.gz", hash = "sha256:2d82818f5bb3e369420cb3c4060a7970edba416647068eb4c5343488a6c604a8"},
-]
-nodeenv = [
-    {file = "nodeenv-1.3.5-py2.py3-none-any.whl", hash = "sha256:5b2438f2e42af54ca968dd1b374d14a1194848955187b0e5e4be1f73813a5212"},
 ]
 packaging = [
     {file = "packaging-20.3-py2.py3-none-any.whl", hash = "sha256:82f77b9bee21c1bafbf35a84905d604d5d1223801d639cf3ed140bd651c08752"},

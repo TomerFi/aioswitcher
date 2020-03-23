@@ -102,7 +102,7 @@ legacy_tox_ini = """
 [tox]
 envlist =
     pypi-checkers
-    py{35, 36, 37}
+    py{37}
 isolated_build = true
 minversion = 3.13.1
 requires = poetry>=0.12.17
@@ -130,20 +130,6 @@ commands =
     # bash -c "for fil in $(find "$(pwd)/docs/source" -type f -name "*.rst"); do scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $fil || exit 1; done" # linux
     scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $(dir "${pwd}/docs/source/*.rst" -Recurse | foreach  { "$_" }) # windows
     sphinx-build -W -b html -d {envtmpdir}/doctrees docs/source {envtmpdir}/html
-
-[testenv:py35]
-basepython = python3.5
-commands =
-    python --version
-    poetry install -v --extras "unittests"
-    pytest -vs
-
-[testenv:py36]
-basepython = python3.6
-commands =
-    python --version
-    poetry install -v --extras "unittests"
-    pytest -vs
 
 [testenv:py37]
 commands =
