@@ -7,16 +7,9 @@ PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Hea
 Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted with
 [readthedocs.io](https://readthedocs.org/).
 
-This module:
-
-- Is build for *Python 3.7*.
-- Is packaged with [poetry](https://poetry.eustace.io/).
-- Works concurrently using Python's Asynchronous I/O module [asyncio](https://docs.python.org/3/library/asyncio.html#module-asyncio).
-- Is static typed and checked with [mypy](https://mypy.readthedocs.io/en/latest/index.html) based
-  on [PEP484](https://www.python.org/dev/peps/pep-0484/).
-- Follows [black code style](https://black.readthedocs.io/en/stable/) rules and guidelines.
-- Package is described using [pyproject.toml](pyproject.toml) based on [PEP517](https://www.python.org/dev/peps/pep-0517/)
-  and [PEP518](https://www.python.org/dev/peps/pep-0518/).
+Please note, this module is build for *Python 3.7*and packaged with [poetry](https://poetry.eustace.io/).</br>
+Please see, [PEP517](https://www.python.org/dev/peps/pep-0517/) and
+[PEP518](https://www.python.org/dev/peps/pep-0518/).
 
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher
