@@ -44,7 +44,10 @@ jobs:
           poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
 
       - name: Lint yaml files
-        run: yamllint --config-file .yamllint --format colored --strict .
+        run: |
+          python --version
+          poetry --version
+          yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
         run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
