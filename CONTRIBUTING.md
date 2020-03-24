@@ -10,28 +10,25 @@ Contributing is pretty straight-forward:
 
 Please feel free to contribute, even to this contributing guideline file, if you see fit.
 
-- [Items description](#items-description)
-  - [Source files](#source-files)
-  - [Package management](#package-management)
-  - [Documentation](#documentation)
-    - [Read the Docs](#read-the-docs)
+- [Source files](#source-files)
+- [Package management](#package-management)
+- [Documentation](#documentation)
+  - [Read the Docs](#read-the-docs)
 - [Testing](#testing)
 - [Code of Conduct](#code-of-conduct)
 
-## Items description
-
-### Source files
+## Source files
 
 - `src/aioswitcher` is the *Python* modules making the package.
 - `tests` is where *Python* test-cases are stored and executed with [pytest](https://pypi.org/project/pytest/).
 
-### Package management
+## Package management
 
 The [pyproject.toml](pyproject.toml) is the main configuration file for the pypi package based on
 [PEP518](https://www.python.org/dev/peps/pep-0518/). Please note, this package is being managed,
 build, packaged and deployed with [poetry](https://poetry.eustace.io/).
 
-### Documentation
+## Documentation
 
 - `docs/sources` is where the *restructuredText* for creating the [Sphinx Documentation](http://www.sphinx-doc.org/en/master/)
   are stored for build, deployment and hosting by [Read the Docs](https://readthedocs.org/).
@@ -40,7 +37,7 @@ build, packaged and deployed with [poetry](https://poetry.eustace.io/).
   [sphinx](http://www.sphinx-doc.org/en/master/) will create the documentation site locally in
   `docs/build`.
 
-#### Read the Docs
+### Read the Docs
 
 By hook configuration, [Read the Docs](https://readthedocs.org) will build the documentation site
 based on [docs/source](docs/source) and host it:
