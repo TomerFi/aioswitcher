@@ -66,7 +66,7 @@ yamllint = { version = "1.20.0", optional = true }
 coverage = ["codecov"]
 docslint = ["doc8", "scspell3k"]
 docsbuild = ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
-python-checkers = [
+checkers = [
     "asynctest",
     "bandit",
     "black",
@@ -99,7 +99,7 @@ target-version = ["py37"]
 legacy_tox_ini = """
 [tox]
 envlist =
-    pypi-checkers
+    checkers
     py{37}
 isolated_build = true
 minversion = 3.13.1
@@ -114,10 +114,10 @@ whitelist_externals =
     bash
     poetry
 
-[testenv:pypi-checkers]
+[testenv:checkers]
 commands =
     python --version
-    poetry install -v --extras "python-checkers" --extras "docslint" --extras "docsbuild"
+    poetry install -v --extras "checkers" --extras "docslint" --extras "docsbuild"
     yamllint --config-file .yamllint --format colored --strict .
     bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
     isort --check-only --recursive src/ tests/ docs/source/

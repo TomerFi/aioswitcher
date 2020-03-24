@@ -3,15 +3,14 @@ name: Build
 
 on:
   pull_request:
-    branch: master
+    branch: dev
 
 jobs:
-
   verify:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [ '3.7' ]
+        python: [3.7]
     name: Verify project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
@@ -42,7 +41,7 @@ jobs:
         run: |
           pip install --upgrade pip poetry
           poetry config virtualenvs.create false --local
-          poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "python-checkers" -E "unittests"
+          poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
 
       - name: Lint yaml files
         run: yamllint --config-file .yamllint --format colored --strict .
