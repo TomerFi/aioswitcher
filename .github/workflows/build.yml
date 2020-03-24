@@ -47,7 +47,7 @@ jobs:
         run: |
           python --version
           poetry --version
-          poetry config
+          poetry config --list
           python -m yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
