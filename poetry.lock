@@ -637,14 +637,6 @@ docutils = ">=0.11,<1.0"
 
 [[package]]
 category = "main"
-description = "A conservative interactive spell checker for source code."
-name = "scspell3k"
-optional = true
-python-versions = "*"
-version = "2.2"
-
-[[package]]
-category = "main"
 description = "Python 2 and 3 compatibility utilities"
 name = "six"
 optional = true
@@ -886,12 +878,12 @@ testing = ["pathlib2", "unittest2", "jaraco.itertools", "func-timeout"]
 checkers = ["asynctest", "bandit", "black", "flake8", "flake8-docstrings", "isort", "mypy", "pytest", "toml", "yamllint"]
 coverage = ["codecov"]
 docsbuild = ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
-docslint = ["doc8", "scspell3k"]
+docslint = ["doc8"]
 toml = ["toml"]
 unittests = ["asynctest", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov", "pytest-sugar"]
 
 [metadata]
-content-hash = "ad351b9fa816ffe3a98e2377e93ed706c6013d8dbdbea6e1e31756ce20b8d64c"
+content-hash = "1ee051d07c54b3dcecd075c7f7f2e342cde63167a17ce8d9a77264120cb020b7"
 python-versions = "^3.5 || ^3.6 || ^3.7"
 
 [metadata.files]
@@ -1255,9 +1247,6 @@ requests = [
 ]
 restructuredtext-lint = [
     {file = "restructuredtext_lint-1.3.0.tar.gz", hash = "sha256:97b3da356d5b3a8514d8f1f9098febd8b41463bed6a1d9f126cf0a048b6fd908"},
-]
-scspell3k = [
-    {file = "scspell3k-2.2.tar.gz", hash = "sha256:c7ee9dd5f9707d08885259246e20cf6bc73a1ac7876713ab7d1d3ce8cc6dcd09"},
 ]
 six = [
     {file = "six-1.14.0-py2.py3-none-any.whl", hash = "sha256:8f3cd2e254d8f793e7f3d6d9df77b92252b52637291d0f0da013c76ea2724b6c"},

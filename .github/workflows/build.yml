@@ -49,11 +49,6 @@ jobs:
       - name: Lint rst files
         run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
 
-      - name: Spellcheck rst files
-        run: |
-          RST_FILES=$(find "$(pwd)/docs/source" -type f -name "*.rst")
-          scspell --report-only --use-builtin-base-dict --override-dictionary .spelling $RST_FILES
-
       - name: Temp build documantation site
         run: |
           mkdir sphinxtemp
