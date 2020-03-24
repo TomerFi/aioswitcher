@@ -9,6 +9,9 @@ on:
 jobs:
   pre-release:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.7]
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.0.0
