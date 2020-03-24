@@ -6,12 +6,12 @@ on:
     branch: dev
 
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python: [3.7]
-    name: Verify project with Python ${{ matrix.python }}
+    name: Build project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.0.0
@@ -28,7 +28,7 @@ jobs:
         uses: actions/cache@v1.1.2
         with:
           path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
           restore-keys: |
             ${{ runner.os }}-poetry-
 
