@@ -9,6 +9,7 @@ Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted 
 
 This module:
 
+- Is build for *Python 3.7*.
 - Is packaged with [poetry](https://poetry.eustace.io/).
 - Works concurrently using Python's Asynchronous I/O module [asyncio](https://docs.python.org/3/library/asyncio.html#module-asyncio).
 - Is static typed and checked with [mypy](https://mypy.readthedocs.io/en/latest/index.html) based
@@ -16,9 +17,6 @@ This module:
 - Follows [black code style](https://black.readthedocs.io/en/stable/) rules and guidelines.
 - Package is described using [pyproject.toml](pyproject.toml) based on [PEP517](https://www.python.org/dev/peps/pep-0517/)
   and [PEP518](https://www.python.org/dev/peps/pep-0518/).
-
-Although the [aioswitcher][11] module requires the use of *Python 3.5/3.6/3.7*,
-The use of *Python 3.7* is preferable.
 
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher

@@ -6,7 +6,6 @@ on:
     branch: dev
 
 jobs:
-
   verify:
     runs-on: ubuntu-latest
     strategy:
