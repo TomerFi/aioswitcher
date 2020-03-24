@@ -40,8 +40,8 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
-          poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
+          poetry config virtualenvs.create false
+          poetry install --no-dev -n -vv -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
           yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint yaml files
