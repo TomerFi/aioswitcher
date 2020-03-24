@@ -47,7 +47,8 @@ jobs:
         run: |
           python --version
           poetry --version
-          yamllint --config-file .yamllint --format colored --strict .
+          poetry config
+          python -m yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
         run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
