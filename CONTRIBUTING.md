@@ -50,5 +50,4 @@ For automated local tests, use [Tox](https://tox.readthedocs.io/en/latest/).
 
 ## Code of Conduct
 
-The [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) can also be found
-[here](https://aioswitcher.readthedocs.io/en/stable/conduct.html).
+Please check the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) markdown.
