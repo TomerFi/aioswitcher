@@ -6,12 +6,12 @@ on:
     branch: dev
 
 jobs:
-  verify:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python: [3.7]
-    name: Verify project with Python ${{ matrix.python }}
+    name: Build project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.0.0
@@ -20,9 +20,9 @@ jobs:
         uses: actions/cache@v1.1.2
         with:
           path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
-            ${{ runner.os }}-pip-
+            ${{ runner.os }}-${{ matrix.python }}-pip-
 
       - name: Cache poetry repository
         uses: actions/cache@v1.1.2
@@ -30,7 +30,7 @@ jobs:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
-            ${{ runner.os }}-poetry-
+            ${{ runner.os }}-${{ matrix.python }}-poetry-
 
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v1.2.0
@@ -41,7 +41,7 @@ jobs:
         run: |
           pip install --upgrade pip poetry
           poetry config virtualenvs.create false --local
-          poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
+          poetry install -vv -E "checkers" -E "docs" -E "tests"
 
       - name: Lint yaml files
         run: yamllint --config-file .yamllint --format colored --strict .
@@ -77,6 +77,7 @@ jobs:
         uses: codecov/codecov-action@v1.0.6
         with:
           file: ./coverage_report/coverage.xml
+          fail_ci_if_error: true
 
       - name: Upload coverage report as artifact
         uses: actions/upload-artifact@v1.0.0
