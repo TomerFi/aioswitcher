@@ -42,13 +42,14 @@ jobs:
           pip install --upgrade pip poetry
           poetry config virtualenvs.create false --local
           poetry install -v -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
+          yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint yaml files
         run: |
           python --version
           poetry --version
           poetry config --list
-          python -m yamllint --config-file .yamllint --format colored --strict .
+          yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
         run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
