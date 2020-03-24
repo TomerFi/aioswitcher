@@ -10,17 +10,11 @@ Contributing is pretty straight-forward:
 
 Please feel free to contribute, even to this contributing guideline file, if you see fit.
 
-- [Source files](#source-files)
 - [Package management](#package-management)
 - [Documentation](#documentation)
   - [Read the Docs](#read-the-docs)
 - [Testing](#testing)
 - [Code of Conduct](#code-of-conduct)
-
-## Source files
-
-- `src/aioswitcher` is the *Python* modules making the package.
-- `tests` is where *Python* test-cases are stored and executed with [pytest](https://pypi.org/project/pytest/).
 
 ## Package management
 
