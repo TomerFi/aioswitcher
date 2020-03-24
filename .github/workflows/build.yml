@@ -36,20 +36,15 @@ jobs:
         uses: actions/setup-python@v1.2.0
         with:
           python-version: ${{ matrix.python }}
-          architecture: x86
 
       - name: Install dependencies
         run: |
-          pip install --upgrade pip poetry==0.12.16
-          poetry config virtualenvs.create false
-          poetry install --no-dev -n -vv -E "coverage" -E "docslint" -E "docsbuild" -E "checkers" -E "unittests"
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
+          poetry install -vv -E "checkers" -E "docs" -E "tests"
 
       - name: Lint yaml files
-        run: |
-          python --version
-          poetry --version
-          poetry config --list
-          yamllint --config-file .yamllint --format colored --strict .
+        run: yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
         run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source

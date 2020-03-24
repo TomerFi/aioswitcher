@@ -1,5 +1,5 @@
 [build-system]
-requires = ["poetry~=0.12"]
+requires = ["poetry~=1.0.5"]
 build-backend = "poetry.masonry.api"
 
 [tool.poetry]
@@ -40,11 +40,10 @@ exclude = [
 ] # poetry.lock is automatically excluded
 
 [tool.poetry.dependencies]
-python = "^3.5 || ^3.6 || ^3.7"
+python = "^3.7"
 asynctest = { version = "0.13.0", optional = true }
 bandit = { version = "1.6.2", optional = true }
-black = { version = "19.10b0", optional = true, python = ">=3.6"}
-codecov = { version = "2.0.22", optional = true }
+black = { version = "19.10b0", optional = true }
 doc8 = { version = "0.8.0", optional = true }
 flake8 = { version = "3.7.9", optional = true }
 flake8-docstrings = { version = "1.5.0", optional = true }
@@ -62,13 +61,12 @@ toml = { version = "0.10.0", optional = true }
 yamllint = { version = "1.20.0", optional = true }
 
 [tool.poetry.extras]
-coverage = ["codecov"]
-docslint = ["doc8"]
-docsbuild = ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
+docs= ["pygments", "sphinx", "sphinx-rtd-theme", "toml"]
 checkers = [
     "asynctest",
     "bandit",
     "black",
+    "doc8",
     "flake8",
     "flake8-docstrings",
     "isort",
@@ -77,7 +75,7 @@ checkers = [
     "toml",
     "yamllint"
 ]
-unittests = [
+tests = [
     "asynctest",
     "pytest",
     "pytest-aiohttp",
@@ -85,7 +83,6 @@ unittests = [
     "pytest-cov",
     "pytest-sugar"
 ]
-toml = ["toml"]
 
 [tool.isort]
 line_length = 79
@@ -103,7 +100,7 @@ envlist =
     py{37}
 isolated_build = true
 minversion = 3.13.1
-requires = poetry>=0.12.17
+requires = poetry>=1.0.5
 skip_missing_interpreters = true
 skipdist = true
 
@@ -117,7 +114,7 @@ commands = poetry update
 
 [testenv:checkers]
 commands =
-    poetry install -v --extras "checkers" --extras "docslint" --extras "docsbuild"
+    poetry install -vv -E "checkers" -E "docs"
     yamllint --config-file .yamllint --format colored --strict .
     bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
     isort --check-only --recursive src/ tests/ docs/source/
@@ -129,7 +126,7 @@ commands =
 
 [testenv:py37]
 commands =
-    poetry install -v --extras "unittests" --extras "toml"
+    poetry install -vv -E "tests"
     pytest -vs --cov --cov-config=.coveragerc
 
 """
