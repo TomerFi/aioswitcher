@@ -77,6 +77,7 @@ jobs:
         uses: codecov/codecov-action@v1.0.6
         with:
           file: ./coverage_report/coverage.xml
+          fail_ci_if_error: true
 
       - name: Upload coverage report as artifact
         uses: actions/upload-artifact@v1.0.0
