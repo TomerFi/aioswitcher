@@ -96,7 +96,6 @@ envlist =
 isolated_build = true
 minversion = 3.13.1
 requires = poetry>=1.0.5
-skip_missing_interpreters = true
 skipdist = true
 
 [testenv]
