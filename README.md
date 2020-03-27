@@ -6,10 +6,6 @@ PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Hea
 Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted with
 [readthedocs.io](https://readthedocs.org/).
 
-Please note, packaged with [poetry](https://poetry.eustace.io/).</br>
-Please see, [PEP517](https://www.python.org/dev/peps/pep-0517/) and
-[PEP518](https://www.python.org/dev/peps/pep-0518/).
-
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
