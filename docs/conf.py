@@ -5,9 +5,9 @@ from sys import path as sys_path
 
 from toml import load as toml_load
 
-sys_path.insert(0, os_path.abspath("../../src"))
+sys_path.insert(0, os_path.abspath("../src"))
 
-toml_path = "{}/pyproject.toml".format(os_path.abspath("../.."))
+toml_path = "{}/pyproject.toml".format(os_path.abspath(".."))
 parsed_toml = toml_load(toml_path)
 
 project = parsed_toml["tool"]["poetry"]["name"]
@@ -23,7 +23,7 @@ extensions = [
 ]
 templates_path = ["_templates"]
 source_suffix = ".rst"
-master_doc = "index"
+master_doc = "source/index"
 language = None
 exclude_patterns = ["_build"]
 pygments_style = "sphinx"

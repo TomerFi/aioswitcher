@@ -7,9 +7,6 @@ from datetime import datetime, timedelta
 from struct import unpack
 from time import gmtime, strftime
 
-from asynctest import patch
-from pytest import fail, mark, raises
-
 from aioswitcher.api.packets import GET_STATE_PACKET
 from aioswitcher.consts import ENCODING_CODEC, STRUCT_PACKING_FORMAT
 from aioswitcher.errors import CalculationError, DecodingError, EncodingError
@@ -19,6 +16,8 @@ from aioswitcher.tools import (
     crc_sign_full_packet_com_key, create_weekdays_value,
     get_days_list_from_bytes, get_time_from_bytes, get_timestamp,
     timedelta_str_to_schedule_time)
+from asynctest import patch
+from pytest import fail, mark, raises
 
 from .asserters import assert_lists_equal, assert_seconds_to_iso_time
 from .common import create_random_time

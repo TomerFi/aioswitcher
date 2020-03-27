@@ -736,7 +736,7 @@ six = ">=1.10.0"
 category = "main"
 description = "Python Library for Tom's Obvious, Minimal Language"
 name = "toml"
-optional = false
+optional = true
 python-versions = "*"
 version = "0.10.0"
 
@@ -815,12 +815,12 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["jaraco.itertools", "func-timeout"]
 
 [extras]
-checkers = ["asynctest", "bandit", "black", "doc8", "flake8", "flake8-docstrings", "isort", "mypy", "pytest", "yamllint"]
+checkers = ["bandit", "black", "doc8", "flake8", "flake8-docstrings", "isort", "mypy", "yamllint"]
 docs = ["pygments", "sphinx", "sphinx-rtd-theme"]
 tests = ["asynctest", "codecov", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov"]
 
 [metadata]
-content-hash = "90d6c859f556cfe2910a44543c0c86e79d2570960d9016bb805d66701f50075a"
+content-hash = "8e33ece87360724240e4d743c7e4a3418244e3c7b52d4ee5f37e48ad57aa4740"
 python-versions = "^3.7"
 
 [metadata.files]
