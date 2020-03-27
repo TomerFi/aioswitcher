@@ -44,49 +44,49 @@ jobs:
 
       - name: Lint yaml files
         run: |
-          poetry shell
+          poetry shell -n
           yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
         run: |
-          poetry shell
+          poetry shell -n
           doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
 
       - name: Temp build documantation site
         run: |
-          poetry shell
+          poetry shell -n
           mkdir sphinxtemp
           sphinx-build -W -b html -d sphinxtemp/doctrees docs sphinxtemp/html
           rm -r sphinxtemp
 
       - name: Security check code with bandit
         run: |
-          poetry shell
+          poetry shell -n
           bandit -rvc .bandit src/ tests/ docs/ -l -ii
 
       - name: Validate imports with isort
         run: |
-          poetry shell
+          poetry shell -n
           isort -vv --check-only --recursive src/ tests/ docs/
 
       - name: Lint code with flake8
         run: |
-          poetry shell
+          poetry shell -n
           flake8 --statistics --count --doctests src/ tests/ docs/
 
       - name: Check code style with black
         run: |
-          poetry shell
+          poetry shell -n
           black --check src/ tests/ docs/
 
       - name: Check static typing with mypy
         run: |
-          poetry shell
+          poetry shell -n
           mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
 
       - name: Perform unit tests with coverage report
         run: |
-          poetry shell
+          poetry shell -n
           pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
 
       - name: Push coverage report to CodeCov
