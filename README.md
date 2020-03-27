@@ -1,4 +1,4 @@
-# Switcher Boiler Unofficial Bridge and API Tools</br>[![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![shields-io-maintenance]][0]
+# Switcher Boiler Unofficial Bridge and API Tools</br>[![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![dependabot-status]][1]
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3] [![code-style-black]][5] [![checked-with-mypy]][6]
 
@@ -12,10 +12,10 @@ Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted 
 > As a result of this midst project change, [PyPi][11] automatically marks the wrong version,
 > `2019.10.25`, as the latest.</br>
 > If you use `2019.10.25` or earlier [calver](https://calver.org/) adhering versions, please note</br>
-> **it would soon be deleted from [PyPi][11] - Please use the latest [semver](https://semver.org/) adhering version**.
+> **it will soon be deleted from [PyPi][11] - Please use the latest [semver](https://semver.org/) adhering version**.
 
 <!-- Real Links -->
-[0]: https://github.com/TomerFi/aioswitcher
+[1]: https://dependabot.com
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [5]: https://black.readthedocs.io/en/stable/
 [6]: http://mypy-lang.org/
@@ -26,9 +26,9 @@ Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted 
 [checked-with-mypy]: http://www.mypy-lang.org/static/mypy_badge.svg
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
+[dependabot-status]: https://api.dependabot.com/badges/status?host=github&repo=TomerFi/aioswitcher
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/workflows/Build/badge.svg
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
 [pypi-version]: https://badge.fury.io/py/aioswitcher.svg
 [read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
-[shields-io-maintenance]: https://img.shields.io/badge/Maintained%3F-yes-green.svg
