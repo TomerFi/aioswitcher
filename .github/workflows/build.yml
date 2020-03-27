@@ -24,56 +24,70 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-pip-
 
+      - name: Cache poetry repository
+        uses: actions/cache@v1.1.2
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python }}-poetry-
+
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v1.2.0
         with:
           python-version: ${{ matrix.python }}
 
-
-      - name: Setup environment
-        run: |
-          pip install --upgrade pip poetry
-          poetry update
-          poetry config virtualenvs.create false --local
-
       - name: Install dependencies
         run: |
-          poetry export -E docs -E checkers -E tests --format requirements.txt \
-          --output requirements.txt --without-hashes --no-interaction
-          pip install -r requirements.txt
-
-      - name: Install project
-        run: poetry install
+          pip install --upgrade pip poetry
+          poetry install -vv -E "checkers" -E "docs" -E "tests"
 
       - name: Lint yaml files
-        run: yamllint --config-file .yamllint --format colored --strict .
+        run: |
+          poetry shell
+          yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
-        run: doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
+        run: |
+          poetry shell
+          doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
 
       - name: Temp build documantation site
         run: |
+          poetry shell
           mkdir sphinxtemp
           sphinx-build -W -b html -d sphinxtemp/doctrees docs sphinxtemp/html
           rm -r sphinxtemp
 
       - name: Security check code with bandit
-        run: bandit -rvc .bandit src/ tests/ docs/ -l -ii
+        run: |
+          poetry shell
+          bandit -rvc .bandit src/ tests/ docs/ -l -ii
 
       - name: Validate imports with isort
-        run: isort -vv --check-only --recursive src/ tests/ docs/
+        run: |
+          poetry shell
+          isort -vv --check-only --recursive src/ tests/ docs/
 
       - name: Lint code with flake8
-        run: flake8 --statistics --count --doctests src/ tests/ docs/
+        run: |
+          poetry shell
+          flake8 --statistics --count --doctests src/ tests/ docs/
 
       - name: Check code style with black
-        run: black --check src/ tests/ docs/
+        run: |
+          poetry shell
+          black --check src/ tests/ docs/
 
       - name: Check static typing with mypy
-        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
+        run: |
+          poetry shell
+          mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
 
       - name: Perform unit tests with coverage report
-        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+        run: |
+          poetry shell
+          pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
 
       - name: Push coverage report to CodeCov
         uses: codecov/codecov-action@v1.0.6
