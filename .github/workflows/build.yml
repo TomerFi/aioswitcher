@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.7]
+        python: [3.8]
     name: Build project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout

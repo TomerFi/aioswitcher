@@ -20,7 +20,7 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
     "Topic :: Documentation :: Sphinx",
     "Topic :: Home Automation",
     "Topic :: Software Development :: Libraries",
@@ -40,7 +40,7 @@ exclude = [
 ] # poetry.lock is automatically excluded
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8"
 asynctest = { version = "0.13.0", optional = true }
 bandit = { version = "1.6.2", optional = true }
 black = { version = "19.10b0", optional = true }
@@ -85,7 +85,6 @@ line_length = 79
 
 [tool.black]
 line-length = 79
-target-version = ["py37"]
 
 [tool.tox]
 legacy_tox_ini = """
@@ -93,7 +92,7 @@ legacy_tox_ini = """
 envlist =
     update-poetry
     checkers
-    py{37}
+    py{38}
 isolated_build = true
 minversion = 3.13.1
 requires = poetry>=1.0.5
@@ -101,7 +100,7 @@ skip_missing_interpreters = true
 skipdist = true
 
 [testenv]
-basepython = python3.7
+basepython = python3.8
 skip_install = true
 whitelist_externals = poetry
 
@@ -120,7 +119,7 @@ commands =
     doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
     sphinx-build -W -b html -d {envtmpdir}/doctrees docs {envtmpdir}/html
 
-[testenv:py37]
+[testenv:py38]
 commands =
     poetry install -vv -E "tests"
     pytest -vs --cov --cov-config=.coveragerc

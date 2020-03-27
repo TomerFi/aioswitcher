@@ -2,11 +2,11 @@
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3] [![code-style-black]][5] [![checked-with-mypy]][6]
 
-PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).
+PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
 Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted with
 [readthedocs.io](https://readthedocs.org/).
 
-Please note, this module is build for *Python 3.7*and packaged with [poetry](https://poetry.eustace.io/).</br>
+Please note, packaged with [poetry](https://poetry.eustace.io/).</br>
 Please see, [PEP517](https://www.python.org/dev/peps/pep-0517/) and
 [PEP518](https://www.python.org/dev/peps/pep-0518/).
 
