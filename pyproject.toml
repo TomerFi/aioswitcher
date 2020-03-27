@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "aioswitcher"
-version = "2020.3.27"
+version = "0.1.0"
 description = "Switcher Boiler Unofficial Bridge and API."
 license = "MIT"
 authors = ["Tomer Figenblat <tomer.figenblat@gmail.com>"]
