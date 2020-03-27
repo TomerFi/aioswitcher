@@ -52,23 +52,23 @@ jobs:
       - name: Temp build documantation site
         run: |
           mkdir sphinxtemp
-          sphinx-build -W -b html -d sphinxtemp/doctrees docs/source sphinxtemp/html
+          sphinx-build -W -b html -d sphinxtemp/doctrees docs sphinxtemp/html
           rm -r sphinxtemp
 
       - name: Security check code with bandit
-        run: bandit -rvc .bandit src/ tests/ docs/source/ -l -ii
+        run: bandit -rvc .bandit src/ tests/ docs/ -l -ii
 
       - name: Validate imports with isort
-        run: isort -vv --check-only --recursive src/ tests/ docs/source/
+        run: isort -vv --check-only --recursive src/ tests/ docs/
 
       - name: Lint code with flake8
-        run: flake8 --statistics --count --doctests src/ tests/ docs/source/
+        run: flake8 --statistics --count --doctests src/ tests/ docs/
 
       - name: Check code style with black
-        run: black --check src/ tests/ docs/source/
+        run: black --check src/ tests/ docs/
 
       - name: Check static typing with mypy
-        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/source/
+        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
 
       - name: Perform unit tests with coverage report
         run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml

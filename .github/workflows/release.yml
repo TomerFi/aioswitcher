@@ -20,7 +20,7 @@ jobs:
         uses: actions/cache@v1.1.2
         with:
           path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
