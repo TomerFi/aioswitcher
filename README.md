@@ -1,6 +1,6 @@
-# Switcher Boiler Unofficial Bridge and API Tools</br>[![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11] [![dependabot-status]][1]
+# Switcher Boiler Unofficial Bridge and API Tools</br>[![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11]
 
-[![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3] [![code-style-black]][5] [![checked-with-mypy]][6]
+[![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3] [![dependabot-status]][1] [![code-style-black]][5] [![checked-with-mypy]][6]
 
 PyPi module named [aioswitcher][11] for integrating with the [Switcher Water Heater](https://www.switcher.co.il/).</br>
 Please check out the [documentation](https://aioswitcher.readthedocs.io) hosted with
