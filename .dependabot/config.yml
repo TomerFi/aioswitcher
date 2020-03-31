@@ -10,4 +10,15 @@ update_configs:
     default_assignees:
       - "TomerFi"
     default_labels:
-      - "dependabot"
+      - "dependencies"
+
+  - package_manager: "python"
+    directory: "/docs/"
+    update_schedule: "weekly"
+    target_branch: "dev"
+    default_reviewers:
+      - "TomerFi"
+    default_assignees:
+      - "TomerFi"
+    default_labels:
+      - "dependencies"
