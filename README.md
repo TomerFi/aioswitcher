@@ -1,4 +1,4 @@
-# Switcher Boiler Unofficial Bridge and API</br>[![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11]
+# Switcher Boiler Unofficial Bridge and API</br>[![pypi-version]][11] [![gh-release-version]][2] [![pypi-license]][11] [![pypi-downloads]][11]
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3] [![dependabot-status]][1] [![code-style-black]][5] [![checked-with-mypy]][6]
 
@@ -15,6 +15,7 @@ Please check out the [documentation][8] hosted with [readthedocs.io](https://rea
 
 <!-- Real Links -->
 [1]: https://dependabot.com
+[2]: https://github.com/TomerFi/aioswitcher/releases
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [5]: https://black.readthedocs.io
 [6]: http://mypy-lang.org/
@@ -27,7 +28,8 @@ Please check out the [documentation][8] hosted with [readthedocs.io](https://rea
 [code-style-black]: https://img.shields.io/badge/code%20style-black-000000.svg
 [dependabot-status]: https://api.dependabot.com/badges/status?host=github&repo=TomerFi/aioswitcher
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/workflows/Build/badge.svg
+[gh-release-version]: https://img.shields.io/github/v/release/TomerFi/aioswitcher?logo=github
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg
-[pypi-version]: https://badge.fury.io/py/aioswitcher.svg
+[pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
 [read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
