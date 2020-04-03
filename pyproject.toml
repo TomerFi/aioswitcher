@@ -4,14 +4,14 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "aioswitcher"
-version = "2020.4.3"
+version = "1.0.2"
 description = "Switcher Boiler Unofficial Bridge and API."
 license = "MIT"
 authors = ["Tomer Figenblat <tomer.figenblat@gmail.com>"]
 readme = "README.md"
 homepage = "https://pypi.org/project/aioswitcher/"
 repository = "https://github.com/tomerfi/aioswitcher"
-documentation = "https://aioswitcher.readthedocs.io"
+documentation = "https://aioswitcher.tomfi.info"
 keywords = ["home", "automation", "switcher", "water-heater"]
 classifiers = [
     "Framework :: AsyncIO",
