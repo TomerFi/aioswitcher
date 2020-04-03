@@ -21,13 +21,8 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
 ]
-templates_path = ["_templates"]
-source_suffix = ".rst"
-master_doc = "source/index"
-language = None
 exclude_patterns = ["_build"]
 pygments_style = "sphinx"
-# html_static_path = ["_static"]
 html_theme = "sphinx_rtd_theme"
 language = "en"
 show_authors = False
