@@ -47,7 +47,7 @@ jobs:
         run: yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
-        run: doc8 --allow-long-titles --max-line-length 100 -e rst docs
+        run: doc8 --allow-long-titles --max-line-length 100 docs
 
       - name: Security check code with bandit
         run: bandit -rvc .bandit src/ tests/ docs/ -l -ii
