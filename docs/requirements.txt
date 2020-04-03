@@ -1,1 +1,4 @@
+pygments==2.6.1
+sphinx==2.4.4
+sphinx-rtd-theme==0.4.3
 toml==0.10.0
