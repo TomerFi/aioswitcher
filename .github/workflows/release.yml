@@ -14,10 +14,10 @@ jobs:
         python: [3.8]
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.1.0
+        uses: actions/checkout@v2
 
       - name: Cache pip repository
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
@@ -25,7 +25,7 @@ jobs:
             ${{ runner.os }}-pip-
 
       - name: Cache poetry repository
-        uses: actions/cache@v1.1.2
+        uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
@@ -33,7 +33,7 @@ jobs:
             ${{ runner.os }}-poetry-
 
       - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1.2.0
+        uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
 
@@ -43,7 +43,7 @@ jobs:
           poetry build
 
       - name: Create release
-        uses: marvinpinto/action-automatic-releases@v1.0.0
+        uses: marvinpinto/action-automatic-releases@v1
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           prerelease: false
@@ -53,7 +53,7 @@ jobs:
             dist/*.whl
 
       - name: Publish python distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.1.0
+        uses: pypa/gh-action-pypi-publish@v1
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}

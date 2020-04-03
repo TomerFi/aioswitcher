@@ -10,4 +10,4 @@ jobs:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Set WIP PR status to pending
-        uses: wip/action@v1.0.0
+        uses: wip/action@v1
