@@ -7,7 +7,7 @@ end_of_line = lf
 insert_final_newline = true
 
 [requirements.txt]
-end_of_line = crlf
+end_of_line = lf
 trim_trailing_whitespace = false
 
 [**.py]

@@ -113,7 +113,7 @@ commands =
     flake8 --statistics --count --doctests src/ tests/ docs/
     black --check --diff src/ tests/ docs/
     mypy --follow-imports silent --ignore-missing-imports --show-error-codes src/ tests/ docs/
-    doc8 --allow-long-titles --max-line-length 100 -e rst docs/source
+    doc8 --allow-long-titles --max-line-length 100 docs
 
 [testenv:py38]
 commands =
