@@ -107,14 +107,14 @@ jobs:
 
       - name: Perform unit tests with coverage report
         if: matrix.python == 3.8
-        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage.xml
 
       - name: Upload coverage report as artifact
         if: matrix.python == 3.8
         uses: actions/upload-artifact@v1
         with:
           name: coverage-report
-          path: ./coverage_report/coverage.xml
+          path: ./coverage.xml
 
   coverage:
     runs-on: ubuntu-latest
@@ -133,5 +133,5 @@ jobs:
       - name: Push to CodeCov
         uses: codecov/codecov-action@v1
         with:
-          file: ./coverage_report/coverage.xml
+          file: coverage-report/coverage.xml
           fail_ci_if_error: true
