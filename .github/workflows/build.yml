@@ -124,14 +124,14 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2
 
-    - name: Download coverage report from artifacts
-      uses: actions/dpload-artifact@v1
-      with:
-        name: coverage-report
-        path: ./coverage_report/coverage.xml
+      - name: Download coverage report from artifacts
+        uses: actions/dpload-artifact@v1
+        with:
+          name: coverage-report
+          path: ./coverage_report/coverage.xml
 
-    - name: Push to CodeCov
-      uses: codecov/codecov-action@v1
-      with:
-        file: ./coverage_report/coverage.xml
-        fail_ci_if_error: true
+      - name: Push to CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage_report/coverage.xml
+          fail_ci_if_error: true
