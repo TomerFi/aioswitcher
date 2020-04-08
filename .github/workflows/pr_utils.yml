@@ -1,0 +1,39 @@
+---
+name: PullRequestsUtils
+
+on: pull_request
+
+jobs:
+  lint-markdown:
+    runs-on: ubuntu-latest
+    name: Lint project files
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2
+
+      - name: Lint markdown files
+        uses: prologic/action-remark-lint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          level: info
+
+      - name: Validate files with editorconfig
+        uses: greut/eclint-action@v1
+
+  add-reviewers-assignees:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: kentaro-m/auto-assign-action@v1.1.0
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+          configuration-path: .github/auto_assign.yml
+
+  wip-to-pending:
+    runs-on: ubuntu-latest
+    name: Set WIP labeled PRs as pending
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Set WIP PR status to pending
+        uses: wip/action@v1.0.0
