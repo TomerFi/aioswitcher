@@ -23,6 +23,7 @@ jobs:
 
   add-reviewers-assignees:
     runs-on: ubuntu-latest
+    name: Add reviewers and assignees
     steps:
       - uses: kentaro-m/auto-assign-action@v1.1.0
         with:
