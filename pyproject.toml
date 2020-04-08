@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "aioswitcher"
-version = "1.0.2"
+version = "1.1.0"
 description = "Switcher Boiler Unofficial Bridge and API."
 license = "MIT"
 authors = ["Tomer Figenblat <tomer.figenblat@gmail.com>"]
@@ -14,16 +14,19 @@ repository = "https://github.com/tomerfi/aioswitcher"
 documentation = "https://aioswitcher.tomfi.info"
 keywords = ["home", "automation", "switcher", "water-heater"]
 classifiers = [
-    "Framework :: AsyncIO",
-    "Framework :: tox",
-    "Framework :: Pytest",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Topic :: Documentation :: Sphinx",
     "Topic :: Home Automation",
+    "Topic :: Software Development",
     "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed"
 ]
 include = [] # CAHNGELOG, LICENSE, README and pyproject.toml are automatically included
@@ -90,7 +93,7 @@ legacy_tox_ini = """
 envlist =
     update-poetry
     checkers
-    py{38}
+    py{36,37,38}
 isolated_build = true
 minversion = 3.13.1
 requires = poetry>=1.0.5
@@ -98,13 +101,15 @@ skipdist = true
 
 [testenv]
 basepython = python3.8
-skip_install = true
+skip_missing_interpreters = true
 whitelist_externals = poetry
 
 [testenv:update-poetry]
+skip_install = true
 commands = poetry update
 
 [testenv:checkers]
+skip_install = true
 commands =
     poetry install -vv -E "checkers"
     yamllint --config-file .yamllint --format colored --strict .
@@ -114,6 +119,18 @@ commands =
     black --check --diff src/ tests/ docs/
     mypy --follow-imports silent --ignore-missing-imports --show-error-codes src/ tests/ docs/
     doc8 --allow-long-titles --max-line-length 100 docs
+
+[testenv:py36]
+basepython = python3.6
+commands =
+    poetry install -vv -E "tests"
+    pytest -vs --cov --cov-config=.coveragerc
+
+[testenv:py37]
+basepython = python3.7
+commands =
+    poetry install -vv -E "tests"
+    pytest -vs --cov --cov-config=.coveragerc
 
 [testenv:py38]
 commands =
