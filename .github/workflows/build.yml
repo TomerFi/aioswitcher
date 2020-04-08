@@ -101,7 +101,7 @@ jobs:
           poetry config virtualenvs.create false --local
           poetry install -vv -E "tests"
 
-      - name: Perform unit tests with coverage report
+      - name: Perform unit tests
         if: matrix.python != 3.8
         run: pytest -vs
 
