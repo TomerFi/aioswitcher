@@ -1,6 +1,5 @@
 {
   "plugins": [
-    "remark-lint",
     ["remark-lint-final-definition", false],
     ["remark-lint-list-item-indent", false],
     ["remark-lint-list-item-spacing", false],
