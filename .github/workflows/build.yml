@@ -6,12 +6,12 @@ on:
     branch: dev
 
 jobs:
-  build:
+  verify:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python: [3.8]
-    name: Build project with Python ${{ matrix.python }}
+    name: Verify project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
         uses: actions/checkout@v2
@@ -41,7 +41,7 @@ jobs:
         run: |
           pip install --upgrade pip poetry
           poetry config virtualenvs.create false --local
-          poetry install -vv -E "checkers" -E "tests"
+          poetry install -vv -E "checkers"
 
       - name: Lint yaml files
         run: yamllint --config-file .yamllint --format colored --strict .
@@ -64,17 +64,73 @@ jobs:
       - name: Check static typing with mypy
         run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
 
-      - name: Perform unit tests with coverage report
-        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage_report/coverage.xml
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: [3.6, 3.7, 3.8]
+    name: Test project with Python ${{ matrix.python }}
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2
 
-      - name: Push coverage report to CodeCov
-        uses: codecov/codecov-action@v1
+      - name: Cache pip repository
+        uses: actions/cache@v1
         with:
-          file: ./coverage_report/coverage.xml
-          fail_ci_if_error: true
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python }}-pip-
+
+      - name: Cache poetry repository
+        uses: actions/cache@v1
+        with:
+          path: ~/.cache/pypoetry
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.python }}-poetry-
+
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
+          poetry install -vv -E "tests"
+
+      - name: Perform unit tests
+        if: matrix.python != 3.8
+        run: pytest -vs
+
+      - name: Perform unit tests with coverage report
+        if: matrix.python == 3.8
+        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage.xml
 
       - name: Upload coverage report as artifact
+        if: matrix.python == 3.8
         uses: actions/upload-artifact@v1
         with:
           name: coverage-report
-          path: ./coverage_report/coverage.xml
+          path: ./coverage.xml
+
+  coverage:
+    runs-on: ubuntu-latest
+    name: Push coverage report to CodeCov
+    needs: [verify, test]
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2
+
+      - name: Download coverage report from artifacts
+        uses: actions/download-artifact@v1
+        with:
+          name: coverage-report
+
+      - name: Push to CodeCov
+        uses: codecov/codecov-action@v1
+        with:
+          file: coverage-report/coverage.xml
+          fail_ci_if_error: true

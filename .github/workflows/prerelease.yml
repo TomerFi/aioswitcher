@@ -9,6 +9,7 @@ on:
 jobs:
   pre-release:
     runs-on: ubuntu-latest
+    name: Build pre-release and publish to GitHub
     strategy:
       matrix:
         python: [3.8]

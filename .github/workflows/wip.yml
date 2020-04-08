@@ -6,6 +6,7 @@ on: pull_request
 jobs:
   set-pr-status:
     runs-on: ubuntu-latest
+    name: Set WIP PRs as pending
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
