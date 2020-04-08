@@ -19,7 +19,7 @@ jobs:
           level: info
 
       - name: Validate files with editorconfig
-        uses: greut/eclint-action@v1
+        uses: greut/eclint-action@v0.1.7
 
   add-reviewers-assignees:
     runs-on: ubuntu-latest
