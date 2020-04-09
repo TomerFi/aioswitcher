@@ -1,0 +1,43 @@
+---
+name: PullRequestsUtils
+
+on: pull_request
+
+jobs:
+  lint-markdown:
+    runs-on: ubuntu-latest
+    name: Lint project files
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2
+
+      - name: Lint markdown files
+        uses: prologic/action-markdownlint@v0.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          level: error
+
+  check-spelling:
+    runs-on: ubuntu-latest
+    name: Check spelling
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2
+
+      - name: Check for spelling mistakes
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          locale: "US"
+          reporter: github-pr-check
+          level: error
+
+  wip-to-pending:
+    runs-on: ubuntu-latest
+    name: Set WIP labeled PRs as pending
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Set WIP PR status to pending
+        uses: wip/action@v1.0.0
