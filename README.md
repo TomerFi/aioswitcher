@@ -1,4 +1,4 @@
-# Switcher Boiler Unofficial Bridge and API</br>[![gh-release]][2] [![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11]
+# Switcher Boiler Unofficial Bridge and API</br>[![pypi-version]][11] [![pypi-license]][11] [![pypi-downloads]][11]
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3] [![dependabot-status]][1]
 
@@ -24,7 +24,6 @@ Please check out the [documentation][8].
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [dependabot-status]: https://api.dependabot.com/badges/status?host=github&repo=TomerFi/aioswitcher
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/workflows/Build/badge.svg
-[gh-release]: https://img.shields.io/github/v/release/TomerFi/aioswitcher?logo=github
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi
 [pypi-license]: https://img.shields.io/pypi/l/aioswitcher.svg?logo=pypi
 [pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
