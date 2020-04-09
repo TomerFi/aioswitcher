@@ -19,7 +19,7 @@ jobs:
           level: warning
 
       - name: Lint markdown files
-        uses: prologic/action-markdownlint@v1
+        uses: prologic/action-markdownlint@v0.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
