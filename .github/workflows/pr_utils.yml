@@ -25,12 +25,13 @@ jobs:
         uses: errata-ai/vale-action@v1.0.4
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        styles: |
-          https://github.com/errata-ai/Microsoft/releases/latest/download/Microsoft.zip
-          https://github.com/errata-ai/Google/releases/latest/download/Google.zip
-          https://github.com/errata-ai/write-good/releases/latest/download/write-good.zip
-          https://github.com/errata-ai/proselint/releases/latest/download/proselint.zip
-          https://github.com/errata-ai/Joblint/releases/latest/download/Joblint.zip
+        with:
+          styles: |
+            https://github.com/errata-ai/Microsoft/releases/latest/download/Microsoft.zip
+            https://github.com/errata-ai/Google/releases/latest/download/Google.zip
+            https://github.com/errata-ai/write-good/releases/latest/download/write-good.zip
+            https://github.com/errata-ai/proselint/releases/latest/download/proselint.zip
+            https://github.com/errata-ai/Joblint/releases/latest/download/Joblint.zip
 
   wip-to-pending:
     runs-on: ubuntu-latest
