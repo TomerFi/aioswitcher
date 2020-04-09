@@ -21,14 +21,16 @@ jobs:
       - name: Validate files with editorconfig
         uses: greut/eclint-action@v0.1.7
 
-  add-reviewers-assignees:
-    runs-on: ubuntu-latest
-    name: Add reviewers and assignees
-    steps:
-      - uses: kentaro-m/auto-assign-action@v1.1.0
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"
-          configuration-path: .github/auto_assign.yml
+      - name: Vale restructuredText and markdown files
+        uses: errata-ai/vale-action@v1.0.4
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        styles: |
+          https://github.com/errata-ai/Microsoft/releases/latest/download/Microsoft.zip
+          https://github.com/errata-ai/Google/releases/latest/download/Google.zip
+          https://github.com/errata-ai/write-good/releases/latest/download/write-good.zip
+          https://github.com/errata-ai/proselint/releases/latest/download/proselint.zip
+          https://github.com/errata-ai/Joblint/releases/latest/download/Joblint.zip
 
   wip-to-pending:
     runs-on: ubuntu-latest
