@@ -16,10 +16,30 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: github-pr-check
-          level: error
+          level: warning
+
+      - name: Lint markdown files
+        uses: prologic/action-markdownlint@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          level: warning
 
       - name: Validate files with editorconfig
         uses: greut/eclint-action@v0.1.7
+
+      - name: Check for spelling mistakes
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          locale: "US"
+
+      - name: Check language
+        uses: reviewdog/action-languagetool@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-review
+          level: info
 
       - name: Vale restructuredText and markdown files
         uses: errata-ai/vale-action@v1.0.4
