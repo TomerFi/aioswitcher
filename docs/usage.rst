@@ -444,6 +444,9 @@ SwitcherV2StateResponseMSG
 +-----------------+---------------------+-----------------------------------------------------+
 | **time_left**   | ``str``             | Return the time left to auto-off.                   |
 +-----------------+---------------------+-----------------------------------------------------+
+| **time_on**     | ``str``             | Return the time in "on" state. Relevant only if the |
+|                 |                     | current state is "on".                              |
++-----------------+---------------------+-----------------------------------------------------+
 | **auto_off**    | ``str``             | Return the auto-off configuration value.            |
 +-----------------+---------------------+-----------------------------------------------------+
 | **power**       | ``Optional[int]``   | Return the current power consumption in watts.      |
