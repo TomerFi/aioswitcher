@@ -1,5 +1,5 @@
 ---
-name: Pre-Release
+name: PreRelease
 
 on:
   push:

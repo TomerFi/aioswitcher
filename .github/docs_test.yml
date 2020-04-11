@@ -1,0 +1,33 @@
+---
+name: DocsTest
+
+on: pull_request
+
+jobs:
+  lint-markdown:
+    runs-on: ubuntu-latest
+    name: Verify doc files
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2
+
+      - name: Lint markdown files
+        uses: prologic/action-markdownlint@v0.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          level: error
+
+      - name: Check for spelling mistakes
+        uses: reviewdog/action-misspell@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          locale: "US"
+          reporter: github-pr-check
+          level: error
+
+      - name: Check links in markdown files
+        uses: urlstechie/urlchecker-action@0.1.9
+        with:
+          file_types: .md,.py,.rst
+          force_pass: false

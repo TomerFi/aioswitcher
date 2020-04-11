@@ -4,40 +4,16 @@ name: PullRequestsUtils
 on: pull_request
 
 jobs:
-  lint-markdown:
+  triage:
     runs-on: ubuntu-latest
-    name: Lint project files
+    name: Pull request triage
     steps:
-      - name: Source checkout
-        uses: actions/checkout@v2
-
-      - name: Lint markdown files
-        uses: prologic/action-markdownlint@v0.1
+      - name: Label pr based on content
+        uses: actions/labeler@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-check
-          level: error
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
 
-  check-spelling:
-    runs-on: ubuntu-latest
-    name: Check spelling
-    steps:
-      - name: Source checkout
-        uses: actions/checkout@v2
-
-      - name: Check for spelling mistakes
-        uses: reviewdog/action-misspell@v1
+      - name: Auto assign reviewers
+        uses: kentaro-m/auto-assign-action@v1.1.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          locale: "US"
-          reporter: github-pr-check
-          level: error
-
-  wip-to-pending:
-    runs-on: ubuntu-latest
-    name: Set WIP labeled PRs as pending
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-      - name: Set WIP PR status to pending
-        uses: wip/action@v1.0.0
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
