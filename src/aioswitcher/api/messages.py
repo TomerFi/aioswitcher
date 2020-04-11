@@ -142,6 +142,18 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                 self._loop, temp_time_left_seconds
             )
 
+            temp_time_on = hexlify(response)[186:194]
+            temp_time_on_seconds = int(
+                temp_time_on[6:8]
+                + temp_time_on[4:6]
+                + temp_time_on[2:4]
+                + temp_time_on[0:2],
+                16,
+            )
+            self._time_on = await convert_seconds_to_iso_time(
+                self._loop, temp_time_on_seconds
+            )
+
             temp_auto_off = hexlify(response)[194:202]
             temp_auto_off_seconds = int(
                 temp_auto_off[6:8]
@@ -178,6 +190,12 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
     def time_left(self) -> str:
         """str: Return the time left to auto-off."""
         return self._time_to_auto_off
+
+    @property
+    def time_on(self) -> str:
+        """str: Return the time in "on" state.
+        Relevant only if the current state is "on"."""
+        return self._time_on
 
     @property
     def auto_off(self) -> str:
