@@ -194,7 +194,9 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
     @property
     def time_on(self) -> str:
         """str: Return the time in "on" state.
-        Relevant only if the current state is "on"."""
+        
+        Relevant only if the current state is "on".
+        """
         return self._time_on
 
     @property
