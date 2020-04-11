@@ -1,4 +1,4 @@
-# Switcher Boiler Unofficial Bridge and API</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
+# Switcher Water Heater Unofficial Bridge and API</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3] [![dependabot-status]][1]
 
