@@ -40,10 +40,10 @@ The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 [1]: https://dependabot.com
 [2]: https://github.com/TomerFi/aioswitcher/releases
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
-[4]: https://github.com/TomerFi/aioswitche
+[4]: https://github.com/TomerFi/aioswitcher
 [7]: https://github.com/TomerFi/aioswitcher/actions?query=workflow%3ABuild
 [8]: https://aioswitcher.tomfi.info/
-[11]: https://pypi.org/project/aioswitcher/
+[11]: https://pypi.org/project/aioswitcher
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [dependabot-status]: https://api.dependabot.com/badges/status?host=github&repo=TomerFi/aioswitcher
