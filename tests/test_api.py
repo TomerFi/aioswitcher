@@ -90,6 +90,7 @@ async def test_api_get_state_success(
 
         assert response.state == STATE_OFF
         assert response.time_left == "00:00:00"
+        assert response.time_on == "00:00:00"
         assert response.auto_off == "01:30:00"
         assert response.power == 0
         assert response.current == 0.0
