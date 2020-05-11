@@ -4,7 +4,7 @@ build-backend = "poetry.masonry.api"
 
 [tool.poetry]
 name = "aioswitcher"
-version = "1.1.2"
+version = "1.2.0"
 description = "Switcher Water Heater Unofficial Bridge and API."
 license = "MIT"
 authors = ["Tomer Figenblat <tomer.figenblat@gmail.com>"]
