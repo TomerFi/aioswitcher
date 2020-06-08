@@ -435,7 +435,7 @@ description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = true
 python-versions = ">=3.5"
-version = "5.4.2"
+version = "5.4.3"
 
 [package.dependencies]
 atomicwrites = ">=1.0"
@@ -664,7 +664,7 @@ checkers = ["bandit", "black", "doc8", "flake8", "flake8-docstrings", "isort", "
 tests = ["asynctest", "codecov", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov"]
 
 [metadata]
-content-hash = "6ec0b9db4af72244e2139b0f7c3c6e1fab17f66a283c37793a3d33c1f8bed1c8"
+content-hash = "30a1464748e713d3a6b88c40eec70acd22f36a01a3fab029bea5c8b6ffd4ceea"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -890,8 +890,8 @@ pyparsing = [
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
 pytest = [
-    {file = "pytest-5.4.2-py3-none-any.whl", hash = "sha256:95c710d0a72d91c13fae35dce195633c929c3792f54125919847fdcdf7caa0d3"},
-    {file = "pytest-5.4.2.tar.gz", hash = "sha256:eb2b5e935f6a019317e455b6da83dd8650ac9ffd2ee73a7b657a30873d67a698"},
+    {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},
+    {file = "pytest-5.4.3.tar.gz", hash = "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"},
 ]
 pytest-aiohttp = [
     {file = "pytest-aiohttp-0.3.0.tar.gz", hash = "sha256:c929854339637977375838703b62fef63528598bc0a9d451639eba95f4aaa44f"},
