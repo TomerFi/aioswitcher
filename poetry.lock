@@ -168,9 +168,10 @@ description = "Style checker for Sphinx (or other) RST documentation"
 name = "doc8"
 optional = true
 python-versions = "*"
-version = "0.8.0"
+version = "0.8.1"
 
 [package.dependencies]
+Pygments = "*"
 chardet = "*"
 docutils = "*"
 restructuredtext-lint = ">=0.7"
@@ -664,7 +665,7 @@ checkers = ["bandit", "black", "doc8", "flake8", "flake8-docstrings", "isort", "
 tests = ["asynctest", "codecov", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov"]
 
 [metadata]
-content-hash = "30a1464748e713d3a6b88c40eec70acd22f36a01a3fab029bea5c8b6ffd4ceea"
+content-hash = "b6741b898969f4e2f0f17272a91e331191eeb892efb94360358a7f1e80015d8e"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -764,8 +765,8 @@ coverage = [
     {file = "coverage-5.1.tar.gz", hash = "sha256:f90bfc4ad18450c80b024036eaf91e4a246ae287701aaa88eaebebf150868052"},
 ]
 doc8 = [
-    {file = "doc8-0.8.0-py2.py3-none-any.whl", hash = "sha256:d12f08aa77a4a65eb28752f4bc78f41f611f9412c4155e2b03f1f5d4a45efe04"},
-    {file = "doc8-0.8.0.tar.gz", hash = "sha256:2df89f9c1a5abfb98ab55d0175fed633cae0cf45025b8b1e0ee5ea772be28543"},
+    {file = "doc8-0.8.1-py2.py3-none-any.whl", hash = "sha256:4d58a5c8c56cedd2b2c9d6e3153be5d956cf72f6051128f0f2255c66227df721"},
+    {file = "doc8-0.8.1.tar.gz", hash = "sha256:4d1df12598807cf08ffa9a1d5ef42d229ee0de42519da01b768ff27211082c12"},
 ]
 docutils = [
     {file = "docutils-0.16-py2.py3-none-any.whl", hash = "sha256:0c5b78adfbf7762415433f5515cd5c9e762339e23369dbe8000d84a4bf4ab3af"},
