@@ -1,0 +1,26 @@
+---
+version: 2
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"
+    reviewers:
+      - "TomerFi"
+    assignees:
+      - "TomerFi"
+    labels:
+      - "dependabot"
+
+  - package-ecosystem: "pip"
+    directory: "/docs/"
+    schedule:
+      interval: "weekly"
+    target-branch: "dev"
+    reviewers:
+      - "TomerFi"
+    assignees:
+      - "TomerFi"
+    labels:
+      - "dependabot"
