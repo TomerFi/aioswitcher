@@ -12,6 +12,9 @@ updates:
       - "TomerFi"
     labels:
       - "dependabot"
+    commit-message:
+      prefix: "Python"
+      include: "scope"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -24,3 +27,6 @@ updates:
       - "TomerFi"
     labels:
       - "dependabot"
+    commit-message:
+      prefix: "GHAction"
+      include: "scope"
