@@ -132,5 +132,5 @@ jobs:
       - name: Push to CodeCov
         uses: codecov/codecov-action@v1.0.7
         with:
-          file: coverage-report/coverage.xml
+          file: coverage.xml
           fail_ci_if_error: true
