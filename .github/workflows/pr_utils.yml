@@ -14,8 +14,3 @@ jobs:
         if: github.repository_owner == 'TomerFi'
         with:
           repo-token: "${{ secrets.GITHUB_TOKEN }}"
-
-      - name: Auto assign reviewers
-        uses: kentaro-m/auto-assign-action@v1.1.0
-        with:
-          repo-token: "${{ secrets.GITHUB_TOKEN }}"

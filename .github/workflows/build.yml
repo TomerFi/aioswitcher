@@ -16,10 +16,20 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2
 
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Set up poetry
+        run: |
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
+
       - name: Cache pip repository
         uses: actions/cache@v1
         with:
-          path: ~/.cache/pypoetry
+          path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-pip-
@@ -32,37 +42,29 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-poetry-
 
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python }}
-
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
-          poetry install -vv -E "checkers"
+        run: poetry install -vv -E "checkers"
 
       - name: Lint yaml files
-        run: yamllint --config-file .yamllint --format colored --strict .
+        run: poetry run yamllint --config-file .yamllint --format colored --strict .
 
       - name: Lint rst files
-        run: doc8 --allow-long-titles --max-line-length 100 docs
+        run: poetry run doc8 --allow-long-titles --max-line-length 100 docs
 
       - name: Security check code with bandit
-        run: bandit -rvc .bandit src/ tests/ docs/ -l -ii
+        run: poetry run bandit -rvc .bandit src/ tests/ docs/ -l -ii
 
       - name: Validate imports with isort
-        run: isort -vv --check-only --recursive src/ tests/ docs/
+        run: poetry run isort -vv --check-only --recursive src/ tests/ docs/
 
       - name: Lint code with flake8
-        run: flake8 --statistics --count --doctests src/ tests/ docs/
+        run: poetry run flake8 --statistics --count --doctests src/ tests/ docs/
 
       - name: Check code style with black
-        run: black --check src/ tests/ docs/
+        run: poetry run black --check src/ tests/ docs/
 
       - name: Check static typing with mypy
-        run: mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
+        run: poetry run mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
 
   test:
     runs-on: ubuntu-latest
@@ -74,10 +76,20 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2
 
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Set up poetry
+        run: |
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
+
       - name: Cache pip repository
         uses: actions/cache@v1
         with:
-          path: ~/.cache/pypoetry
+          path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-pip-
@@ -90,24 +102,16 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-poetry-
 
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python }}
-
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
-          poetry install -vv -E "tests"
+        run: poetry install -vv -E "tests"
 
       - name: Perform unit tests
         if: matrix.python != 3.8
-        run: pytest -vs
+        run: poetry run pytest -vs
 
       - name: Perform unit tests with coverage report
         if: matrix.python == 3.8
-        run: pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage.xml
+        run: poetry run pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage.xml
 
       - name: Upload coverage report as artifact
         if: matrix.python == 3.8
