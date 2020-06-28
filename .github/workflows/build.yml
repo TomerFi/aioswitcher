@@ -16,10 +16,20 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2
 
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Set up poetry
+        run: |
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
+
       - name: Cache pip repository
         uses: actions/cache@v1
         with:
-          path: ~/.cache/pypoetry
+          path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-pip-
@@ -32,16 +42,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-poetry-
 
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python }}
-
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
-          poetry install -vv -E "checkers"
+        run: poetry install -vv -E "checkers"
 
       - name: Lint yaml files
         run: yamllint --config-file .yamllint --format colored --strict .
@@ -74,10 +76,20 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2
 
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Set up poetry
+        run: |
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
+
       - name: Cache pip repository
         uses: actions/cache@v1
         with:
-          path: ~/.cache/pypoetry
+          path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-pip-
@@ -90,16 +102,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ matrix.python }}-poetry-
 
-      - name: Set up Python ${{ matrix.python }}
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python }}
-
       - name: Install dependencies
-        run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
-          poetry install -vv -E "tests"
+        run: poetry install -vv -E "tests"
 
       - name: Perform unit tests
         if: matrix.python != 3.8
