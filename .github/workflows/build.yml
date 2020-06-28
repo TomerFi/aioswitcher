@@ -22,7 +22,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Cache pip repository
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
@@ -34,7 +34,7 @@ jobs:
           poetry config virtualenvs.create false --local
 
       - name: Cache poetry repository
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
@@ -80,7 +80,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Cache pip repository
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
@@ -92,7 +92,7 @@ jobs:
           poetry config virtualenvs.create false --local
 
       - name: Cache poetry repository
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
