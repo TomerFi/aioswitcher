@@ -22,24 +22,22 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Set up poetry
-        run: pip install --upgrade pip poetry
-
       - name: Cache pip repository
         uses: actions/cache@v1
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Set up poetry
+        run: pip install --upgrade pip poetry
 
       - name: Cache poetry repository
         uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-
+          restore-keys: ${{ runner.os }}-poetry-
 
       - name: Build distribution assets
         run: poetry build
