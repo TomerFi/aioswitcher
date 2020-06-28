@@ -21,26 +21,24 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Set up poetry
-        run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
-
       - name: Cache pip repository
         uses: actions/cache@v1
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.python }}-pip-
+          restore-keys: ${{ runner.os }}-${{ matrix.python }}-pip-
+
+      - name: Set up poetry
+        run: |
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
 
       - name: Cache poetry repository
         uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.python }}-poetry-
+          restore-keys: ${{ runner.os }}-${{ matrix.python }}-poetry-
 
       - name: Install dependencies
         run: poetry install -vv -E "checkers"
@@ -81,26 +79,24 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
 
-      - name: Set up poetry
-        run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
-
       - name: Cache pip repository
         uses: actions/cache@v1
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.python }}-pip-
+          restore-keys: ${{ runner.os }}-${{ matrix.python }}-pip-
+
+      - name: Set up poetry
+        run: |
+          pip install --upgrade pip poetry
+          poetry config virtualenvs.create false --local
 
       - name: Cache poetry repository
         uses: actions/cache@v1
         with:
           path: ~/.cache/pypoetry
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.python }}-poetry-
+          restore-keys: ${{ runner.os }}-${{ matrix.python }}-poetry-
 
       - name: Install dependencies
         run: poetry install -vv -E "tests"
