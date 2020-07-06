@@ -114,7 +114,7 @@ commands =
     poetry install -vv -E "checkers"
     yamllint --config-file .yamllint --format colored --strict .
     bandit -rvc .bandit src/ tests/ docs/ -l -ii
-    isort --check-only --recursive src/ tests/ docs/
+    isort --check-only src/ tests/ docs/
     flake8 --statistics --count --doctests src/ tests/ docs/
     black --check --diff src/ tests/ docs/
     mypy --follow-imports silent --ignore-missing-imports --show-error-codes src/ tests/ docs/

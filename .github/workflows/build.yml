@@ -53,7 +53,7 @@ jobs:
         run: poetry run bandit -rvc .bandit src/ tests/ docs/ -l -ii
 
       - name: Validate imports with isort
-        run: poetry run isort -vv --check-only --recursive src/ tests/ docs/
+        run: poetry run isort --check-only src/ tests/ docs/
 
       - name: Lint code with flake8
         run: poetry run flake8 --statistics --count --doctests src/ tests/ docs/
