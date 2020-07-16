@@ -47,7 +47,7 @@ python = "^3.6"
 asynctest = { version = "0.13.0", optional = true }
 bandit = { version = "1.6.2", optional = true }
 black = { version = "19.10b0", optional = true }
-codecov = { version = "2.1.7", optional = true }
+codecov = { version = "2.1.8", optional = true }
 doc8 = { version = "0.8.1", optional = true }
 flake8 = { version = "3.8.3", optional = true }
 flake8-docstrings = { version = "1.5.0", optional = true }
