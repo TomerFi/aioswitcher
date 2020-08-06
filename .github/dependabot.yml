@@ -13,7 +13,7 @@ updates:
     labels:
       - "dependabot"
     commit-message:
-      prefix: "Python"
+      prefix: "build"
       include: "scope"
 
   - package-ecosystem: "github-actions"
@@ -28,5 +28,5 @@ updates:
     labels:
       - "dependabot"
     commit-message:
-      prefix: "GHAction"
+      prefix: "ci"
       include: "scope"
