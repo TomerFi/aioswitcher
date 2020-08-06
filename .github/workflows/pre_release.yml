@@ -43,7 +43,7 @@ jobs:
         run: poetry build
 
       - name: Create release
-        uses: marvinpinto/action-automatic-releases@v1.0.0
+        uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: latest
