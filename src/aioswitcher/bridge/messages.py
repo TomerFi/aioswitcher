@@ -127,9 +127,10 @@ class SwitcherV2BroadcastMSG:
                         + temp_remaining_time[0:2],
                         16,
                     )
-                    # TODO: black keeps pushing this lengthy line, why?
-                    self._remaining_time_to_off = await convert_seconds_to_iso_time(  # noqa E501
-                        self._loop, temp_remaining_time_seconds
+                    self._remaining_time_to_off = (
+                        await convert_seconds_to_iso_time(
+                            self._loop, temp_remaining_time_seconds
+                        )
                     )
 
             self._validated = True
