@@ -1,0 +1,3 @@
+# https://probot.github.io/apps/delete-merged-branch/
+---
+delete_closed_pr: true
