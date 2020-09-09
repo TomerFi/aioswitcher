@@ -7,7 +7,7 @@ labelPRBasedOnFilePath:
     - src/**/*
   tests:
     - tests/**/*
-    docs:
+  docs:
     - docs/**/*
 
 firstIssueWelcomeComment: >
