@@ -1,0 +1,22 @@
+# https://probot.github.io/apps/lock/
+---
+daysUntilLock: 1
+skipCreatedBefore: false
+exemptLabels: []
+lockLabel: false
+lockComment: >
+  This issue's conversation has been locked. Please file
+  a [new issue](/TomerFi/aioswitcher/issues/new) if you would
+  like to continue the discussion.
+setLockReason: true
+# Limit to only `issues` or `pulls`
+# only: issues
+issues:
+  exemptLabels:
+    - enhancement
+    - bug
+pulls:
+  exemptLabels:
+    - wip
+# Repository to extend settings from
+# _extends: repo

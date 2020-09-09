@@ -1,0 +1,11 @@
+---
+todo:
+  # https://probot.github.io/apps/todo/
+  autoAssign: true
+  keyword: ["@todo", "TODO"]
+  bodyKeyword: ["@body", "BODY"]
+  blobLines: 5
+  caseSensitive: false
+  label: "todo-issue"
+  reopenClosed: true
+  exclude: ""
