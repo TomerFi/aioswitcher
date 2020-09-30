@@ -637,12 +637,13 @@ category = "main"
 description = "A linter for YAML files."
 name = "yamllint"
 optional = true
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-version = "1.24.2"
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
+version = "1.25.0"
 
 [package.dependencies]
 pathspec = ">=0.5.3"
 pyyaml = "*"
+setuptools = "*"
 
 [[package]]
 category = "main"
@@ -678,7 +679,7 @@ checkers = ["bandit", "black", "doc8", "flake8", "flake8-docstrings", "isort", "
 tests = ["asynctest", "codecov", "pytest", "pytest-aiohttp", "pytest-asyncio", "pytest-cov"]
 
 [metadata]
-content-hash = "57b8fc44ee678958c34af74b23d6e1ec8c6bca037fe14d76d415a73c03470c99"
+content-hash = "5175d92f58e546153d91e8c98b497939387267750f21cce084d50c2d0d53a393"
 lock-version = "1.0"
 python-versions = "^3.6"
 
@@ -1023,8 +1024,8 @@ urllib3 = [
     {file = "urllib3-1.25.10.tar.gz", hash = "sha256:91056c15fa70756691db97756772bb1eb9678fa585d9184f24534b100dc60f4a"},
 ]
 yamllint = [
-    {file = "yamllint-1.24.2-py2.py3-none-any.whl", hash = "sha256:ad3b0d30317dca005d7af99ff27248d459cae2d931a2ff06a134b67bcd405b30"},
-    {file = "yamllint-1.24.2.tar.gz", hash = "sha256:40b68de6bacdccec1585dbd54072731b10da7fc2f9cfd96517a71f066208b61f"},
+    {file = "yamllint-1.25.0-py2.py3-none-any.whl", hash = "sha256:c7be4d0d2584a1b561498fa9acb77ad22eb434a109725c7781373ae496d823b3"},
+    {file = "yamllint-1.25.0.tar.gz", hash = "sha256:b1549cbe5b47b6ba67bdeea31720f5c51431a4d0c076c1557952d841f7223519"},
 ]
 yarl = [
     {file = "yarl-1.5.1-cp35-cp35m-macosx_10_14_x86_64.whl", hash = "sha256:db6db0f45d2c63ddb1a9d18d1b9b22f308e52c83638c26b422d520a815c4b3fb"},
