@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.8]
+        python: [3.9]
     name: Verify project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.6, 3.7, 3.8]
+        python: [3.6, 3.7, 3.8, 3.9]
     name: Test project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
