@@ -95,14 +95,14 @@ legacy_tox_ini = """
 envlist =
     update-poetry
     checkers
-    py{36,37,38}
+    py{36,37,38,39}
 isolated_build = true
 minversion = 3.13.1
 requires = poetry>=1.0.5
 skipdist = true
 
 [testenv]
-basepython = python3.8
+basepython = python3.9
 skip_missing_interpreters = true
 whitelist_externals = poetry
 
@@ -135,6 +135,12 @@ commands =
     pytest -vs
 
 [testenv:py38]
+basepython = python3.8
+commands =
+    poetry install -vv -E "tests"
+    pytest -vs
+
+[testenv:py39]
 commands =
     poetry install -vv -E "tests"
     pytest -vs --cov --cov-config=.coveragerc
