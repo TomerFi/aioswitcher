@@ -426,7 +426,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "pytest"
-version = "6.2.0"
+version = "6.2.1"
 description = "pytest: simple powerful testing with Python"
 category = "main"
 optional = true
@@ -670,7 +670,7 @@ tests = ["asynctest", "codecov", "pytest", "pytest-aiohttp", "pytest-asyncio", "
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "699d4eea7031b3469dba67afc1f6667d496b72aaf6c40983c61a48cc7e92007b"
+content-hash = "39585093911f42ff7635062971a4b5277715ccc29e17245287d61c279732e1fe"
 
 [metadata.files]
 aiohttp = [
@@ -947,8 +947,8 @@ pyparsing = [
     {file = "pyparsing-2.4.7.tar.gz", hash = "sha256:c203ec8783bf771a155b207279b9bccb8dea02d8f0c9e5f8ead507bc3246ecc1"},
 ]
 pytest = [
-    {file = "pytest-6.2.0-py3-none-any.whl", hash = "sha256:d69e1a80b34fe4d596c9142f35d9e523d98a2838976f1a68419a8f051b24cec6"},
-    {file = "pytest-6.2.0.tar.gz", hash = "sha256:b12e09409c5bdedc28d308469e156127004a436b41e9b44f9bff6446cbab9152"},
+    {file = "pytest-6.2.1-py3-none-any.whl", hash = "sha256:1969f797a1a0dbd8ccf0fecc80262312729afea9c17f1d70ebf85c5e76c6f7c8"},
+    {file = "pytest-6.2.1.tar.gz", hash = "sha256:66e419b1899bc27346cb2c993e12c5e5e8daba9073c1fbce33b9807abc95c306"},
 ]
 pytest-aiohttp = [
     {file = "pytest-aiohttp-0.3.0.tar.gz", hash = "sha256:c929854339637977375838703b62fef63528598bc0a9d451639eba95f4aaa44f"},
