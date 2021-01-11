@@ -6,11 +6,11 @@ from asyncio import (AbstractEventLoop, StreamReader, StreamWriter,
 from binascii import unhexlify
 from typing import Any, Generator, List, Tuple, Union
 
-from asynctest import CoroutineMock, Mock, patch
 from pytest import fixture
 
 from aioswitcher.consts import ENCODING_CODEC, WEEKDAY_TUP
 from aioswitcher.schedules import SwitcherV2Schedule
+from tests.async_mock import AsyncMock, Mock, patch
 
 from .common import (create_random_time, get_later_time_for_minute_delta,
                      get_weekday_for_day_delta)
@@ -83,7 +83,7 @@ def mock_event_loop() -> Generator[AbstractEventLoop, Any, None]:
 
 
 @fixture(name="tcp_connection")
-def mock_tcp_connection() -> Generator[CoroutineMock, Any, None]:
+def mock_tcp_connection() -> Generator[AsyncMock, Any, None]:
     """Fixture for mocking asyncio.open_connection."""
     with patch("aioswitcher.api.open_connection") as conn:
         reader = Mock(StreamReader)
