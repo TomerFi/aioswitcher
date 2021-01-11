@@ -114,7 +114,7 @@ commands = poetry update
 skip_install = true
 commands =
     poetry install -vv -E "checkers"
-    yamllint --config-file .yamllint --format colored --strict .
+    python -Xutf8 -m yamllint --config-file .yamllint --format colored --strict .
     bandit -rvc .bandit src/ tests/ docs/ -l -ii
     isort --check-only src/ tests/ docs/
     flake8 --statistics --count --doctests src/ tests/ docs/
