@@ -1,0 +1,74 @@
+---
+name: Pull request content
+on:
+  pull_request:
+    branches:
+      - dev
+    types: [opened, edited, synchronize]
+
+jobs:
+  label-by-content:
+    runs-on: ubuntu-latest
+    name: Label by content
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Label scope by content
+        uses: actions/labeler@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: ".github/configs/content_labels.yml"
+          sync-labels: true
+
+      - name: Label if conflicts
+        uses: eps1lon/actions-label-merge-conflict@releases/2.x
+        with:
+          dirtyLabel: "status: has conflicts"
+          removeOnDirtyLabel: "status: needs review"
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get pull request size
+        uses: actions-ecosystem/action-size@v2.2.0
+        id: pr_size
+        with:
+          size_xs_label: "size: xs"
+          size_s_threshold: 10
+          size_s_label: "size: s"
+          size_m_threshold: 30
+          size_m_label: "size: m"
+          size_l_threshold: 100
+          size_l_label: "size: l"
+          size_xl_threshold: 500
+          size_xl_label: "size: xl"
+          size_xxl_threshold: 1000
+          size_xxl_label: "size: xxl"
+
+      - name: Remove stale size labels
+        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: ${{ steps.pr_size.outputs.stale_labels }}
+
+      - name: Add size label
+        uses: actions-ecosystem/action-add-labels@v1.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: ${{ steps.pr_size.outputs.new_label }}
+
+  content-warning:
+    runs-on: ubuntu-latest
+    name: Content warnings
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Warn for potential conflicts
+        uses: outsideris/potential-conflicts-checker-action@0.1.0
+        with:
+          ghToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Warn for large files
+        uses: actionsdesk/lfs-warning@v2.0
+        with:
+          filesizelimit: '5242880'

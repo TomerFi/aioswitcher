@@ -1,0 +1,41 @@
+---
+name: Pull request triage
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types: [opened]
+
+jobs:
+  triage-non-dependabot:
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    name: Triage non dependabot
+    steps:
+      - name: Set reviewers and assign author
+        uses: kentaro-m/auto-assign-action@v1.1.2
+        with:
+          configuration-path: ".github/configs/auto_assign.yml"
+
+      - name: Add review label
+        uses: actions-ecosystem/action-add-labels@v1.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: needs review"
+
+  triage-by-dependabot:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    name: Triage by dependabot
+    steps:
+      - name: Auto approve
+        uses: hmarr/auto-approve-action@v2.0.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add approved label
+        uses: actions-ecosystem/action-add-labels@v1.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: approved"

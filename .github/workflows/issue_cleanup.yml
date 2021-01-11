@@ -1,0 +1,21 @@
+---
+name: Issue cleanup
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  lock-issue:
+    runs-on: ubuntu-latest
+    name: Lock issue
+    steps:
+      - name: Lock closed issues
+        uses: dessant/lock-threads@v2.0.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          issue-lock-inactive-days: 0
+          # yamllint disable-line rule:line-length
+          issue-lock-comment: Locking this issue. [Open a new issue](https://github.com/TomerFi/aioswitcher/issues/new/choose).
+          issue-lock-reason: closed
+          process-only: issues

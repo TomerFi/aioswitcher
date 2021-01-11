@@ -1,0 +1,17 @@
+---
+name: Issue acknowledged
+on:
+  issues:
+    types: [assigned, locked]
+
+jobs:
+  remove-labels:
+    runs-on: ubuntu-latest
+    name: Remove labels
+    steps:
+      - name: Remove triage label
+        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: needs triage"
