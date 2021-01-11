@@ -12,7 +12,7 @@ updates:
     assignees:
       - "TomerFi"
     labels:
-      - "dependabot"
+      - "type: dependencies"
     commit-message:
       prefix: "build"
       include: "scope"
@@ -27,7 +27,7 @@ updates:
     assignees:
       - "TomerFi"
     labels:
-      - "dependabot"
+      - "type: dependencies"
     commit-message:
       prefix: "ci"
       include: "scope"

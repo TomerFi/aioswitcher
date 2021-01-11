@@ -1,0 +1,63 @@
+---
+name: Pull request review
+
+on:
+  pull_request_review:
+    branches:
+      - dev
+    types: [submitted, edited]
+
+jobs:
+  remove-base:
+    runs-on: ubuntu-latest
+    name: Remove base labels
+    steps:
+      - name: Remove triage label
+        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: needs triage"
+
+      - name: Remove review label
+        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: needs review"
+
+  handle-approved:
+    runs-on: ubuntu-latest
+    if: contains(github.event.state, 'approved')
+    name: Handle approved labels
+    steps:
+      - name: Remove changes requested label
+        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: changes requested"
+
+      - name: Add approved label
+        uses: actions-ecosystem/action-add-labels@v1.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: approved"
+
+  handle-change-requested:
+    runs-on: ubuntu-latest
+    if: contains(github.event.state, 'changes_requested')
+    name: Handle change requested labels
+    steps:
+      - name: Remove approved label
+        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: approved"
+
+      - name: Add changes requested label
+        uses: actions-ecosystem/action-add-labels@v1.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: changes requested"

@@ -1,0 +1,21 @@
+---
+name: Repository management
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  sync-labels:
+    runs-on: ubuntu-latest
+    name: Sync repository labels
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2.3.4
+
+      - name: Verify labels
+        uses: crazy-max/ghaction-github-labeler@v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          yaml-file: ".github/configs/synced_labels.yml"

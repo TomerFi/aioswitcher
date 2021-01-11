@@ -1,0 +1,18 @@
+---
+name: Issue triage
+
+on:
+  issues:
+    types: [opened, unassigned]
+
+jobs:
+  labels:
+    runs-on: ubuntu-latest
+    name: Add lables
+    steps:
+      - name: Add triage label if not assigned
+        if: contains(github.event.issue, 'assignee') == false
+        uses: actions-ecosystem/action-add-labels@v1.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: "status: needs triage"

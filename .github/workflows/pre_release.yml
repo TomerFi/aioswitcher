@@ -1,5 +1,5 @@
 ---
-name: PreRelease
+name: Pre-release
 
 on:
   push:
@@ -9,10 +9,10 @@ on:
 jobs:
   pre-release:
     runs-on: ubuntu-latest
-    name: Build pre-release and publish to GitHub
+    name: Build pre-release and publish latest to GitHub
     strategy:
       matrix:
-        python: [3.8]
+        python: [3.9]
     steps:
       - name: Source checkout
         uses: actions/checkout@v2
