@@ -5,13 +5,13 @@ from asyncio import AbstractEventLoop, wait
 from datetime import timedelta
 from typing import List, Tuple
 
-from asynctest import CoroutineMock
 from pytest import mark, raises
 
 from aioswitcher.api import SwitcherV2Api
 from aioswitcher.api.messages import ResponseMessageType
 from aioswitcher.consts import COMMAND_ON, STATE_OFF
 from aioswitcher.errors import DecodingError
+from tests.async_mock import AsyncMock
 
 from .asserters import assert_api_messege_base_type, assert_lists_equal
 from .consts import (DUMMY_DEVICE_ID, DUMMY_DEVICE_PASSWORD, DUMMY_IP_ADDRESS,
@@ -23,7 +23,7 @@ from .consts import (DUMMY_DEVICE_ID, DUMMY_DEVICE_PASSWORD, DUMMY_IP_ADDRESS,
 @mark.asyncio
 async def test_api_login_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_login: bytes,
 ) -> None:
     """Test the SwitcherV2Api successful login."""
@@ -47,7 +47,7 @@ async def test_api_login_success(
 @mark.asyncio
 async def test_api_login_fail(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_failed_login: bytes,
 ) -> None:
     """Test the SwitcherV2Api failed login."""
@@ -70,7 +70,7 @@ async def test_api_login_fail(
 @mark.asyncio
 async def test_api_get_state_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_get_state: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful get_state."""
@@ -102,7 +102,7 @@ async def test_api_get_state_success(
 @mark.asyncio
 async def test_api_get_state_fail(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_fail_get_state: Tuple[bytes, str],
 ) -> None:
     """Test the SwitcherV2Api failed get_state."""
@@ -127,7 +127,7 @@ async def test_api_get_state_fail(
 @mark.asyncio
 async def test_api_control_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_control: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful control."""
@@ -150,7 +150,7 @@ async def test_api_control_success(
 @mark.asyncio
 async def test_api_set_device_name_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_update_name: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful set_device_name."""
@@ -173,7 +173,7 @@ async def test_api_set_device_name_success(
 @mark.asyncio
 async def test_api_set_auto_shutdown_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_set_auto_off: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful set_auto_shutdown."""
@@ -196,7 +196,7 @@ async def test_api_set_auto_shutdown_success(
 @mark.asyncio
 async def test_api_get_schedules_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_get_schedules: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful get_schedules."""
@@ -236,7 +236,7 @@ async def test_api_get_schedules_success(
 @mark.asyncio
 async def test_api_delete_schedule_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_delete_schedule: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful delete_schedule."""
@@ -259,7 +259,7 @@ async def test_api_delete_schedule_success(
 @mark.asyncio
 async def test_api_create_schedule_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_create_schedule: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful create_schedule."""
@@ -282,7 +282,7 @@ async def test_api_create_schedule_success(
 @mark.asyncio
 async def test_api_disable_enable_schedule_success(
     event_loop: AbstractEventLoop,
-    tcp_connection: CoroutineMock,
+    tcp_connection: AsyncMock,
     api_stage_success_en_disable_schedule: List[bytes],
 ) -> None:
     """Test the SwitcherV2Api successful disable_enable_schedule."""
