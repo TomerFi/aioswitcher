@@ -7,8 +7,6 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "dev"
-    reviewers:
-      - "TomerFi"
     assignees:
       - "TomerFi"
     labels:
@@ -22,8 +20,6 @@ updates:
     schedule:
       interval: "daily"
     target-branch: "dev"
-    reviewers:
-      - "TomerFi"
     assignees:
       - "TomerFi"
     labels:
