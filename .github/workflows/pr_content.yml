@@ -29,6 +29,7 @@ jobs:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get pull request size
+        if: github.repository_owner == 'TomerFi'
         uses: actions-ecosystem/action-size@v2.2.0
         id: pr_size
         with:
@@ -45,12 +46,14 @@ jobs:
           size_xxl_label: "size: xxl"
 
       - name: Remove stale size labels
+        if: github.repository_owner == 'TomerFi'
         uses: actions-ecosystem/action-remove-labels@v1.0.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.stale_labels }}
 
       - name: Add size label
+        if: github.repository_owner == 'TomerFi'
         uses: actions-ecosystem/action-add-labels@v1.1.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
