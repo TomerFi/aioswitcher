@@ -13,14 +13,14 @@ jobs:
     name: Handle labels
     steps:
       - name: Remove triage label
-        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        uses: actions-ecosystem/action-remove-labels@v1.1.0
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs triage"
 
       - name: Remove review label
-        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        uses: actions-ecosystem/action-remove-labels@v1.1.0
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
