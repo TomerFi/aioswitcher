@@ -48,7 +48,7 @@ jobs:
 
       - name: Remove stale size labels
         if: github.repository_owner == 'TomerFi'
-        uses: actions-ecosystem/action-remove-labels@v1.0.2
+        uses: actions-ecosystem/action-remove-labels@v1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.stale_labels }}
