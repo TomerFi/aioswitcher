@@ -27,7 +27,7 @@ jobs:
           level: error
 
       - name: Check links in markdown files
-        uses: urlstechie/urlchecker-action@0.2.2
+        uses: urlstechie/urlchecker-action@0.2.3
         with:
           file_types: .md,.py,.rst
           force_pass: false
