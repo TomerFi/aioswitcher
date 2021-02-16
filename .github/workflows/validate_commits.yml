@@ -20,6 +20,6 @@ jobs:
           fetch-depth: 0
 
       - name: Verify with commitlint
-        uses: wagoid/commitlint-github-action@v2.2.2
+        uses: wagoid/commitlint-github-action@v2.2.3
         with:
           configFile: ".commitlintrc.yml"
