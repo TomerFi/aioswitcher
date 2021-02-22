@@ -15,7 +15,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           issue-lock-inactive-days: 0
-          # yamllint disable-line rule:line-length
-          issue-lock-comment: Locking this issue. [Open a new issue](https://github.com/TomerFi/aioswitcher/issues/new/choose).
-          issue-lock-reason: closed
+          issue-lock-comment: >
+            Locking this issue.
+            [Open a new issue](https://github.com/TomerFi/aioswitcher/issues/new/choose).
           process-only: issues
