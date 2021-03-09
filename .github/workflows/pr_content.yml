@@ -15,22 +15,21 @@ jobs:
         uses: actions/checkout@v2.3.4
 
       - name: Label scope by content
-        if: github.repository_owner == 'TomerFi'
+        if: github.repository_owner == 'TomerFi'  # workaround disabling for forks
         uses: actions/labeler@v3
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           configuration-path: ".github/configs/content_labels.yml"
           sync-labels: true
 
-      - name: Label if conflicts
-        uses: eps1lon/actions-label-merge-conflict@releases/2.x
+      - name: Label if conflicts found
+        uses: mschilde/auto-label-merge-conflicts@v2.0
         with:
-          dirtyLabel: "status: has conflicts"
-          removeOnDirtyLabel: "status: needs review"
-          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          CONFLICT_LABEL_NAME: "status: has conflicts"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get pull request size
-        if: github.repository_owner == 'TomerFi'
+        if: github.repository_owner == 'TomerFi'  # workaround disabling for forks
         uses: actions-ecosystem/action-size@v2.2.0
         id: pr_size
         with:
@@ -47,32 +46,20 @@ jobs:
           size_xxl_label: "size: xxl"
 
       - name: Remove stale size labels
-        if: github.repository_owner == 'TomerFi'
+        if: github.repository_owner == 'TomerFi'  # workaround disabling for forks
         uses: actions-ecosystem/action-remove-labels@v1.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.stale_labels }}
 
       - name: Add size label
-        if: github.repository_owner == 'TomerFi'
+        if: github.repository_owner == 'TomerFi'  # workaround disabling for forks
         uses: actions-ecosystem/action-add-labels@v1.1.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.new_label }}
 
-  content-warning:
-    runs-on: ubuntu-latest
-    name: Content warnings
-    steps:
-      - name: Source checkout
-        uses: actions/checkout@v2.3.4
-
-      - name: Warn for potential conflicts
-        uses: outsideris/potential-conflicts-checker-action@0.1.0
-        with:
-          ghToken: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Warn for large files
+      - name: Label if contains large files  # builtin label: "lfs-detected!"
         uses: actionsdesk/lfs-warning@v2.0
         with:
           filesizelimit: '5242880'
