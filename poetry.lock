@@ -629,7 +629,7 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "yamllint"
-version = "1.26.0"
+version = "1.26.1"
 description = "A linter for YAML files."
 category = "main"
 optional = true
@@ -671,7 +671,7 @@ tests = ["asynctest", "codecov", "pytest", "pytest-aiohttp", "pytest-asyncio", "
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.6"
-content-hash = "e2063b795d5fc7cb1456769715f111c43575c779ebe7343404a37907b61b993d"
+content-hash = "0bce1bdd8453eec5a624662ff32f5475bc4f4eedadf4f351356c75819171bd9e"
 
 [metadata.files]
 aiohttp = [
@@ -1119,8 +1119,7 @@ urllib3 = [
     {file = "urllib3-1.26.2.tar.gz", hash = "sha256:19188f96923873c92ccb987120ec4acaa12f0461fa9ce5d3d0772bc965a39e08"},
 ]
 yamllint = [
-    {file = "yamllint-1.26.0-py2.py3-none-any.whl", hash = "sha256:8a5f8e442f49309eaf3e9d7232ce76f2fc8026f5c0c0b164b83f33fed1399637"},
-    {file = "yamllint-1.26.0.tar.gz", hash = "sha256:b0e4c89985c7f5f8451c2eb8c67d804d10ac13a4abe031cbf49bdf3465d01087"},
+    {file = "yamllint-1.26.1.tar.gz", hash = "sha256:87d9462b3ed7e9dfa19caa177f7a77cd9888b3dc4044447d6ae0ab233bcd1324"},
 ]
 yarl = [
     {file = "yarl-1.6.3-cp36-cp36m-macosx_10_14_x86_64.whl", hash = "sha256:0355a701b3998dcd832d0dc47cc5dedf3874f966ac7f870e0f3a6788d802d434"},
