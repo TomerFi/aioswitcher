@@ -14,7 +14,7 @@ jobs:
     name: Verify project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2.2.2
@@ -72,7 +72,7 @@ jobs:
     name: Test project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2.2.2
@@ -122,7 +122,7 @@ jobs:
     needs: [verify, test]
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: Download coverage report from artifacts
         uses: actions/download-artifact@v2
