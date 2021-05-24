@@ -13,14 +13,14 @@ jobs:
     name: Remove base labels
     steps:
       - name: Remove triage label
-        uses: actions-ecosystem/action-remove-labels@v1.1.0
+        uses: actions-ecosystem/action-remove-labels@v1.1.1
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs triage"
 
       - name: Remove review label
-        uses: actions-ecosystem/action-remove-labels@v1.1.0
+        uses: actions-ecosystem/action-remove-labels@v1.1.1
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -32,7 +32,7 @@ jobs:
     name: Handle approved labels
     steps:
       - name: Remove changes requested label
-        uses: actions-ecosystem/action-remove-labels@v1.1.0
+        uses: actions-ecosystem/action-remove-labels@v1.1.1
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -50,7 +50,7 @@ jobs:
     name: Handle change requested labels
     steps:
       - name: Remove approved label
-        uses: actions-ecosystem/action-remove-labels@v1.1.0
+        uses: actions-ecosystem/action-remove-labels@v1.1.1
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
