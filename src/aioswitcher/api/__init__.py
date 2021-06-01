@@ -30,9 +30,7 @@ class SwitcherV2Api:
     Args:
       loop: the event loop for the factory to run in.
       ip_addr: the ip address assigned to the device
-      phone_id: the phone id of the desired device.
       device_id: the id of the desired device.
-      device_password: the password of the desired device.
 
     Todo:
       * ``control_device`` takes a timer value that must be converted to hex
@@ -44,21 +42,12 @@ class SwitcherV2Api:
     """
 
     def __init__(
-        self,
-        loop: AbstractEventLoop,
-        ip_addr: str,
-        phone_id: str,
-        device_id: str,
-        device_password: str,
+        self, loop: AbstractEventLoop, ip_addr: str, device_id: str
     ) -> None:
         """Initialize the Switcher V2 API."""
-        # phone_id and device_password are pinned to zero based on:
-        # https://github.com/TomerFi/aioswitcher/issues/271
         self._loop = loop
         self._ip_addr = ip_addr
         self._device_id = device_id
-        self._phone_id = "0000"
-        self._device_password = "00000000"
         self._reader = None  # type: Optional[StreamReader]
         self._writer = None  # type: Optional[StreamWriter]
         self._connected_evt = Event()
@@ -132,9 +121,7 @@ class SwitcherV2Api:
         """
         timestamp = await get_timestamp(self._loop)
 
-        packet = packets.LOGIN_PACKET.format(
-            REMOTE_SESSION_ID, timestamp, self._phone_id, self._device_password
-        )
+        packet = packets.LOGIN_PACKET.format(REMOTE_SESSION_ID, timestamp)
 
         signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
@@ -265,8 +252,6 @@ class SwitcherV2Api:
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                self._phone_id,
-                self._device_password,
                 command,
                 minutes_timer,
             )
@@ -320,8 +305,6 @@ class SwitcherV2Api:
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                self._phone_id,
-                self._device_password,
                 auto_off,
             )
 
@@ -371,8 +354,6 @@ class SwitcherV2Api:
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                self._phone_id,
-                self._device_password,
                 device_name,
             )
 
@@ -417,8 +398,6 @@ class SwitcherV2Api:
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                self._phone_id,
-                self._device_password,
             )
 
             signed_packet = await crc_sign_full_packet_com_key(
@@ -472,8 +451,6 @@ class SwitcherV2Api:
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                self._phone_id,
-                self._device_password,
                 schedule_data,
             )
 
@@ -523,8 +500,6 @@ class SwitcherV2Api:
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                self._phone_id,
-                self._device_password,
                 schedule_id,
             )
 
@@ -578,8 +553,6 @@ class SwitcherV2Api:
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                self._phone_id,
-                self._device_password,
                 schedule_data,
             )
 

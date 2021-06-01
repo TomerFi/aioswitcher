@@ -22,9 +22,7 @@ class SwitcherV2Bridge:
 
     Args:
       loop: the event loop for the factory to run in.
-      phone_id: the phone id of the desired device.
       device_id: the id of the desired device.
-      device_password: the password of the desired device.
 
     Todo:
       * replace ``queue`` attribute with ``get_queue`` method.
@@ -34,17 +32,11 @@ class SwitcherV2Bridge:
     def __init__(
         self,
         loop: AbstractEventLoop,
-        phone_id: str,
         device_id: str,
-        device_password: str,
     ) -> None:
         """Initialize the switcherv2 bridge."""
-        # phone_id and device_password are pinned to zero based on:
-        # https://github.com/TomerFi/aioswitcher/issues/271
         self._loop = loop
         self._device_id = device_id
-        self._phone_id = "0000"
-        self._device_password = "00000000"
 
         self._device = None  # type: Optional[SwitcherV2Device]
         self._running_evt = Event()
@@ -86,9 +78,7 @@ class SwitcherV2Bridge:
                 SwitcherV2UdpProtocolFactory,
                 *[
                     self._loop,
-                    self._phone_id,
                     self._device_id,
-                    self._device_password,
                     self.queue,
                     self._running_evt,
                 ],

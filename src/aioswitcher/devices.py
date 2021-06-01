@@ -21,8 +21,6 @@ class SwitcherV2Device:
       auto_off_set: configured value for auto shutdown.
       power_consumption: the current power consumpstion in watts.
       electric_current: the current power consumpstion in amps.
-      phone_id: the phone id retrieved from the device.
-      device_password: the password retrieved from the device.
       last_state_change: datetime of the last state change.
 
     """
@@ -38,15 +36,11 @@ class SwitcherV2Device:
         auto_off_set: str,
         power_consumption: int,
         electric_current: float,
-        phone_id: str,
-        device_password: str,
         last_state_change: datetime,
     ) -> None:
         """Initialize the Switcher V2 Device."""
         self._device_id = device_id
         self._mac_addr = mac_address
-        self._phone_id = phone_id
-        self._device_password = device_password
         self.update_device_data(
             ip_address,
             name,
@@ -136,16 +130,6 @@ class SwitcherV2Device:
     def electric_current(self) -> float:
         """float: returns the power consumption in amps."""
         return self._electric_current
-
-    @property
-    def phone_id(self) -> str:
-        """str: Returns the phone id."""
-        return self._phone_id
-
-    @property
-    def device_password(self) -> str:
-        """str: Returns the device password."""
-        return self._device_password
 
     @property
     def last_data_update(self) -> datetime:
