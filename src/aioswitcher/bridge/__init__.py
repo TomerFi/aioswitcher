@@ -39,10 +39,12 @@ class SwitcherV2Bridge:
         device_password: str,
     ) -> None:
         """Initialize the switcherv2 bridge."""
+        # phone_id and device_password are pinned to zero based on:
+        # https://github.com/TomerFi/aioswitcher/issues/271
         self._loop = loop
-        self._phone_id = phone_id
         self._device_id = device_id
-        self._device_password = device_password
+        self._phone_id = "0"
+        self._device_password = "0"
 
         self._device = None  # type: Optional[SwitcherV2Device]
         self._running_evt = Event()
