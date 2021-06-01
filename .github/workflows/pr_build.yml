@@ -107,7 +107,18 @@ jobs:
 
       - name: Perform unit tests with coverage report
         if: matrix.python == 3.8
-        run: poetry run pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage.xml
+        run: |
+          poetry run pytest -vs --cov \
+          --cov-config=.coveragerc \
+          --cov-report=xml:coverage.xml \
+          --junit-xml junit.xml
+
+      - name: Publish unit test report to GitHub
+        uses: EnricoMi/publish-unit-test-result-action@v1.17
+        if: matrix.python == 3.8 && always()
+        with:
+          test_changes_limit: 0
+          files: junit.xml
 
       - name: Upload coverage report as artifact
         if: matrix.python == 3.8
