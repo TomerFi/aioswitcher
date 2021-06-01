@@ -1,8 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-labels: 'Feature'
-assignees: tomerfi
+labels: "type: enhancement"
 
 ---
 # Feature Request
