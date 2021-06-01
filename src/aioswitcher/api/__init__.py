@@ -57,8 +57,8 @@ class SwitcherV2Api:
         self._loop = loop
         self._ip_addr = ip_addr
         self._device_id = device_id
-        self._phone_id = "0"
-        self._device_password = "0"
+        self._phone_id = "0000"
+        self._device_password = "00000000"
         self._reader = None  # type: Optional[StreamReader]
         self._writer = None  # type: Optional[StreamWriter]
         self._connected_evt = Event()

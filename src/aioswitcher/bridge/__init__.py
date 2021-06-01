@@ -43,8 +43,8 @@ class SwitcherV2Bridge:
         # https://github.com/TomerFi/aioswitcher/issues/271
         self._loop = loop
         self._device_id = device_id
-        self._phone_id = "0"
-        self._device_password = "0"
+        self._phone_id = "0000"
+        self._device_password = "00000000"
 
         self._device = None  # type: Optional[SwitcherV2Device]
         self._running_evt = Event()
