@@ -23,9 +23,7 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
 
     Args:
       loop: the event loop for the factory to run in.
-      phone_id: the phone id of the desired device.
       device_id: the id of the desired device.
-      device_password: the password of the desired device.
       queue: a ``asyncio.Queue`` for the factory to save messages in.
       run_factory_evt ``asyncio.Event`` for signaling the factory to run.
 
@@ -38,17 +36,13 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
     def __init__(
         self,
         loop: AbstractEventLoop,
-        phone_id: str,
         device_id: str,
-        device_password: str,
         queue: Queue,
         run_factory_evt: Event,
     ) -> None:
         """Initialize the protocol."""
         self._loop = loop
-        self._phone_id = phone_id
         self._device_id = device_id
-        self._device_password = device_password
         self._queue = queue
         self._run_factory = run_factory_evt
         self._factory_future = self._loop.create_future()
@@ -130,8 +124,6 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
                         msg.auto_off_set,
                         msg.power,
                         msg.current,
-                        self._phone_id.lower(),
-                        self._device_password.lower(),
                         datetime.now(),
                     )
                 try:

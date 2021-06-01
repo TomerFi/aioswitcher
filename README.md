@@ -16,9 +16,7 @@ pip install aioswitcher
 Please check out the [documentation][8] for the full usage section.
 
 ```python
-async with SwitcherV2Api(
-        your_loop, ip_address, phone_id,
-        device_id, device_password) as swapi:
+async with SwitcherV2Api(your_loop, ip_address, device_id) as swapi:
     # get the device state
     state_response = await swapi.get_state()
 

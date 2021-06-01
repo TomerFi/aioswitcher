@@ -144,7 +144,7 @@ aioswitcher.devices
 .. automodule:: aioswitcher.devices
 
     .. autoclass:: aioswitcher.devices.SwitcherV2Device
-        :members: device_id, ip_addr, mac_addr, name, state, remaining_time, auto_off_set, power_consumption, electric_current, phone_id, device_password, last_data_update, last_state_change
+        :members: device_id, ip_addr, mac_addr, name, state, remaining_time, auto_off_set, power_consumption, electric_current, last_data_update, last_state_change
 
         .. automethod:: update_device_data(ip_address, name, state, remaining_time, auto_off_set, power_consumption, electric_current, last_state_change)
 

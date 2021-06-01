@@ -14,8 +14,7 @@ from aioswitcher.errors import DecodingError
 from tests.async_mock import AsyncMock
 
 from .asserters import assert_api_messege_base_type, assert_lists_equal
-from .consts import (DUMMY_DEVICE_ID, DUMMY_DEVICE_PASSWORD, DUMMY_IP_ADDRESS,
-                     DUMMY_PHONE_ID)
+from .consts import DUMMY_DEVICE_ID, DUMMY_IP_ADDRESS
 
 # fmt: on
 
@@ -30,9 +29,7 @@ async def test_api_login_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.return_value = api_stage_success_login
@@ -54,9 +51,7 @@ async def test_api_login_fail(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.return_value = api_stage_failed_login
@@ -77,9 +72,7 @@ async def test_api_get_state_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_get_state
@@ -109,9 +102,7 @@ async def test_api_get_state_fail(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_fail_get_state
@@ -134,9 +125,7 @@ async def test_api_control_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_control
@@ -157,9 +146,7 @@ async def test_api_set_device_name_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_update_name
@@ -180,9 +167,7 @@ async def test_api_set_auto_shutdown_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_set_auto_off
@@ -203,9 +188,7 @@ async def test_api_get_schedules_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_get_schedules
@@ -243,9 +226,7 @@ async def test_api_delete_schedule_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_delete_schedule
@@ -266,9 +247,7 @@ async def test_api_create_schedule_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_create_schedule
@@ -289,9 +268,7 @@ async def test_api_disable_enable_schedule_success(
     async with SwitcherV2Api(
         event_loop,
         DUMMY_IP_ADDRESS,
-        DUMMY_PHONE_ID,
         DUMMY_DEVICE_ID,
-        DUMMY_DEVICE_PASSWORD,
     ) as swapi:
         reader = tcp_connection
         reader.read.side_effect = api_stage_success_en_disable_schedule

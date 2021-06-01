@@ -49,18 +49,14 @@ Example of UDP Bridge usage
 
    # instructions on getting this data is in,
    # https://github.com/NightRang3r/Switcher-V2-Python
-   phone_id = "your_devices's_phone_id"
    device_id = "your_devices's_device_id"
-   device_password = "your_devices's_device_password"
 
    # create a new event loop
    your_loop = asyncio.get_event_loop()
 
    """Use as instance."""
    async def run_as_instance() -> None:
-       v2bridge = SwitcherV2Bridge(
-           your_loop, phone_id, device_id, device_password
-       )
+       v2bridge = SwitcherV2Bridge(your_loop, device_id)
        # start the bridge
        await v2bridge.start()
 
@@ -100,12 +96,7 @@ Example of UDP Bridge usage
 
    """Use as context manager."""
    async def run_as_context_manager() -> None:
-       async with SwitcherV2Bridge(
-           your_loop,
-           phone_id,
-           device_id,
-           device_password,
-       ) as v2bridge:
+       async with SwitcherV2Bridge(your_loop, device_id) as v2bridge:
            # get the Queue
            queue = v2bridge.queue  # type: asyncio.Queue
 
@@ -188,15 +179,11 @@ Example of TCP Socket API usage
 
    # instructions on getting this data is in
    # https://github.com/NightRang3r/Switcher-V2-Python
-   phone_id = "your_devices's_phone_id"
    device_id = "your_devices's_device_id"
-   device_password = "your_devices's_device_password"
 
    """Use as context manager."""
    async def run_as_context_manager() -> None:
-       async with SwitcherV2Api(
-               your_loop, ip_address, phone_id,
-               device_id, device_password) as swapi:
+       async with SwitcherV2Api(your_loop, ip_address, device_id) as swapi:
            # get the device state
            # response: messages.SwitcherV2StateResponseMSG
            state_response = await swapi.get_state()
@@ -320,9 +307,6 @@ SwitcherV2Device
 |                       |              | power          |                     |                  |
 |                       |              | consumption in |                     |                  |
 |                       |              | amps.          |                     |                  |
-+-----------------------+--------------+----------------+---------------------+------------------+
-| **phone_id**          | ``str``      | Return the the | 1234                |                  |
-|                       |              | phone id.      |                     |                  |
 +-----------------------+--------------+----------------+---------------------+------------------+
 | **last_data_update**  | ``datetime`` | Return the     | %Y-%m-%dTH:%M:%S.%F |                  |
 |                       |              | timestamp of   |                     |                  |
