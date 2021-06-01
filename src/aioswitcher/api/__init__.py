@@ -52,11 +52,13 @@ class SwitcherV2Api:
         device_password: str,
     ) -> None:
         """Initialize the Switcher V2 API."""
+        # phone_id and device_password are pinned to zero based on:
+        # https://github.com/TomerFi/aioswitcher/issues/271
         self._loop = loop
         self._ip_addr = ip_addr
-        self._phone_id = phone_id
         self._device_id = device_id
-        self._device_password = device_password
+        self._phone_id = "0"
+        self._device_password = "0"
         self._reader = None  # type: Optional[StreamReader]
         self._writer = None  # type: Optional[StreamWriter]
         self._connected_evt = Event()
