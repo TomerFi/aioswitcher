@@ -94,7 +94,7 @@ line-length = 79
 legacy_tox_ini = """
 [tox]
 envlist =
-    update-poetry
+;    update-poetry
     checkers
     py{36,37,38,39}
 isolated_build = true
@@ -119,7 +119,7 @@ commands =
     bandit -rvc .bandit src/ tests/ docs/ -l -ii
     isort --check-only src/ tests/ docs/
     flake8 --statistics --count --doctests src/ tests/ docs/
-    black --check --diff src/ tests/ docs/
+    black --diff src/ tests/ docs/
     mypy --follow-imports silent --ignore-missing-imports --show-error-codes src/ tests/ docs/
     doc8 --allow-long-titles --max-line-length 100 docs
 
