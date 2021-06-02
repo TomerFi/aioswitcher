@@ -41,13 +41,13 @@ The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 [2]: https://github.com/TomerFi/aioswitcher/releases
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [4]: https://github.com/TomerFi/aioswitcher
-[7]: https://github.com/TomerFi/aioswitcher/actions?query=workflow%3ABuild
+[7]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml
 [8]: https://aioswitcher.tomfi.info/
 [11]: https://pypi.org/project/aioswitcher
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [conventional-commits]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
-[gh-build-status]: https://github.com/TomerFi/aioswitcher/workflows/Build/badge.svg
+[gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml/badge.svg
 [license-badge]: https://img.shields.io/github/license/tomerfi/aioswitcher
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi&color=1082C2
 [pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
