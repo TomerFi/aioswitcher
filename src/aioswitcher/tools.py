@@ -4,7 +4,6 @@
 
 """
 
-# fmt: off
 from asyncio import AbstractEventLoop
 from binascii import crc_hqx, hexlify, unhexlify
 from datetime import time as datetime_time
@@ -14,11 +13,14 @@ from time import localtime, mktime, strftime, strptime
 from time import time as time_time
 from typing import List
 
-from .consts import (ENCODING_CODEC, HANDLED_EXCEPTIONS, HEX_TO_DAY_DICT,
-                     REMOTE_KEY, STRUCT_PACKING_FORMAT)
+from .consts import (
+    ENCODING_CODEC,
+    HANDLED_EXCEPTIONS,
+    HEX_TO_DAY_DICT,
+    REMOTE_KEY,
+    STRUCT_PACKING_FORMAT,
+)
 from .errors import CalculationError, DecodingError, EncodingError
-
-# fmt: on
 
 
 def _convert_seconds_to_iso_time(all_seconds: int) -> str:
@@ -44,16 +46,12 @@ def _convert_seconds_to_iso_time(all_seconds: int) -> str:
         minutes, seconds = divmod(int(all_seconds), 60)
         hours, minutes = divmod(minutes, 60)
 
-        return datetime_time(
-            hour=hours, minute=minutes, second=seconds
-        ).isoformat()
+        return datetime_time(hour=hours, minute=minutes, second=seconds).isoformat()
     except HANDLED_EXCEPTIONS as ex:
         raise CalculationError("failed to convert seconds to iso time") from ex
 
 
-async def convert_seconds_to_iso_time(
-    loop: AbstractEventLoop, all_seconds: int
-) -> str:
+async def convert_seconds_to_iso_time(loop: AbstractEventLoop, all_seconds: int) -> str:
     """Asynchronous wrapper for _convert_seconds_to_iso_time.
 
     Use as async wrapper for calling _convert_seconds_to_iso_time,
@@ -68,9 +66,7 @@ async def convert_seconds_to_iso_time(
       e.g. "02:24:37".
 
     """
-    return await loop.run_in_executor(
-        None, _convert_seconds_to_iso_time, all_seconds
-    )
+    return await loop.run_in_executor(None, _convert_seconds_to_iso_time, all_seconds)
 
 
 def _crc_sign_full_packet_com_key(data: str) -> str:
@@ -96,9 +92,7 @@ def _crc_sign_full_packet_com_key(data: str) -> str:
             ENCODING_CODEC
         )
         data = data + crc[6:8] + crc[4:6]
-        crc = (
-            crc[6:8] + crc[4:6] + (hexlify(REMOTE_KEY)).decode(ENCODING_CODEC)
-        )
+        crc = crc[6:8] + crc[4:6] + (hexlify(REMOTE_KEY)).decode(ENCODING_CODEC)
         crc = hexlify(pack(">I", crc_hqx(unhexlify(crc), 0x1021))).decode(
             ENCODING_CODEC
         )
@@ -109,9 +103,7 @@ def _crc_sign_full_packet_com_key(data: str) -> str:
         raise EncodingError("failed to sign crc") from ex
 
 
-async def crc_sign_full_packet_com_key(
-    loop: AbstractEventLoop, data: str
-) -> str:
+async def crc_sign_full_packet_com_key(loop: AbstractEventLoop, data: str) -> str:
     """Asynchronous wrapper for _crc_sign_full_packet_com_key.
 
     Use as async wrapper for calling _crc_sign_full_packet_com_key,
@@ -124,9 +116,7 @@ async def crc_sign_full_packet_com_key(
       The calculated and signed packet data.
 
     """
-    return await loop.run_in_executor(
-        None, _crc_sign_full_packet_com_key, data
-    )
+    return await loop.run_in_executor(None, _crc_sign_full_packet_com_key, data)
 
 
 def _convert_minutes_to_timer(minutes: str) -> str:
@@ -157,9 +147,7 @@ def _convert_minutes_to_timer(minutes: str) -> str:
         ) from ex
 
 
-async def convert_minutes_to_timer(
-    loop: AbstractEventLoop, minutes: str
-) -> str:
+async def convert_minutes_to_timer(loop: AbstractEventLoop, minutes: str) -> str:
     """Asynchronous wrapper for _convert_minutes_to_timer.
 
     Use as async wrapper for calling _convert_minutes_to_timer,
@@ -204,9 +192,7 @@ def _convert_timedelta_to_auto_off(full_time: timedelta) -> str:
         raise ValueError("can only handle 1 to 24 hours on auto-off set")
     except HANDLED_EXCEPTIONS as ex:
         raise EncodingError(
-            "failed to create auto-off from {} timedelta".format(
-                str(full_time)
-            )
+            "failed to create auto-off from {} timedelta".format(str(full_time))
         ) from ex
 
 
@@ -225,9 +211,7 @@ async def convert_timedelta_to_auto_off(
       Hexadecimal represntation of the full_time argument.
 
     """
-    return await loop.run_in_executor(
-        None, _convert_timedelta_to_auto_off, full_time
-    )
+    return await loop.run_in_executor(None, _convert_timedelta_to_auto_off, full_time)
 
 
 def _convert_string_to_device_name(name: str) -> str:
@@ -261,9 +245,7 @@ def _convert_string_to_device_name(name: str) -> str:
         ) from ex
 
 
-async def convert_string_to_device_name(
-    loop: AbstractEventLoop, name: str
-) -> str:
+async def convert_string_to_device_name(loop: AbstractEventLoop, name: str) -> str:
     """Asynchronous wrapper for _convert_string_to_device_name.
 
     Use as async wrapper for calling _convert_string_to_device_name,
@@ -276,9 +258,7 @@ async def convert_string_to_device_name(
       Hexadecimal represntation of the name argument.
 
     """
-    return await loop.run_in_executor(
-        None, _convert_string_to_device_name, name
-    )
+    return await loop.run_in_executor(None, _convert_string_to_device_name, name)
 
 
 def _get_days_list_from_bytes(data: int) -> List[str]:
@@ -308,14 +288,10 @@ def _get_days_list_from_bytes(data: int) -> List[str]:
 
         return days_list
     except HANDLED_EXCEPTIONS as ex:
-        raise DecodingError(
-            "failed to extract week days from schedule"
-        ) from ex
+        raise DecodingError("failed to extract week days from schedule") from ex
 
 
-async def get_days_list_from_bytes(
-    loop: AbstractEventLoop, data: int
-) -> List[str]:
+async def get_days_list_from_bytes(loop: AbstractEventLoop, data: int) -> List[str]:
     """Asynchronous wrapper for _get_days_list_from_bytes.
 
     Use as async wrapper for calling _get_days_list_from_bytes,
@@ -393,9 +369,9 @@ def _get_timestamp() -> str:
 
     """
     try:
-        return hexlify(
-            pack(STRUCT_PACKING_FORMAT, int(round(time_time())))
-        ).decode(ENCODING_CODEC)
+        return hexlify(pack(STRUCT_PACKING_FORMAT, int(round(time_time())))).decode(
+            ENCODING_CODEC
+        )
     except HANDLED_EXCEPTIONS as ex:
         raise DecodingError("failed to generate timestamp") from ex
 
@@ -457,9 +433,7 @@ async def create_weekdays_value(
       Hexadecimal representation of the days list.
 
     """
-    return await loop.run_in_executor(
-        None, _create_weekdays_value, requested_days
-    )
+    return await loop.run_in_executor(None, _create_weekdays_value, requested_days)
 
 
 def _timedelta_str_to_schedule_time(time_value: str) -> str:
@@ -496,9 +470,7 @@ def _timedelta_str_to_schedule_time(time_value: str) -> str:
             ENCODING_CODEC
         )
     except HANDLED_EXCEPTIONS as ex:
-        raise EncodingError(
-            "failed to convert time value to schedule time"
-        ) from ex
+        raise EncodingError("failed to convert time value to schedule time") from ex
 
 
 async def timedelta_str_to_schedule_time(
@@ -516,6 +488,4 @@ async def timedelta_str_to_schedule_time(
       Hexadecimal representation of time_value argument.
 
     """
-    return await loop.run_in_executor(
-        None, _timedelta_str_to_schedule_time, time_value
-    )
+    return await loop.run_in_executor(None, _timedelta_str_to_schedule_time, time_value)

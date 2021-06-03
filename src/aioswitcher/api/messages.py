@@ -1,19 +1,22 @@
 """Switcher Packet Response Messages."""
 
-# fmt: off
 from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import hexlify
 from enum import Enum
 from typing import List
 
-from ..consts import (ENCODING_CODEC, HANDLED_EXCEPTIONS, STATE_OFF, STATE_ON,
-                      STATE_RESPONSE_OFF, STATE_RESPONSE_ON, STATE_UNKNOWN)
+from ..consts import (
+    ENCODING_CODEC,
+    HANDLED_EXCEPTIONS,
+    STATE_OFF,
+    STATE_ON,
+    STATE_RESPONSE_OFF,
+    STATE_RESPONSE_ON,
+    STATE_UNKNOWN,
+)
 from ..errors import DecodingError
 from ..schedules import SwitcherV2Schedule
 from ..tools import convert_seconds_to_iso_time
-
-# fmt: on
-
 
 ResponseMessageType = Enum(
     "ResponseMessageType",
@@ -84,9 +87,7 @@ class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
         try:
             self._session_id = hexlify(response)[16:24].decode(ENCODING_CODEC)
         except HANDLED_EXCEPTIONS as exc:
-            raise DecodingError(
-                "failed to parse login response message"
-            ) from exc
+            raise DecodingError("failed to parse login response message") from exc
 
     @property
     def session_id(self) -> str:
@@ -123,12 +124,8 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
         """
         try:
             temp_power = hexlify(response)[154:162]
-            self._power_consumption = int(
-                temp_power[2:4] + temp_power[0:2], 16
-            )
-            self._electric_current = round(
-                (self._power_consumption / float(220)), 1
-            )
+            self._power_consumption = int(temp_power[2:4] + temp_power[0:2], 16)
+            self._electric_current = round((self._power_consumption / float(220)), 1)
 
             temp_time_left = hexlify(response)[178:186]
             temp_time_left_seconds = int(
@@ -316,9 +313,7 @@ class SwitcherV2DisableEnableScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the switcher v2 dis/en schedule response message."""
-        super().__init__(
-            loop, response, ResponseMessageType.DISABLE_ENABLE_SCHEDULE
-        )
+        super().__init__(loop, response, ResponseMessageType.DISABLE_ENABLE_SCHEDULE)
 
 
 class SwitcherV2DeleteScheduleResponseMSG(SwitcherV2BaseResponseMSG):

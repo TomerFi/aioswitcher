@@ -1,17 +1,19 @@
 """Switcher Bridge Response Messages."""
 
-# fmt: off
 from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import hexlify
 from socket import inet_ntoa
 from struct import pack
 from typing import Optional, Union
 
-from ..consts import (ENCODING_CODEC, STATE_OFF, STATE_ON, STATE_RESPONSE_ON,
-                      WAITING_TEXT)
+from ..consts import (
+    ENCODING_CODEC,
+    STATE_OFF,
+    STATE_ON,
+    STATE_RESPONSE_ON,
+    WAITING_TEXT,
+)
 from ..tools import convert_seconds_to_iso_time
-
-# fmt: on
 
 
 class SwitcherV2BroadcastMSG:
@@ -26,9 +28,7 @@ class SwitcherV2BroadcastMSG:
 
     """
 
-    def __init__(
-        self, loop: AbstractEventLoop, message: Union[bytes, str]
-    ) -> None:
+    def __init__(self, loop: AbstractEventLoop, message: Union[bytes, str]) -> None:
         """Initialize the broadcast message."""
         self._loop = loop
         self._verified = self._validated = False
@@ -42,9 +42,7 @@ class SwitcherV2BroadcastMSG:
         self._remaining_time_to_off = WAITING_TEXT
         self._init_future = loop.create_future()
         fixed_msg = (
-            message
-            if isinstance(message, bytes)
-            else message.encode(ENCODING_CODEC)
+            message if isinstance(message, bytes) else message.encode(ENCODING_CODEC)
         )
         ensure_future(self.initialize(fixed_msg), loop=loop)
 
@@ -83,13 +81,9 @@ class SwitcherV2BroadcastMSG:
                     + mac[10:12]
                 )
 
-                self._name = (
-                    message[42:74].decode(ENCODING_CODEC).rstrip("\x00")
-                )
+                self._name = message[42:74].decode(ENCODING_CODEC).rstrip("\x00")
 
-                self._device_id = hexlify(message)[36:42].decode(
-                    ENCODING_CODEC
-                )
+                self._device_id = hexlify(message)[36:42].decode(ENCODING_CODEC)
 
                 self._device_state = (
                     STATE_ON
@@ -112,9 +106,7 @@ class SwitcherV2BroadcastMSG:
 
                 if self._device_state == STATE_ON:
                     temp_power = hexlify(message)[270:278]
-                    self._power_consumption = int(
-                        temp_power[2:4] + temp_power[0:2], 16
-                    )
+                    self._power_consumption = int(temp_power[2:4] + temp_power[0:2], 16)
                     self._electric_current = round(
                         (self._power_consumption / float(220)), 1
                     )
@@ -127,10 +119,8 @@ class SwitcherV2BroadcastMSG:
                         + temp_remaining_time[0:2],
                         16,
                     )
-                    self._remaining_time_to_off = (
-                        await convert_seconds_to_iso_time(
-                            self._loop, temp_remaining_time_seconds
-                        )
+                    self._remaining_time_to_off = await convert_seconds_to_iso_time(
+                        self._loop, temp_remaining_time_seconds
                     )
 
             self._validated = True
