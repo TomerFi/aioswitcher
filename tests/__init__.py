@@ -1,1 +1,1 @@
-"""Test cases for Switcher integration https://www.switcher.co.il."""
+"""Switcher water heater unofficial API and bridge test cases."""
