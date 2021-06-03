@@ -4,7 +4,6 @@
 
 """
 
-# fmt: off
 from asyncio import AbstractEventLoop, Event, open_connection, wait
 from binascii import unhexlify
 from datetime import timedelta
@@ -13,15 +12,17 @@ from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Tuple, Type
 
 from ..consts import NO_TIMER_REQUESTED, REMOTE_SESSION_ID, SOCKET_PORT
-from ..tools import (convert_minutes_to_timer, convert_string_to_device_name,
-                     convert_timedelta_to_auto_off,
-                     crc_sign_full_packet_com_key, get_timestamp)
+from ..tools import (
+    convert_minutes_to_timer,
+    convert_string_to_device_name,
+    convert_timedelta_to_auto_off,
+    crc_sign_full_packet_com_key,
+    get_timestamp,
+)
 from . import messages, packets
 
 if TYPE_CHECKING:
     from asyncio import StreamReader, StreamWriter
-
-# fmt: on
 
 
 class SwitcherV2Api:
@@ -41,9 +42,7 @@ class SwitcherV2Api:
 
     """
 
-    def __init__(
-        self, loop: AbstractEventLoop, ip_addr: str, device_id: str
-    ) -> None:
+    def __init__(self, loop: AbstractEventLoop, ip_addr: str, device_id: str) -> None:
         """Initialize the Switcher V2 API."""
         self._loop = loop
         self._ip_addr = ip_addr
@@ -183,9 +182,7 @@ class SwitcherV2Api:
                 login_response.session_id, timestamp, self._device_id
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))
@@ -242,9 +239,7 @@ class SwitcherV2Api:
         ):
 
             if timer:
-                minutes_timer = await convert_minutes_to_timer(
-                    self._loop, timer
-                )
+                minutes_timer = await convert_minutes_to_timer(self._loop, timer)
             else:
                 minutes_timer = NO_TIMER_REQUESTED
 
@@ -256,18 +251,14 @@ class SwitcherV2Api:
                 minutes_timer,
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))
 
                 response = await self._reader.read(1024)
 
-                return messages.SwitcherV2ControlResponseMSG(
-                    self._loop, response
-                )
+                return messages.SwitcherV2ControlResponseMSG(self._loop, response)
 
         return None
 
@@ -297,9 +288,7 @@ class SwitcherV2Api:
             and get_state_response
             and get_state_response.successful
         ):
-            auto_off = await convert_timedelta_to_auto_off(
-                self._loop, full_time
-            )
+            auto_off = await convert_timedelta_to_auto_off(self._loop, full_time)
 
             packet = packets.SET_AUTO_OFF_SET_PACKET.format(
                 login_response.session_id,
@@ -308,18 +297,14 @@ class SwitcherV2Api:
                 auto_off,
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))
 
                 response = await self._reader.read(1024)
 
-                return messages.SwitcherV2SetAutoOffResponseMSG(
-                    self._loop, response
-                )
+                return messages.SwitcherV2SetAutoOffResponseMSG(self._loop, response)
 
         return None
 
@@ -357,18 +342,14 @@ class SwitcherV2Api:
                 device_name,
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))
 
                 response = await self._reader.read(1024)
 
-                return messages.SwitcherV2UpdateNameResponseMSG(
-                    self._loop, response
-                )
+                return messages.SwitcherV2UpdateNameResponseMSG(self._loop, response)
 
         return None
 
@@ -400,18 +381,14 @@ class SwitcherV2Api:
                 self._device_id,
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))
 
                 response = await self._reader.read(1024)
 
-                return messages.SwitcherV2GetScheduleResponseMSG(
-                    self._loop, response
-                )
+                return messages.SwitcherV2GetScheduleResponseMSG(self._loop, response)
 
         return None
 
@@ -454,9 +431,7 @@ class SwitcherV2Api:
                 schedule_data,
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))
@@ -503,9 +478,7 @@ class SwitcherV2Api:
                 schedule_id,
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))
@@ -556,9 +529,7 @@ class SwitcherV2Api:
                 schedule_data,
             )
 
-            signed_packet = await crc_sign_full_packet_com_key(
-                self._loop, packet
-            )
+            signed_packet = await crc_sign_full_packet_com_key(self._loop, packet)
 
             if self._writer and self._reader:
                 self._writer.write(unhexlify(signed_packet))

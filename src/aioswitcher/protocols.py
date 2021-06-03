@@ -4,18 +4,24 @@
 
 """
 
-# fmt: off
-from asyncio import (AbstractEventLoop, BaseTransport, DatagramProtocol, Event,
-                     Future, Queue, QueueEmpty, QueueFull, Transport,
-                     ensure_future)
+from asyncio import (
+    AbstractEventLoop,
+    BaseTransport,
+    DatagramProtocol,
+    Event,
+    Future,
+    Queue,
+    QueueEmpty,
+    QueueFull,
+    Transport,
+    ensure_future,
+)
 from datetime import datetime
 from functools import partial
 from typing import Optional, Tuple, Union, cast
 
 from .bridge.messages import SwitcherV2BroadcastMSG
 from .devices import SwitcherV2Device
-
-# fmt: on
 
 
 class SwitcherV2UdpProtocolFactory(DatagramProtocol):
@@ -59,9 +65,7 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
     def datagram_received(self, data: Union[bytes, str], addr: Tuple) -> None:
         """Call on datagram recieved."""
         if self._run_factory.is_set() and self._accept_datagrams.is_set():
-            ensure_future(
-                self.handle_incoming_messages(data, addr), loop=self._loop
-            )
+            ensure_future(self.handle_incoming_messages(data, addr), loop=self._loop)
 
     def error_received(self, exc: Optional[Exception]) -> None:
         """Call on exception recieved."""
@@ -133,9 +137,7 @@ class SwitcherV2UdpProtocolFactory(DatagramProtocol):
                         self._queue.get_nowait()
                     except QueueEmpty:
                         pass
-                    ensure_future(
-                        self._queue.put(self._device), loop=self._loop
-                    )
+                    ensure_future(self._queue.put(self._device), loop=self._loop)
         self._accept_datagrams.set()
 
     @property
