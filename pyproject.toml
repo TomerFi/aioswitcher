@@ -36,114 +36,37 @@ exclude = [
     "dist",
     "docs",
     "tests",
-    "CODE_OF_CONDUCT.md",
-    "mypy.ini",
-    "pylintrc",
     "*__pycache__*",
     "*.pyc"
 ] # poetry.lock is automatically excluded
 
 [tool.poetry.dependencies]
-python = "^3.6"
-asynctest = { version = "0.13.0", optional = true }
-bandit = { version = "1.7.0", optional = true }
-black = { version = "20.8b1", optional = true }
-codecov = { version = "2.1.11", optional = true }
-doc8 = { version = "0.8.1", optional = true }
-flake8 = { version = "3.9.2", optional = true }
-flake8-docstrings = { version = "1.6.0", optional = true }
-isort = { version = "5.8.0", optional = true }
-mypy = { version = "0.812", optional = true }
-pygments = { version = "2.9.0", optional = true }
-pytest = { version = "6.2.4", optional = true }
-pytest-aiohttp = { version = "0.3.0", optional = true }
-pytest-asyncio = { version = "0.15.1", optional = true }
-pytest-cov = { version = "2.12.1", optional = true }
-pytest-sugar = { version = "0.9.4", optional = true}
-yamllint = { version = "1.26.1", optional = true }
+python = "^3.6.2"
 
-[tool.poetry.extras]
-checkers = [
-    "bandit",
-    "black",
-    "doc8",
-    "flake8",
-    "flake8-docstrings",
-    "isort",
-    "mypy",
-    "pygments",
-    "yamllint"
-]
-tests = [
-    "asynctest",
-    "codecov",
-    "pytest",
-    "pytest-aiohttp",
-    "pytest-asyncio",
-    "pytest-cov",
-    "pytest-sugar"
-]
+[tool.poetry.dev-dependencies]
+assertpy = "^1.1"
+bandit = "^1.7.0"
+black = "^21.5b2"
+codecov = "^2.1.11"
+doc8 = "^0.8.1"
+flake8 = "^3.9.2"
+flake8-docstrings = "^1.6.0"
+isort = "^5.8.0"
+mypy = "^0.812"
+poethepoet = "^0.10.0"
+pytest = "^6.2.4"
+pytest-cov = "^2.12.1"
+pytest-sugar = "^0.9.4"
+yamllint = "^1.26.1"
 
-[tool.isort]
-line_length = 79
-
-[tool.black]
-line-length = 79
-
-[tool.tox]
-legacy_tox_ini = """
-[tox]
-envlist =
-;    update-poetry
-    checkers
-    py{36,37,38,39}
-isolated_build = true
-minversion = 3.13.1
-requires = poetry>=1.0.5
-skipdist = true
-
-[testenv]
-basepython = python3.9
-skip_missing_interpreters = true
-whitelist_externals = poetry
-
-[testenv:update-poetry]
-skip_install = true
-commands = poetry update
-
-[testenv:checkers]
-skip_install = true
-commands =
-    poetry install -vv -E "checkers"
-    python -Xutf8 -m yamllint --config-file .yamllint --format colored --strict .
-    bandit -rvc .bandit src/ tests/ docs/ -l -ii
-    isort --check-only src/ tests/ docs/
-    flake8 --statistics --count --doctests src/ tests/ docs/
-    black --diff src/ tests/ docs/
-    mypy --follow-imports silent --ignore-missing-imports --show-error-codes src/ tests/ docs/
-    doc8 --allow-long-titles --max-line-length 100 docs
-
-[testenv:py36]
-basepython = python3.6
-commands =
-    poetry install -vv -E "tests"
-    pytest -vs
-
-[testenv:py37]
-basepython = python3.7
-commands =
-    poetry install -vv -E "tests"
-    pytest -vs
-
-[testenv:py38]
-basepython = python3.8
-commands =
-    poetry install -vv -E "tests"
-    pytest -vs
-
-[testenv:py39]
-commands =
-    poetry install -vv -E "tests"
-    pytest -vs --cov --cov-config=.coveragerc
-
-"""
+[tool.poe.tasks]
+test = "poetry run pytest -vs"
+testcov = "poetry run pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage.xml --junit-xml junit.xml"
+lint = ["bandit", "black", "doc8", "flake8", "isort", "mypy", "yamllint"]
+bandit = "poetry run bandit -rvc .bandit src/ tests/ docs/ -l -ii"
+black = "poetry run black --check src/ tests/ docs/"
+doc8 = "poetry run doc8 --allow-long-titles --max-line-length 100 docs"
+flake8 = "poetry run flake8 --statistics --count --doctests src/ tests/ docs/"
+isort = "poetry run isort --profile black --check-only src/ tests/ docs/"
+mypy = "poetry run mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/"
+yamllint = "poetry run yamllint --config-file .yamllint --format colored --strict ."
