@@ -60,11 +60,11 @@ pytest-sugar = "^0.9.4"
 yamllint = "^1.26.1"
 
 [tool.poe.tasks]
-test = "poetry run pytest -vs"
-testcov = "poetry run pytest -vs --cov --cov-config=.coveragerc --cov-report=xml:coverage.xml --junit-xml junit.xml"
+test = "poetry run pytest -v"
+testcov = "poetry run pytest -v --cov --cov-report=term --cov-report=xml:coverage.xml --junit-xml junit.xml"
 lint = ["bandit", "black", "doc8", "flake8", "isort", "mypy", "yamllint"]
 bandit = "poetry run bandit -rvc .bandit src/ tests/ docs/ -l -ii"
-black = "poetry run black --check src/ tests/ docs/"
+black = "poetry run black --check src/ docs/"  # tests are not included
 doc8 = "poetry run doc8 --allow-long-titles --max-line-length 100 docs"
 flake8 = "poetry run flake8 --statistics --count --doctests src/ tests/ docs/"
 isort = "poetry run isort --profile black --check-only src/ tests/ docs/"
