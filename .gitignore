@@ -117,3 +117,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# coverage reports
+coverage.xml
+junit.xml
