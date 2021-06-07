@@ -4,10 +4,11 @@ from binascii import hexlify
 from struct import pack
 
 from assertpy import assert_that
+
 from aioswitcher import consts
-from aioswitcher.utils import sign_packet_with_crc_key
 from aioswitcher.api import packets
 from aioswitcher.errors import EncodingError
+from aioswitcher.utils import sign_packet_with_crc_key
 
 SUT_DEVICE_ID = "a123bc"
 SUT_SESSION_ID = "01000000"
