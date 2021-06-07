@@ -8,7 +8,7 @@ from struct import pack, unpack
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher import Weekday, utils
+from aioswitcher import Days, utils
 from aioswitcher.errors import CalculationError, DecodingError, EncodingError
 
 
@@ -112,13 +112,13 @@ def test_hexadecimale_timestamp_to_localtime_with_wrong_value_should_throw_a_dec
 
 
 @mark.parametrize("weekdays, expected_sum", [
-    (Weekday.MONDAY, 2),
-    ({Weekday.MONDAY, Weekday.TUESDAY}, 6),
-    ({Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY}, 14),
-    ({Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY}, 30),
-    ({Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY, Weekday.FRIDAY}, 62),
-    ({Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY, Weekday.FRIDAY, Weekday.SATURDAY}, 126),
-    ({Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY, Weekday.FRIDAY, Weekday.SATURDAY, Weekday.SUNDAY}, 254),
+    (Days.MONDAY, 2),
+    ({Days.MONDAY, Days.TUESDAY}, 6),
+    ({Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY}, 14),
+    ({Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY}, 30),
+    ({Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY}, 62),
+    ({Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY, Days.SATURDAY}, 126),
+    ({Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY, Days.SATURDAY, Days.SUNDAY}, 254),
 ])
 def test_weekdays_to_hexadecimal_with_parameterized_weekday_set_should_return_the_expected_sum(weekdays, expected_sum):
     sut_hex = utils.weekdays_to_hexadecimal(weekdays)
@@ -133,7 +133,7 @@ def test_weekdays_to_hexadecimal_with_empty_collections_should_throw_an_encoding
     ).when_called_with(empty_collection).is_equal_to("failed to calculate weekdays")
 
 
-@mark.parametrize("duplicate_members", [(Weekday.MONDAY, Weekday.MONDAY), [Weekday.MONDAY, Weekday.MONDAY]])
+@mark.parametrize("duplicate_members", [(Days.MONDAY, Days.MONDAY), [Days.MONDAY, Days.MONDAY]])
 def test_weekdays_to_hexadecimal_with_duplicate_members_should_throw_an_encoding_error(duplicate_members):
     assert_that(utils.weekdays_to_hexadecimal).raises(
         EncodingError
@@ -141,20 +141,20 @@ def test_weekdays_to_hexadecimal_with_duplicate_members_should_throw_an_encoding
 
 
 @mark.parametrize("sum, expected_weekdays", [
-    (2, {Weekday.MONDAY}),
-    (6, {Weekday.MONDAY, Weekday.TUESDAY}),
-    (14, {Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY},),
-    (30, {Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY}),
-    (62, {Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY, Weekday.FRIDAY}),
-    (126, {Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY, Weekday.FRIDAY, Weekday.SATURDAY}),
-    (254, {Weekday.MONDAY, Weekday.TUESDAY, Weekday.WEDNESDAY, Weekday.THURSDAY, Weekday.FRIDAY, Weekday.SATURDAY, Weekday.SUNDAY}),
+    (2, {Days.MONDAY}),
+    (6, {Days.MONDAY, Days.TUESDAY}),
+    (14, {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY},),
+    (30, {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY}),
+    (62, {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY}),
+    (126, {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY, Days.SATURDAY}),
+    (254, {Days.MONDAY, Days.TUESDAY, Days.WEDNESDAY, Days.THURSDAY, Days.FRIDAY, Days.SATURDAY, Days.SUNDAY}),
 ])
-def test_bit_summary_to_weekdays_with_parameterized_sum_should_return_the_expected_weekday_set(sum, expected_weekdays):
-    assert_that(utils.bit_summary_to_weekdays(sum)).is_equal_to(expected_weekdays)
+def test_bit_summary_to_days_with_parameterized_sum_should_return_the_expected_weekday_set(sum, expected_weekdays):
+    assert_that(utils.bit_summary_to_days(sum)).is_equal_to(expected_weekdays)
 
 
 @mark.parametrize("wrong_bit_sum", [1, 255])
-def test_bit_summary_to_weekdays_with_wrong_bit_sum_parameterized_value(wrong_bit_sum):
-    assert_that(utils.bit_summary_to_weekdays).raises(
+def test_bit_summary_to_days_with_wrong_bit_sum_parameterized_value(wrong_bit_sum):
+    assert_that(utils.bit_summary_to_days).raises(
         DecodingError
     ).when_called_with(wrong_bit_sum).is_equal_to("failed to decode value to weekdays")

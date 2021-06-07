@@ -3,34 +3,65 @@
 .. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
 
 """
-from enum import Enum
+from enum import Enum, unique
 
 name = "aioswitcher"
 
 __all__ = ["api", "bridge", "devices", "schedules", "utils"]
 
 
-class Weekday(Enum):
-    """Enum class represnting the weekday."""
+@unique
+class DeviceState(Enum):
+    """Enum class represnting the device's state."""
 
-    MONDAY = ("Monday", 0x02, 2)
-    TUESDAY = ("Tuesday", 0x04, 4)
-    WEDNESDAY = ("Wednesday", 0x08, 8)
-    THURSDAY = ("Thursday", 0x10, 16)
-    FRIDAY = ("Friday", 0x20, 32)
-    SATURDAY = ("Saturday", 0x40, 64)
-    SUNDAY = ("Sunday", 0x80, 128)
+    ON = "0100", "on"
+    OFF = "0000", "off"
 
-    def __new__(cls, value: str, hex_rep: int, bit_rep: int) -> "Weekday":
+    def __new__(cls, value: str, display: str) -> "DeviceState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value
+        new_enum._display = display
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        return self._value  # type: ignore
+
+
+@unique
+class Days(Enum):
+    """Enum class represnting the day entity."""
+
+    MONDAY = ("Monday", 0x02, 2, 0)
+    TUESDAY = ("Tuesday", 0x04, 4, 1)
+    WEDNESDAY = ("Wednesday", 0x08, 8, 2)
+    THURSDAY = ("Thursday", 0x10, 16, 3)
+    FRIDAY = ("Friday", 0x20, 32, 4)
+    SATURDAY = ("Saturday", 0x40, 64, 5)
+    SUNDAY = ("Sunday", 0x80, 128, 6)
+
+    def __new__(cls, value: str, hex_rep: int, bit_rep: int, weekday: int) -> "Days":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
         new_enum._value_ = value
         new_enum._hex_rep = hex_rep
         new_enum._bit_rep = bit_rep
+        new_enum._weekday = weekday
         return new_enum
 
+    @property
     def bit_rep(self) -> int:
         return self._bit_rep  # type: ignore
 
+    @property
     def hex_rep(self) -> int:
         return self._hex_rep  # type: ignore
+
+    @property
+    def weekday(self) -> int:
+        return self._weekday  # type: ignore

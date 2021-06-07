@@ -5,18 +5,12 @@ from binascii import hexlify
 from enum import Enum
 from typing import List
 
-from ..consts import (
-    ENCODING_CODEC,
-    HANDLED_EXCEPTIONS,
-    STATE_OFF,
-    STATE_ON,
-    STATE_RESPONSE_OFF,
-    STATE_RESPONSE_ON,
-    STATE_UNKNOWN,
-)
+from .. import DeviceState
 from ..errors import DecodingError
 from ..schedules import SwitcherV2Schedule
 from ..utils import seconds_to_iso_time
+
+STATE_UNKNOWN = "unknown"
 
 ResponseMessageType = Enum(
     "ResponseMessageType",
@@ -85,8 +79,8 @@ class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
         """Initialize the login response."""
         super().__init__(loop, response, ResponseMessageType.LOGIN)
         try:
-            self._session_id = hexlify(response)[16:24].decode(ENCODING_CODEC)
-        except HANDLED_EXCEPTIONS as exc:
+            self._session_id = hexlify(response)[16:24].decode()
+        except Exception as exc:
             raise DecodingError("failed to parse login response message") from exc
 
     @property
@@ -123,51 +117,50 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
 
         """
         try:
-            temp_power = hexlify(response)[154:162]
-            self._power_consumption = int(temp_power[2:4] + temp_power[0:2], 16)
+            hex_power = hexlify(response)[154:162]
+            self._power_consumption = int(hex_power[2:4] + hex_power[0:2], 16)
             self._electric_current = round((self._power_consumption / float(220)), 1)
 
-            temp_time_left = hexlify(response)[178:186]
-            temp_time_left_seconds = int(
-                temp_time_left[6:8]
-                + temp_time_left[4:6]
-                + temp_time_left[2:4]
-                + temp_time_left[0:2],
+            hex_time_left = hexlify(response)[178:186]
+            time_left_seconds = int(
+                hex_time_left[6:8]
+                + hex_time_left[4:6]
+                + hex_time_left[2:4]
+                + hex_time_left[0:2],
                 16,
             )
-            self._time_to_auto_off = seconds_to_iso_time(temp_time_left_seconds)
+            self._time_to_auto_off = seconds_to_iso_time(time_left_seconds)
 
-            temp_time_on = hexlify(response)[186:194]
-            temp_time_on_seconds = int(
-                temp_time_on[6:8]
-                + temp_time_on[4:6]
-                + temp_time_on[2:4]
-                + temp_time_on[0:2],
+            hex_time_on = hexlify(response)[186:194]
+            time_on_seconds = int(
+                hex_time_on[6:8]
+                + hex_time_on[4:6]
+                + hex_time_on[2:4]
+                + hex_time_on[0:2],
                 16,
             )
-            self._time_on = seconds_to_iso_time(temp_time_on_seconds)
+            self._time_on = seconds_to_iso_time(time_on_seconds)
 
-            temp_auto_off = hexlify(response)[194:202]
-            temp_auto_off_seconds = int(
-                temp_auto_off[6:8]
-                + temp_auto_off[4:6]
-                + temp_auto_off[2:4]
-                + temp_auto_off[0:2],
+            hex_auto_off = hexlify(response)[194:202]
+            auto_off_seconds = int(
+                hex_auto_off[6:8]
+                + hex_auto_off[4:6]
+                + hex_auto_off[2:4]
+                + hex_auto_off[0:2],
                 16,
             )
-            self._auto_off_set = seconds_to_iso_time(temp_auto_off_seconds)
+            self._auto_off_set = seconds_to_iso_time(auto_off_seconds)
 
-            temp_state = hexlify(response)[150:154].decode(ENCODING_CODEC)
+            hex_state = hexlify(response)[150:154].decode()
+            states = dict(map(lambda s: (s.value, s), DeviceState))
             self._state = (
-                STATE_ON
-                if temp_state == STATE_RESPONSE_ON
-                else STATE_OFF
-                if temp_state == STATE_RESPONSE_OFF
+                states.get(hex_state).display  # type: ignore
+                if states.get(hex_state)
                 else STATE_UNKNOWN
             )
 
             self.init_future.set_result(self)
-        except HANDLED_EXCEPTIONS as exc:
+        except Exception as exc:
             self.init_future.set_exception(exc)
 
         return None
@@ -273,7 +266,7 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
         self._schedule_list = []  # type: List[SwitcherV2Schedule]
 
         res = hexlify(response)
-        idx = res[90:-8].decode(ENCODING_CODEC)
+        idx = res[90:-8].decode()
         schedules_details = [
             idx[i : i + 32] for i in range(0, len(idx), 32)  # noqa E203
         ]

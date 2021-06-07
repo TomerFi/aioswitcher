@@ -7,11 +7,11 @@
 from asyncio import AbstractEventLoop, Event, open_connection, wait
 from binascii import unhexlify
 from datetime import timedelta
+from enum import Enum, unique
 from socket import AF_INET
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Tuple, Type
 
-from ..consts import NO_TIMER_REQUESTED
 from ..utils import (
     current_timestamp_to_hexadecimal,
     minutes_to_hexadecimal_seconds,
@@ -25,6 +25,14 @@ if TYPE_CHECKING:
     from asyncio import StreamReader, StreamWriter
 
 SERVER_PORT = 9957
+
+
+@unique
+class Command(Enum):
+    """Enum for turning the device on or off."""
+
+    ON = "1"
+    OFF = "0"
 
 
 class SwitcherV2Api:
@@ -211,16 +219,14 @@ class SwitcherV2Api:
         return full_state_tuple[2]
 
     async def control_device(
-        self, command: str, timer: Optional[int] = None
+        self, command: Command, timer: Optional[int] = None
     ) -> Optional[messages.SwitcherV2ControlResponseMSG]:
         """Use for sending the control packet to the device.
 
         Args:
-          command: specify ``aioswitcher.consts.COMMAND_ON`` or
-            ``aioswitcher.consts.COMMAND_OFF``.
+          command: use the ``aioswitcher.api.Command`` enum.
           timer: if turning-on optionally incorporate a auto-off timer. Use
-            ``aioswitcher.tools.convert_minutes_to_timer`` to create the
-            appropriate timer value.
+            ``aioswitcher.utils.minutes_to_hexadecimal_seconds``.
 
         Returns:
           An instance of the serialized object
@@ -243,13 +249,13 @@ class SwitcherV2Api:
             if timer:
                 minutes_timer = minutes_to_hexadecimal_seconds(timer)
             else:
-                minutes_timer = NO_TIMER_REQUESTED
+                minutes_timer = packets.NO_TIMER_REQUESTED
 
             packet = packets.SEND_CONTROL_PACKET.format(
                 login_response.session_id,
                 timestamp,
                 self._device_id,
-                command,
+                command.value,
                 minutes_timer,
             )
 
@@ -403,11 +409,11 @@ class SwitcherV2Api:
           schedule_data: formatted data for updating the schedule, can be
             obtained from the ``aioswitcher.schedules.SwitcherV2Schedule``
             object or created using the format
-            ``aioswitcher.consts.SCHEDULE_CREATE_DATA_FORMAT`` filled with
+            ``aioswitcher.schedules.SCHEDULE_CREATE_DATA_FORMAT`` filled with
             three values: weekdays, start-time and end-time. Weekdays can be
-            created using the tool ``aioswitcher.tools.create_weekdays_value``,
+            created using the tool ``aioswitcher.utils.weekdays_to_hexadecimal``,
             the start and end times can be created using the
-            ``aioswitcher.tools.timedelta_str_to_schedule_time``
+            ``aioswitcher.utils.time_to_hexadecimal_timestamp``
 
         Returns:
           An instance of the serialized object
@@ -501,11 +507,11 @@ class SwitcherV2Api:
         Args:
           schedule_data: formatted data for updating the schedule, can be
             created using the format
-            ``aioswitcher.consts.SCHEDULE_CREATE_DATA_FORMAT`` filled with
+            ``aioswitcher.schedules.SCHEDULE_CREATE_DATA_FORMAT`` filled with
             three values: weekdays, start-time and end-time. Weekdays can be
-            created using the tool ``aioswitcher.tools.create_weekdays_value``,
+            created using the tool ``aioswitcher.utils.weekdays_to_hexadecimal``,
             the start and end times can be created using the
-            ``aioswitcher.tools.timedelta_str_to_schedule_time``
+            ``aioswitcher.utils.time_to_hexadecimal_timestamp``
 
         Returns:
           An instance of the serialized object
