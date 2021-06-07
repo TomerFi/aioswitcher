@@ -10,9 +10,9 @@ from aioswitcher.api import packets
 from aioswitcher.errors import EncodingError
 from aioswitcher.utils import sign_packet_with_crc_key
 
-SUT_DEVICE_ID = "a123bc"
-SUT_SESSION_ID = "01000000"
 SUT_TIMESTAMP = "ef8db35c"
+SUT_SESSION_ID = "01000000"
+SUT_DEVICE_ID = "a123bc"
 
 
 def test_sign_packet_with_crc_key_for_a_random_string_throws_error():
@@ -24,8 +24,8 @@ def test_sign_packet_with_crc_key_for_a_random_string_throws_error():
 
 def test_sign_packet_with_crc_key_for_login_packet_returns_signed_packet():
     """Test the sign_packet_with_crc_key tool for the LOGIN_PACKET."""
-    packet = packets.LOGIN_PACKET.format(SUT_SESSION_ID, SUT_TIMESTAMP)
-    assert_that(sign_packet_with_crc_key(packet)).is_equal_to(packet + "c40a4188")
+    packet = packets.LOGIN_PACKET.format(SUT_TIMESTAMP)
+    assert_that(sign_packet_with_crc_key(packet)).is_equal_to(packet + "627f33f1")
 
 
 def test_sign_packet_with_crc_key_for_get_state_packet_returns_signed_packet():
