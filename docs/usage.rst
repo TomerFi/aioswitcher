@@ -166,9 +166,9 @@ Example of TCP Socket API usage
 
    import asyncio
    from datetime import timedelta
-   from aioswitcher import consts, tools
+   from aioswitcher import Days, utils
    from aioswitcher.api import SwitcherV2Api, messages
-   from aioswitcher.schedules import SwitcherV2Schedule
+   from aioswitcher.schedules import SCHEDULE_CREATE_DATA_FORMAT, SwitcherV2Schedule
 
    # create a new event loop
    your_loop = asyncio.get_event_loop()
@@ -191,11 +191,11 @@ Example of TCP Socket API usage
            # control the device: on / off / on + (15/30/45/60) minutes timer
            # response: messages.SwitcherV2ControlResponseMSG
            turn_on_response = await swapi.control_device(
-               consts.COMMAND_ON)
+               api.Command.ON)
            turn_off_response = await swapi.control_device(
-               consts.COMMAND_OFF)
+               api.Command.OFF)
            turn_on_30_min_response = await swapi.control_device(
-               consts.COMMAND_ON, '30')
+               api.Command.ON, '30')
 
            # set the limit time to auto-shutdown the device (1 < hours < 24)
            # response: messages.SwitcherV2SetAutoOffResponseMSG
@@ -216,11 +216,11 @@ Example of TCP Socket API usage
            #
            # the following will enable the schedule:
            # updated_schedule_data = (
-           #    schedule_data[0:2] + consts.ENABLE_SCHEDULE + schedule_data[4:])
+           #    schedule_data[0:2] + schedules.ScheduleStatus.ENABLED.value + schedule_data[4:])
            #
            # the following will disable the schedule:
            # updated_schedule_data = (
-           #    schedule_data[0:2] + consts.DISABLE_SCHEDULE + schedule_data[4:])
+           #    schedule_data[0:2] + schedules.ScheduleStatus.DISABLED.value + schedule_data[4:])
            enable_disable_response = await swapi.disable_enable_schedule(
                updated_schedule_data)
 
@@ -231,24 +231,20 @@ Example of TCP Socket API usage
 
            # create a schedule to turn on at 20:30 and off at 21:00
            # response: messages.SwitcherV2CreateScheduleResponseMSG
-           schedule_days = [0]
+           schedule_days = set()  # type: Set[Days]
            # append selected days, if non-recurring skip next
-           schedule_days.append(consts.DAY_TO_INT_DICT[consts.SUNDAY])
-           schedule_days.append(consts.DAY_TO_INT_DICT[consts.MONDAY])
-           schedule_days.append(consts.DAY_TO_INT_DICT[consts.TUESDAY])
-           schedule_days.append(consts.DAY_TO_INT_DICT[consts.WEDNESDAY])
-           schedule_days.append(consts.DAY_TO_INT_DICT[consts.THURSDAY])
-           schedule_days.append(consts.DAY_TO_INT_DICT[consts.FRIDAY])
-           schedule_days.append(consts.DAY_TO_INT_DICT[consts.SATURDAY])
+           schedule_days.append(Days.MONDAY)
+           schedule_days.append(Days.TUESDAY)
+           schedule_days.append(Days.WEDNESDAY)
+           schedule_days.append(Days.THURSDAY)
+           schedule_days.append(Days.FRIDAY)
+           schedule_days.append(Days.SATURDAY)
+           schedule_days.append(Days.SUNDAY)
            # skip here if non-recurring
-           weekdays = await tools.create_weekdays_value(
-               your_loop, schedule_days)
-           start_time = await tools.timedelta_str_to_schedule_time(
-               your_loop, str(timedelta(hours=20, minutes=30)))
-           end_time = await tools.timedelta_str_to_schedule_time(
-               your_loop, str(timedelta(hours=21)))
-           schedule_data = consts.SCHEDULE_CREATE_DATA_FORMAT.format(
-               weekdays, start_time, end_time)
+           weekdays = utils.weekdays_to_hexadecimal(schedule_days)
+           start_time = utils.time_to_hexadecimal_timestamp(str(timedelta(hours=20, minutes=30)))
+           end_time = utils.timedelta_str_to_schedule_time(str(timedelta(hours=21)))
+           schedule_data = SCHEDULE_CREATE_DATA_FORMAT.format(weekdays, start_time, end_time)
            create_response = await swapi.create_schedule(schedule_data)
 
        return None
@@ -421,10 +417,8 @@ SwitcherV2StateResponseMSG
 +-----------------+---------------------+-----------------------------------------------------+
 | Property        | Type                | Description                                         |
 +=================+=====================+=====================================================+
-| **state**       | ``str``             | Return the state. Possible values are:              |
-|                 |                     |                                                     |
-|                 |                     |    * ``aioswitcher.consts.STATE_ON``                |
-|                 |                     |    * ``aioswitcher.consts.STATE_OFF``               |
+| **state**       | ``str``             | Return the state. Possible values are based on the  |
+|                 |                     | enum class ``aioswitcher.DeviceState``.             |
 +-----------------+---------------------+-----------------------------------------------------+
 | **time_left**   | ``str``             | Return the time left to auto-off.                   |
 +-----------------+---------------------+-----------------------------------------------------+
