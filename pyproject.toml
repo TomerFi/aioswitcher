@@ -65,8 +65,10 @@ testcov = "poetry run pytest -v --cov --cov-report=term --cov-report=xml:coverag
 lint = ["bandit", "black", "doc8", "flake8", "isort", "mypy", "yamllint"]
 bandit = "poetry run bandit -r src/ tests/ docs/"
 black = "poetry run black --check src/ docs/"  # tests are not included
+black_fix = "poetry run black src/ docs/"
 doc8 = "poetry run doc8 docs/"
 flake8 = "poetry run flake8 src/ tests/ docs/"
 isort = "poetry run isort --check-only src/ tests/ docs/"
+isort_fix = "poetry run isort src/ tests/ docs/"
 mypy = "poetry run mypy src/ tests/ docs/"
 yamllint = "poetry run yamllint --format colored --strict ."

@@ -7,19 +7,27 @@
 from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import unhexlify
 from datetime import datetime
+from enum import Enum, unique
 from typing import List
 
-from .consts import (
-    ALL_DAYS,
-    MONDAY,
-    SCHEDULE_DUE_ANOTHER_DAY_FORMAT,
-    SCHEDULE_DUE_TODAY_FORMAT,
-    SCHEDULE_DUE_TOMMOROW_FORMAT,
-    SUNDAY,
-    WAITING_TEXT,
-    WEEKDAY_TUP,
-)
-from .utils import bit_summary_to_weekdays, hexadecimale_timestamp_to_localtime
+from . import Days
+from .utils import bit_summary_to_days, hexadecimale_timestamp_to_localtime
+
+ALL_DAYS = "Every day"
+WAITING_TEXT = "waiting_for_schedule_data"
+SCHEDULE_DUE_TODAY_FORMAT = "Due today at {}"
+SCHEDULE_DUE_TOMMOROW_FORMAT = "Due tommorow at {}"
+SCHEDULE_DUE_ANOTHER_DAY_FORMAT = "Due next {} at {}"
+# weekdays sum, start-time timestamp, end-time timestamp
+SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"
+
+
+@unique
+class ScheduleStatus(Enum):
+    """Enum representing the status of the schedule."""
+
+    ENABLED = "01"
+    DISABLED = "00"
 
 
 class SwitcherV2Schedule:
@@ -61,10 +69,10 @@ class SwitcherV2Schedule:
                 if schedule_details[idx][4:6] == "fe":
                     self._days.append(ALL_DAYS)
                 else:
-                    weekdays = bit_summary_to_weekdays(
+                    days = bit_summary_to_days(
                         bytearray(unhexlify((schedule_details[idx][4:6])))[0]
                     )
-                    self._days = [weekday.value for weekday in weekdays]  # type: ignore
+                    self._days = [day.value for day in days]  # type: ignore
 
             self._start_time = hexadecimale_timestamp_to_localtime(
                 schedule_details[idx][8:16]
@@ -199,24 +207,22 @@ def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
                 return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)
             return SCHEDULE_DUE_TOMMOROW_FORMAT.format(schedule_details.start_time)
 
-        for day in schedule_details.days:
-            set_weekday = WEEKDAY_TUP.index(day)
-
-            if set_weekday == current_weekday and current_time < start_time:
+        for day in Days:
+            if day.weekday == current_weekday and current_time < start_time:
                 return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)
 
-            if found_day == -1 or found_day > set_weekday:
-                found_day = set_weekday
+            if found_day == -1 or found_day > day.weekday:
+                found_day = day.weekday
 
         if found_day - 1 == current_weekday or (
-            found_day == WEEKDAY_TUP.index(MONDAY)
-            and current_weekday == WEEKDAY_TUP.index(SUNDAY)
+            found_day == Days.MONDAY.weekday and current_weekday == Days.SUNDAY.weekday
         ):
 
             return SCHEDULE_DUE_TOMMOROW_FORMAT.format(schedule_details.start_time)
 
+        weekdays = dict(map(lambda d: (d.weekday, d), Days))
         return SCHEDULE_DUE_ANOTHER_DAY_FORMAT.format(
-            WEEKDAY_TUP[found_day], schedule_details.start_time
+            weekdays[found_day].value, schedule_details.start_time
         )
 
     return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)

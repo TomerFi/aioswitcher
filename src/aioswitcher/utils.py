@@ -10,7 +10,7 @@ from binascii import crc_hqx, hexlify, unhexlify
 from struct import pack
 from typing import Set, Union, cast
 
-from . import Weekday
+from . import Days
 from .errors import CalculationError, DecodingError, EncodingError
 
 
@@ -210,7 +210,7 @@ def hexadecimale_timestamp_to_localtime(hex_timestamp: bytes) -> str:
         raise DecodingError("failed to decode timestamp") from ex
 
 
-def weekdays_to_hexadecimal(days: Union[Weekday, Set[Weekday]]) -> str:
+def weekdays_to_hexadecimal(days: Union[Days, Set[Days]]) -> str:
     """Sum the requested weekdays bit represntation and return as hexadecimal value.
 
     Args:
@@ -225,17 +225,17 @@ def weekdays_to_hexadecimal(days: Union[Weekday, Set[Weekday]]) -> str:
     """
     try:
         if days:
-            if type(days) is Weekday:
-                return "{:02x}".format(cast(Weekday, days).bit_rep())
-            elif type(days) is set or len(days) == len(set(days)):  # type:ignore
-                map_to_bits = map(lambda w: w.bit_rep(), days)  # type: ignore
+            if type(days) is Days:
+                return "{:02x}".format(cast(Days, days).bit_rep)
+            elif type(days) is set or len(days) == len(set(days)):  # type: ignore
+                map_to_bits = map(lambda w: w.bit_rep, days)  # type: ignore
                 return "{:02x}".format(int(sum(map_to_bits)))
         raise ValueError("no days requested")
     except Exception as ex:
         raise EncodingError("failed to calculate weekdays") from ex
 
 
-def bit_summary_to_weekdays(sum_weekdays_bit: int) -> Set[Weekday]:
+def bit_summary_to_days(sum_weekdays_bit: int) -> Set[Days]:
     """Decode a weekdays bit summary to a set of weekdays.
 
     Args:
@@ -255,7 +255,7 @@ def bit_summary_to_weekdays(sum_weekdays_bit: int) -> Set[Weekday]:
     try:
         if 1 < sum_weekdays_bit < 255:
             return_weekdays = set()
-            weekdays_by_hex = map(lambda w: (w.hex_rep(), w), Weekday)
+            weekdays_by_hex = map(lambda w: (w.hex_rep, w), Days)
             for weekday_hex in weekdays_by_hex:
                 if weekday_hex[0] & sum_weekdays_bit != 0:
                     return_weekdays.add(weekday_hex[1])

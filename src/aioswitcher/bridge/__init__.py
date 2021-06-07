@@ -10,11 +10,12 @@ from socket import AF_INET
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Type
 
-from ..consts import SOCKET_BIND_TUP
 from ..protocols import SwitcherV2UdpProtocolFactory
 
 if TYPE_CHECKING:
     from ..devices import SwitcherV2Device
+
+SOCKET_BIND_TUP = ("0.0.0.0", 20002)  # nosec
 
 
 class SwitcherV2Bridge:

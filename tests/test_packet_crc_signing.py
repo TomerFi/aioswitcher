@@ -5,8 +5,7 @@ from struct import pack
 
 from assertpy import assert_that
 
-from aioswitcher import consts
-from aioswitcher.api import packets
+from aioswitcher.api import Command, packets
 from aioswitcher.errors import EncodingError
 from aioswitcher.utils import sign_packet_with_crc_key
 
@@ -37,14 +36,14 @@ def test_sign_packet_with_crc_key_for_get_state_packet_returns_signed_packet():
 def test_sign_packet_with_crc_key_for_send_control_on_with_no_timer_packet_returns_signed_packet():
     """Test the sign_packet_with_crc_key tool for the SEND_CONTROL_PACKET for on state with no timer."""
     packet = packets.SEND_CONTROL_PACKET.format(
-        SUT_SESSION_ID, SUT_TIMESTAMP, SUT_DEVICE_ID, consts.COMMAND_ON, consts.NO_TIMER_REQUESTED)
+        SUT_SESSION_ID, SUT_TIMESTAMP, SUT_DEVICE_ID, Command.ON.value, packets.NO_TIMER_REQUESTED)
     assert_that(sign_packet_with_crc_key(packet)).is_equal_to(packet + "cc06bb10")
 
 
 def test_sign_packet_with_crc_key_for_send_control_off_packet_returns_signed_packet():
     """Test the sign_packet_with_crc_key tool for the SEND_CONTROL_PACKET for off state."""
     packet = packets.SEND_CONTROL_PACKET.format(
-        SUT_SESSION_ID, SUT_TIMESTAMP, SUT_DEVICE_ID, consts.COMMAND_OFF, consts.NO_TIMER_REQUESTED)
+        SUT_SESSION_ID, SUT_TIMESTAMP, SUT_DEVICE_ID, Command.OFF.value, packets.NO_TIMER_REQUESTED)
     assert_that(sign_packet_with_crc_key(packet)).is_equal_to(packet + "6c432cf4")
 
 
@@ -52,7 +51,7 @@ def test_sign_packet_with_crc_key_for_send_control_on_with_timer_packet_returns_
     """Test the sign_packet_with_crc_key tool for the SEND_CONTROL_PACKET for on state with a 90 minutes timer."""
     timer_minutes = hexlify(pack("<I", 5400)).decode()
     packet = packets.SEND_CONTROL_PACKET.format(
-        SUT_SESSION_ID, SUT_TIMESTAMP, SUT_DEVICE_ID, consts.COMMAND_ON, timer_minutes)
+        SUT_SESSION_ID, SUT_TIMESTAMP, SUT_DEVICE_ID, Command.ON.value, timer_minutes)
     assert_that(sign_packet_with_crc_key(packet)).is_equal_to(packet + "3b30141e")
 
 

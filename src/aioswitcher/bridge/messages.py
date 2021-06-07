@@ -6,14 +6,11 @@ from socket import inet_ntoa
 from struct import pack
 from typing import Optional, Union
 
-from ..consts import (
-    ENCODING_CODEC,
-    STATE_OFF,
-    STATE_ON,
-    STATE_RESPONSE_ON,
-    WAITING_TEXT,
-)
+from aioswitcher import DeviceState
+
 from ..utils import seconds_to_iso_time
+
+WAITING_TEXT = "waiting_for_data"
 
 
 class SwitcherV2BroadcastMSG:
@@ -41,9 +38,7 @@ class SwitcherV2BroadcastMSG:
         self._auto_off_set = WAITING_TEXT
         self._remaining_time_to_off = WAITING_TEXT
         self._init_future = loop.create_future()
-        fixed_msg = (
-            message if isinstance(message, bytes) else message.encode(ENCODING_CODEC)
-        )
+        fixed_msg = message if isinstance(message, bytes) else message.encode()
         ensure_future(self.initialize(fixed_msg), loop=loop)
 
     async def initialize(self, message: bytes) -> None:
@@ -55,70 +50,66 @@ class SwitcherV2BroadcastMSG:
         """
         try:
             self._verified = (
-                hexlify(message)[0:4].decode(ENCODING_CODEC) == "fef0"
-                and len(message) == 165
+                hexlify(message)[0:4].decode() == "fef0" and len(message) == 165
             )
             if self._verified:
-                temp_ip = hexlify(message)[152:160]
-                ip_addr = int(
-                    temp_ip[6:8] + temp_ip[4:6] + temp_ip[2:4] + temp_ip[0:2],
-                    16,
-                )
+                hex_ip = hexlify(message)[152:160]
+                ip_addr = int(hex_ip[6:8] + hex_ip[4:6] + hex_ip[2:4] + hex_ip[0:2], 16)
                 self._ip_address = inet_ntoa(pack("<L", ip_addr))
 
-                mac = hexlify(message)[160:172].decode(ENCODING_CODEC).upper()
+                hex_mac = hexlify(message)[160:172].decode().upper()
                 self._mac_address = (
-                    mac[0:2]
+                    hex_mac[0:2]
                     + ":"
-                    + mac[2:4]
+                    + hex_mac[2:4]
                     + ":"
-                    + mac[4:6]
+                    + hex_mac[4:6]
                     + ":"
-                    + mac[6:8]
+                    + hex_mac[6:8]
                     + ":"
-                    + mac[8:10]
+                    + hex_mac[8:10]
                     + ":"
-                    + mac[10:12]
+                    + hex_mac[10:12]
                 )
 
-                self._name = message[42:74].decode(ENCODING_CODEC).rstrip("\x00")
+                self._name = message[42:74].decode().rstrip("\x00")
 
-                self._device_id = hexlify(message)[36:42].decode(ENCODING_CODEC)
+                self._device_id = hexlify(message)[36:42].decode()
 
+                hex_device_state = hexlify(message)[266:270].decode()
                 self._device_state = (
-                    STATE_ON
-                    if hexlify(message)[266:270].decode(ENCODING_CODEC)
-                    == STATE_RESPONSE_ON
-                    else STATE_OFF
+                    DeviceState.ON.display
+                    if hex_device_state == DeviceState.ON.value
+                    else DeviceState.OFF.display
                 )
 
-                temp_auto_off_set = hexlify(message)[310:318]
-                temp_auto_off_set_seconds = int(
-                    temp_auto_off_set[6:8]
-                    + temp_auto_off_set[4:6]
-                    + temp_auto_off_set[2:4]
-                    + temp_auto_off_set[0:2],
+                hex_auto_off_set = hexlify(message)[310:318]
+                auto_off_set_seconds = int(
+                    hex_auto_off_set[6:8]
+                    + hex_auto_off_set[4:6]
+                    + hex_auto_off_set[2:4]
+                    + hex_auto_off_set[0:2],
                     16,
                 )
-                self._auto_off_set = seconds_to_iso_time(temp_auto_off_set_seconds)
+                self._auto_off_set = seconds_to_iso_time(auto_off_set_seconds)
 
-                if self._device_state == STATE_ON:
-                    temp_power = hexlify(message)[270:278]
-                    self._power_consumption = int(temp_power[2:4] + temp_power[0:2], 16)
+                if self._device_state == DeviceState.ON.value:
+                    hex_power = hexlify(message)[270:278]
+                    self._power_consumption = int(hex_power[2:4] + hex_power[0:2], 16)
                     self._electric_current = round(
                         (self._power_consumption / float(220)), 1
                     )
 
-                    temp_remaining_time = hexlify(message)[294:302]
-                    temp_remaining_time_seconds = int(
-                        temp_remaining_time[6:8]
-                        + temp_remaining_time[4:6]
-                        + temp_remaining_time[2:4]
-                        + temp_remaining_time[0:2],
+                    hex_remaining_time = hexlify(message)[294:302]
+                    remaining_time_seconds = int(
+                        hex_remaining_time[6:8]
+                        + hex_remaining_time[4:6]
+                        + hex_remaining_time[2:4]
+                        + hex_remaining_time[0:2],
                         16,
                     )
                     self._remaining_time_to_off = seconds_to_iso_time(
-                        temp_remaining_time_seconds
+                        remaining_time_seconds
                     )
 
             self._validated = True

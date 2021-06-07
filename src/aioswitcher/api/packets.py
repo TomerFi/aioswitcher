@@ -3,6 +3,7 @@
 .. codeauthor:: Tomer Figenblat <tomer.figenblat@gmail.com>
 
 """
+NO_TIMER_REQUESTED = "00000000"
 # format values are local session id, timestamp
 REQUEST_FORMAT = "{}340001000000000000000000{}00000000000000000000f0fe"
 PAD_74_ZEROS = "0" * 74
