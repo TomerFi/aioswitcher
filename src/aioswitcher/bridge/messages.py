@@ -13,7 +13,7 @@ from ..consts import (
     STATE_RESPONSE_ON,
     WAITING_TEXT,
 )
-from ..tools import convert_seconds_to_iso_time
+from ..utils import seconds_to_iso_time
 
 
 class SwitcherV2BroadcastMSG:
@@ -100,9 +100,7 @@ class SwitcherV2BroadcastMSG:
                     + temp_auto_off_set[0:2],
                     16,
                 )
-                self._auto_off_set = await convert_seconds_to_iso_time(
-                    self._loop, temp_auto_off_set_seconds
-                )
+                self._auto_off_set = seconds_to_iso_time(temp_auto_off_set_seconds)
 
                 if self._device_state == STATE_ON:
                     temp_power = hexlify(message)[270:278]
@@ -119,8 +117,8 @@ class SwitcherV2BroadcastMSG:
                         + temp_remaining_time[0:2],
                         16,
                     )
-                    self._remaining_time_to_off = await convert_seconds_to_iso_time(
-                        self._loop, temp_remaining_time_seconds
+                    self._remaining_time_to_off = seconds_to_iso_time(
+                        temp_remaining_time_seconds
                     )
 
             self._validated = True
