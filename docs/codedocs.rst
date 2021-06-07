@@ -132,12 +132,6 @@ aioswitcher.bridge.messages
 
         .. automethod:: initialize(message)
 
-aioswitcher.consts
-^^^^^^^^^^^^^^^^^^
-
-.. automodule:: aioswitcher.consts
-    :undoc-members:
-
 aioswitcher.devices
 ^^^^^^^^^^^^^^^^^^^
 
@@ -207,9 +201,9 @@ aioswitcher.schedules
 
     .. automethod:: aioswitcher.schedules.calc_next_run_for_schedule(loop, schedule_details)
 
-aioswitcher.tools
+aioswitcher.utils
 ^^^^^^^^^^^^^^^^^
 
-.. automodule:: aioswitcher.tools
+.. automodule:: aioswitcher.utils
     :members:
     :private-members:

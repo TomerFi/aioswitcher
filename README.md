@@ -21,9 +21,9 @@ async with SwitcherV2Api(your_loop, ip_address, device_id) as swapi:
     state_response = await swapi.get_state()
 
     # control the device: on / off / on + 30 minutes timer
-    turn_on_response = await swapi.control_device(consts.COMMAND_ON)
-    turn_off_response = await swapi.control_device(consts.COMMAND_OFF)
-    turn_on_30_min_response = await swapi.control_device(consts.COMMAND_ON, '30')
+    turn_on_response = await swapi.control_device(api.Command.ON)
+    turn_off_response = await swapi.control_device(api.Command.OFF)
+    turn_on_30_min_response = await swapi.control_device(api.Command.ON, '30')
 ```
 
 ## Contributing
