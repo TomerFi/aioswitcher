@@ -19,7 +19,7 @@ from .consts import (
     WAITING_TEXT,
     WEEKDAY_TUP,
 )
-from .tools import get_days_list_from_bytes, get_time_from_bytes
+from .utils import bit_summary_to_weekdays, hexadecimale_timestamp_to_localtime
 
 
 class SwitcherV2Schedule:
@@ -61,16 +61,16 @@ class SwitcherV2Schedule:
                 if schedule_details[idx][4:6] == "fe":
                     self._days.append(ALL_DAYS)
                 else:
-                    self._days = await get_days_list_from_bytes(
-                        self._loop,
-                        bytearray(unhexlify((schedule_details[idx][4:6])))[0],
+                    weekdays = bit_summary_to_weekdays(
+                        bytearray(unhexlify((schedule_details[idx][4:6])))[0]
                     )
+                    self._days = [weekday.value for weekday in weekdays]  # type: ignore
 
-            self._start_time = await get_time_from_bytes(
-                self._loop, schedule_details[idx][8:16]
+            self._start_time = hexadecimale_timestamp_to_localtime(
+                schedule_details[idx][8:16]
             )
-            self._end_time = await get_time_from_bytes(
-                self._loop, schedule_details[idx][16:24]
+            self._end_time = hexadecimale_timestamp_to_localtime(
+                schedule_details[idx][16:24]
             )
             self._duration = str(
                 datetime.strptime(self._end_time, "%H:%M")

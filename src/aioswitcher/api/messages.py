@@ -16,7 +16,7 @@ from ..consts import (
 )
 from ..errors import DecodingError
 from ..schedules import SwitcherV2Schedule
-from ..tools import convert_seconds_to_iso_time
+from ..utils import seconds_to_iso_time
 
 ResponseMessageType = Enum(
     "ResponseMessageType",
@@ -135,9 +135,7 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                 + temp_time_left[0:2],
                 16,
             )
-            self._time_to_auto_off = await convert_seconds_to_iso_time(
-                self._loop, temp_time_left_seconds
-            )
+            self._time_to_auto_off = seconds_to_iso_time(temp_time_left_seconds)
 
             temp_time_on = hexlify(response)[186:194]
             temp_time_on_seconds = int(
@@ -147,9 +145,7 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                 + temp_time_on[0:2],
                 16,
             )
-            self._time_on = await convert_seconds_to_iso_time(
-                self._loop, temp_time_on_seconds
-            )
+            self._time_on = seconds_to_iso_time(temp_time_on_seconds)
 
             temp_auto_off = hexlify(response)[194:202]
             temp_auto_off_seconds = int(
@@ -159,9 +155,7 @@ class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
                 + temp_auto_off[0:2],
                 16,
             )
-            self._auto_off_set = await convert_seconds_to_iso_time(
-                self._loop, temp_auto_off_seconds
-            )
+            self._auto_off_set = seconds_to_iso_time(temp_auto_off_seconds)
 
             temp_state = hexlify(response)[150:154].decode(ENCODING_CODEC)
             self._state = (
