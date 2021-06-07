@@ -6,7 +6,7 @@ Projects using this module
    *  `switcher_kis code`_
    *  `switcher_kis documentation`_
 
-*  Switcher Water Heater Unofficial REST API:
+*  Switcher Smart Switch Unofficial REST API:
 
    *  `webapi code`_
    *  `webapi documentation`_
