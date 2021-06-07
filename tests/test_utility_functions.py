@@ -1,14 +1,15 @@
 """Switcher water heater Utility functions test cases."""
 
+import time
 from binascii import hexlify, unhexlify
 from datetime import datetime, timedelta
 from struct import pack, unpack
-import time
 
 from assertpy import assert_that
+from pytest import mark
+
 from aioswitcher import Weekday, utils
 from aioswitcher.errors import CalculationError, DecodingError, EncodingError
-from pytest import mark
 
 
 def test_seconds_to_iso_time_with_a_valid_seconds_value_should_return_a_time_string():

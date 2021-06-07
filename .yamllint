@@ -6,7 +6,6 @@ locale: en_US.UTF-8
 ignore: |
   .git/
   .mypy_cache/
-  .tox
 
 rules:
   line-length:
