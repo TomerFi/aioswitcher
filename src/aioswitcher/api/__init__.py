@@ -11,7 +11,7 @@ from socket import AF_INET
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Tuple, Type
 
-from ..consts import NO_TIMER_REQUESTED, REMOTE_SESSION_ID, SOCKET_PORT
+from ..consts import NO_TIMER_REQUESTED
 from ..utils import (
     current_timestamp_to_hexadecimal,
     minutes_to_hexadecimal_seconds,
@@ -23,6 +23,8 @@ from . import messages, packets
 
 if TYPE_CHECKING:
     from asyncio import StreamReader, StreamWriter
+
+SERVER_PORT = 9957
 
 
 class SwitcherV2Api:
@@ -83,7 +85,7 @@ class SwitcherV2Api:
         """Connect to asynchronous socket and get reader and writer object."""
         self._reader, self._writer = await open_connection(
             host=self._ip_addr,
-            port=SOCKET_PORT,
+            port=SERVER_PORT,
             loop=self._loop,
             family=AF_INET,
         )
@@ -120,7 +122,7 @@ class SwitcherV2Api:
         """
         timestamp = current_timestamp_to_hexadecimal()
 
-        packet = packets.LOGIN_PACKET.format(REMOTE_SESSION_ID, timestamp)
+        packet = packets.LOGIN_PACKET.format(timestamp)
 
         signed_packet = sign_packet_with_crc_key(packet)
 

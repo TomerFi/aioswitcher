@@ -7,8 +7,8 @@
 REQUEST_FORMAT = "{}340001000000000000000000{}00000000000000000000f0fe"
 PAD_74_ZEROS = "0" * 74
 
-# format values are remote session id, timestamp
-LOGIN_PACKET = "fef052000232a100" + REQUEST_FORMAT + "1c" + PAD_74_ZEROS
+# format value just timestamp (initial session id is "00000000")
+LOGIN_PACKET = "fef052000232a10000000000" + REQUEST_FORMAT[2:] + "1c" + PAD_74_ZEROS
 # format values are local session id, timestamp, device id
 GET_STATE_PACKET = "fef0300002320103" + REQUEST_FORMAT + "{}00"
 # format values are local session id, timestamp, device id, command, timer
