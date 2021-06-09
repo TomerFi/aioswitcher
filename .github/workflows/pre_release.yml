@@ -2,6 +2,7 @@
 name: Pre-release
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - dev
@@ -9,7 +10,7 @@ on:
 jobs:
   pre-release:
     runs-on: ubuntu-latest
-    name: Build pre-release and publish latest to GitHub
+    name: Build pre-release and publish early access to GitHub
     strategy:
       matrix:
         python: [3.9]
@@ -26,29 +27,38 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: ${{ runner.os }}-pip-
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python }}
 
-      - name: Set up poetry
-        run: pip install --upgrade pip poetry
+      - name: Prepare python environment
+        run: |
+          pip install -rrequirements.txt
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
 
-      - name: Cache poetry repository
+      - name: Cache poetry virtual environment
         uses: actions/cache@v2.1.6
         with:
-          path: ~/.cache/pypoetry
+          path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: ${{ runner.os }}-poetry-
 
-      - name: Build distribution assets
-        run: poetry build
+      - name: Install, test, and build distribution assets
+        run: |
+          poe install_all
+          poe test_rep
+          poe build
 
       - name: Create release
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: early-access
-          prerelease: true
           title: early-access
           files: |
             dist/*.tar.gz
             dist/*.whl
+
+      - name: Push to CodeCov
+        uses: codecov/codecov-action@v1.5.0
+        with:
+          file: coverage.xml
+          fail_ci_if_error: true
