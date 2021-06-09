@@ -2,70 +2,79 @@
 name: Pull request build
 
 on:
-  pull_request:
+  pull_request_target:
     branch: dev
 
+env:
+  MAIN_PY_VER: 3.9
+
 jobs:
-  verify:
+  lint:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python: [3.9]
-    name: Verify project with Python ${{ matrix.python }}
+    name: Lint source files
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.3.4
 
-      - name: Set up Python ${{ matrix.python }}
+      - name: Set up Python ${{ env.MAIN_PY_VER }}
         uses: actions/setup-python@v2.2.2
         with:
-          python-version: ${{ matrix.python }}
+          python-version: $MAIN_PY_VER
 
       - name: Cache pip repository
         uses: actions/cache@v2.1.6
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: ${{ runner.os }}-${{ matrix.python }}-pip-
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Set up poetry
+      - name: Prepare python environment
         run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
+          pip install -rrequirements.txt
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
 
-      - name: Cache poetry repository
+      - name: Cache poetry virtual environment
         uses: actions/cache@v2.1.6
         with:
-          path: ~/.cache/pypoetry
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: ${{ runner.os }}-${{ matrix.python }}-poetry-
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Install dependencies
-        run: poetry install -vv -E "checkers"
+      - name: Install dev dependencies and lint project
+        run: |
+          poe install_dev
+          poe lint
 
-      - name: Lint yaml files
-        run: poetry run yamllint --config-file .yamllint --format colored --strict .
+      - name: Install deno runtime
+        uses: denoland/setup-deno@v1.0.0
 
-      - name: Lint rst files
-        run: poetry run doc8 --allow-long-titles --max-line-length 100 docs
+      - name: Check license headers on source files
+        run: poe lic_check
 
-      - name: Security check code with bandit
-        run: poetry run bandit -rvc .bandit src/ tests/ docs/ -l -ii
+  lint-docs:
+    runs-on: ubuntu-latest
+    name: Lint documentation files
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v2.3.4
 
-      - name: Validate imports with isort
-        run: poetry run isort --check-only src/ tests/ docs/
+      - name: Lint markdown files
+        uses: prologic/action-markdownlint@v0.1.2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-pr-check
+          level: error
 
-      - name: Lint code with flake8
-        run: poetry run flake8 --statistics --count --doctests src/ tests/ docs/
-
-      - name: Check code style with black
-        run: poetry run black --check src/ tests/ docs/
-
-      - name: Check static typing with mypy
-        run: poetry run mypy --follow-imports silent --ignore-missing-imports src/ tests/ docs/
+      - name: Check for spelling mistakes
+        uses: reviewdog/action-misspell@v1.7.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          locale: "US"
+          reporter: github-pr-check
+          level: error
 
   test:
     runs-on: ubuntu-latest
+    needs: [lint, lint-docs]
     strategy:
       matrix:
         python: [3.6, 3.7, 3.8, 3.9]
@@ -83,54 +92,45 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: ${{ runner.os }}-${{ matrix.python }}-pip-
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python }}
 
-      - name: Set up poetry
+      - name: Prepare python environment
         run: |
-          pip install --upgrade pip poetry
-          poetry config virtualenvs.create false --local
+          pip install -rrequirements.txt
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
 
-      - name: Cache poetry repository
+      - name: Cache poetry virtual environment
         uses: actions/cache@v2.1.6
         with:
-          path: ~/.cache/pypoetry
+          path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
-          restore-keys: ${{ runner.os }}-${{ matrix.python }}-poetry-
 
-      - name: Install dependencies
-        run: poetry install -vv -E "tests"
+      - name: Install project pacakge
+        run: poetry install_pkg
 
-      - name: Perform unit tests
-        if: matrix.python != 3.8
-        run: poetry run pytest -vs
+      - name: Test project
+        if: matrix.python != $MAIN_PY_VER
+        run: poe test
 
-      - name: Perform unit tests with coverage report
-        if: matrix.python == 3.8
-        run: |
-          poetry run pytest -vs --cov \
-          --cov-config=.coveragerc \
-          --cov-report=xml:coverage.xml \
-          --junit-xml junit.xml
+      - name: Test project and create reports
+        if: matrix.python == $MAIN_PY_VER
+        run: poe test_rep
 
-      - name: Publish unit test report to GitHub
-        uses: EnricoMi/publish-unit-test-result-action@v1.18
-        if: matrix.python == 3.8 && always()
+      - name: Push coverage report as artifact
+        if: matrix.python == $MAIN_PY_VER
+        uses: actions/upload-artifact@v2.2.3
         with:
-          test_changes_limit: 0
-          files: junit.xml
+          name: reports
+          if-no-files-found: error
+          path: |
+            ./coverage.xml
+            ./junit.xml
 
-      - name: Upload coverage report as artifact
-        if: matrix.python == 3.8
-        uses: actions/upload-artifact@v2.2.4
-        with:
-          name: coverage-report
-          path: ./coverage.xml
-
-  coverage:
+  report:
     runs-on: ubuntu-latest
     name: Push coverage report to CodeCov
-    needs: [verify, test]
+    needs: [test]
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.3.4
@@ -138,10 +138,18 @@ jobs:
       - name: Download coverage report from artifacts
         uses: actions/download-artifact@v2
         with:
-          name: coverage-report
+          name: reports
+          path: reports
+
+      - name: Report test summary
+        uses: EnricoMi/publish-unit-test-result-action@v1.17
+        if: matrix.python == $MAIN_PY_VER && always()
+        with:
+          test_changes_limit: 0
+          files: reports/junit.xml
 
       - name: Push to CodeCov
         uses: codecov/codecov-action@v1.5.2
         with:
-          file: coverage.xml
+          file: reports/coverage.xml
           fail_ci_if_error: true
