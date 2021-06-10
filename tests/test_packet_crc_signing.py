@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch packet crc signing test cases."""
+"""Switcher unofficial integration packet crc signing test cases."""
 
 from binascii import hexlify
 from struct import pack

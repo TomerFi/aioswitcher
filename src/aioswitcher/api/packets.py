@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch unofficial API and bridge, API Packet formats."""
+"""Switcher unofficial integration TCP socket API packet formats."""
 
 NO_TIMER_REQUESTED = "00000000"
 # format values are local session id, timestamp

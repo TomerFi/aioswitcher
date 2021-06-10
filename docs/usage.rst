@@ -44,8 +44,8 @@ Example of UDP Bridge usage
 
    import asyncio
    from datetime import datetime
-   from aioswitcher.bridge import SwitcherV2Bridge
-   from aioswitcher.devices import SwitcherV2Device
+   from aioswitcher.bridge import SwitcherBridge
+   from aioswitcher.devices.switcherv2 import SwitcherV2Device
 
    # instructions on getting this data is in,
    # https://github.com/NightRang3r/Switcher-V2-Python
@@ -56,7 +56,7 @@ Example of UDP Bridge usage
 
    """Use as instance."""
    async def run_as_instance() -> None:
-       v2bridge = SwitcherV2Bridge(your_loop, device_id)
+       v2bridge = SwitcherBridge(your_loop, device_id)
        # start the bridge
        await v2bridge.start()
 
@@ -96,7 +96,7 @@ Example of UDP Bridge usage
 
    """Use as context manager."""
    async def run_as_context_manager() -> None:
-       async with SwitcherV2Bridge(your_loop, device_id) as v2bridge:
+       async with SwitcherBridge(your_loop, device_id) as v2bridge:
            # get the Queue
            queue = v2bridge.queue  # type: asyncio.Queue
 
@@ -259,7 +259,7 @@ Objects and Properties
 There are two main objects you need to be aware of:
 
 *  The first object is the one representing the device itself,
-   ``aioswitcher.devices.SwitcherV2Device`` SwitcherV2Device_.
+   ``aioswitcher.devices.switcherv2.SwitcherV2Device`` SwitcherV2Device_.
 
 *  The second object is the one representing the device's schedule,
    ``aioswitcher.schedules.SwitcherV2Schedule`` SwitcherV2Schedule_.
@@ -418,7 +418,7 @@ SwitcherV2StateResponseMSG
 | Property        | Type                | Description                                         |
 +=================+=====================+=====================================================+
 | **state**       | ``str``             | Return the state. Possible values are based on the  |
-|                 |                     | enum class ``aioswitcher.DeviceState``.             |
+|                 |                     | enum class ``aioswitcher.devices.DeviceState``.     |
 +-----------------+---------------------+-----------------------------------------------------+
 | **time_left**   | ``str``             | Return the time left to auto-off.                   |
 +-----------------+---------------------+-----------------------------------------------------+

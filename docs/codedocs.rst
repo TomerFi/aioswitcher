@@ -109,7 +109,7 @@ aioswitcher.bridge
 
 .. automodule:: aioswitcher.bridge
 
-    .. autoclass:: aioswitcher.bridge.SwitcherV2Bridge
+    .. autoclass:: aioswitcher.bridge.SwitcherBridge
         :members: running, queue
 
         .. automethod:: __aenter__()
@@ -122,12 +122,31 @@ aioswitcher.bridge
 
         .. automethod:: stop()
 
+    .. autoclass:: aioswitcher.bridge.UdpProtocolFactory
+        :show-inheritance:
+        :inherited-members:
+        :members: factory_future
+
+        .. automethod:: connection_made(transport)
+
+        .. automethod:: datagram_received(data, addr)
+
+        .. automethod:: error_received(exc)
+
+        .. automethod:: connection_lost(exc)
+
+        .. automethod:: close_transport(future)
+
+        .. automethod:: handle_incoming_messages(data, addr)
+
+        .. automethod:: get_device_from_message(ip_addr, future)
+
 aioswitcher.bridge.messages
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. automodule:: aioswitcher.bridge.messages
 
-    .. autoclass:: aioswitcher.bridge.messages.SwitcherV2BroadcastMSG
+    .. autoclass:: aioswitcher.bridge.messages.BroadcastMessage
         :members: verified, ip_address, mac_address, name, device_id, power, device_state, remaining_time_to_off, current, auto_off_set, init_future
 
         .. automethod:: initialize(message)
@@ -137,7 +156,7 @@ aioswitcher.devices
 
 .. automodule:: aioswitcher.devices
 
-    .. autoclass:: aioswitcher.devices.SwitcherV2Device
+    .. autoclass:: aioswitcher.devices.switcherv2.SwitcherV2Device
         :members: device_id, ip_addr, mac_addr, name, state, remaining_time, auto_off_set, power_consumption, electric_current, last_data_update, last_state_change
 
         .. automethod:: update_device_data(ip_address, name, state, remaining_time, auto_off_set, power_consumption, electric_current, last_state_change)
@@ -160,30 +179,6 @@ aioswitcher.errors
     .. autoexception:: aioswitcher.errors.EncodingError
         :show-inheritance:
         :inherited-members:
-
-aioswitcher.protocols
-^^^^^^^^^^^^^^^^^^^^^
-
-.. automodule:: aioswitcher.protocols
-
-    .. autoclass:: aioswitcher.protocols.SwitcherV2UdpProtocolFactory
-        :show-inheritance:
-        :inherited-members:
-        :members: factory_future
-
-        .. automethod:: connection_made(transport)
-
-        .. automethod:: datagram_received(data, addr)
-
-        .. automethod:: error_received(exc)
-
-        .. automethod:: connection_lost(exc)
-
-        .. automethod:: close_transport(future)
-
-        .. automethod:: handle_incoming_messages(data, addr)
-
-        .. automethod:: get_device_from_message(ip_addr, future)
 
 aioswitcher.schedules
 ^^^^^^^^^^^^^^^^^^^^^

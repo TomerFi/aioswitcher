@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch unofficial API and bridge, Utility functions."""
+"""Switcher unofficial integration utility functions."""
 
 import datetime
 import time

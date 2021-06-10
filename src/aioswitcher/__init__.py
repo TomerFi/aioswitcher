@@ -12,35 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch unofficial API and bridge."""
+"""Switcher unofficial integration."""
 from enum import Enum, unique
 
 name = "aioswitcher"
 
 __all__ = ["api", "bridge", "devices", "schedules", "utils"]
-
-
-@unique
-class DeviceState(Enum):
-    """Enum class represnting the device's state."""
-
-    ON = "0100", "on"
-    OFF = "0000", "off"
-
-    def __new__(cls, value: str, display: str) -> "DeviceState":
-        """Override the default enum constructor and include extra properties."""
-        new_enum = object.__new__(cls)
-        new_enum._value = value
-        new_enum._display = display
-        return new_enum
-
-    @property
-    def display(self) -> str:
-        return self._display  # type: ignore
-
-    @property
-    def value(self) -> str:
-        return self._value  # type: ignore
 
 
 @unique

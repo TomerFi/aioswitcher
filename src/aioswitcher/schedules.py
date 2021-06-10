@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch unofficial API and bridge, Schedules."""
+"""Switcher unofficial integration schedules."""
 
 from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import unhexlify

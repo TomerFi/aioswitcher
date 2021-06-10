@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch utility functions test cases."""
+"""Switcher unofficial integration utility functions test cases."""
 
 import time
 from binascii import hexlify, unhexlify

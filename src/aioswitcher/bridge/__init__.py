@@ -12,63 +12,91 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch unofficial API and bridge, Bridge Object."""
+"""Switcher unofficial integration, UDP Bridge."""
 
-from asyncio import AbstractEventLoop, Event, Queue
+from asyncio import BaseTransport, DatagramProtocol, Event, Transport, get_running_loop
 from functools import partial
 from socket import AF_INET
 from types import TracebackType
-from typing import TYPE_CHECKING, Optional, Type
+from typing import Any, Callable, Optional, Tuple, Type, cast
 
-from ..protocols import SwitcherV2UdpProtocolFactory
+from ..devices import (
+    DeviceCategory,
+    SwitcherBase,
+    SwitcherPowerPlug,
+    SwitcherWaterHeater,
+)
+from .messages import BroadcastMessage
 
-if TYPE_CHECKING:
-    from ..devices import SwitcherV2Device
-
-SOCKET_BIND_TUP = ("0.0.0.0", 20002)  # nosec
+LOCAL_ADDRESS = ("0.0.0.0", 20002)  # nosec
 
 
-class SwitcherV2Bridge:
-    """Represntation of the SwitcherV2 Bridge object.
+def parse_device_from_message(
+    device_callback: Callable[[SwitcherBase], Any], message: BroadcastMessage
+) -> None:
+    """Use as callback function to be called for every broadcast message.
+
+    Will create devices and send to the on_device callback.
 
     Args:
-      loop: the event loop for the factory to run in.
-      device_id: the id of the desired device.
-
-    Todo:
-      * replace ``queue`` attribute with ``get_queue`` method.
+        device_callback: callable for sending SwitcherBase devices parsed from message.
+        broadcast_message: the BroadcastMessage to parse.
 
     """
+    if message.device_type.category == DeviceCategory.WATER_HEATER:
+        device_callback(
+            SwitcherWaterHeater(
+                message.device_type,
+                message.device_state,
+                message.device_id,
+                message.ip_address,
+                message.mac_address,
+                message.name,
+                message.power_consumption,
+                message.electric_current,
+                message.remaining_time,
+                message.auto_shutdown,
+            )
+        )
 
-    def __init__(
-        self,
-        loop: AbstractEventLoop,
-        device_id: str,
-    ) -> None:
-        """Initialize the switcherv2 bridge."""
-        self._loop = loop
-        self._device_id = device_id
+    elif message.device_type.category == DeviceCategory.POWER_PLUG:
+        device_callback(
+            SwitcherPowerPlug(
+                message.device_type,
+                message.device_state,
+                message.device_id,
+                message.ip_address,
+                message.mac_address,
+                message.name,
+                message.power_consumption,
+                message.electric_current,
+            )
+        )
 
-        self._device = None  # type: Optional[SwitcherV2Device]
-        self._running_evt = Event()
-        self._queue = Queue(maxsize=1)  # type: Queue
 
-    async def __aenter__(self) -> "SwitcherV2Bridge":
-        """Enter SwitcherV2Bridge asynchronous context manager.
+class SwitcherBridge:
+    """Represntation of the Switcher Bridge object."""
+
+    def __init__(self, on_device: Callable[[SwitcherBase], Any]) -> None:
+        """Initialize the switcher bridge."""
+        self._on_device = on_device
+        self._bridge_running_evt = Event()
+
+    async def __aenter__(self) -> "SwitcherBridge":
+        """Enter SwitcherBridge asynchronous context manager.
 
         Returns:
-          This instance of ``aioswitcher.bridge.SwitcherV2Bridge`` as an
-          awaitable.
+            This instance of ``aioswitcher.bridge.SwitcherBridge`` as an awaitable.
 
         """
         await self.start()
         return await self.__await__()
 
-    async def __await__(self) -> "SwitcherV2Bridge":
-        """Return SwitcherV2Bridge awaitable object.
+    async def __await__(self) -> "SwitcherBridge":
+        """Return SwitcherBridge awaitable object.
 
         Returns:
-          This instance of ``aioswitcher.bridge.SwitcherV2Bridge``.
+            This instance of ``aioswitcher.bridge.SwitcherBridge``.
 
         """
         return self
@@ -79,39 +107,55 @@ class SwitcherV2Bridge:
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
-        """Exit the SwitcherV2Bridge asynchronous context manager."""
+        """Exit the SwitcherBridge asynchronous context manager."""
         return await self.stop()
 
     async def start(self) -> None:
         """Create an asynchronous listenr and start the bridge event."""
-        await self._loop.create_datagram_endpoint(
-            partial(
-                SwitcherV2UdpProtocolFactory,
-                *[
-                    self._loop,
-                    self._device_id,
-                    self.queue,
-                    self._running_evt,
-                ],
+        await get_running_loop().create_datagram_endpoint(
+            lambda: UdpClientProtocol(
+                partial(parse_device_from_message, self._on_device)
             ),
-            local_addr=SOCKET_BIND_TUP,
+            local_addr=LOCAL_ADDRESS,
             family=AF_INET,
         )
 
-        self._running_evt.set()
+        self._bridge_running_evt.set()
         return None
 
     async def stop(self) -> None:
         """Stop the asynchronous bridge."""
-        self._running_evt.clear()
+        self._bridge_running_evt.clear()
         return None
 
     @property
-    def running(self) -> bool:
+    def is_running(self) -> bool:
         """bool: Return true if bridge is running."""
-        return self._running_evt.is_set()
+        return self._bridge_running_evt.is_set()
 
-    @property
-    def queue(self) -> Queue:
-        """asyncio.Queue: Return the queue storing updated device objects."""
-        return self._queue
+
+class UdpClientProtocol(DatagramProtocol):
+    """Implementation of the Asyncio UDP DatagramProtocol."""
+
+    def __init__(self, on_datagram: Callable[[BroadcastMessage], None]) -> None:
+        """Initialize the protocol."""
+        self.transport = None  # type: Optional[Transport]
+        self._on_datagram = on_datagram
+
+    def connection_made(self, transport: BaseTransport) -> None:
+        """Call on connection established."""
+        self.transport = cast(Transport, transport)
+
+    def datagram_received(self, data: bytes, addr: Tuple) -> None:
+        """Call on datagram recieved."""
+        self._on_datagram(BroadcastMessage(data))
+
+    def error_received(self, exc: Optional[Exception]) -> None:
+        """Call on exception recieved."""
+        # TODO: replace the following
+        print("error_received")
+
+    def connection_lost(self, exc: Optional[Exception]) -> None:
+        """Call on connection lost."""
+        # TODO: replace the following
+        print("connection_lost")

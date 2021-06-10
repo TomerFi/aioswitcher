@@ -12,16 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch unofficial API and bridge, Exception classes."""
+"""Switcher unofficial integration custom exceptions."""
 
 
 class CalculationError(Exception):
-    """Exception to be raised when cpu bound calculation is failing."""
+    """Used for failures in calculating data."""
 
 
 class DecodingError(Exception):
-    """Exception to be raised when cpu bound decoding is failing."""
+    """Used for failures in decoding data."""
 
 
 class EncodingError(Exception):
-    """Exception to be raised when cpu bound encoding is failing."""
+    """Used for failures in encoding data."""
+
+
+class NotSwitcherDevice(Exception):
+    """Used when the broadcast message originator cannot be identified."""
