@@ -6,7 +6,7 @@ Projects using this module
    *  `switcher_kis code`_
    *  `switcher_kis documentation`_
 
-*  Switcher Smart Switch Unofficial REST API:
+*  Switcher Unofficial REST API:
 
    *  `webapi code`_
    *  `webapi documentation`_

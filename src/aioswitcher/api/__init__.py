@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher smart switch unofficial API and bridge, API Object."""
+"""Switcher unofficial integration TCP socket API."""
 
 from asyncio import AbstractEventLoop, Event, open_connection, wait
 from binascii import unhexlify

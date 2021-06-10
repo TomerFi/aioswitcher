@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher Packet Response Messages."""
+"""Switcher unofficial integration TCP socket API messages."""
 
 from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import hexlify
 from enum import Enum
 from typing import List
 
-from .. import DeviceState
+from ..devices import DeviceState
 from ..errors import DecodingError
 from ..schedules import SwitcherV2Schedule
 from ..utils import seconds_to_iso_time

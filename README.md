@@ -1,8 +1,8 @@
-# Switcher Smart Switch Unofficial Bridge and API</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4] [![conventional-commits]][0]
+# Switcher Unofficial Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4] [![conventional-commits]][0]
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3]
 
-PyPi module named [aioswitcher][11] for integrating with the [Switcher Smart Switch](https://www.switcher.co.il/).</br>
+PyPi module named [aioswitcher][11] for integrating with the [Switcher Devices](https://www.switcher.co.il/).</br>
 Please check out the [documentation][8].
 
 ## Install
