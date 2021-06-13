@@ -15,7 +15,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.6",
     "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -37,7 +36,7 @@ exclude = [
 ] # poetry.lock is automatically excluded
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7.0"
 
 [tool.poetry.dev-dependencies]
 assertpy = "^1.1"
