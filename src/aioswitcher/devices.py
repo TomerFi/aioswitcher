@@ -14,7 +14,8 @@
 
 """Switcher unofficial integration devices."""
 
-from abc import ABC, abstractmethod
+from abc import ABC
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto, unique
 from typing import Optional
@@ -90,85 +91,9 @@ class DeviceState(Enum):
         return self._value  # type: ignore
 
 
+@dataclass
 class SwitcherBase(ABC):
-    """Abstraction for all switcher devices."""
-
-    @property
-    @abstractmethod
-    def device_type(self) -> DeviceType:
-        """Return the switcher device type."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def device_state(self) -> DeviceState:
-        """Return the switcher device state."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def device_id(self) -> str:
-        """str: Returns the device id."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def ip_address(self) -> str:
-        """str: Returns the ip address."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def mac_address(self) -> str:
-        """str: Returns the mac address."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def name(self) -> str:
-        """str: Returns the device name."""
-        raise NotImplementedError
-
-    @property
-    def last_data_update(self) -> datetime:
-        """datetime: Returns timestamp of the last update."""
-        raise NotImplementedError
-
-
-class SwitcherPowerBase(ABC):
-    """Abstraction for all switcher devices reporting power data."""
-
-    @property
-    @abstractmethod
-    def power_consumption(self) -> int:
-        """int: Returns the power consumption in watts."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def electric_current(self) -> float:
-        """float: returns the power consumption in amps."""
-        raise NotImplementedError
-
-
-class SwitcherTimedBase(ABC):
-    """Abstraction for all switcher devices supporting timed operations."""
-
-    @property
-    @abstractmethod
-    def remaining_time(self) -> Optional[str]:
-        """str: Returns the time left to auto shutdown."""
-        raise NotImplementedError
-
-    @property
-    @abstractmethod
-    def auto_shutdown(self) -> str:
-        """str: Returns the auto-shutdown configuration value."""
-        raise NotImplementedError
-
-
-class SwitcherPowerPlug(SwitcherBase, SwitcherPowerBase):
-    """Implementation of the Switcher Power Plug device.
+    """Abstraction for all switcher devices.
 
     Args:
         device_type: the DeviceType appropriate member.
@@ -177,177 +102,75 @@ class SwitcherPowerPlug(SwitcherBase, SwitcherPowerBase):
         ip_address: the ip address assigned to the device.
         mac_address: the mac address assigned to the device.
         name: the name of the device.
+
+    """
+
+    device_type: DeviceType
+    device_state: DeviceState
+    device_id: str
+    ip_address: str
+    mac_address: str
+    name: str
+    last_data_update: datetime = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Post initialization, set last_data_update to the instantiation datetime."""
+        self.last_data_update = datetime.now()
+
+
+@dataclass
+class SwitcherPowerBase(ABC):
+    """Abstraction for all switcher devices reporting power data.
+
+    Args:
         power_consumption: the current power consumpstion in watts.
         electric_current: the current power consumpstion in amps.
 
     """
 
-    def __init__(
-        self,
-        device_type: DeviceType,
-        device_state: DeviceState,
-        device_id: str,
-        ip_address: str,
-        mac_address: str,
-        name: str,
-        power_consumption: int,
-        electric_current: float,
-    ) -> None:
-        """Initialize the Switcher Power Plug Device."""
-        if device_type.category != DeviceCategory.POWER_PLUG:
-            raise ValueError("only power plugs are allowed")
-        self._device_type = device_type
-        self._device_state = device_state
-        self._device_id = device_id
-        self._ip_address = ip_address
-        self._mac_address = mac_address
-        self._name = name
-        self._power_consumption = power_consumption
-        self._electric_current = electric_current
-        self._last_data_update = datetime.now()
-
-    @property
-    def device_type(self) -> DeviceType:
-        """Return the switcher device type."""
-        return self._device_type
-
-    @property
-    def device_state(self) -> DeviceState:
-        """Return the switcher device state."""
-        return self._device_state
-
-    @property
-    def device_id(self) -> str:
-        """str: Returns the device id."""
-        return self._device_id
-
-    @property
-    def ip_address(self) -> str:
-        """str: Returns the ip address."""
-        return self._ip_address
-
-    @property
-    def mac_address(self) -> str:
-        """str: Returns the mac address."""
-        return self._mac_address
-
-    @property
-    def name(self) -> str:
-        """str: Returns the device name."""
-        return self._name
-
-    @property
-    def power_consumption(self) -> int:
-        """int: Returns the power consumption in watts."""
-        return self._power_consumption
-
-    @property
-    def electric_current(self) -> float:
-        """float: returns the power consumption in amps."""
-        return self._electric_current
-
-    @property
-    def last_data_update(self) -> datetime:
-        """datetime: Returns timestamp of the last update."""
-        return self._last_data_update
+    power_consumption: int
+    electric_current: float
 
 
-class SwitcherWaterHeater(SwitcherBase, SwitcherPowerBase, SwitcherTimedBase):
-    """Implementation of the Switcher Water Heater device.
+@dataclass
+class SwitcherTimedBase(ABC):
+    """Abstraction for all switcher devices supporting timed operations.
 
     Args:
-        device_type: the DeviceType appropriate member.
-        device_state: the DeviceState appropriate member.
-        device_id: the id retrieved from the device.
-        ip_address: the ip address assigned to the device.
-        mac_address: the mac address assigned to the device.
-        name: the name of the device.
-        power_consumption: the current power consumpstion in watts.
-        electric_current: the current power consumpstion in amps.
         remaining_time: remaining time (if on).
         auto_shutdown: configured value for auto shutdown.
 
     """
 
-    def __init__(
-        self,
-        device_type: DeviceType,
-        device_state: DeviceState,
-        device_id: str,
-        ip_address: str,
-        mac_address: str,
-        name: str,
-        power_consumption: int,
-        electric_current: float,
-        remaining_time: Optional[str],
-        auto_shutdown: str,
-    ) -> None:
-        """Initialize the Switcher Water Heater Device."""
-        if device_type.category != DeviceCategory.WATER_HEATER:
+    remaining_time: Optional[str]
+    auto_shutdown: str
+
+
+@dataclass
+class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
+    """Implementation of the Switcher Power Plug device.
+
+    Please Note the order of the inherited classes to understand the order of the
+    instantiation parameters and the super call.
+    """
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as POWER_PLUG."""
+        if self.device_type.category != DeviceCategory.POWER_PLUG:
+            raise ValueError("only power plugs are allowed")
+        super().__post_init__()
+
+
+@dataclass
+class SwitcherWaterHeater(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
+    """Implementation of the Switcher Water Heater device.
+
+    Please Note the order of the inherited classes to understand the order of the
+    instantiation parameters and the super call.
+    """
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as WATER_HEATER."""
+        if self.device_type.category != DeviceCategory.WATER_HEATER:
             raise ValueError("only water heaters are allowed")
-        self._device_type = device_type
-        self._device_state = device_state
-        self._device_id = device_id
-        self._ip_address = ip_address
-        self._mac_address = mac_address
-        self._name = name
-        self._power_consumption = power_consumption
-        self._electric_current = electric_current
-        self._remaining_time = remaining_time
-        self._auto_shutdown = auto_shutdown
-        self._last_data_update = datetime.now()
-
-    @property
-    def device_type(self) -> DeviceType:
-        """Return the switcher device type."""
-        return self._device_type
-
-    @property
-    def device_state(self) -> DeviceState:
-        """Return the switcher device state."""
-        return self._device_state
-
-    @property
-    def device_id(self) -> str:
-        """str: Returns the device id."""
-        return self._device_id
-
-    @property
-    def ip_address(self) -> str:
-        """str: Returns the ip address."""
-        return self._ip_address
-
-    @property
-    def mac_address(self) -> str:
-        """str: Returns the mac address."""
-        return self._mac_address
-
-    @property
-    def name(self) -> str:
-        """str: Returns the device name."""
-        return self._name
-
-    @property
-    def power_consumption(self) -> int:
-        """int: Returns the power consumption in watts."""
-        return self._power_consumption
-
-    @property
-    def electric_current(self) -> float:
-        """float: returns the power consumption in amps."""
-        return self._electric_current
-
-    @property
-    def remaining_time(self) -> Optional[str]:
-        """str: Returns the time left to auto shutdown."""
-        return self._remaining_time
-
-    @property
-    def auto_shutdown(self) -> str:
-        """str: Returns the auto-shutdown configuration value."""
-        return self._auto_shutdown
-
-    @property
-    def last_data_update(self) -> datetime:
-        """datetime: Returns timestamp of the last update."""
-        return self._last_data_update
+        super().__post_init__()
