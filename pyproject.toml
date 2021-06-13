@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioswitcher"
-version = "2.0.0-dev1"
+version = "2.0.0-dev2"
 description = "Switcher Unofficial Integration."
 license = "Apache-2.0"
 authors = ["Tomer Figenblat <tomer.figenblat@gmail.com>"]
@@ -8,20 +8,12 @@ readme = "README.md"
 homepage = "https://pypi.org/project/aioswitcher/"
 repository = "https://github.com/tomerfi/aioswitcher"
 documentation = "https://aioswitcher.tomfi.info"
-keywords = ["home", "automation", "switcher", "water-heater"]
+keywords = ["home", "automation", "switcher", "smart"]
 classifiers = [
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Operating System :: OS Independent",
-    "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Topic :: Documentation :: Sphinx",
     "Topic :: Home Automation",
-    "Topic :: Software Development",
-    "Topic :: Software Development :: Libraries",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed"
 ]
