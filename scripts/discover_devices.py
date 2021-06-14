@@ -28,13 +28,13 @@ Example:
     script listens for these messages and prints a serialized version of the to the
     standard output, for example (note the ``device_id`` and ``mac_address`` properties)::
         {   'auto_shutdown': '03:00:00',
-            'device_id': 'xxxxxx',
+            'device_id': 'aaaaaa',
             'device_state': <DeviceState.OFF: ('0000', 'off')>,
             'device_type': <DeviceType.V2_ESP: ('Switcher V2 (esp)', 'a7', <DeviceCategory.WATER_HEATER: 1>)>,
             'electric_current': 0.0,
             'ip_address': '192.168.1.33',
             'last_data_update': datetime.datetime(2021, 6, 13, 11, 11, 44, 883003),
-            'mac_address': 'XX:XX:XX:XX:XX:XX',
+            'mac_address': '12:A1:A2:1A:BC:1A',
             'name': 'My Switcher Boiler',
             'power_consumption': 0,
             'remaining_time': None}
