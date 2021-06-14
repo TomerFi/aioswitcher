@@ -43,6 +43,7 @@ Example:
 
 from argparse import ArgumentParser
 from asyncio import get_event_loop, sleep
+from dataclasses import asdict
 from pprint import PrettyPrinter
 
 from pkg_resources import require
@@ -59,7 +60,7 @@ async def print_devices(delay: int) -> None:
 
     def on_device_found_callback(device: SwitcherBase):
         """Use as a callback printing found devices."""
-        printer.pprint(device.__dict__)
+        printer.pprint(asdict(device))
         print()
 
     bridge = SwitcherBridge(on_device_found_callback)
