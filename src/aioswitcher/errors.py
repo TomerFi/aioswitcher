@@ -25,7 +25,3 @@ class DecodingError(Exception):
 
 class EncodingError(Exception):
     """Used for failures in encoding data."""
-
-
-class NotSwitcherDevice(Exception):
-    """Used when the broadcast message originator cannot be identified."""
