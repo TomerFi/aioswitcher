@@ -99,7 +99,12 @@ def parse_device_from_datagram(
 
 
 class SwitcherBridge:
-    """Represntation of the Switcher Bridge object."""
+    """Use for running a UDP client for bridging Switcher devices broadcast messages.
+
+    Args:
+        on_device: a callable to which every new SwitcherBase device found will be send.
+
+    """
 
     def __init__(self, on_device: Callable[[SwitcherBase], Any]) -> None:
         """Initialize the switcher bridge."""
