@@ -33,7 +33,7 @@ from .devices import (
     SwitcherPowerPlug,
     SwitcherWaterHeater,
 )
-from .utils import seconds_to_iso_time
+from .utils import seconds_to_iso_time, watts_to_amps
 
 __all__ = ["SwitcherBridge"]
 
@@ -60,7 +60,7 @@ def _parse_device_from_datagram(
         device_state = parser.get_device_state()
         if device_state == DeviceState.ON:
             power_consumption = parser.get_power_consumption()
-            electric_current = round((power_consumption / float(220)), 1)
+            electric_current = watts_to_amps(power_consumption)
         else:
             power_consumption = 0
             electric_current = 0.0

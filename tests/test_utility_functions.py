@@ -172,3 +172,8 @@ def test_bit_summary_to_days_with_wrong_bit_sum_parameterized_value(wrong_bit_su
     assert_that(utils.bit_summary_to_days).raises(
         DecodingError
     ).when_called_with(wrong_bit_sum).is_equal_to("failed to decode value to weekdays")
+
+
+@mark.parametrize("watts, amps", [(1608, 7.3), (2600, 11.8), (3489, 15.9)])
+def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(watts, amps):
+    assert_that(utils.watts_to_amps(watts)).is_equal_to(amps)
