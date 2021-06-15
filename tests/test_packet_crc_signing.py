@@ -20,7 +20,6 @@ from struct import pack
 from assertpy import assert_that
 
 from aioswitcher.api import Command, packets
-from aioswitcher.errors import EncodingError
 from aioswitcher.utils import sign_packet_with_crc_key
 
 SUT_TIMESTAMP = "ef8db35c"
@@ -31,8 +30,8 @@ SUT_DEVICE_ID = "a123bc"
 def test_sign_packet_with_crc_key_for_a_random_string_throws_error():
     """Test the sign_packet_with_crc_key tool with a random string unqualified as a packet."""
     assert_that(sign_packet_with_crc_key).raises(
-        EncodingError
-    ).when_called_with("just a regular string").is_equal_to("failed to sign crc")
+        ValueError
+    ).when_called_with("just a regular string").is_equal_to("Odd-length string")
 
 
 def test_sign_packet_with_crc_key_for_login_packet_returns_signed_packet():

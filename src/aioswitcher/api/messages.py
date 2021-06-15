@@ -20,7 +20,6 @@ from enum import Enum
 from typing import List
 
 from ..devices import DeviceState
-from ..errors import DecodingError
 from ..schedules import SwitcherV2Schedule
 from ..utils import seconds_to_iso_time
 
@@ -95,7 +94,7 @@ class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
         try:
             self._session_id = hexlify(response)[16:24].decode()
         except Exception as exc:
-            raise DecodingError("failed to parse login response message") from exc
+            raise ValueError("failed to parse login response message") from exc
 
     @property
     def session_id(self) -> str:
