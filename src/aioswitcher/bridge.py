@@ -35,10 +35,12 @@ from .devices import (
 )
 from .utils import seconds_to_iso_time
 
+__all__ = ["SwitcherBridge"]
+
 LOCAL_ADDRESS = ("0.0.0.0", 20002)  # nosec
 
 
-def parse_device_from_datagram(
+def _parse_device_from_datagram(
     device_callback: Callable[[SwitcherBase], Any], datagram: bytes
 ) -> None:
     """Use as callback function to be called for every broadcast message.
@@ -144,7 +146,7 @@ class SwitcherBridge:
         """Create an asynchronous listenr and start the bridge event."""
         info("starting the udp bridge")
         protocol_factory = UdpClientProtocol(
-            partial(parse_device_from_datagram, self._on_device)
+            partial(_parse_device_from_datagram, self._on_device)
         )
         transport, protocol = await get_running_loop().create_datagram_endpoint(
             lambda: protocol_factory,
@@ -212,13 +214,9 @@ class DatagramParser:
 
     def is_switcher_originator(self) -> bool:
         """Verify the broadcast message had originated from a switcher device."""
-        try:
-            return (
-                hexlify(self.message)[0:4].decode() == "fef0"
-                and len(self.message) == 165
-            )
-        except Exception:
-            return False
+        return (
+            hexlify(self.message)[0:4].decode() == "fef0" and len(self.message) == 165
+        )
 
     def get_ip(self) -> str:
         """Extract the IP address from the broadcast message."""
