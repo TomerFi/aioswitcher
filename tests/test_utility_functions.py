@@ -17,23 +17,22 @@
 import time
 from binascii import hexlify, unhexlify
 from datetime import datetime, timedelta
-from struct import pack, unpack
+from struct import error, pack, unpack
 
 from assertpy import assert_that
 from pytest import mark
 
 from aioswitcher import Days, utils
-from aioswitcher.errors import CalculationError, DecodingError, EncodingError
 
 
 def test_seconds_to_iso_time_with_a_valid_seconds_value_should_return_a_time_string():
     assert_that(utils.seconds_to_iso_time(86399)).is_equal_to("23:59:59")
 
 
-def test_seconds_to_iso_time_with_a_nagative_value_should_throw_a_calculation_error():
+def test_seconds_to_iso_time_with_a_nagative_value_should_throw_an_error():
     assert_that(utils.seconds_to_iso_time).raises(
-        CalculationError
-    ).when_called_with(-1).is_equal_to("failed to convert seconds to iso time")
+        ValueError
+    ).when_called_with(-1).is_equal_to("hour must be in 0..23")
 
 
 def test_minutes_to_hexadecimal_seconds_with_correct_minutes_should_return_expected_hex_seconds():
@@ -42,10 +41,10 @@ def test_minutes_to_hexadecimal_seconds_with_correct_minutes_should_return_expec
     assert_that(hex_sut).is_equal_to("18150000")
 
 
-def test_minutes_to_hexadecimal_seconds_with_a_negative_value_should_throw_an_encoding_error():
+def test_minutes_to_hexadecimal_seconds_with_a_negative_value_should_throw_an_error():
     assert_that(utils.minutes_to_hexadecimal_seconds).raises(
-        EncodingError
-    ).when_called_with(-1).is_equal_to("failed to encode -1 minutes")
+        error
+    ).when_called_with(-1).is_equal_to("argument out of range")
 
 
 def test_timedelta_to_hexadecimal_seconds_with_an_allowed_timedelta_should_return_an_hex_timestamp():
@@ -55,10 +54,10 @@ def test_timedelta_to_hexadecimal_seconds_with_an_allowed_timedelta_should_retur
 
 
 @mark.parametrize("out_of_range", [timedelta(minutes=59), timedelta(hours=24)])
-def test_timedelta_to_hexadecimal_seconds_with_an_out_of_range_value_should_throw_an_encoding_error(out_of_range):
+def test_timedelta_to_hexadecimal_seconds_with_an_out_of_range_value_should_throw_an_error(out_of_range):
     assert_that(utils.timedelta_to_hexadecimal_seconds).raises(
-        EncodingError
-    ).when_called_with(out_of_range).starts_with("failed to encode")
+        ValueError
+    ).when_called_with(out_of_range).starts_with("can only handle 1 to 24 hours")
 
 
 def test_string_to_hexadecimale_device_name_with_a_correct_length_name_should_return_a_right_zero_padded_hex_name():
@@ -69,10 +68,10 @@ def test_string_to_hexadecimale_device_name_with_a_correct_length_name_should_re
 
 
 @mark.parametrize("unsupported_length_value", ["t", "t" * 33])
-def test_string_to_hexadecimale_device_name_with_an_unsupported_length_value_should_throw_an_encoding_error(unsupported_length_value):
+def test_string_to_hexadecimale_device_name_with_an_unsupported_length_value_should_throw_an_error(unsupported_length_value):
     assert_that(utils.string_to_hexadecimale_device_name).raises(
-        EncodingError
-    ).when_called_with(unsupported_length_value).starts_with("failed to encode")
+        ValueError
+    ).when_called_with(unsupported_length_value).starts_with("name length can vary from 2 to 32")
 
 
 def test_current_timestamp_to_hexadecimal_should_return_the_current_timestamp():
@@ -85,13 +84,13 @@ def test_current_timestamp_to_hexadecimal_should_return_the_current_timestamp():
     assert_that(sut_datetime).is_equal_to_ignoring_time(datetime.now())
 
 
-def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_a_decoding_error(monkeypatch):
+def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_an_error(monkeypatch):
     # patch the time method to return a nagative value instead of the actuall timestamp
     monkeypatch.setattr(time, "time", lambda: -1)
 
     assert_that(utils.current_timestamp_to_hexadecimal).raises(
-        DecodingError
-    ).when_called_with().is_equal_to("failed to generate timestamp")
+        error
+    ).when_called_with().is_equal_to("argument out of range")
 
 
 def test_time_to_hexadecimal_timestamp_with_correct_time_should_return_the_expected_timestamp():
@@ -105,10 +104,10 @@ def test_time_to_hexadecimal_timestamp_with_correct_time_should_return_the_expec
     ).is_equal_to_ignoring_time(datetime.now()).has_hour(21).has_minute(0)
 
 
-def test_time_to_hexadecimal_timestamp_with_incorrect_time_should_throw_an_encoding_error():
+def test_time_to_hexadecimal_timestamp_with_incorrect_time_should_throw_an_error():
     assert_that(utils.time_to_hexadecimal_timestamp).raises(
-        EncodingError
-    ).when_called_with("2100").is_equal_to("failed to encode 2100")
+        IndexError
+    ).when_called_with("2100").is_equal_to("list index out of range")
 
 
 def test_hexadecimale_timestamp_to_localtime_with_the_current_timestamp_should_return_a_time_string():
@@ -119,10 +118,10 @@ def test_hexadecimale_timestamp_to_localtime_with_the_current_timestamp_should_r
     ).is_equal_to(sut_datetime.time().strftime("%H:%M"))
 
 
-def test_hexadecimale_timestamp_to_localtime_with_wrong_value_should_throw_a_decoding_error():
+def test_hexadecimale_timestamp_to_localtime_with_wrong_value_should_throw_an_error():
     assert_that(utils.hexadecimale_timestamp_to_localtime).raises(
-        DecodingError
-    ).when_called_with("wrongvalue".encode()).is_equal_to("failed to decode timestamp")
+        ValueError
+    ).when_called_with("wrongvalue".encode()).starts_with("invalid literal for int() with base 16")
 
 
 @mark.parametrize("weekdays, expected_sum", [
@@ -141,17 +140,17 @@ def test_weekdays_to_hexadecimal_with_parameterized_weekday_set_should_return_th
 
 
 @mark.parametrize("empty_collection", [set(), (), {}, []])
-def test_weekdays_to_hexadecimal_with_empty_collections_should_throw_an_encoding_error(empty_collection):
+def test_weekdays_to_hexadecimal_with_empty_collections_should_throw_an_error(empty_collection):
     assert_that(utils.weekdays_to_hexadecimal).raises(
-        EncodingError
-    ).when_called_with(empty_collection).is_equal_to("failed to calculate weekdays")
+        ValueError
+    ).when_called_with(empty_collection).is_equal_to("no days requested")
 
 
 @mark.parametrize("duplicate_members", [(Days.MONDAY, Days.MONDAY), [Days.MONDAY, Days.MONDAY]])
 def test_weekdays_to_hexadecimal_with_duplicate_members_should_throw_an_encoding_error(duplicate_members):
     assert_that(utils.weekdays_to_hexadecimal).raises(
-        EncodingError
-    ).when_called_with(duplicate_members).is_equal_to("failed to calculate weekdays")
+        ValueError
+    ).when_called_with(duplicate_members).is_equal_to("no days requested")
 
 
 @mark.parametrize("sum, expected_weekdays", [
@@ -170,8 +169,8 @@ def test_bit_summary_to_days_with_parameterized_sum_should_return_the_expected_w
 @mark.parametrize("wrong_bit_sum", [1, 255])
 def test_bit_summary_to_days_with_wrong_bit_sum_parameterized_value(wrong_bit_sum):
     assert_that(utils.bit_summary_to_days).raises(
-        DecodingError
-    ).when_called_with(wrong_bit_sum).is_equal_to("failed to decode value to weekdays")
+        ValueError
+    ).when_called_with(wrong_bit_sum).is_equal_to("weekdays bit sum should be between 2 and 254")
 
 
 @mark.parametrize("watts, amps", [(1608, 7.3), (2600, 11.8), (3489, 15.9)])

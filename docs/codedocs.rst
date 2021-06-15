@@ -161,24 +161,6 @@ aioswitcher.devices
 
         .. automethod:: update_device_data(ip_address, name, state, remaining_time, auto_off_set, power_consumption, electric_current, last_state_change)
 
-        .. automethod:: as_dict()
-
-aioswitcher.errors
-^^^^^^^^^^^^^^^^^^
-
-.. automodule:: aioswitcher.errors
-
-    .. autoexception:: aioswitcher.errors.CalculationError
-        :show-inheritance:
-        :inherited-members:
-
-    .. autoexception:: aioswitcher.errors.DecodingError
-        :show-inheritance:
-        :inherited-members:
-
-    .. autoexception:: aioswitcher.errors.EncodingError
-        :show-inheritance:
-        :inherited-members:
 
 aioswitcher.schedules
 ^^^^^^^^^^^^^^^^^^^^^
