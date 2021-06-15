@@ -65,7 +65,7 @@ def _parse_device_from_datagram(
             power_consumption = 0
             electric_current = 0.0
 
-        if device_type.category == DeviceCategory.WATER_HEATER:
+        if device_type and device_type.category == DeviceCategory.WATER_HEATER:
             debug("discovered a water heater switcher device")
             device_callback(
                 SwitcherWaterHeater(
@@ -82,7 +82,7 @@ def _parse_device_from_datagram(
                 )
             )
 
-        elif device_type.category == DeviceCategory.POWER_PLUG:
+        elif device_type and device_type.category == DeviceCategory.POWER_PLUG:
             debug("discovered a power plug switcher device")
             device_callback(
                 SwitcherPowerPlug(

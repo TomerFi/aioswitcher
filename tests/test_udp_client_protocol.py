@@ -16,8 +16,8 @@
 
 from unittest.mock import Mock, patch
 
-from assertpy import assert_that, assert_warn
-from pytest import fixture, mark
+from assertpy import assert_that
+from pytest import fixture, warns
 
 from aioswitcher.bridge import UdpClientProtocol
 
@@ -44,9 +44,9 @@ def test_given_datagram_when_sut_received_then_the_callback_is_called(sut_protoc
     mock_callback.assert_called_once_with(mock_datagram)
 
 
-@mark.filterwarnings("ignore::UserWarning")
 def test_error_received_with_no_error_should_issue_a_warning(sut_protocol):
-    assert_warn(sut_protocol.error_received(None)).is_equal_to("udp client received error")
+    with warns(UserWarning, match="udp client received error"):
+        sut_protocol.error_received(None)
 
 
 @patch("logging.Logger.error")
