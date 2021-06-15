@@ -273,3 +273,8 @@ def bit_summary_to_days(sum_weekdays_bit: int) -> Set[Days]:
         raise ValueError("weekdays bit sum should be between 2 and 254")
     except Exception as ex:
         raise DecodingError("failed to decode value to weekdays") from ex
+
+
+def watts_to_amps(watts: int) -> float:
+    """Convert power consumption to watts to electric current in amps."""
+    return round((watts / float(220)), 1)
