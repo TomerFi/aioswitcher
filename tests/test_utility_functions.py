@@ -14,10 +14,10 @@
 
 """Switcher unofficial integration utility functions test cases."""
 
-import time
 from binascii import hexlify, unhexlify
 from datetime import datetime, timedelta
-from struct import error, pack, unpack
+from struct import pack, unpack
+from unittest.mock import patch
 
 from assertpy import assert_that
 from pytest import mark
@@ -43,7 +43,7 @@ def test_minutes_to_hexadecimal_seconds_with_correct_minutes_should_return_expec
 
 def test_minutes_to_hexadecimal_seconds_with_a_negative_value_should_throw_an_error():
     assert_that(utils.minutes_to_hexadecimal_seconds).raises(
-        error
+        Exception
     ).when_called_with(-1).is_equal_to("argument out of range")
 
 
@@ -84,12 +84,10 @@ def test_current_timestamp_to_hexadecimal_should_return_the_current_timestamp():
     assert_that(sut_datetime).is_equal_to_ignoring_time(datetime.now())
 
 
-def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_an_error(monkeypatch):
-    # patch the time method to return a nagative value instead of the actuall timestamp
-    monkeypatch.setattr(time, "time", lambda: -1)
-
+@patch("time.time", return_value=-1)
+def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_an_error(_):
     assert_that(utils.current_timestamp_to_hexadecimal).raises(
-        error
+        Exception
     ).when_called_with().is_equal_to("argument out of range")
 
 
