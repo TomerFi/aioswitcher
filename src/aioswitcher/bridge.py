@@ -37,8 +37,6 @@ from .utils import seconds_to_iso_time, watts_to_amps
 
 __all__ = ["SwitcherBridge"]
 
-LOCAL_ADDRESS = ("0.0.0.0", 20002)  # nosec
-
 
 def _parse_device_from_datagram(
     device_callback: Callable[[SwitcherBase], Any], datagram: bytes
@@ -108,29 +106,18 @@ class SwitcherBridge:
 
     """
 
-    def __init__(self, on_device: Callable[[SwitcherBase], Any]) -> None:
+    def __init__(
+        self, on_device: Callable[[SwitcherBase], Any], broadcast_port: int = 20002
+    ) -> None:
         """Initialize the switcher bridge."""
         self._on_device = on_device
+        self._broadcast_port = broadcast_port
         self._is_running = False
         self._transport = None  # type: Optional[BaseTransport]
 
     async def __aenter__(self) -> "SwitcherBridge":
-        """Enter SwitcherBridge asynchronous context manager.
-
-        Returns:
-            This instance of ``aioswitcher.bridge.SwitcherBridge`` as an awaitable.
-
-        """
+        """Enter SwitcherBridge asynchronous context manager."""
         await self.start()
-        return await self.__await__()
-
-    async def __await__(self) -> "SwitcherBridge":
-        """Return SwitcherBridge awaitable object.
-
-        Returns:
-            This instance of ``aioswitcher.bridge.SwitcherBridge``.
-
-        """
         return self
 
     async def __aexit__(
@@ -140,7 +127,7 @@ class SwitcherBridge:
         traceback: Optional[TracebackType],
     ) -> None:
         """Exit the SwitcherBridge asynchronous context manager."""
-        return await self.stop()
+        await self.stop()
 
     async def start(self) -> None:
         """Create an asynchronous listenr and start the bridge event."""
@@ -150,7 +137,7 @@ class SwitcherBridge:
         )
         transport, protocol = await get_running_loop().create_datagram_endpoint(
             lambda: protocol_factory,
-            local_addr=LOCAL_ADDRESS,
+            local_addr=("0.0.0.0", self._broadcast_port),  # nosec
             family=AF_INET,
         )
 
