@@ -18,7 +18,6 @@ from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto, unique
-from typing import Optional
 
 
 @unique
@@ -137,12 +136,12 @@ class SwitcherTimedBase(ABC):
     """Abstraction for all switcher devices supporting timed operations.
 
     Args:
-        remaining_time: remaining time (if on).
+        remaining_time: remaining time to current run.
         auto_shutdown: configured value for auto shutdown.
 
     """
 
-    remaining_time: Optional[str]
+    remaining_time: str
     auto_shutdown: str
 
 

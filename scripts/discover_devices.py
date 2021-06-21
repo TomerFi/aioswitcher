@@ -37,7 +37,7 @@ Example:
             'mac_address': '12:A1:A2:1A:BC:1A',
             'name': 'My Switcher Boiler',
             'power_consumption': 0,
-            'remaining_time': None}
+            'remaining_time': '00:00:00'}
 
 """  # noqa: E501
 
