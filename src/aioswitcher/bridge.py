@@ -75,7 +75,11 @@ def _parse_device_from_datagram(
                     parser.get_name(),
                     power_consumption,
                     electric_current,
-                    parser.get_remaining() if device_state == DeviceState.ON else None,
+                    (
+                        parser.get_remaining()
+                        if device_state == DeviceState.ON
+                        else "00:00:00"
+                    ),
                     parser.get_auto_shutdown(),
                 )
             )
