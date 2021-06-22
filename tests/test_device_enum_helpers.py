@@ -17,7 +17,7 @@
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher.devices import DeviceCategory, DeviceState, DeviceType
+from aioswitcher.device import DeviceCategory, DeviceState, DeviceType
 
 
 @mark.parametrize("sut_type, expected_value, expected_hex_rep, expected_category", [

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration, UDP Bridge."""
+"""Switcher unofficial integration, UDP Bridge module."""
 
 from asyncio import BaseTransport, DatagramProtocol, get_running_loop
 from binascii import hexlify
@@ -25,7 +25,7 @@ from types import TracebackType
 from typing import Any, Callable, Optional, Tuple, Type
 from warnings import warn
 
-from .devices import (
+from .device import (
     DeviceCategory,
     DeviceState,
     DeviceType,
@@ -33,7 +33,7 @@ from .devices import (
     SwitcherPowerPlug,
     SwitcherWaterHeater,
 )
-from .utils import seconds_to_iso_time, watts_to_amps
+from .device.tools import seconds_to_iso_time, watts_to_amps
 
 __all__ = ["SwitcherBridge"]
 

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration TCP socket API."""
+"""Switcher unofficial integration TCP socket API module."""
 
 from asyncio import AbstractEventLoop, Event, open_connection, wait
 from binascii import unhexlify
@@ -22,7 +22,7 @@ from socket import AF_INET
 from types import TracebackType
 from typing import TYPE_CHECKING, Optional, Tuple, Type
 
-from ..utils import (
+from ..device.tools import (
     current_timestamp_to_hexadecimal,
     minutes_to_hexadecimal_seconds,
     sign_packet_with_crc_key,
@@ -417,7 +417,7 @@ class SwitcherV2Api:
 
         Args:
           schedule_data: formatted data for updating the schedule, can be
-            obtained from the ``aioswitcher.schedules.SwitcherV2Schedule``
+            obtained from the ``aioswitcher.schedules.SwitcherSchedule``
             object or created using the format
             ``aioswitcher.schedules.SCHEDULE_CREATE_DATA_FORMAT`` filled with
             three values: weekdays, start-time and end-time. Weekdays can be
@@ -470,7 +470,7 @@ class SwitcherV2Api:
         Args:
           schedule_id: the id of the schedule slot from the device, can be 0-7
             as there are 8 slots available. Can be obtained from the
-            ``aioswitcher.schedules.SwitcherV2Schedule`` object.
+            ``aioswitcher.schedules.SwitcherSchedule`` object.
 
         Returns:
           An instance of the serialized object
