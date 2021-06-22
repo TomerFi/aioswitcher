@@ -21,6 +21,8 @@ name = "aioswitcher"
 __all__ = ["api", "bridge", "device", "schedule"]
 
 
+# the following enum should be under the schedule module
+# it is here to avoid a circular imports issue
 @unique
 class Days(Enum):
     """Enum class represnting the day entity."""
