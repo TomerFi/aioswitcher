@@ -22,7 +22,7 @@ from assertpy import assert_that
 from pytest import fixture, warns
 
 from aioswitcher.bridge import DatagramParser, _parse_device_from_datagram
-from aioswitcher.devices import DeviceState, SwitcherPowerPlug, SwitcherWaterHeater
+from aioswitcher.device import DeviceState, SwitcherPowerPlug, SwitcherWaterHeater
 
 
 @fixture

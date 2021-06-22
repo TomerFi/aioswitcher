@@ -20,7 +20,7 @@ from struct import pack
 from assertpy import assert_that
 
 from aioswitcher.api import Command, packets
-from aioswitcher.utils import sign_packet_with_crc_key
+from aioswitcher.device.tools import sign_packet_with_crc_key
 
 SUT_TIMESTAMP = "ef8db35c"
 SUT_SESSION_ID = "01000000"

@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration utility functions."""
+"""Switcher unofficial integration device module tools."""
 
 import datetime
 import time
 from binascii import crc_hqx, hexlify, unhexlify
 from struct import pack
-from typing import Set, Union, cast
-
-from . import Days
 
 
 def seconds_to_iso_time(all_seconds: int) -> str:
@@ -144,70 +141,6 @@ def time_to_hexadecimal_timestamp(time_value: str) -> str:
     binary_timestamp = pack("<I", int(timestamp))
 
     return hexlify(binary_timestamp).decode()
-
-
-def hexadecimale_timestamp_to_localtime(hex_timestamp: bytes) -> str:
-    """Decode an hexadecimale timestamp to localtime with the format %H:%M.
-
-    Args:
-        hex_timestamp: the hexadecimale timestamp.
-
-    Return:
-        Localtime string with %H:%M format. e.g. "20:30".
-    """
-    hex_time = (
-        hex_timestamp[6:8]
-        + hex_timestamp[4:6]
-        + hex_timestamp[2:4]
-        + hex_timestamp[0:2]
-    )
-    int_time = int(hex_time, 16)
-    local_time = time.localtime(int_time)
-    print(local_time)
-    return time.strftime("%H:%M", local_time)
-
-
-def weekdays_to_hexadecimal(days: Union[Days, Set[Days]]) -> str:
-    """Sum the requested weekdays bit represntation and return as hexadecimal value.
-
-    Args:
-        days: the requested Weekday members.
-
-    Return:
-        Hexadecimale represntation of the sum of all requested day's bit representation.
-
-    """
-    if days:
-        if type(days) is Days:
-            return "{:02x}".format(cast(Days, days).bit_rep)
-        elif type(days) is set or len(days) == len(set(days)):  # type: ignore
-            map_to_bits = map(lambda w: w.bit_rep, days)  # type: ignore
-            return "{:02x}".format(int(sum(map_to_bits)))
-    raise ValueError("no days requested")
-
-
-def bit_summary_to_days(sum_weekdays_bit: int) -> Set[Days]:
-    """Decode a weekdays bit summary to a set of weekdays.
-
-    Args:
-        sum_weekdays: the sum of all weekdays
-
-    Return:
-        Set of Weekday memebers decoded from the summary value.
-
-    Todo:
-        Should an existing remainder in the sum value throw an error?
-        E.g. 3 will result in a set of MONDAY and the remainder will be 1.
-
-    """
-    if 1 < sum_weekdays_bit < 255:
-        return_weekdays = set()
-        weekdays_by_hex = map(lambda w: (w.hex_rep, w), Days)
-        for weekday_hex in weekdays_by_hex:
-            if weekday_hex[0] & sum_weekdays_bit != 0:
-                return_weekdays.add(weekday_hex[1])
-        return return_weekdays
-    raise ValueError("weekdays bit sum should be between 2 and 254")
 
 
 def watts_to_amps(watts: int) -> float:

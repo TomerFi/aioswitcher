@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration devices."""
+"""Switcher unofficial integration device module."""
 
 from abc import ABC
 from dataclasses import dataclass, field

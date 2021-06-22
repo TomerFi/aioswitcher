@@ -19,7 +19,7 @@ from dataclasses import dataclass
 from assertpy import assert_that
 from pytest import fixture, mark
 
-from aioswitcher.devices import (
+from aioswitcher.device import (
     DeviceState,
     DeviceType,
     SwitcherPowerPlug,

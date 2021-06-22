@@ -49,7 +49,7 @@ from pprint import PrettyPrinter
 from pkg_resources import require
 
 from aioswitcher.bridge import SwitcherBridge
-from aioswitcher.devices import SwitcherBase
+from aioswitcher.device import SwitcherBase
 
 require("aioswitcher>=2.0.0-dev")
 

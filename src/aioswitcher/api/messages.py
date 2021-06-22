@@ -19,9 +19,9 @@ from binascii import hexlify
 from enum import Enum
 from typing import List
 
-from ..devices import DeviceState
-from ..schedules import SwitcherV2Schedule
-from ..utils import seconds_to_iso_time
+from ..device import DeviceState
+from ..device.tools import seconds_to_iso_time
+from ..schedule import SwitcherSchedule
 
 STATE_UNKNOWN = "unknown"
 
@@ -276,7 +276,7 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
     def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
         """Initialize the Set Name response message."""
         super().__init__(loop, response, ResponseMessageType.GET_SCHEDULES)
-        self._schedule_list = []  # type: List[SwitcherV2Schedule]
+        self._schedule_list = []  # type: List[SwitcherSchedule]
 
         res = hexlify(response)
         idx = res[90:-8].decode()
@@ -286,9 +286,7 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
 
         if schedules_details:
             for i in range(len(schedules_details)):
-                schedule = SwitcherV2Schedule(
-                    loop, i, schedules_details  # type: ignore
-                )
+                schedule = SwitcherSchedule(loop, i, schedules_details)  # type: ignore
                 self._schedule_list.append(schedule)
 
     @property
@@ -297,8 +295,8 @@ class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
         return self._schedule_list != []
 
     @property
-    def get_schedules(self) -> List[SwitcherV2Schedule]:
-        """list(aioswitcher.schedules.SwitcherV2Schedule): Return schedules."""
+    def get_schedules(self) -> List[SwitcherSchedule]:
+        """list(aioswitcher.schedules.SwitcherSchedule): Return schedules."""
         return self._schedule_list
 
 

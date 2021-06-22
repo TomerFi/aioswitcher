@@ -21,7 +21,7 @@ from assertpy import assert_that
 from pytest import mark
 
 from aioswitcher.bridge import DatagramParser
-from aioswitcher.devices import DeviceState, DeviceType
+from aioswitcher.device import DeviceState, DeviceType
 
 
 @mark.parametrize("type_suffix, expected_type", [

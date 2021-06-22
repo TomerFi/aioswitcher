@@ -168,7 +168,7 @@ Example of TCP Socket API usage
    from datetime import timedelta
    from aioswitcher import Days, utils
    from aioswitcher.api import SwitcherV2Api, messages
-   from aioswitcher.schedules import SCHEDULE_CREATE_DATA_FORMAT, SwitcherV2Schedule
+   from aioswitcher.schedules import SCHEDULE_CREATE_DATA_FORMAT, SwitcherSchedule
 
    # create a new event loop
    your_loop = asyncio.get_event_loop()
@@ -211,7 +211,7 @@ Example of TCP Socket API usage
            get_schedules_response = await swapi.get_schedules()
 
            # disable or enable a schedule
-           # schedule_data = (SwitcherV2Schedule).schedule_data
+           # schedule_data = (SwitcherSchedule).schedule_data
            # response: messages.SwitcherV2DisableEnableScheduleResponseMSG
            #
            # the following will enable the schedule:
@@ -225,7 +225,7 @@ Example of TCP Socket API usage
                updated_schedule_data)
 
            # delete a schedule (0 <= schedule_id <= 7)
-           # schedule_id = (SwitcherV2Schedule).schedule_id
+           # schedule_id = (SwitcherSchedule).schedule_id
            # response: messages.SwitcherV2DeleteScheduleResponseMSG
            delete_response = await swapi.delete_schedule(schedule_id)
 
@@ -262,7 +262,7 @@ There are two main objects you need to be aware of:
    ``aioswitcher.devices.switcherv2.SwitcherV2Device`` SwitcherV2Device_.
 
 *  The second object is the one representing the device's schedule,
-   ``aioswitcher.schedules.SwitcherV2Schedule`` SwitcherV2Schedule_.
+   ``aioswitcher.schedules.SwitcherSchedule`` SwitcherSchedule_.
 
 SwitcherV2Device
 ----------------
@@ -315,7 +315,7 @@ SwitcherV2Device
 |                       |              | state change.  |                     |                  |
 +-----------------------+--------------+----------------+---------------------+------------------+
 
-SwitcherV2Schedule
+SwitcherSchedule
 ------------------
 
 +-------------------+--------------------+---------------+---------------------+------------------+
@@ -367,7 +367,7 @@ SwitcherV2Schedule
 |                   |                    | the schedule  |                     |                  |
 |                   |                    | data.         |                     |                  |
 +-------------------+--------------------+---------------+---------------------+------------------+
-| **init_future**   | ``asyncio.Future`` | Return the    | SwitcherV2Schedule  |                  |
+| **init_future**   | ``asyncio.Future`` | Return the    | SwitcherSchedule    |                  |
 |                   |                    | future of the |                     |                  |
 |                   |                    | init.         |                     |                  |
 +-------------------+--------------------+---------------+---------------------+------------------+
@@ -484,7 +484,7 @@ SwitcherV2GetScheduleResponseMSG
 | **found_schedules** | ``bool``                     | Return true if found schedules in the |
 |                     |                              | response.                             |
 +---------------------+------------------------------+---------------------------------------+
-| **get_schedules**   | ``List[SwitcherV2Schedule]`` | Return a list of SwitcherV2Schedule_. |
+| **get_schedules**   | ``List[SwitcherSchedule]``   | Return a list of SwitcherSchedule_.   |
 +---------------------+------------------------------+---------------------------------------+
 
 SwitcherV2DisableEnableScheduleResponseMSG

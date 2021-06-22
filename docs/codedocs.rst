@@ -167,7 +167,7 @@ aioswitcher.schedules
 
 .. automodule:: aioswitcher.schedules
 
-    .. autoclass:: aioswitcher.schedules.SwitcherV2Schedule
+    .. autoclass:: aioswitcher.schedules.SwitcherSchedule
         :members: schedule_id, enabled, recurring, days, start_time, end_time, duration, schedule_data, init_future
 
         .. automethod:: initialize(idx, schedule_details)

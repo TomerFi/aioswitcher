@@ -12,12 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration."""
+"""Switcher unofficial integration main module."""
+
 from enum import Enum, unique
 
 name = "aioswitcher"
 
-__all__ = ["api", "bridge", "devices", "schedules", "utils"]
+__all__ = ["api", "bridge", "device", "schedule"]
 
 
 @unique
