@@ -86,6 +86,16 @@ def test_pretty_next_run_on_last_sunday_with_monday_selected_should_return_due_t
         assert_that(tools.pretty_next_run("13:00", {Days.MONDAY})).is_equal_to(expected_return)
 
 
+def test_calc_duration_with_valid_start_and_end_time_should_return_the_duration():
+    assert_that(tools.calc_duration("13:00", "14:00")).is_equal_to("1:00:00")
+
+
+def test_calc_duration_with_reveresed_start_and_end_time_should_throw_an_error():
+    assert_that(tools.calc_duration).raises(
+        ValueError
+    ).when_called_with("14:00", "13:00").is_equal_to("end_time should be greater the start_time")
+
+
 def test_hexadecimale_timestamp_to_localtime_with_the_current_timestamp_should_return_a_time_string():
     sut_datetime = datetime.now()
     hex_timestamp = hexlify(pack("<I", round(sut_datetime.timestamp())))
