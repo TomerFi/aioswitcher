@@ -25,9 +25,6 @@ from .utils import bit_summary_to_days, hexadecimale_timestamp_to_localtime
 
 ALL_DAYS = "Every day"
 WAITING_TEXT = "waiting_for_schedule_data"
-SCHEDULE_DUE_TODAY_FORMAT = "Due today at {}"
-SCHEDULE_DUE_TOMMOROW_FORMAT = "Due tommorow at {}"
-SCHEDULE_DUE_ANOTHER_DAY_FORMAT = "Due next {} at {}"
 # weekdays sum, start-time timestamp, end-time timestamp
 SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"
 
@@ -183,78 +180,46 @@ class SwitcherV2Schedule:
         return self.__dict__
 
 
-def _calc_next_run_for_schedule(schedule_details: SwitcherV2Schedule) -> str:
-    """Calculate the next runtime of the schedule.
+def _pretty_next_run(start_time: str, days: List[Days] = []) -> str:
+    """Create a literal for displaying the next run time.
 
     Args:
-      schedule_details: ``SwitcherV2Schedule`` representing the schedule slot.
+        start_time: the start of the schedule in "%H:%M" format, e.g. "17:00".
+        days: for recurring schedules, a list of days when none, will be today.
 
     Returns:
-      A pretty string describing the next due run.
-      e.g. "Due tommorow at 17:00".
-
-    Note:
-      This is a private function containing blocking code.
-      Please consider using ``calc_next_run_for_schedule`` (without the `_`),
-      to schedule as a task on the event loop.
+        A pretty string describing the next due run.
+        e.g. "Due next Sunday at 17:00".
 
     """
-    if schedule_details.recurring:
-        today_datetime = datetime.now()
+    if not days:
+        return f"Due today at {start_time}"
 
-        start_time = datetime.strptime(schedule_details.start_time, "%H:%M")
-        current_time = datetime.strptime(
-            ("0" + str(today_datetime.hour))[-2:]
-            + ":"
-            + ("0" + str(today_datetime.minute))[-2:],
-            "%H:%M",
-        )
+    current_datetime = datetime.utcnow()
+    current_weekday = current_datetime.weekday()
 
-        current_weekday = today_datetime.weekday()
-        found_day = -1
-        if schedule_details.days == [ALL_DAYS]:
-            if current_time < start_time:
-                return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)
-            return SCHEDULE_DUE_TOMMOROW_FORMAT.format(schedule_details.start_time)
+    current_time = datetime.strptime(
+        current_datetime.time().strftime("%H:%M"), "%H:%M"
+    ).time()
+    schedule_time = datetime.strptime(start_time, "%H:%M").time()
 
-        for day in Days:
-            if day.weekday == current_weekday and current_time < start_time:
-                return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)
+    found_day = -1
+    for day in days:
+        # if scheduled for later on today, return "due today"
+        if day.weekday == current_weekday and current_time < schedule_time:
+            return f"Due today at {start_time}"
 
-            if found_day == -1 or found_day > day.weekday:
-                found_day = day.weekday
+        # get the closest day to today by saving the lowest weekday as "found_day"
+        if found_day == -1 or found_day > day.weekday:
+            found_day = day.weekday
 
-        if found_day - 1 == current_weekday or (
-            found_day == Days.MONDAY.weekday and current_weekday == Days.SUNDAY.weekday
-        ):
+    # if found day is tommorow for the current day, or this is the week end (today is
+    # sunday and tommorow is monday)  return "due tommorow"
+    if found_day - 1 == current_weekday or (
+        found_day == Days.MONDAY.weekday and current_weekday == Days.SUNDAY.weekday
+    ):
+        return f"Due tommorow at {start_time}"
 
-            return SCHEDULE_DUE_TOMMOROW_FORMAT.format(schedule_details.start_time)
-
-        weekdays = dict(map(lambda d: (d.weekday, d), Days))
-        return SCHEDULE_DUE_ANOTHER_DAY_FORMAT.format(
-            weekdays[found_day].value, schedule_details.start_time
-        )
-
-    return SCHEDULE_DUE_TODAY_FORMAT.format(schedule_details.start_time)
-
-
-async def calc_next_run_for_schedule(
-    loop: AbstractEventLoop, schedule_details: SwitcherV2Schedule
-) -> str:
-    """Asynchronous wrapper for _calc_next_run_for_schedule.
-
-    Use as async wrapper for calling _calc_next_run_for_schedule,
-    calculating the next runtime of the schedule.
-
-    Args:
-      loop: the event loop to execute the function in.
-      schedule_details: ``SwitcherV2Schedule`` representing the schedule slot.
-
-    Returns:
-      A pretty string describing the next due run.
-      e.g. "Due tommorow at 17:00".
-
-    """
-    return await loop.run_in_executor(
-        None, _calc_next_run_for_schedule, schedule_details
-    )
+    # if here, then the scuedle is due some other day this week, return "due at..."
+    weekdays = dict(map(lambda d: (d.weekday, d), Days))
+    return f"Due next {weekdays[found_day].value} at {start_time}"
