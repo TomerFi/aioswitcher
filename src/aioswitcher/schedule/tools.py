@@ -78,10 +78,12 @@ def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
 
 
 def calc_duration(start_time: str, end_time: str) -> str:
-    """Calculate duration between to time values formated as %H:%M."""
-    return str(
-        datetime.strptime(end_time, "%H:%M") - datetime.strptime(start_time, "%H:%M")
-    )
+    """Use to calculate the delta between two time values formated as %H:%M."""
+    start_datetime = datetime.strptime(start_time, "%H:%M")
+    end_datetime = datetime.strptime(end_time, "%H:%M")
+    if end_datetime > start_datetime:
+        return str(end_datetime - start_datetime)
+    raise ValueError("end_time should be greater the start_time")
 
 
 def bit_summary_to_days(sum_weekdays_bit: int) -> Set[Days]:
