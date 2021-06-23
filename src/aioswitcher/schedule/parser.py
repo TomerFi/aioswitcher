@@ -17,7 +17,7 @@
 from dataclasses import dataclass, field
 from typing import Set
 
-from . import Days, tools
+from . import Days, ScheduleState, tools
 
 
 @dataclass
@@ -47,8 +47,8 @@ class SwitcherSchedule:
 
     def __post_init__(self) -> None:
         """Post initialization, set duration and display."""
-        self._duration = tools.calc_duration(self.start_time, self.end_time)
-        self._display = tools.pretty_next_run(self.start_time, self.days)
+        self.duration = tools.calc_duration(self.start_time, self.end_time)
+        self.display = tools.pretty_next_run(self.start_time, self.days)
 
 
 @dataclass(frozen=True)
@@ -67,11 +67,23 @@ class ScheduleParser:
 
     def is_recurring(self) -> bool:
         """Return true if a recurring schedule."""
-        return self.schedule[4:6] != "00"
+        print(self.schedule[4:6])
+        return self.schedule[4:6] != b"00"
 
     def get_days(self) -> Set[Days]:
         """Retun a set of the scheduled Days."""
-        return tools.bit_summary_to_days(int(self.schedule[4:6], 16))
+        return (
+            tools.bit_summary_to_days(int(self.schedule[4:6], 16))
+            if self.is_recurring()
+            else set()
+        )
+
+    def get_state(self) -> ScheduleState:
+        """Return the current state of the device.
+
+        Not sure if this needs to be included in the schedule object.
+        """
+        return ScheduleState(self.schedule[6:8].decode())
 
     def get_start_time(self) -> str:
         """Return the schedule start time in %H:%M format."""
@@ -80,17 +92,6 @@ class ScheduleParser:
     def get_end_time(self) -> str:
         """Return the schedule end time in %H:%M format."""
         return tools.hexadecimale_timestamp_to_localtime(self.schedule[16:24])
-
-    def get_data(self) -> bytes:
-        """Get the bytes data for communication with device."""
-        schedule_id = self.schedule[0:2]
-        enabled = self.schedule[2:4]
-        days = self.schedule[4:6]
-        state = self.schedule[6:8]
-        start_time = self.schedule[8:16]
-        end_time = self.schedule[16:24]
-
-        return schedule_id + enabled + days + state + start_time + end_time
 
 
 def get_schedules(message: bytes) -> Set[SwitcherSchedule]:
@@ -110,7 +111,7 @@ def get_schedules(message: bytes) -> Set[SwitcherSchedule]:
                 parser.get_days(),
                 parser.get_start_time(),
                 parser.get_end_time(),
-                parser.get_data(),
+                parser.schedule,
             )
         )
 

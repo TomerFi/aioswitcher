@@ -21,7 +21,7 @@ SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"
 
 
 @unique
-class ScheduleStatus(Enum):
+class ScheduleState(Enum):
     """Enum representing the status of the schedule."""
 
     ENABLED = "01"
