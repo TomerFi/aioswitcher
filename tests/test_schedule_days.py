@@ -17,7 +17,7 @@
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher import Days
+from aioswitcher.schedule import Days
 
 
 @mark.parametrize("sut_day,expected_value,expected_hex_rep,expected_bit_rep,expected_weekday", [

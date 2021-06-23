@@ -21,7 +21,7 @@ from typing import List
 
 from ..device import DeviceState
 from ..device.tools import seconds_to_iso_time
-from ..schedule import SwitcherSchedule
+from ..schedule.parser import SwitcherSchedule
 
 STATE_UNKNOWN = "unknown"
 
