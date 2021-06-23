@@ -14,7 +14,9 @@
 
 """Switcher unofficial integration schedule parser module."""
 
+from binascii import hexlify
 from dataclasses import dataclass, field
+from textwrap import wrap
 from typing import Set
 
 from . import Days, ScheduleState, tools
@@ -49,6 +51,16 @@ class SwitcherSchedule:
         """Post initialization, set duration and display."""
         self.duration = tools.calc_duration(self.start_time, self.end_time)
         self.display = tools.pretty_next_run(self.start_time, self.days)
+
+    def __hash__(self) -> int:
+        """For usage with set, implementation of the __hash__ magic method."""
+        return hash(self.schedule_id)
+
+    def __eq__(self, obj: object) -> bool:
+        """For usage with set, implementation of the __eq__ magic method."""
+        if isinstance(obj, SwitcherSchedule):
+            return self.schedule_id == obj.schedule_id
+        return False
 
 
 @dataclass(frozen=True)
@@ -96,12 +108,10 @@ class ScheduleParser:
 
 def get_schedules(message: bytes) -> Set[SwitcherSchedule]:
     """Use to create a list of schedule from a response message from the device."""
-    schedule_data = message[90:-8].decode()
-    schedule_list = [
-        schedule_data[i : i + 32] for i in range(0, len(schedule_data), 32)  # noqa E203
-    ]
+    hex_data = hexlify(message)[90:-8].decode()
+    hex_data_split = wrap(hex_data, 32)
     ret_set = set()
-    for schedule in schedule_list:
+    for schedule in hex_data_split:
         parser = ScheduleParser(schedule.encode())
         ret_set.add(
             SwitcherSchedule(
@@ -114,5 +124,4 @@ def get_schedules(message: bytes) -> Set[SwitcherSchedule]:
                 parser.schedule,
             )
         )
-
     return ret_set
