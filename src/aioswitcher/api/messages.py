@@ -14,329 +14,137 @@
 
 """Switcher unofficial integration TCP socket API messages."""
 
-from asyncio import AbstractEventLoop, Future, ensure_future
 from binascii import hexlify
-from enum import Enum
-from typing import List
+from dataclasses import InitVar, dataclass, field
+from typing import Set
 
 from ..device import DeviceState
-from ..device.tools import seconds_to_iso_time
-from ..schedule.parser import SwitcherSchedule
-
-STATE_UNKNOWN = "unknown"
-
-ResponseMessageType = Enum(
-    "ResponseMessageType",
-    [
-        "AUTO_OFF",
-        "CONTROL",
-        "CREATE_SCHEDULE",
-        "DELETE_SCHEDULE",
-        "DISABLE_ENABLE_SCHEDULE",
-        "GET_SCHEDULES",
-        "LOGIN",
-        "STATE",
-        "UPDATE_NAME",
-    ],
-)
+from ..device.tools import seconds_to_iso_time, watts_to_amps
+from ..schedule.parser import SwitcherSchedule, get_schedules
 
 
-class SwitcherV2BaseResponseMSG:
-    """Represntation of the switcher v2 base response message.
+@dataclass
+class StateMessageParser():
+    """Use for parsing api messages."""
+
+    response: InitVar[bytes]
+
+    def __post_init__(self, response) -> None:
+        """Post initialization of the parser."""
+        self._hex_response = hexlify(response)
+
+    def get_power_consumption(self) -> int:
+        """Return the current power consumption of the device."""
+        hex_power = self._hex_response[154:162]
+        return int(hex_power[2:4] + hex_power[0:2], 16)
+
+    def get_time_left(self) -> str:
+        """Return the time left for the device current run."""
+        hex_time_left = self._hex_response[178:186]
+        time_left_seconds = int(
+            hex_time_left[6:8]
+            + hex_time_left[4:6]
+            + hex_time_left[2:4]
+            + hex_time_left[0:2],
+            16,
+        )
+        return seconds_to_iso_time(time_left_seconds)
+
+    def get_time_on(self) -> str:
+        """Return how long the device has been on."""
+        hex_time_on = self._hex_response[186:194]
+        time_on_seconds = int(
+            hex_time_on[6:8]
+            + hex_time_on[4:6]
+            + hex_time_on[2:4]
+            + hex_time_on[0:2],
+            16,
+        )
+        return seconds_to_iso_time(time_on_seconds)
+
+    def get_auto_shutdown(self) -> str:
+        """Return the value of the auto shutdown configuration."""
+        hex_auto_off = self._hex_response[194:202]
+        auto_off_seconds = int(
+            hex_auto_off[6:8]
+            + hex_auto_off[4:6]
+            + hex_auto_off[2:4]
+            + hex_auto_off[0:2],
+            16,
+        )
+        return seconds_to_iso_time(auto_off_seconds)
+
+    def get_state(self) -> DeviceState:
+        """Return the current device state."""
+        hex_state = self._hex_response[150:154].decode()
+        states = dict(map(lambda s: (s.value, s), DeviceState))
+        return states[hex_state]
+
+
+@dataclass
+class SwitcherBaseResponse:
+    """Represntation of the switcher base response message.
+
+    Applicable for all messages that do no require post initialization.
+    e.g. not applicable for SwitcherLoginResponse, SwitcherStateResponse,
+    SwitcherGetScheduleResponse.
 
     Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-      msg_type: the message type as described in the ''ResponseMessageType''
-        Enum class.
+        unparsed_response: the raw response from the device.
 
     """
 
-    def __init__(
-        self,
-        loop: AbstractEventLoop,
-        response: bytes,
-        msg_type: ResponseMessageType,
-    ) -> None:
-        """Initialize the base object."""
-        self._loop = loop
-        self._unparsed_response = response
-        self._msg_type = msg_type
-
-    @property
-    def unparsed_response(self) -> bytes:
-        """bytes: Return The raw response from the device."""
-        return self._unparsed_response
-
-    @property
-    def successful(self) -> bool:
-        """bool: Indicating whether or not the request was successful."""
-        return self._unparsed_response is not None
-
-    @property
-    def msg_type(self) -> ResponseMessageType:
-        """aioswitcher.api.messages.ResponseMessageType: the message type."""
-        return self._msg_type
+    unparsed_response: bytes
 
 
-class SwitcherV2LoginResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 login response message.
+@dataclass
+class SwitcherLoginResponse(SwitcherBaseResponse):
+    """Represntation of the switcher login response message."""
 
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
+    session_id: str = field(init=False)
 
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the login response."""
-        super().__init__(loop, response, ResponseMessageType.LOGIN)
+    def __post_init__(self) -> None:
+        """Post initialization of the response."""
         try:
-            self._session_id = hexlify(response)[16:24].decode()
+            self.session_id = hexlify(self.unparsed_response)[16:24].decode()
         except Exception as exc:
             raise ValueError("failed to parse login response message") from exc
 
-    @property
-    def session_id(self) -> str:
-        """str: Return the retrieved session id."""
-        return self._session_id
+
+@dataclass
+class SwitcherStateResponse(SwitcherBaseResponse):
+    """Represntation of the switcher state response message."""
+
+    state: DeviceState = field(init=False)
+    time_left: str = field(init=False)
+    time_on: str = field(init=False)
+    auto_shutdown: str = field(init=False)
+    power_consumption: int = field(init=False)
+    electric_current: float = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Post initialization of the message."""
+        parser = StateMessageParser(self.unparsed_response)
+
+        self.state = parser.get_state()
+        self.time_left = parser.get_time_left()
+        self.time_on = parser.get_time_on()
+        self.auto_shutdown = parser.get_auto_shutdown()
+        self.power_consumption = parser.get_power_consumption()
+        self.electric_current = watts_to_amps(self.power_consumption)
 
 
-class SwitcherV2StateResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 state response message.
+@dataclass
+class SwitcherGetScheduleResponse(SwitcherBaseResponse):
+    """represnation of the switcher v2 get schedule message."""
 
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
+    schedules: Set[SwitcherSchedule] = field(init=False)
 
-    Todo:
-      * replace ``init_future`` attribute with ``get_init_future`` method.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the state response message."""
-        super().__init__(loop, response, ResponseMessageType.STATE)
-        self._power_consumption = 0
-        self._electric_current = 0.0
-        self._init_future = loop.create_future()
-        ensure_future(self.initialize(response), loop=loop)
-
-    async def initialize(self, response: bytes) -> None:
-        """Finish the initialization of the message and update the future object.
-
-        Args:
-          response: the raw response from the device.
-
-        """
-        try:
-            hex_power = hexlify(response)[154:162]
-            self._power_consumption = int(hex_power[2:4] + hex_power[0:2], 16)
-            self._electric_current = round((self._power_consumption / float(220)), 1)
-
-            hex_time_left = hexlify(response)[178:186]
-            time_left_seconds = int(
-                hex_time_left[6:8]
-                + hex_time_left[4:6]
-                + hex_time_left[2:4]
-                + hex_time_left[0:2],
-                16,
-            )
-            self._time_to_auto_off = seconds_to_iso_time(time_left_seconds)
-
-            hex_time_on = hexlify(response)[186:194]
-            time_on_seconds = int(
-                hex_time_on[6:8]
-                + hex_time_on[4:6]
-                + hex_time_on[2:4]
-                + hex_time_on[0:2],
-                16,
-            )
-            self._time_on = seconds_to_iso_time(time_on_seconds)
-
-            hex_auto_off = hexlify(response)[194:202]
-            auto_off_seconds = int(
-                hex_auto_off[6:8]
-                + hex_auto_off[4:6]
-                + hex_auto_off[2:4]
-                + hex_auto_off[0:2],
-                16,
-            )
-            self._auto_off_set = seconds_to_iso_time(auto_off_seconds)
-
-            hex_state = hexlify(response)[150:154].decode()
-            states = dict(map(lambda s: (s.value, s), DeviceState))
-            self._state = (
-                states.get(hex_state).display  # type: ignore
-                if states.get(hex_state)
-                else STATE_UNKNOWN
-            )
-
-            self.init_future.set_result(self)
-        except Exception as exc:
-            self.init_future.set_exception(exc)
-
-        return None
+    def __post_init__(self) -> None:
+        """Post initialization of the message."""
+        self.schedules = get_schedules(self.unparsed_response)
 
     @property
-    def state(self) -> str:
-        """str: Return the state."""
-        return self._state
-
-    @property
-    def time_left(self) -> str:
-        """str: Return the time left to auto-off."""
-        return self._time_to_auto_off
-
-    @property
-    def time_on(self) -> str:
-        """str: Return the time in "on" state.
-
-        Relevant only if the current state is "on".
-        """
-        return self._time_on
-
-    @property
-    def auto_off(self) -> str:
-        """str: Return the auto-off configuration value."""
-        return self._auto_off_set
-
-    @property
-    def power(self) -> int:
-        """int: Return the current power consumption in watts."""
-        return self._power_consumption
-
-    @property
-    def current(self) -> float:
-        """float: Return the power consumption in amps."""
-        return self._electric_current
-
-    @property
-    def init_future(self) -> Future:
-        """asyncio.Future: Return the future of the initialization."""
-        return self._init_future
-
-
-class SwitcherV2ControlResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 control response message.
-
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the Control response message."""
-        super().__init__(loop, response, ResponseMessageType.CONTROL)
-
-
-class SwitcherV2SetAutoOffResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 set auto-off response message.
-
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the Set Auto-Off response message."""
-        super().__init__(loop, response, ResponseMessageType.AUTO_OFF)
-
-
-class SwitcherV2UpdateNameResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 update name response message.
-
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the Set Name response message."""
-        super().__init__(loop, response, ResponseMessageType.UPDATE_NAME)
-
-
-class SwitcherV2GetScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """represnation of the switcher v2 get schedule message.
-
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-
-    Todo:
-      * the ``get_schedules`` attribute should be a method.
-      * ``schdule_detais`` is ``__init__`` is yielding List[str] instead of
-        List[bytes], that's not supposed to happen.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the Set Name response message."""
-        super().__init__(loop, response, ResponseMessageType.GET_SCHEDULES)
-        self._schedule_list = []  # type: List[SwitcherSchedule]
-
-        res = hexlify(response)
-        idx = res[90:-8].decode()
-        schedules_details = [
-            idx[i : i + 32] for i in range(0, len(idx), 32)  # noqa E203
-        ]
-
-        if schedules_details:
-            for i in range(len(schedules_details)):
-                schedule = SwitcherSchedule(loop, i, schedules_details)  # type: ignore
-                self._schedule_list.append(schedule)
-
-    @property
-    def found_schedules(self) -> bool:
-        """bool: Return true if found schedules in the response."""
-        return self._schedule_list != []
-
-    @property
-    def get_schedules(self) -> List[SwitcherSchedule]:
-        """list(aioswitcher.schedules.SwitcherSchedule): Return schedules."""
-        return self._schedule_list
-
-
-class SwitcherV2DisableEnableScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 dis/en schedule response message.
-
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the switcher v2 dis/en schedule response message."""
-        super().__init__(loop, response, ResponseMessageType.DISABLE_ENABLE_SCHEDULE)
-
-
-class SwitcherV2DeleteScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 delete schedule response message.
-
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the switcher v2 delete schedule response message."""
-        super().__init__(loop, response, ResponseMessageType.DELETE_SCHEDULE)
-
-
-class SwitcherV2CreateScheduleResponseMSG(SwitcherV2BaseResponseMSG):
-    """Represntation of the switcher v2 create schedule response message.
-
-    Args:
-      loop: the event loop to perform actions in.
-      response: the raw response from the device.
-
-    """
-
-    def __init__(self, loop: AbstractEventLoop, response: bytes) -> None:
-        """Initialize the switcher v2 create schedule response message."""
-        super().__init__(loop, response, ResponseMessageType.CREATE_SCHEDULE)
+    def git_schedules(self) -> bool:
+        """Return true if found schedules in the response."""
+        return len(self.schedules) > 0
