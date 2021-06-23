@@ -18,7 +18,7 @@ import time
 from datetime import datetime
 from typing import Set, Union, cast
 
-from .. import Days
+from . import Days
 
 
 def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
@@ -43,17 +43,6 @@ def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
         current_datetime.time().strftime("%H:%M"), "%H:%M"
     ).time()
     schedule_time = datetime.strptime(start_time, "%H:%M").time()
-
-    print("debug")
-    print(start_time)
-    print(days)
-    print(list(days)[0].weekday)
-
-    print("debug")
-    print(current_datetime)
-    print(current_weekday)
-    print(current_time)
-    print(schedule_time)
 
     found_day = -1
     for day in days:
@@ -127,7 +116,6 @@ def hexadecimale_timestamp_to_localtime(hex_timestamp: bytes) -> str:
     )
     int_time = int(hex_time, 16)
     local_time = time.localtime(int_time)
-    print(local_time)
     return time.strftime("%H:%M", local_time)
 
 

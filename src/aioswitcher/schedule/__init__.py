@@ -14,14 +14,7 @@
 
 """Switcher unofficial integration schedule module."""
 
-from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Set
-
-from .. import Days
-from . import tools
-
-__all__ = ["ScheduleStatus", "SwitcherSchedule", "get_schedules", "tools"]
 
 # weekdays sum, start-time timestamp, end-time timestamp
 SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"
@@ -35,98 +28,38 @@ class ScheduleStatus(Enum):
     DISABLED = "00"
 
 
-@dataclass
-class SwitcherSchedule:
-    """Represnation of the Switcher schedule slot.
+@unique
+class Days(Enum):
+    """Enum class represnting the day entity."""
 
-    Args:
-        schedule_id: the id of the schedule
-        enabled: is the shcedule enabled
-        recurring: is a recurring schedule
-        days: a set of schedule days, or empty set for non recurring schedules
-        start_time: the start time of the schedule
-        end_time: the end time of the schedule
-        schedule_data: bytes data to communuicate with the device
+    MONDAY = ("Monday", 0x02, 2, 0)
+    TUESDAY = ("Tuesday", 0x04, 4, 1)
+    WEDNESDAY = ("Wednesday", 0x08, 8, 2)
+    THURSDAY = ("Thursday", 0x10, 16, 3)
+    FRIDAY = ("Friday", 0x20, 32, 4)
+    SATURDAY = ("Saturday", 0x40, 64, 5)
+    SUNDAY = ("Sunday", 0x80, 128, 6)
 
-    """
+    def __new__(cls, value: str, hex_rep: int, bit_rep: int, weekday: int) -> "Days":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value_ = value
+        new_enum._hex_rep = hex_rep
+        new_enum._bit_rep = bit_rep
+        new_enum._weekday = weekday
+        return new_enum
 
-    schedule_id: str
-    enabled: bool
-    recurring: bool
-    days: Set[Days]
-    start_time: str
-    end_time: str
-    schedule_data: bytes
-    duration: str = field(init=False)
-    display: str = field(init=False)
+    @property
+    def bit_rep(self) -> int:
+        """Return the bit represntation of the day."""
+        return self._bit_rep  # type: ignore
 
-    def __post_init__(self) -> None:
-        """Post initialization, set duration and display."""
-        self._duration = tools.calc_duration(self.start_time, self.end_time)
-        self._display = tools.pretty_next_run(self.start_time, self.days)
+    @property
+    def hex_rep(self) -> int:
+        """Return the hexadecimal represntation of the day."""
+        return self._hex_rep  # type: ignore
 
-
-@dataclass(frozen=True)
-class ScheduleParser:
-    """Schedule parsing tool."""
-
-    schedule: bytes
-
-    def get_id(self) -> str:
-        """Return the id of the schedule."""
-        return str(int(self.schedule[0:2], 16))
-
-    def is_enabled(self) -> bool:
-        """Return true if enbaled."""
-        return int(self.schedule[2:4], 16) == 1
-
-    def is_recurring(self) -> bool:
-        """Return true if a recurring schedule."""
-        return self.schedule[4:6] != "00"
-
-    def get_days(self) -> Set[Days]:
-        """Retun a set of the scheduled Days."""
-        return tools.bit_summary_to_days(int(self.schedule[4:6], 16))
-
-    def get_start_time(self) -> str:
-        """Return the schedule start time in %H:%M format."""
-        return tools.hexadecimale_timestamp_to_localtime(self.schedule[8:16])
-
-    def get_end_time(self) -> str:
-        """Return the schedule end time in %H:%M format."""
-        return tools.hexadecimale_timestamp_to_localtime(self.schedule[16:24])
-
-    def get_data(self) -> bytes:
-        """Get the bytes data for communication with device."""
-        schedule_id = self.schedule[0:2]
-        enabled = self.schedule[2:4]
-        days = self.schedule[4:6]
-        state = self.schedule[6:8]
-        start_time = self.schedule[8:16]
-        end_time = self.schedule[16:24]
-
-        return schedule_id + enabled + days + state + start_time + end_time
-
-
-def get_schedules(message: bytes) -> Set[SwitcherSchedule]:
-    """Use to create a list of schedule from a response message from the device."""
-    schedule_data = message[90:-8].decode()
-    schedule_list = [
-        schedule_data[i : i + 32] for i in range(0, len(schedule_data), 32)  # noqa E203
-    ]
-    ret_set = set()
-    for schedule in schedule_list:
-        parser = ScheduleParser(schedule.encode())
-        ret_set.add(
-            SwitcherSchedule(
-                parser.get_id(),
-                parser.is_enabled(),
-                parser.is_recurring(),
-                parser.get_days(),
-                parser.get_start_time(),
-                parser.get_end_time(),
-                parser.get_data(),
-            )
-        )
-
-    return ret_set
+    @property
+    def weekday(self) -> int:
+        """Return the weekday of the day."""
+        return self._weekday  # type: ignore

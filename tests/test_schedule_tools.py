@@ -22,8 +22,7 @@ import time_machine
 from assertpy import assert_that
 from pytest import fixture, mark
 
-from aioswitcher import Days
-from aioswitcher.schedule import tools
+from aioswitcher.schedule import Days, tools
 
 days_by_weekdays = dict(map(lambda d: (d.weekday, d), Days))
 
