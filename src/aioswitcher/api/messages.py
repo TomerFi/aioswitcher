@@ -24,7 +24,7 @@ from ..schedule.parser import SwitcherSchedule, get_schedules
 
 
 @dataclass
-class StateMessageParser():
+class StateMessageParser:
     """Use for parsing api messages."""
 
     response: InitVar[bytes]
@@ -54,10 +54,7 @@ class StateMessageParser():
         """Return how long the device has been on."""
         hex_time_on = self._hex_response[186:194]
         time_on_seconds = int(
-            hex_time_on[6:8]
-            + hex_time_on[4:6]
-            + hex_time_on[2:4]
-            + hex_time_on[0:2],
+            hex_time_on[6:8] + hex_time_on[4:6] + hex_time_on[2:4] + hex_time_on[0:2],
             16,
         )
         return seconds_to_iso_time(time_on_seconds)
@@ -135,7 +132,7 @@ class SwitcherStateResponse(SwitcherBaseResponse):
 
 
 @dataclass
-class SwitcherGetScheduleResponse(SwitcherBaseResponse):
+class SwitcherGetSchedulesResponse(SwitcherBaseResponse):
     """represnation of the switcher v2 get schedule message."""
 
     schedules: Set[SwitcherSchedule] = field(init=False)
@@ -143,8 +140,10 @@ class SwitcherGetScheduleResponse(SwitcherBaseResponse):
     def __post_init__(self) -> None:
         """Post initialization of the message."""
         self.schedules = get_schedules(self.unparsed_response)
+        print("debug")
+        print(self.schedules)
 
     @property
-    def git_schedules(self) -> bool:
+    def found_schedules(self) -> bool:
         """Return true if found schedules in the response."""
         return len(self.schedules) > 0
