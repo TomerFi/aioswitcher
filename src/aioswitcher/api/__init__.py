@@ -147,15 +147,20 @@ class SwitcherApi:
 
         """
         timestamp, login_resp = await self._login()
-        packet = packets.GET_STATE_PACKET.format(
-            login_resp.session_id, timestamp, self._device_id
-        )
-        signed_packet = sign_packet_with_crc_key(packet)
+        if login_resp.successful:
+            packet = packets.GET_STATE_PACKET.format(
+                login_resp.session_id, timestamp, self._device_id
+            )
+            signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a get state packet")
-        self._writer.write(unhexlify(signed_packet))
-        state_resp = await self._reader.read(1024)
-        return timestamp, login_resp.session_id, SwitcherStateResponse(state_resp)
+            debug("sending a get state packet")
+            self._writer.write(unhexlify(signed_packet))
+            state_resp = await self._reader.read(1024)
+            response = SwitcherStateResponse(state_resp)
+            if response.successful:
+                return timestamp, login_resp.session_id, response
+            raise RuntimeError("get state request was not successful")
+        raise RuntimeError("login request was not successful")
 
     async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
