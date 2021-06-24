@@ -19,15 +19,22 @@ from pathlib import Path
 from unittest.mock import Mock, patch
 
 from assertpy import assert_that
+from pytest import mark
 
 from aioswitcher.api import messages
 from aioswitcher.api.messages import (
     StateMessageParser,
+    SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
     SwitcherLoginResponse,
     SwitcherStateResponse,
 )
 from aioswitcher.device import DeviceState
+
+
+@mark.parametrize("faulty_response", [b'', bytearray(), None])
+def test_switcher_base_response_with_an_empty_bytes_value_should_return_not_succefull(faulty_response):
+    assert_that(SwitcherBaseResponse(faulty_response).successful).is_false()
 
 
 def test_switcher_login_response_dataclass(resource_path):
