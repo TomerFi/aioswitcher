@@ -91,23 +91,6 @@ def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_an_e
     ).when_called_with().is_equal_to("argument out of range")
 
 
-def test_time_to_hexadecimal_timestamp_with_correct_time_should_return_the_expected_timestamp():
-    hex_timestamp = tools.time_to_hexadecimal_timestamp("21:00")
-
-    binary_timestamp = unhexlify(hex_timestamp.encode())
-    unpacked_timestamp = unpack("<I", binary_timestamp)
-    sut_datetime = datetime.fromtimestamp(unpacked_timestamp[0])
-    assert_that(
-        sut_datetime
-    ).is_equal_to_ignoring_time(datetime.now()).has_hour(21).has_minute(0)
-
-
-def test_time_to_hexadecimal_timestamp_with_incorrect_time_should_throw_an_error():
-    assert_that(tools.time_to_hexadecimal_timestamp).raises(
-        IndexError
-    ).when_called_with("2100").is_equal_to("list index out of range")
-
-
 @mark.parametrize("watts, amps", [(1608, 7.3), (2600, 11.8), (3489, 15.9)])
 def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(watts, amps):
     assert_that(tools.watts_to_amps(watts)).is_equal_to(amps)

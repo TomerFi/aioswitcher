@@ -21,7 +21,12 @@ from unittest.mock import Mock, patch
 from assertpy import assert_that
 
 from aioswitcher.api import messages
-from aioswitcher.api.messages import StateMessageParser, SwitcherGetSchedulesResponse, SwitcherLoginResponse, SwitcherStateResponse
+from aioswitcher.api.messages import (
+    StateMessageParser,
+    SwitcherGetSchedulesResponse,
+    SwitcherLoginResponse,
+    SwitcherStateResponse,
+)
 from aioswitcher.device import DeviceState
 
 
