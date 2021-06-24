@@ -14,9 +14,9 @@
 
 """Switcher unofficial integration pretty next run tool test cases."""
 
-from binascii import hexlify
+from binascii import hexlify, unhexlify
 from datetime import datetime, timedelta
-from struct import pack
+from struct import pack, unpack
 
 import time_machine
 from assertpy import assert_that
@@ -156,3 +156,20 @@ def test_weekdays_to_hexadecimal_with_duplicate_members_should_throw_an_encoding
     assert_that(tools.weekdays_to_hexadecimal).raises(
         ValueError
     ).when_called_with(duplicate_members).is_equal_to("no days requested")
+
+
+def test_time_to_hexadecimal_timestamp_with_correct_time_should_return_the_expected_timestamp():
+    hex_timestamp = tools.time_to_hexadecimal_timestamp("21:00")
+
+    binary_timestamp = unhexlify(hex_timestamp.encode())
+    unpacked_timestamp = unpack("<I", binary_timestamp)
+    sut_datetime = datetime.fromtimestamp(unpacked_timestamp[0])
+    assert_that(
+        sut_datetime
+    ).is_equal_to_ignoring_time(datetime.now()).has_hour(21).has_minute(0)
+
+
+def test_time_to_hexadecimal_timestamp_with_incorrect_time_should_throw_an_error():
+    assert_that(tools.time_to_hexadecimal_timestamp).raises(
+        IndexError
+    ).when_called_with("2100").is_equal_to("list index out of range")

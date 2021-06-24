@@ -15,7 +15,9 @@
 """Switcher unofficial integration schedule module tools."""
 
 import time
+from binascii import hexlify
 from datetime import datetime
+from struct import pack
 from typing import Set, Union, cast
 
 from . import Days
@@ -44,26 +46,28 @@ def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
     ).time()
     schedule_time = datetime.strptime(start_time, "%H:%M").time()
 
-    found_day = -1
-    for day in days:
-        # if scheduled for later on today, return "due today"
-        if day.weekday == current_weekday and current_time < schedule_time:
-            return f"Due today at {start_time}"
+    execution_days = [d.weekday for d in days]
+    # if scheduled for later on today, return "due today"
+    if current_weekday in execution_days and current_time < schedule_time:
+        return f"Due today at {start_time}"
 
-        # get the closest day to today by saving the lowest weekday as "found_day"
-        if found_day == -1 or found_day > day.weekday:
-            found_day = day.weekday
+    higher_days = [d for d in execution_days if d > current_weekday]
+    if higher_days:
+        next_exc_day = min(higher_days, key=lambda d: abs(d - current_weekday))
+    else:
+        lower_days = [d for d in execution_days if d < current_weekday]
+        next_exc_day = min(lower_days, key=lambda d: abs(d - current_weekday))
 
-    # if found day is tommorow for the current day, or this is the week end (today is
-    # sunday and tommorow is monday)  return "due tommorow"
-    if found_day - 1 == current_weekday or (
-        found_day == Days.MONDAY.weekday and current_weekday == Days.SUNDAY.weekday
+    # if next excution day is tommorow for the current day, or this is the week end
+    # (today is sunday and tommorow is monday)  return "due tommorow"
+    if next_exc_day - 1 == current_weekday or (
+        next_exc_day == Days.MONDAY.weekday and current_weekday == Days.SUNDAY.weekday
     ):
         return f"Due tommorow at {start_time}"
 
     # if here, then the scuedle is due some other day this week, return "due at..."
     weekdays = dict(map(lambda d: (d.weekday, d), Days))
-    return f"Due next {weekdays[found_day].value} at {start_time}"
+    return f"Due next {weekdays[next_exc_day].value} at {start_time}"
 
 
 def calc_duration(start_time: str, end_time: str) -> str:
@@ -136,3 +140,22 @@ def weekdays_to_hexadecimal(days: Union[Days, Set[Days]]) -> str:
             map_to_bits = map(lambda w: w.bit_rep, days)  # type: ignore
             return "{:02x}".format(int(sum(map_to_bits)))
     raise ValueError("no days requested")
+
+
+def time_to_hexadecimal_timestamp(time_value: str) -> str:
+    """Convert hours and minutes to a timestamp with the current date and encode.
+
+    Args:
+        time_value: time to convert. e.g. "21:00".
+
+    Return:
+        Hexadecimal representation of the timestamp.
+
+    """
+    tsplit = time_value.split(":")
+    str_timedate = time.strftime("%d/%m/%Y") + " " + tsplit[0] + ":" + tsplit[1]
+    struct_timedate = time.strptime(str_timedate, "%d/%m/%Y %H:%M")
+    timestamp = time.mktime(struct_timedate)
+    binary_timestamp = pack("<I", int(timestamp))
+
+    return hexlify(binary_timestamp).decode()

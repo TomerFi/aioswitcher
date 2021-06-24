@@ -124,25 +124,6 @@ def current_timestamp_to_hexadecimal() -> str:
     return hex_timestamp.decode()
 
 
-def time_to_hexadecimal_timestamp(time_value: str) -> str:
-    """Convert hours and minutes to a timestamp with the current date and encode.
-
-    Args:
-        time_value: time to convert. e.g. "21:00".
-
-    Return:
-        Hexadecimal representation of the timestamp.
-
-    """
-    tsplit = time_value.split(":")
-    str_timedate = time.strftime("%d/%m/%Y") + " " + tsplit[0] + ":" + tsplit[1]
-    struct_timedate = time.strptime(str_timedate, "%d/%m/%Y %H:%M")
-    timestamp = time.mktime(struct_timedate)
-    binary_timestamp = pack("<I", int(timestamp))
-
-    return hexlify(binary_timestamp).decode()
-
-
 def watts_to_amps(watts: int) -> float:
     """Convert power consumption to watts to electric current in amps."""
     return round((watts / float(220)), 1)
