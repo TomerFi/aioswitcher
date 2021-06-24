@@ -16,9 +16,6 @@
 
 from enum import Enum, unique
 
-# weekdays sum, start-time timestamp, end-time timestamp
-SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"
-
 
 @unique
 class ScheduleState(Enum):

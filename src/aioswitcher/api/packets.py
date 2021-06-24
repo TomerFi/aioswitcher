@@ -14,6 +14,9 @@
 
 """Switcher unofficial integration TCP socket API packet formats."""
 
+# weekdays sum, start-time timestamp, end-time timestamp
+SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"
+
 NO_TIMER_REQUESTED = "00000000"
 # format values are local session id, timestamp
 REQUEST_FORMAT = "{}340001000000000000000000{}00000000000000000000f0fe"

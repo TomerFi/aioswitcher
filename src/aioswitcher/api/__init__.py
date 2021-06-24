@@ -14,13 +14,14 @@
 
 """Switcher unofficial integration TCP socket API module."""
 
-from asyncio import AbstractEventLoop, Event, open_connection, wait
+from asyncio import open_connection
 from binascii import unhexlify
 from datetime import timedelta
 from enum import Enum, unique
+from logging import debug, info
 from socket import AF_INET
 from types import TracebackType
-from typing import TYPE_CHECKING, Optional, Tuple, Type
+from typing import Optional, Set, Tuple, Type
 
 from ..device.tools import (
     current_timestamp_to_hexadecimal,
@@ -29,12 +30,16 @@ from ..device.tools import (
     string_to_hexadecimale_device_name,
     timedelta_to_hexadecimal_seconds,
 )
-from . import messages, packets
-
-if TYPE_CHECKING:
-    from asyncio import StreamReader, StreamWriter
-
-SERVER_PORT = 9957
+from ..schedule import Days, ScheduleState
+from ..schedule.parser import SwitcherSchedule
+from ..schedule.tools import time_to_hexadecimal_timestamp, weekdays_to_hexadecimal
+from . import packets
+from .messages import (
+    SwitcherBaseResponse,
+    SwitcherGetSchedulesResponse,
+    SwitcherLoginResponse,
+    SwitcherStateResponse,
+)
 
 
 @unique
@@ -45,49 +50,31 @@ class Command(Enum):
     OFF = "0"
 
 
-class SwitcherV2Api:
-    """Represntation of the SwitcherV2 API object.
+class SwitcherApi:
+    """Switcher TCP based API.
 
     Args:
-      loop: the event loop for the factory to run in.
-      ip_addr: the ip address assigned to the device
-      device_id: the id of the desired device.
-
-    Todo:
-      * ``control_device`` takes a timer value that must be converted to hex
-        before calling this method using the deisgnated tool. On the other
-        hand, the rest of the action methods` takes their arguments raw and
-        use the appropriate tool for converting themselves.
-        This is confusing and needs to be adjusted.
+        ip_address: the ip address assigned to the device.
+        device_id: the id of the desired device.
+        port: the port of the device, default is 9957.
 
     """
 
-    def __init__(self, loop: AbstractEventLoop, ip_addr: str, device_id: str) -> None:
-        """Initialize the Switcher V2 API."""
-        self._loop = loop
-        self._ip_addr = ip_addr
+    def __init__(self, ip_address: str, device_id: str, port: int = 9957) -> None:
+        """Initialize the Switcher TCP connection API."""
+        self._ip_address = ip_address
         self._device_id = device_id
-        self._reader = None  # type: Optional[StreamReader]
-        self._writer = None  # type: Optional[StreamWriter]
-        self._connected_evt = Event()
+        self._port = port
+        self._connected = False
 
-    async def __aenter__(self) -> "SwitcherV2Api":
-        """Enter SwitcherV2Api asynchronous context manager.
+    async def __aenter__(self) -> "SwitcherApi":
+        """Enter SwitcherApi asynchronous context manager.
 
         Returns:
-          This instance of ``aioswitcher.api.SwitcherV2Api`` as an awaitable.
+            This instance of ``aioswitcher.api.SwitcherApi``.
 
         """
         await self.connect()
-        return await self.__await__()
-
-    async def __await__(self) -> "SwitcherV2Api":
-        """Return SwitcherV2Api awaitable object.
-
-        Returns:
-          This instance of ``aioswitcher.api.SwitcherV2Api``.
-
-        """
         return self
 
     async def __aexit__(
@@ -96,471 +83,283 @@ class SwitcherV2Api:
         exc_value: Optional[BaseException],
         traceback: Optional[TracebackType],
     ) -> None:
-        """Exit SwitcherV2Api asynchronous context manager."""
-        return await self.disconnect()
+        """Exit SwitcherApi asynchronous context manager."""
+        await self.disconnect()
 
     async def connect(self) -> None:
         """Connect to asynchronous socket and get reader and writer object."""
+        info("connecting to the switcher device")
         self._reader, self._writer = await open_connection(
-            host=self._ip_addr,
-            port=SERVER_PORT,
-            loop=self._loop,
+            host=self._ip_address,
+            port=self._port,
             family=AF_INET,
         )
 
-        self._connected_evt.set()
-        return None
+        self._connected = True
+        info("switcher device connected")
 
     async def disconnect(self) -> None:
         """Disconnect from asynchronous socket."""
         if self._writer:
+            info("disconnecting from the switcher device")
             self._writer.close()
-        self._connected_evt.clear()
-        return None
-
-    async def _full_login(
-        self,
-    ) -> Tuple[str, Optional[messages.SwitcherV2LoginResponseMSG]]:
-        """Use for sending the login packet to the device.
-
-        Returns:
-          A tuple of two
-          ``Tuple[str, Optional[messages.SwitcherV2LoginResponseMSG]]``.
-
-          The first object is a string contianing the hexadecimal
-          representation of the current unix timestamp.
-
-          The second object will be An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2LoginResponseMSG``.
-
-        Note:
-          This is a private function, please consider using its wrapper
-          function ``login`` instead.
-
-        """
-        timestamp = current_timestamp_to_hexadecimal()
-
-        packet = packets.LOGIN_PACKET.format(timestamp)
-
-        signed_packet = sign_packet_with_crc_key(packet)
-
-        if self._writer and self._reader:
-            self._writer.write(unhexlify(signed_packet))
-
-            response = await self._reader.read(1024)
-
-            return (
-                timestamp,
-                messages.SwitcherV2LoginResponseMSG(self._loop, response),
-            )
-
-        return timestamp, None
-
-    async def login(self) -> Optional[messages.SwitcherV2LoginResponseMSG]:
-        """Use as wrapper for sending the login packet to the device.
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2LoginResponseMSG``.
-
-        """
-        full_login_tuple = await self._full_login()
-        return full_login_tuple[1]
-
-    async def _full_get_state(
-        self,
-    ) -> Tuple[
-        str,
-        Optional[messages.SwitcherV2LoginResponseMSG],
-        Optional[messages.SwitcherV2StateResponseMSG],
-    ]:
-        """Use for sending the get state packet to the device.
-
-        Returns:
-          A tuple of three
-          ``Tuple[str, Optional[messages.SwitcherV2LoginResponseMSG],
-          Optional[messages.SwitcherV2StateResponseMSG]]``.
-
-          The first object is a string contianing the hexadecimal
-          representation of the current unix timestamp.
-
-          The second object will be An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2LoginResponseMSG``.
-
-          The third object will be An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2StateResponseMSG``.
-
-        Note:
-          This is a private function, please consider using its wrapper
-          function ``get_state`` instead.
-
-        """
-        timestamp, login_response = await self._full_login()
-
-        if login_response and login_response.successful:
-            packet = packets.GET_STATE_PACKET.format(
-                login_response.session_id, timestamp, self._device_id
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                state_response = messages.SwitcherV2StateResponseMSG(
-                    self._loop, response
-                )
-                await wait([state_response.init_future])
-                return (timestamp, login_response, state_response)
-
-        return timestamp, login_response, None
-
-    async def get_state(self) -> Optional[messages.SwitcherV2StateResponseMSG]:
-        """Use as wrapper for sending the get state packet to the device.
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2StateResponseMSG``.
-
-        """
-        full_state_tuple = await self._full_get_state()
-        return full_state_tuple[2]
-
-    async def control_device(
-        self, command: Command, timer: Optional[int] = None
-    ) -> Optional[messages.SwitcherV2ControlResponseMSG]:
-        """Use for sending the control packet to the device.
-
-        Args:
-          command: use the ``aioswitcher.api.Command`` enum.
-          timer: if turning-on optionally incorporate a auto-off timer. Use
-            ``aioswitcher.utils.minutes_to_hexadecimal_seconds``.
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2ControlResponseMSG``.
-
-        """
-        (
-            timestamp,
-            login_response,
-            get_state_response,
-        ) = await self._full_get_state()
-
-        if (
-            login_response
-            and login_response.successful
-            and get_state_response
-            and get_state_response.successful
-        ):
-
-            if timer:
-                minutes_timer = minutes_to_hexadecimal_seconds(timer)
-            else:
-                minutes_timer = packets.NO_TIMER_REQUESTED
-
-            packet = packets.SEND_CONTROL_PACKET.format(
-                login_response.session_id,
-                timestamp,
-                self._device_id,
-                command.value,
-                minutes_timer,
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                return messages.SwitcherV2ControlResponseMSG(self._loop, response)
-
-        return None
-
-    async def set_auto_shutdown(
-        self, full_time: timedelta
-    ) -> Optional[messages.SwitcherV2SetAutoOffResponseMSG]:
-        """Use for sending the set auto-off packet to the device.
-
-        Args:
-          full_time: timedelta value containg the configuration value for
-            auto-shutdown. Accepts anythin between 1 and 3 hours.
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2SetAutoOffResponseMSG``.
-
-        """
-        (
-            timestamp,
-            login_response,
-            get_state_response,
-        ) = await self._full_get_state()
-
-        if (
-            login_response
-            and login_response.successful
-            and get_state_response
-            and get_state_response.successful
-        ):
-            auto_off = timedelta_to_hexadecimal_seconds(full_time)
-
-            packet = packets.SET_AUTO_OFF_SET_PACKET.format(
-                login_response.session_id,
-                timestamp,
-                self._device_id,
-                auto_off,
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                return messages.SwitcherV2SetAutoOffResponseMSG(self._loop, response)
-
-        return None
-
-    async def set_device_name(
-        self, name: str
-    ) -> Optional[messages.SwitcherV2UpdateNameResponseMSG]:
-        """Use for sending the set name packet to the device.
-
-        Args:
-          name: string name with the length of 2 >= x >= 32.
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2UpdateNameResponseMSG``.
-
-        """
-        (
-            timestamp,
-            login_response,
-            get_state_response,
-        ) = await self._full_get_state()
-
-        if (
-            login_response
-            and login_response.successful
-            and get_state_response
-            and get_state_response.successful
-        ):
-            device_name = string_to_hexadecimale_device_name(name)
-
-            packet = packets.UPDATE_DEVICE_NAME_PACKET.format(
-                login_response.session_id,
-                timestamp,
-                self._device_id,
-                device_name,
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                return messages.SwitcherV2UpdateNameResponseMSG(self._loop, response)
-
-        return None
-
-    async def get_schedules(
-        self,
-    ) -> Optional[messages.SwitcherV2GetScheduleResponseMSG]:
-        """Use for retrival of the schedules from the device.
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2GetScheduleResponseMSG``.
-
-        """
-        (
-            timestamp,
-            login_response,
-            get_state_response,
-        ) = await self._full_get_state()
-
-        if (
-            login_response
-            and login_response.successful
-            and get_state_response
-            and get_state_response.successful
-        ):
-            packet = packets.GET_SCHEDULES_PACKET.format(
-                login_response.session_id,
-                timestamp,
-                self._device_id,
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                return messages.SwitcherV2GetScheduleResponseMSG(self._loop, response)
-
-        return None
-
-    async def disable_enable_schedule(
-        self, schedule_data: str
-    ) -> Optional[messages.SwitcherV2DisableEnableScheduleResponseMSG]:
-        """Use for disabling or enabling a schedule on the device.
-
-        Args:
-          schedule_data: formatted data for updating the schedule, can be
-            obtained from the ``aioswitcher.schedules.SwitcherSchedule``
-            object or created using the format
-            ``aioswitcher.schedules.SCHEDULE_CREATE_DATA_FORMAT`` filled with
-            three values: weekdays, start-time and end-time. Weekdays can be
-            created using the tool ``aioswitcher.utils.weekdays_to_hexadecimal``,
-            the start and end times can be created using the
-            ``aioswitcher.utils.time_to_hexadecimal_timestamp``
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2DisableEnableScheduleResponseMSG``.
-
-        """
-        (
-            timestamp,
-            login_response,
-            get_state_response,
-        ) = await self._full_get_state()
-
-        if (
-            login_response
-            and login_response.successful
-            and get_state_response
-            and get_state_response.successful
-        ):
-            packet = packets.DISABLE_ENABLE_SCHEDULE_PACKET.format(
-                login_response.session_id,
-                timestamp,
-                self._device_id,
-                schedule_data,
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                return messages.SwitcherV2DisableEnableScheduleResponseMSG(
-                    self._loop, response
-                )
-
-        return None
-
-    async def delete_schedule(
-        self, schedule_id: str
-    ) -> Optional[messages.SwitcherV2DeleteScheduleResponseMSG]:
-        """Use for deleting a schedule from the device.
-
-        Args:
-          schedule_id: the id of the schedule slot from the device, can be 0-7
-            as there are 8 slots available. Can be obtained from the
-            ``aioswitcher.schedules.SwitcherSchedule`` object.
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2DeleteScheduleResponseMSG``.
-
-        """
-        (
-            timestamp,
-            login_response,
-            get_state_response,
-        ) = await self._full_get_state()
-
-        if (
-            login_response
-            and login_response.successful
-            and get_state_response
-            and get_state_response.successful
-        ):
-            packet = packets.DELETE_SCHEDULE_PACKET.format(
-                login_response.session_id,
-                timestamp,
-                self._device_id,
-                schedule_id,
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                return messages.SwitcherV2DeleteScheduleResponseMSG(
-                    self._loop, response
-                )
-
-        return None
-
-    async def create_schedule(
-        self, schedule_data: str
-    ) -> Optional[messages.SwitcherV2CreateScheduleResponseMSG]:
-        """Use for creating a new schedule in the next empty schedule slot.
-
-        Args:
-          schedule_data: formatted data for updating the schedule, can be
-            created using the format
-            ``aioswitcher.schedules.SCHEDULE_CREATE_DATA_FORMAT`` filled with
-            three values: weekdays, start-time and end-time. Weekdays can be
-            created using the tool ``aioswitcher.utils.weekdays_to_hexadecimal``,
-            the start and end times can be created using the
-            ``aioswitcher.utils.time_to_hexadecimal_timestamp``
-
-        Returns:
-          An instance of the serialized object
-          ``aioswitcher.api.messages.SwitcherV2CreateScheduleResponseMSG``.
-
-        """
-        (
-            timestamp,
-            login_response,
-            get_state_response,
-        ) = await self._full_get_state()
-
-        if (
-            login_response
-            and login_response.successful
-            and get_state_response
-            and get_state_response.successful
-        ):
-            packet = packets.CREATE_SCHEDULE_PACKET.format(
-                login_response.session_id,
-                timestamp,
-                self._device_id,
-                schedule_data,
-            )
-
-            signed_packet = sign_packet_with_crc_key(packet)
-
-            if self._writer and self._reader:
-                self._writer.write(unhexlify(signed_packet))
-
-                response = await self._reader.read(1024)
-
-                return messages.SwitcherV2CreateScheduleResponseMSG(
-                    self._loop, response
-                )
-
-        return None
+            await self._writer.wait_closed()
+        else:
+            info("switcher device not connected")
+        self._connected = False
 
     @property
     def connected(self) -> bool:
-        """bool: Return true if api is connected."""
-        return self._connected_evt.is_set()
+        """Return true if api is connected."""
+        return self._connected
+
+    async def _login(self) -> Tuple[str, SwitcherLoginResponse]:
+        """Use for sending the login packet to the device.
+
+        Returns:
+            A tuple of the hex timestamp and an instance of ``SwitcherLoginResponse``.
+
+        Note:
+            This is a private function used by other functions, do not call this
+            function directly.
+
+        """
+        timestamp = current_timestamp_to_hexadecimal()
+        packet = packets.LOGIN_PACKET.format(timestamp)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a login packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return (timestamp, SwitcherLoginResponse(response))
+
+    async def _get_full_state(self) -> Tuple[str, str, SwitcherStateResponse]:
+        """Use for sending the get state packet to the device.
+
+        Will return extra information needed for other packets.
+
+        Returns:
+            A tuple of the hex timestamp, session id and an instance of
+            ``SwitcherStateResponse``.
+
+        Note:
+            This is a private function, please use get_state instead.
+
+        """
+        timestamp, login_response = await self._login()
+        packet = packets.GET_STATE_PACKET.format(
+            login_response.session_id, timestamp, self._device_id
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a get state packet")
+        self._writer.write(unhexlify(signed_packet))
+        state_response = await self._reader.read(1024)
+        return (
+            timestamp,
+            login_response.session_id,
+            SwitcherStateResponse(state_response),
+        )
+
+    async def get_state(self) -> SwitcherStateResponse:
+        """Use for sending the get state packet to the device.
+
+        Returns:
+            An instance of ``SwitcherStateResponse``.
+
+        """
+        _, _, state_response = await self._get_full_state()
+        return state_response
+
+    async def control_device(
+        self, command: Command, minutes: int = 0
+    ) -> SwitcherBaseResponse:
+        """Use for sending the control packet to the device.
+
+        Args:
+            command: use the ``aioswitcher.api.Command`` enum.
+            minutes: if turning-on optionally incorporate a timer.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        timestamp, session_id, _ = await self._get_full_state()
+        timer = (
+            minutes_to_hexadecimal_seconds(minutes)
+            if minutes > 0
+            else packets.NO_TIMER_REQUESTED
+        )
+        packet = packets.SEND_CONTROL_PACKET.format(
+            session_id,
+            timestamp,
+            self._device_id,
+            command.value,
+            timer,
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a control packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def set_auto_shutdown(self, full_time: timedelta) -> SwitcherBaseResponse:
+        """Use for sending the set auto-off packet to the device.
+
+        Args:
+            full_time: timedelta value containg the configuration value for
+            auto-shutdown.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        timestamp, session_id, _ = await self._get_full_state()
+        auto_shutdown = timedelta_to_hexadecimal_seconds(full_time)
+        packet = packets.SET_AUTO_OFF_SET_PACKET.format(
+            session_id,
+            timestamp,
+            self._device_id,
+            auto_shutdown,
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a set auto shutdown packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def set_device_name(self, name: str) -> SwitcherBaseResponse:
+        """Use for sending the set name packet to the device.
+
+        Args:
+            name: string name with the length of 2 >= x >= 32.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        timestamp, session_id, _ = await self._get_full_state()
+        device_name = string_to_hexadecimale_device_name(name)
+        packet = packets.UPDATE_DEVICE_NAME_PACKET.format(
+            session_id,
+            timestamp,
+            self._device_id,
+            device_name,
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a set name packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def get_schedules(self) -> SwitcherGetSchedulesResponse:
+        """Use for retrival of the schedules from the device.
+
+        Returns:
+            An instance of ``SwitcherGetSchedulesResponse``.
+
+        """
+        timestamp, session_id, _ = await self._get_full_state()
+        packet = packets.GET_SCHEDULES_PACKET.format(
+            session_id,
+            timestamp,
+            self._device_id,
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a get schedules packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherGetSchedulesResponse(response)
+
+    async def disable_enable_schedule(
+        self, schedule: SwitcherSchedule, state: ScheduleState
+    ) -> SwitcherBaseResponse:
+        """Use for disabling or enabling a schedule on the device.
+
+        Use ``get_schedules`` to retrieve the schedule instance.
+
+        Args:
+            schedule: the ``SwitcherSchedule`` for controlling.
+            state: the desired ``ScheduleState``.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        timestamp, session_id, _ = await self._get_full_state()
+        decoded_schedule = schedule.schedule_data.decode()
+        schedule_data = decoded_schedule[:2] + state.value + decoded_schedule[4:]
+        packet = packets.DISABLE_ENABLE_SCHEDULE_PACKET.format(
+            session_id,
+            timestamp,
+            self._device_id,
+            schedule_data,
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending an enable-disable schedule packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def delete_schedule(self, schedule: SwitcherSchedule) -> SwitcherBaseResponse:
+        """Use for deleting a schedule from the device.
+
+        Use ``get_schedules`` to retrieve the schedule instance.
+
+        Args:
+            schedule: the ``SwitcherSchedule`` for deletion.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        timestamp, session_id, _ = await self._get_full_state()
+        packet = packets.DELETE_SCHEDULE_PACKET.format(
+            session_id, timestamp, self._device_id, schedule.schedule_id
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a delete schedule packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def create_schedule(
+        self, start_time: str, end_time: str, days: Set[Days] = set()
+    ) -> SwitcherBaseResponse:
+        """Use for creating a new schedule in the next empty schedule slot.
+
+        Args:
+            start_time: a string start time in %H:%M formst. e.g. 13:00.
+            end_time: a string start time in %H:%M formst. e.g. 13:00.
+            days: for recurring schedules, add ``Days``.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        timestamp, session_id, _ = await self._get_full_state()
+
+        start_time_hex = time_to_hexadecimal_timestamp(start_time)
+        end_time_hex = time_to_hexadecimal_timestamp(end_time)
+        weekdays = weekdays_to_hexadecimal(days)
+        new_schedule = packets.SCHEDULE_CREATE_DATA_FORMAT.format(
+            weekdays, start_time_hex, end_time_hex
+        )
+        packet = packets.CREATE_SCHEDULE_PACKET.format(
+            session_id,
+            timestamp,
+            self._device_id,
+            new_schedule,
+        )
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        debug("sending a create schedule packet")
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
