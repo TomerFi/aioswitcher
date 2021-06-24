@@ -131,7 +131,7 @@ class SwitcherApi:
         debug("sending a login packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
-        return (timestamp, SwitcherLoginResponse(response))
+        return timestamp, SwitcherLoginResponse(response)
 
     async def _get_full_state(self) -> Tuple[str, str, SwitcherStateResponse]:
         """Use for sending the get state packet to the device.
@@ -146,20 +146,16 @@ class SwitcherApi:
             This is a private function, please use get_state instead.
 
         """
-        timestamp, login_response = await self._login()
+        timestamp, login_resp = await self._login()
         packet = packets.GET_STATE_PACKET.format(
-            login_response.session_id, timestamp, self._device_id
+            login_resp.session_id, timestamp, self._device_id
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
         debug("sending a get state packet")
         self._writer.write(unhexlify(signed_packet))
-        state_response = await self._reader.read(1024)
-        return (
-            timestamp,
-            login_response.session_id,
-            SwitcherStateResponse(state_response),
-        )
+        state_resp = await self._reader.read(1024)
+        return timestamp, login_resp.session_id, SwitcherStateResponse(state_resp)
 
     async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
