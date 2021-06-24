@@ -79,7 +79,6 @@ class ScheduleParser:
 
     def is_recurring(self) -> bool:
         """Return true if a recurring schedule."""
-        print(self.schedule[4:6])
         return self.schedule[4:6] != b"00"
 
     def get_days(self) -> Set[Days]:

@@ -140,8 +140,6 @@ class SwitcherGetSchedulesResponse(SwitcherBaseResponse):
     def __post_init__(self) -> None:
         """Post initialization of the message."""
         self.schedules = get_schedules(self.unparsed_response)
-        print("debug")
-        print(self.schedules)
 
     @property
     def found_schedules(self) -> bool:
