@@ -93,6 +93,14 @@ class SwitcherBaseResponse:
 
     unparsed_response: bytes
 
+    @property
+    def successful(self) -> bool:
+        """Return true if the response is not empty.
+
+        Partially indicating the request was successful.
+        """
+        return self.unparsed_response is not None and len(self.unparsed_response) > 0
+
 
 @dataclass
 class SwitcherLoginResponse(SwitcherBaseResponse):
