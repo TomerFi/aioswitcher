@@ -107,6 +107,7 @@ class SwitcherBridge:
 
     Args:
         on_device: a callable to which every new SwitcherBase device found will be send.
+        broadcast_port: broadcast port, default is 20002.
 
     """
 
@@ -134,7 +135,7 @@ class SwitcherBridge:
         await self.stop()
 
     async def start(self) -> None:
-        """Create an asynchronous listenr and start the bridge event."""
+        """Create an asynchronous listenr and start the bridge."""
         info("starting the udp bridge")
         protocol_factory = UdpClientProtocol(
             partial(_parse_device_from_datagram, self._on_device)
@@ -148,7 +149,6 @@ class SwitcherBridge:
         self._is_running = True
         info("udp bridge started")
         self._transport = transport
-        return None
 
     async def stop(self) -> None:
         """Stop the asynchronous bridge."""
@@ -158,7 +158,6 @@ class SwitcherBridge:
         else:
             info("udp bridge not started")
         self._is_running = False
-        return None
 
     @property
     def is_running(self) -> bool:
