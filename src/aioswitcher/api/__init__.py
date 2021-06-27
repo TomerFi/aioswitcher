@@ -156,10 +156,12 @@ class SwitcherApi:
             debug("sending a get state packet")
             self._writer.write(unhexlify(signed_packet))
             state_resp = await self._reader.read(1024)
-            response = SwitcherStateResponse(state_resp)
-            if response.successful:
-                return timestamp, login_resp.session_id, response
-            raise RuntimeError("get state request was not successful")
+            try:
+                response = SwitcherStateResponse(state_resp)
+                if response.successful:
+                    return timestamp, login_resp.session_id, response
+            except (KeyError, ValueError) as ve:
+                raise RuntimeError("get state request was not successful") from ve
         raise RuntimeError("login request was not successful")
 
     async def get_state(self) -> SwitcherStateResponse:
