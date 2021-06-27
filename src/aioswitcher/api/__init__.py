@@ -100,7 +100,7 @@ class SwitcherApi:
 
     async def disconnect(self) -> None:
         """Disconnect from asynchronous socket."""
-        if self._writer:
+        if hasattr(self, "_writer") and self._writer:
             info("disconnecting from the switcher device")
             self._writer.close()
             await self._writer.wait_closed()
