@@ -51,12 +51,11 @@ def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
     if current_weekday in execution_days and current_time < schedule_time:
         return f"Due today at {start_time}"
 
-    higher_days = [d for d in execution_days if d > current_weekday]
-    if higher_days:
-        next_exc_day = min(higher_days, key=lambda d: abs(d - current_weekday))
+    execution_days.sort()
+    if current_weekday > execution_days[-1]:
+        next_exc_day = execution_days[0]
     else:
-        lower_days = [d for d in execution_days if d < current_weekday]
-        next_exc_day = min(lower_days, key=lambda d: abs(d - current_weekday))
+        next_exc_day = list(filter(lambda d: d >= current_weekday, execution_days))[0]
 
     # if next excution day is tommorow for the current day, or this is the week end
     # (today is sunday and tommorow is monday)  return "due tommorow"
