@@ -22,7 +22,11 @@ from assertpy import assert_that
 from pytest import fixture, mark, raises
 
 from aioswitcher.api import SwitcherApi
-from aioswitcher.api.messages import SwitcherLoginResponse, SwitcherStateResponse
+from aioswitcher.api.messages import (
+    SwitcherGetSchedulesResponse,
+    SwitcherLoginResponse,
+    SwitcherStateResponse,
+)
 
 device_id = "aaaaaa"
 device_ip = "1.2.3.4"
@@ -111,6 +115,17 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherStateResponse)
     assert_that(response.unparsed_response).is_equal_to(get_state_response_packet)
+
+
+async def test_get_schedules_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    login_response_packet = _load_packet(resource_path_root, "login_response")
+    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
+    get_schedules_response_packet = _load_packet(resource_path_root, "get_schedules_response")
+    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet, get_schedules_response_packet]):
+        response = await connected_api.get_schedules()
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherGetSchedulesResponse)
+    assert_that(response.unparsed_response).is_equal_to(get_schedules_response_packet)
 
 
 def _load_packet(path, file_name):
