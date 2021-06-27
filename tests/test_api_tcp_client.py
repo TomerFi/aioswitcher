@@ -15,13 +15,14 @@
 """Switcher unofficial integration TCP socket API module test cases."""
 
 from asyncio.streams import StreamReader, StreamWriter
+from binascii import unhexlify
 from unittest.mock import AsyncMock, Mock, patch
 
 from assertpy import assert_that
-from pytest import fixture, mark
+from pytest import fixture, mark, raises
 
 from aioswitcher.api import SwitcherApi
-from aioswitcher.api.messages import SwitcherLoginResponse
+from aioswitcher.api.messages import SwitcherLoginResponse, SwitcherStateResponse
 
 device_id = "aaaaaa"
 device_ip = "1.2.3.4"
@@ -77,5 +78,40 @@ async def test_login_function(reader_mock, writer_write, connected_api, resource
     assert_that(response[1].unparsed_response).is_equal_to(response_packet)
 
 
+async def test_get_full_state_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    login_response_packet = _load_packet(resource_path_root, "login_response")
+    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
+    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet]):
+        response = await connected_api._get_full_state()
+    assert_that(writer_write.call_count).is_equal_to(2)
+    assert_that(response[2]).is_instance_of(SwitcherStateResponse)
+    assert_that(response[2].unparsed_response).is_equal_to(get_state_response_packet)
+
+
+async def test_get_full_state_function_with_a_faulty_login_response_should_raise_error(reader_mock, writer_write, connected_api):
+    with raises(RuntimeError, match="login request was not successful"):
+        with patch.object(reader_mock, "read", return_value=b''):
+            await connected_api._get_full_state()
+    writer_write.assert_called_once()
+
+
+async def test_get_full_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api, resource_path_root):
+    login_response_packet = _load_packet(resource_path_root, "login_response")
+    with raises(RuntimeError, match="get state request was not successful"):
+        with patch.object(reader_mock, "read", side_effect=[login_response_packet, b'']):
+            await connected_api._get_full_state()
+    assert_that(writer_write.call_count).is_equal_to(2)
+
+
+async def test_get_state_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    login_response_packet = _load_packet(resource_path_root, "login_response")
+    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
+    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet]):
+        response = await connected_api.get_state()
+    assert_that(writer_write.call_count).is_equal_to(2)
+    assert_that(response).is_instance_of(SwitcherStateResponse)
+    assert_that(response.unparsed_response).is_equal_to(get_state_response_packet)
+
+
 def _load_packet(path, file_name):
-    return (path / ("dummy_responses/" + file_name + ".txt")).read_text().replace('\n', '').encode()
+    return unhexlify((path / ("dummy_responses/" + file_name + ".txt")).read_text().replace('\n', '').encode())
