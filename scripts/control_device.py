@@ -18,6 +18,7 @@
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from asyncio import get_event_loop
+from datetime import timedelta
 from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
@@ -44,6 +45,15 @@ async def get_state(device_id: str, device_ip: str, verbose: bool) -> None:
     """Use to launch a get_state request."""
     async with SwitcherApi(device_ip, device_id) as api:
         printer.pprint(asdict(await api.get_state(), verbose))
+
+
+async def set_auto_shutdown(
+    device_id: str, device_ip: str, hours: int, minutes: int, verbose: bool
+):
+    """Use to launch a set_auto_shutdown request."""
+    td_val = timedelta(hours=hours, minutes=minutes)
+    async with SwitcherApi(device_ip, device_id) as api:
+        printer.pprint(asdict(await api.set_auto_shutdown(td_val), verbose))
 
 
 async def get_schedules(device_id: str, device_ip: str, verbose: bool) -> None:
@@ -93,6 +103,7 @@ if __name__ == "__main__":
         examples = """example usage:
 
         python control_device.py -d ab1c2d -i "111.222.11.22" get_state
+        python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30
         python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
         python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3
         python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"
@@ -125,6 +136,27 @@ if __name__ == "__main__":
             dest="action", description="supported actions"
         )
         subparsers.add_parser("get_state", help="get the current state of a device")
+        set_auto_shutdown_parser = subparsers.add_parser(
+            "set_auto_shutdown", help="set the auto shutdown property (1h-24h)"
+        )
+        set_auto_shutdown_parser.add_argument(
+            "-r",
+            "--hours",
+            choices=range(1, 24),
+            type=int,
+            required=True,
+            help="number hours for the auto shutdown",
+        )
+        set_auto_shutdown_parser.add_argument(
+            "-m",
+            "--minutes",
+            choices=range(0, 60),
+            type=int,
+            nargs="?",
+            default=0,
+            help="number hours for the auto shutdown",
+        )
+
         subparsers.add_parser("get_schedules", help="retrive a device schedules")
 
         delete_schedule_parser = subparsers.add_parser(
@@ -171,6 +203,16 @@ if __name__ == "__main__":
         if args.action == "get_state":
             get_event_loop().run_until_complete(
                 get_state(args.device_id, args.ip_address, args.verbose)
+            )
+        elif args.action == "set_auto_shutdown":
+            get_event_loop().run_until_complete(
+                set_auto_shutdown(
+                    args.device_id,
+                    args.ip_address,
+                    args.hours,
+                    args.minutes,
+                    args.verbose,
+                )
             )
         elif args.action == "get_schedules":
             get_event_loop().run_until_complete(
