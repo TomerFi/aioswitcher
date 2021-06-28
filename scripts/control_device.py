@@ -47,6 +47,12 @@ async def get_state(device_id: str, device_ip: str, verbose: bool) -> None:
         printer.pprint(asdict(await api.get_state(), verbose))
 
 
+async def set_name(device_id: str, device_ip: str, name: str, verbose: bool):
+    """Use to launch a set_name request."""
+    async with SwitcherApi(device_ip, device_id) as api:
+        printer.pprint(asdict(await api.set_device_name(name), verbose))
+
+
 async def set_auto_shutdown(
     device_id: str, device_ip: str, hours: int, minutes: int, verbose: bool
 ):
@@ -109,6 +115,7 @@ if __name__ == "__main__":
         python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"
         python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday"""  # noqa E501
 
+        # parent parser
         parent_parser = ArgumentParser(
             description="Control your Switcher device",
             epilog=examples,
@@ -135,7 +142,23 @@ if __name__ == "__main__":
         subparsers = parent_parser.add_subparsers(
             dest="action", description="supported actions"
         )
+
+        # get_state parser
         subparsers.add_parser("get_state", help="get the current state of a device")
+
+        # set_name parser
+        set_name_parser = subparsers.add_parser(
+            "set_name", help="set the name of the device"
+        )
+        set_name_parser.add_argument(
+            "-n",
+            "--name",
+            type=str,
+            required=True,
+            help="new name for the device",
+        )
+
+        # set_auto_shutdown parser
         set_auto_shutdown_parser = subparsers.add_parser(
             "set_auto_shutdown", help="set the auto shutdown property (1h-24h)"
         )
@@ -157,8 +180,10 @@ if __name__ == "__main__":
             help="number hours for the auto shutdown",
         )
 
+        # get_schedules parser
         subparsers.add_parser("get_schedules", help="retrive a device schedules")
 
+        # delete_schedule parser
         delete_schedule_parser = subparsers.add_parser(
             "delete_schedule", help="delete a device schedule"
         )
@@ -170,6 +195,7 @@ if __name__ == "__main__":
             help="the id of the schedule for deletion",
         )
 
+        # create_schedule parser
         create_schedule_parser = subparsers.add_parser(
             "create_schedule", help="create a new schedule"
         )
@@ -203,6 +229,10 @@ if __name__ == "__main__":
         if args.action == "get_state":
             get_event_loop().run_until_complete(
                 get_state(args.device_id, args.ip_address, args.verbose)
+            )
+        elif args.action == "set_name":
+            get_event_loop().run_until_complete(
+                set_name(args.device_id, args.ip_address, args.name, args.verbose)
             )
         elif args.action == "set_auto_shutdown":
             get_event_loop().run_until_complete(
