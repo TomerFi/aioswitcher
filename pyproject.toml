@@ -73,6 +73,9 @@ isort = "poetry run isort --check-only src/ tests/ docs/ scripts/"
 isort_fix = "poetry run isort src/ tests/ docs/ scripts/"
 mypy = "poetry run mypy src/ tests/ docs/ scripts/"
 yamllint = "poetry run yamllint --format colored --strict ."
+# sphinx scripts, requirements are specified in docs/requirements.txt
+sphinx_build = "sphinx-build -b spelling docs _build"
+sphinx_clean_build = "sphinx-build -a -b spelling docs _build"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

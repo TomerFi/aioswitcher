@@ -1,4 +1,4 @@
-# Contributing to `aioswitcher`
+# Contributing to `aioswitcher` [![conventional-commits]][0]
 
 :clap: First off, thank you for taking the time to contribute. :clap:
 
@@ -11,32 +11,38 @@ Contributing is pretty straight-forward:
 Please feel free to contribute, even to this contributing guideline file, if you see fit.
 
 - [Package management](#package-management)
-- [Documentation](#documentation)
-- [Testing](#testing)
 - [Code of Conduct](#code-of-conduct)
 
-## Package management
+## Prepare environment
 
-The [pyproject.toml](pyproject.toml) is the main configuration file for the pypi package based on
-[PEP518](https://www.python.org/dev/peps/pep-0518/). Please note, this package is being managed,
-build, packaged and deployed with [poetry](https://poetry.eustace.io/).
+With [Python >= 3.9](https://www.python.org/) use [pip](https://pypi.org/project/pip/) to install
+[poetry](https://poetry.eustace.io/) and the used extensions (mainly [poethepoet](https://github.com/nat-n/poethepoet)):
 
-## Documentation
+```shell
+  pip install -rrequirements.txt
+```
 
-- `docs/sources` is where the *restructuredText* for creating the [Sphinx Documentation](http://www.sphinx-doc.org)
-  are stored for build, deployment and hosting by [Read the Docs](https://readthedocs.org/).
-- `docs/Makefile` the basic *Makefile* for [Sphinx](http://www.sphinx-doc.org)
-  documentation generator. From the [docs](docs/) path, type `make html` and
-  [sphinx](http://www.sphinx-doc.org) will create the documentation site locally in
-  `docs/build`.
+Scroll around [pyproject.toml](../pyproject.toml) and get familiarize with the project,
+pay attention to the following section, as most of the developing steps will use these scripts:
 
-## Testing
+```toml
+[tool.poe.tasks]
+```
 
-Testing is performed with [Pytest, Full-featured Python testing tool](https://docs.pytest.org).</br>
-The various test-cases are in [tests](tests).
+To get you going, here are some poe scripts I use constantly while working on *aioswitcher*:
 
-For automated local tests, use [Tox](https://tox.readthedocs.io).
+- ```poe lint```
+- ```poe test```
+- ```poe test_cov --cov-report html```
+- ```poe install_all```
+- ```poe lic_check``` (requires *deno*)
+- ```poe isort_fix```
 
 ## Code of Conduct
 
-Please check the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) markdown file.
+Please check the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+<!-- Real Links -->
+[0]: https://conventionalcommits.org
+<!-- Badges Links -->
+[conventional-commits]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg

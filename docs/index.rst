@@ -1,13 +1,10 @@
-Welcome to ``aioswitcher`` documentation!
-=========================================
+===========
+Quick Start
+===========
 
 .. toctree::
    :maxdepth: 1
 
-   install
-   prerequisites
    usage
-   license
-   credits
-   projects
+   scripts
    codedocs

@@ -20,27 +20,23 @@ from sys import path as sys_path
 from toml import load as toml_load
 
 sys_path.insert(0, os_path.abspath("../src"))
+sys_path.insert(1, os_path.abspath("../scripts"))
 
 toml_path = "{}/pyproject.toml".format(os_path.abspath(".."))
 parsed_toml = toml_load(toml_path)
 
 project = parsed_toml["tool"]["poetry"]["name"]
-copyright = "Tomer Figenblat"
-author = "Tomer Figenblat"
-version = parsed_toml["tool"]["poetry"]["version"]
-release = version
+author = copyright = "Tomer Figenblat"
+release = version = parsed_toml["tool"]["poetry"]["version"]
+
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    "sphinx.ext.todo",
     "sphinx.ext.viewcode",
+    "sphinxcontrib.autoprogram",
+    "sphinxcontrib.spelling",
 ]
-exclude_patterns = ["_build"]
-pygments_style = "sphinx"
-html_theme = "sphinx_rtd_theme"
-language = "en"
-show_authors = False
-linkcheck_anchors = True
 
-# sphinx.ext.todo configuration
-todo_include_todos = True
+exclude_patterns = ["_build"]
+language = "en"
+html_theme = "insegel"
