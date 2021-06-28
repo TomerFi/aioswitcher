@@ -22,7 +22,7 @@ from unittest.mock import AsyncMock, Mock, patch
 from assertpy import assert_that
 from pytest import fixture, mark, raises
 
-from aioswitcher.api import SwitcherApi
+from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.api.messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
@@ -117,6 +117,33 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherStateResponse)
     assert_that(response.unparsed_response).is_equal_to(get_state_response_packet)
+
+
+async def test_turn_on_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    three_packets = _get_three_packets(resource_path_root, "turn_on_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api.control_device(Command.ON)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    three_packets = _get_three_packets(resource_path_root, "turn_on_with_timer_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api.control_device(Command.ON, 15)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    three_packets = _get_three_packets(resource_path_root, "turn_off_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api.control_device(Command.OFF)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_set_name_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
