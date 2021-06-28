@@ -23,6 +23,7 @@ from pytest import fixture, mark, raises
 
 from aioswitcher.api import SwitcherApi
 from aioswitcher.api.messages import (
+    SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
     SwitcherLoginResponse,
     SwitcherStateResponse,
@@ -126,6 +127,17 @@ async def test_get_schedules_function_with_valid_packets(reader_mock, writer_wri
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherGetSchedulesResponse)
     assert_that(response.unparsed_response).is_equal_to(get_schedules_response_packet)
+
+
+async def test_delete_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    login_response_packet = _load_packet(resource_path_root, "login_response")
+    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
+    delete_schedule_response_packet = _load_packet(resource_path_root, "delete_schedule_response")
+    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet, delete_schedule_response_packet]):
+        response = await connected_api.delete_schedule("0")
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(delete_schedule_response_packet)
 
 
 def _load_packet(path, file_name):
