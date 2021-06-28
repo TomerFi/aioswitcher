@@ -30,8 +30,7 @@ from ..device.tools import (
     string_to_hexadecimale_device_name,
     timedelta_to_hexadecimal_seconds,
 )
-from ..schedule import Days, ScheduleState
-from ..schedule.parser import SwitcherSchedule
+from ..schedule import Days
 from ..schedule.tools import time_to_hexadecimal_timestamp, weekdays_to_hexadecimal
 from . import packets
 from .messages import (
@@ -277,37 +276,6 @@ class SwitcherApi:
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherGetSchedulesResponse(response)
-
-    async def disable_enable_schedule(
-        self, schedule: SwitcherSchedule, state: ScheduleState
-    ) -> SwitcherBaseResponse:
-        """Use for disabling or enabling a schedule on the device.
-
-        Use ``get_schedules`` to retrieve the schedule instance.
-
-        Args:
-            schedule: the ``SwitcherSchedule`` for controlling.
-            state: the desired ``ScheduleState``.
-
-        Returns:
-            An instance of ``SwitcherBaseResponse``.
-
-        """
-        timestamp, session_id, _ = await self._get_full_state()
-        decoded_schedule = schedule.schedule_data.decode()
-        schedule_data = decoded_schedule[:2] + state.value + decoded_schedule[4:]
-        packet = packets.DISABLE_ENABLE_SCHEDULE_PACKET.format(
-            session_id,
-            timestamp,
-            self._device_id,
-            schedule_data,
-        )
-        signed_packet = sign_packet_with_crc_key(packet)
-
-        debug("sending an enable-disable schedule packet")
-        self._writer.write(unhexlify(signed_packet))
-        response = await self._reader.read(1024)
-        return SwitcherBaseResponse(response)
 
     async def delete_schedule(self, schedule_id: str) -> SwitcherBaseResponse:
         """Use for deleting a schedule from the device.

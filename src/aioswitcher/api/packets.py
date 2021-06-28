@@ -48,12 +48,6 @@ DELETE_SCHEDULE_PACKET = (
 )
 # format values are local session id, timestamp, device id,
 # schedule data =
-#         (time_id + on_off + week + timstate + start_time + end_time)
-DISABLE_ENABLE_SCHEDULE_PACKET = (
-    "fef0630002320102" + REQUEST_FORMAT + "{}" + PAD_74_ZEROS + "070c00{}"
-)
-# format values are local session id, timestamp, device id,
-# schedule data =
 #                   (on_off + week + timstate + start_time + end_time)
 CREATE_SCHEDULE_PACKET = (
     "fef0630002320102" + REQUEST_FORMAT + "{}" + PAD_74_ZEROS + "030c00ff{}"
