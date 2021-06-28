@@ -18,7 +18,6 @@
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from asyncio import get_event_loop
-from binascii import hexlify
 from pprint import PrettyPrinter
 from typing import Any, Dict
 
@@ -32,7 +31,7 @@ printer = PrettyPrinter(indent=4)
 
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
-    """Use for custom implementation of the asdict utility method."""
+    """Use as custom implementation of the asdict utility method."""
     return {
         k: v
         for k, v in dc.__dict__.items()
@@ -52,7 +51,7 @@ async def get_schedules(device_id: str, device_ip: str, verbose: bool) -> None:
         response = await api.get_schedules()
         if verbose:
             printer.pprint(
-                {"unparsed_response": hexlify(response.unparsed_response).decode()}
+                {"unparsed_response": response.unparsed_response}
             )
             print()
         for schedule in response.schedules:
@@ -60,12 +59,21 @@ async def get_schedules(device_id: str, device_ip: str, verbose: bool) -> None:
             print()
 
 
+async def delete_schedule(
+    device_id: str, device_ip: str, schedule_id: str, verbose: bool
+) -> None:
+    """Use to launch a delete_schedule request."""
+    async with SwitcherApi(device_ip, device_id) as api:
+        printer.pprint(asdict(await api.delete_schedule(schedule_id), verbose))
+
+
 if __name__ == "__main__":
     try:
         examples = """example usage:
 
         python control_device.py -d ab1c2d -i "111.222.11.22" get_state
-        python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules"""
+        python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
+        python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3"""
 
         parent_parser = ArgumentParser(
             description="Control your Switcher device",
@@ -94,20 +102,33 @@ if __name__ == "__main__":
             dest="action", description="supported actions"
         )
         subparsers.add_parser("get_state", help="get the current state of a device")
-        subparsers.add_parser("get_schedules", help="retrive a device's schedules")
+        subparsers.add_parser("get_schedules", help="retrive a device schedules")
 
-        parent_args = parent_parser.parse_args()
+        delete_schedule_parser = subparsers.add_parser(
+            "delete_schedule", help="delete a device schedule"
+        )
+        delete_schedule_parser.add_argument(
+            "-s",
+            "--schedule-id",
+            type=str,
+            required=True,
+            help="the id of the schedule for deletion",
+        )
 
-        if parent_args.action == "get_state":
+        args = parent_parser.parse_args()
+
+        if args.action == "get_state":
             get_event_loop().run_until_complete(
-                get_state(
-                    parent_args.device_id, parent_args.ip_address, parent_args.verbose
-                )
+                get_state(args.device_id, args.ip_address, args.verbose)
             )
-        elif parent_args.action == "get_schedules":
+        elif args.action == "get_schedules":
             get_event_loop().run_until_complete(
-                get_schedules(
-                    parent_args.device_id, parent_args.ip_address, parent_args.verbose
+                get_schedules(args.device_id, args.ip_address, args.verbose)
+            )
+        elif args.action == "delete_schedule":
+            get_event_loop().run_until_complete(
+                delete_schedule(
+                    args.device_id, args.ip_address, args.schedule_id, args.verbose
                 )
             )
     except KeyboardInterrupt:
