@@ -24,14 +24,14 @@ from aioswitcher.schedule.parser import ScheduleParser, SwitcherSchedule, get_sc
 
 
 def test_switcher_schedule_dataclass_to_verify_the_post_initialization_of_the_dispaly_and_duration():
-    sut = SwitcherSchedule("1", True, False, set(), "13:00", "14:00", b"")
+    sut = SwitcherSchedule("1", False, set(), "13:00", "14:00")
     assert_that(sut.duration).is_equal_to("1:00:00")
     assert_that(sut.display).is_equal_to("Due today at 13:00")
 
 
 def test_switcher_schedule_dataclass_to_verify_equality_and_hashing():
-    sut0 = SwitcherSchedule("0", True, False, set(), "13:00", "14:00", b"")
-    sut1 = SwitcherSchedule("1", True, False, set(), "13:00", "14:00", b"")
+    sut0 = SwitcherSchedule("0", False, set(), "13:00", "14:00")
+    sut1 = SwitcherSchedule("1", False, set(), "13:00", "14:00")
     assert_that(sut0.__eq__(sut0)).is_true()
     assert_that(sut0.__eq__(sut1)).is_false()
     assert_that(sut0.__eq__(object())).is_false()

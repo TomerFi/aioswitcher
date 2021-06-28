@@ -50,9 +50,7 @@ async def get_schedules(device_id: str, device_ip: str, verbose: bool) -> None:
     async with SwitcherApi(device_ip, device_id) as api:
         response = await api.get_schedules()
         if verbose:
-            printer.pprint(
-                {"unparsed_response": response.unparsed_response}
-            )
+            printer.pprint({"unparsed_response": response.unparsed_response})
             print()
         for schedule in response.schedules:
             printer.pprint(asdict(schedule))

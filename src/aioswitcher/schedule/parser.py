@@ -28,22 +28,18 @@ class SwitcherSchedule:
 
     Args:
         schedule_id: the id of the schedule
-        enabled: is the shcedule enabled
         recurring: is a recurring schedule
         days: a set of schedule days, or empty set for non recurring schedules
         start_time: the start time of the schedule
         end_time: the end time of the schedule
-        schedule_data: bytes data to communuicate with the device
 
     """
 
     schedule_id: str
-    enabled: bool
     recurring: bool
     days: Set[Days]
     start_time: str
     end_time: str
-    schedule_data: bytes
     duration: str = field(init=False)
     display: str = field(init=False)
 
@@ -115,12 +111,10 @@ def get_schedules(message: bytes) -> Set[SwitcherSchedule]:
         ret_set.add(
             SwitcherSchedule(
                 parser.get_id(),
-                parser.is_enabled(),
                 parser.is_recurring(),
                 parser.get_days(),
                 parser.get_start_time(),
                 parser.get_end_time(),
-                parser.schedule,
             )
         )
     return ret_set
