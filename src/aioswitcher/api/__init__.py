@@ -309,13 +309,13 @@ class SwitcherApi:
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def delete_schedule(self, schedule: SwitcherSchedule) -> SwitcherBaseResponse:
+    async def delete_schedule(self, schedule_id: str) -> SwitcherBaseResponse:
         """Use for deleting a schedule from the device.
 
         Use ``get_schedules`` to retrieve the schedule instance.
 
         Args:
-            schedule: the ``SwitcherSchedule`` for deletion.
+            schedule_id: the identification of the schedule for deletion.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -323,7 +323,7 @@ class SwitcherApi:
         """
         timestamp, session_id, _ = await self._get_full_state()
         packet = packets.DELETE_SCHEDULE_PACKET.format(
-            session_id, timestamp, self._device_id, schedule.schedule_id
+            session_id, timestamp, self._device_id, schedule_id
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
