@@ -119,6 +119,15 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
     assert_that(response.unparsed_response).is_equal_to(get_state_response_packet)
 
 
+async def test_set_name_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    three_packets = _get_three_packets(resource_path_root, "set_name_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api.set_device_name("my boiler")
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
 async def test_set_auto_shutdown_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
     three_packets = _get_three_packets(resource_path_root, "set_auto_shutdown_response")
     with patch.object(reader_mock, "read", side_effect=three_packets):
