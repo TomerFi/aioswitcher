@@ -19,11 +19,12 @@
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from asyncio import get_event_loop
 from pprint import PrettyPrinter
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from pkg_resources import require
 
 from aioswitcher.api import SwitcherApi
+from aioswitcher.schedule import Days
 
 require("aioswitcher>=2.0.0-dev")
 
@@ -65,13 +66,37 @@ async def delete_schedule(
         printer.pprint(asdict(await api.delete_schedule(schedule_id), verbose))
 
 
+async def create_schedule(
+    device_id: str,
+    device_ip: str,
+    start_time: str,
+    end_time: str,
+    weekdays: List[str],
+    verbose: bool,
+):
+    """Use to launch a create_schedule request."""
+    async with SwitcherApi(device_ip, device_id) as api:
+        printer.pprint(
+            asdict(
+                await api.create_schedule(
+                    start_time,
+                    end_time,
+                    set([Days(w) for w in weekdays]),  # type: ignore
+                ),
+                verbose,
+            )
+        )
+
+
 if __name__ == "__main__":
     try:
         examples = """example usage:
 
         python control_device.py -d ab1c2d -i "111.222.11.22" get_state
         python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
-        python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3"""
+        python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3
+        python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"
+        python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday"""  # noqa E501
 
         parent_parser = ArgumentParser(
             description="Control your Switcher device",
@@ -113,6 +138,34 @@ if __name__ == "__main__":
             help="the id of the schedule for deletion",
         )
 
+        create_schedule_parser = subparsers.add_parser(
+            "create_schedule", help="create a new schedule"
+        )
+        create_schedule_parser.add_argument(
+            "-n",
+            "--start-time",
+            type=str,
+            required=True,
+            help="the on time for the schedule, e.g. 13:00",
+        )
+        create_schedule_parser.add_argument(
+            "-f",
+            "--end-time",
+            type=str,
+            required=True,
+            help="the off time for the schedule, e.g. 13:30",
+        )
+        possible_weekdays = [d.value for d in Days]
+        create_schedule_parser.add_argument(
+            "-w",
+            "--weekdays",
+            choices=possible_weekdays,
+            nargs="*",
+            required=False,
+            help=f"days for recurring scheduels, possible values: {possible_weekdays}",
+            default=list(),
+        )
+
         args = parent_parser.parse_args()
 
         if args.action == "get_state":
@@ -127,6 +180,17 @@ if __name__ == "__main__":
             get_event_loop().run_until_complete(
                 delete_schedule(
                     args.device_id, args.ip_address, args.schedule_id, args.verbose
+                )
+            )
+        elif args.action == "create_schedule":
+            get_event_loop().run_until_complete(
+                create_schedule(
+                    args.device_id,
+                    args.ip_address,
+                    args.start_time,
+                    args.end_time,
+                    args.weekdays,
+                    args.verbose,
                 )
             )
     except KeyboardInterrupt:
