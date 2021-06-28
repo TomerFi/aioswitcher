@@ -318,7 +318,11 @@ class SwitcherApi:
 
         start_time_hex = time_to_hexadecimal_timestamp(start_time)
         end_time_hex = time_to_hexadecimal_timestamp(end_time)
-        weekdays = weekdays_to_hexadecimal(days)
+        weekdays = (
+            weekdays_to_hexadecimal(days)
+            if len(days) > 0
+            else packets.NON_RECURRING_SCHEDULE
+        )
         new_schedule = packets.SCHEDULE_CREATE_DATA_FORMAT.format(
             weekdays, start_time_hex, end_time_hex
         )
