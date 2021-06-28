@@ -119,36 +119,38 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
 
 
 async def test_get_schedules_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
-    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
-    get_schedules_response_packet = _load_packet(resource_path_root, "get_schedules_response")
-    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet, get_schedules_response_packet]):
+    three_packets = _get_three_packets(resource_path_root, "get_schedules_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
         response = await connected_api.get_schedules()
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherGetSchedulesResponse)
-    assert_that(response.unparsed_response).is_equal_to(get_schedules_response_packet)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_delete_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
-    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
-    delete_schedule_response_packet = _load_packet(resource_path_root, "delete_schedule_response")
-    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet, delete_schedule_response_packet]):
+    three_packets = _get_three_packets(resource_path_root, "delete_schedule_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
         response = await connected_api.delete_schedule("0")
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(delete_schedule_response_packet)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_create_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
-    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
-    create_schedule_response_packet = _load_packet(resource_path_root, "create_schedule_response")
-    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet, create_schedule_response_packet]):
+    three_packets = _get_three_packets(resource_path_root, "create_schedule_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
         response = await connected_api.create_schedule("18:00", "19:00")
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(create_schedule_response_packet)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+def _get_three_packets(resource_path_root, third_packet):
+    return [
+        _load_packet(resource_path_root, "login_response"),
+        _load_packet(resource_path_root, "get_state_response"),
+        _load_packet(resource_path_root, third_packet),
+    ]
 
 
 def _load_packet(path, file_name):
