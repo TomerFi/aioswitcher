@@ -24,7 +24,7 @@ from typing import Any, Dict, List
 
 from pkg_resources import require
 
-from aioswitcher.api import SwitcherApi
+from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.schedule import Days
 
 require("aioswitcher>=2.0.0-dev")
@@ -45,6 +45,18 @@ async def get_state(device_id: str, device_ip: str, verbose: bool) -> None:
     """Use to launch a get_state request."""
     async with SwitcherApi(device_ip, device_id) as api:
         printer.pprint(asdict(await api.get_state(), verbose))
+
+
+async def turn_on(device_id: str, device_ip: str, timer: int, verbose: bool) -> None:
+    """Use to launch a turn_on request."""
+    async with SwitcherApi(device_ip, device_id) as api:
+        printer.pprint(asdict(await api.control_device(Command.ON, timer), verbose))
+
+
+async def turn_off(device_id: str, device_ip: str, verbose: bool) -> None:
+    """Use to launch a turn_off request."""
+    async with SwitcherApi(device_ip, device_id) as api:
+        printer.pprint(asdict(await api.control_device(Command.OFF), verbose))
 
 
 async def set_name(device_id: str, device_ip: str, name: str, verbose: bool):
@@ -109,6 +121,10 @@ if __name__ == "__main__":
         examples = """example usage:
 
         python control_device.py -d ab1c2d -i "111.222.11.22" get_state
+        python control_device.py -d ab1c2d -i "111.222.11.22" turn_on
+        python control_device.py -d ab1c2d -i "111.222.11.22" turn_on -t 15
+        python control_device.py -d ab1c2d -i "111.222.11.22" turn_off
+        python control_device.py -d ab1c2d -i "111.222.11.22" set_name -n "My Boiler"
         python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30
         python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
         python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3
@@ -145,6 +161,20 @@ if __name__ == "__main__":
 
         # get_state parser
         subparsers.add_parser("get_state", help="get the current state of a device")
+
+        # turn_on parser
+        turn_on_parser = subparsers.add_parser("turn_on", help="turn on the device")
+        turn_on_parser.add_argument(
+            "-t",
+            "--timer",
+            type=int,
+            nargs="?",
+            default=0,
+            help="set minutes timer for turn on operation",
+        )
+
+        # turn_off parser
+        turn_on_parser = subparsers.add_parser("turn_off", help="turn off the device")
 
         # set_name parser
         set_name_parser = subparsers.add_parser(
@@ -229,6 +259,14 @@ if __name__ == "__main__":
         if args.action == "get_state":
             get_event_loop().run_until_complete(
                 get_state(args.device_id, args.ip_address, args.verbose)
+            )
+        elif args.action == "turn_on":
+            get_event_loop().run_until_complete(
+                turn_on(args.device_id, args.ip_address, args.timer, args.verbose)
+            )
+        elif args.action == "turn_off":
+            get_event_loop().run_until_complete(
+                turn_off(args.device_id, args.ip_address, args.verbose)
             )
         elif args.action == "set_name":
             get_event_loop().run_until_complete(
