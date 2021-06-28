@@ -123,13 +123,13 @@ def hexadecimale_timestamp_to_localtime(hex_timestamp: bytes) -> str:
 
 
 def weekdays_to_hexadecimal(days: Union[Days, Set[Days]]) -> str:
-    """Sum the requested weekdays bit represntation and return as hexadecimal value.
+    """Sum the requested weekdays bit representation and return as hexadecimal value.
 
     Args:
         days: the requested Weekday members.
 
     Return:
-        Hexadecimale represntation of the sum of all requested day's bit representation.
+        Hexadecimale representation of the sum of all requested days.
 
     """
     if days:

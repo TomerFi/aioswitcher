@@ -29,6 +29,24 @@ from aioswitcher.schedule import Days
 
 require("aioswitcher>=2.0.0-dev")
 
+examples = """example usage:
+
+python control_device.py -d ab1c2d -i "111.222.11.22" get_state
+python control_device.py -d ab1c2d -i "111.222.11.22" turn_on
+python control_device.py -d ab1c2d -i "111.222.11.22" turn_on -t 15
+python control_device.py -d ab1c2d -i "111.222.11.22" turn_off
+python control_device.py -d ab1c2d -i "111.222.11.22" set_name -n "My Boiler"
+python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30
+python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
+python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3
+python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"
+python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday"""  # noqa E501
+
+parent_parser = ArgumentParser(
+    description="Control your Switcher device",
+    epilog=examples,
+    formatter_class=RawDescriptionHelpFormatter,
+)
 printer = PrettyPrinter(indent=4)
 
 
@@ -118,25 +136,6 @@ async def create_schedule(
 
 if __name__ == "__main__":
     try:
-        examples = """example usage:
-
-        python control_device.py -d ab1c2d -i "111.222.11.22" get_state
-        python control_device.py -d ab1c2d -i "111.222.11.22" turn_on
-        python control_device.py -d ab1c2d -i "111.222.11.22" turn_on -t 15
-        python control_device.py -d ab1c2d -i "111.222.11.22" turn_off
-        python control_device.py -d ab1c2d -i "111.222.11.22" set_name -n "My Boiler"
-        python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30
-        python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
-        python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3
-        python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"
-        python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday"""  # noqa E501
-
-        # parent parser
-        parent_parser = ArgumentParser(
-            description="Control your Switcher device",
-            epilog=examples,
-            formatter_class=RawDescriptionHelpFormatter,
-        )
         parent_parser.add_argument(
             "-v", "--verbose", default=False, action="store_true"
         )

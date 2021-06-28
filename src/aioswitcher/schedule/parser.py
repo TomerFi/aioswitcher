@@ -19,12 +19,15 @@ from dataclasses import dataclass, field
 from textwrap import wrap
 from typing import Set
 
+from typing_extensions import final
+
 from . import Days, ScheduleState, tools
 
 
+@final
 @dataclass
 class SwitcherSchedule:
-    """Represnation of the Switcher schedule slot.
+    """representation of the Switcher schedule slot.
 
     Args:
         schedule_id: the id of the schedule
@@ -59,6 +62,7 @@ class SwitcherSchedule:
         return False
 
 
+@final
 @dataclass(frozen=True)
 class ScheduleParser:
     """Schedule parsing tool."""

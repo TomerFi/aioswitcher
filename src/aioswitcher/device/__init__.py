@@ -19,6 +19,8 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto, unique
 
+from typing_extensions import final
+
 
 @unique
 class DeviceCategory(Enum):
@@ -67,7 +69,7 @@ class DeviceType(Enum):
 
 @unique
 class DeviceState(Enum):
-    """Enum class represnting the device's state."""
+    """Enum class representing the device's state."""
 
     ON = "0100", "on"
     OFF = "0000", "off"
@@ -145,6 +147,7 @@ class SwitcherTimedBase(ABC):
     auto_shutdown: str
 
 
+@final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
     """Implementation of the Switcher Power Plug device.
@@ -160,6 +163,7 @@ class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
         super().__post_init__()
 
 
+@final
 @dataclass
 class SwitcherWaterHeater(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
     """Implementation of the Switcher Water Heater device.
