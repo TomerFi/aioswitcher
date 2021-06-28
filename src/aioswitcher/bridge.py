@@ -22,7 +22,7 @@ from logging import critical, debug, error, info
 from socket import AF_INET, inet_ntoa
 from struct import pack
 from types import TracebackType
-from typing import Any, Callable, Optional, Tuple, Type
+from typing import Any, Callable, Optional, Tuple, Type, final
 from warnings import warn
 
 from .device import (
@@ -102,6 +102,7 @@ def _parse_device_from_datagram(
             warn("discovered an unknown switcher device")
 
 
+@final
 class SwitcherBridge:
     """Use for running a UDP client for bridging Switcher devices broadcast messages.
 
@@ -135,7 +136,7 @@ class SwitcherBridge:
         await self.stop()
 
     async def start(self) -> None:
-        """Create an asynchronous listenr and start the bridge."""
+        """Create an asynchronous listener and start the bridge."""
         info("starting the udp bridge")
         protocol_factory = UdpClientProtocol(
             partial(_parse_device_from_datagram, self._on_device)
@@ -165,6 +166,7 @@ class SwitcherBridge:
         return self._is_running
 
 
+@final
 class UdpClientProtocol(DatagramProtocol):
     """Implementation of the Asyncio UDP DatagramProtocol."""
 
@@ -196,6 +198,7 @@ class UdpClientProtocol(DatagramProtocol):
             info("udp connection stopped")
 
 
+@final
 @dataclass(frozen=True)
 class DatagramParser:
     """Utility class for parsing a datagram into various device properties."""

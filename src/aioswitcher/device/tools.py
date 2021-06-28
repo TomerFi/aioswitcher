@@ -27,7 +27,7 @@ def seconds_to_iso_time(all_seconds: int) -> str:
         all_seconds: the total number of seconds to convert.
 
     Return:
-        A string represnting the converted iso time in %H:%M:%S format.
+        A string representing the converted iso time in %H:%M:%S format.
         e.g. "02:24:37".
 
     """
@@ -67,7 +67,7 @@ def minutes_to_hexadecimal_seconds(minutes: int) -> str:
         minutes: minutes to encode.
 
     Return:
-        Hexadecimal represntation of the mintues argument.
+        Hexadecimal representation of the mintues argument.
 
     """
     return hexlify(pack("<I", minutes * 60)).decode()
@@ -80,7 +80,7 @@ def timedelta_to_hexadecimal_seconds(full_time: datetime.timedelta) -> str:
         full_time: timedelta time between 1 and 24 hours, seconds are ignored.
 
     Return:
-        Hexadecimal represntation of the seconds built fom the full_time argument.
+        Hexadecimal representation of the seconds built fom the full_time argument.
 
     """
     minutes = full_time.total_seconds() / 60
@@ -100,7 +100,7 @@ def string_to_hexadecimale_device_name(name: str) -> str:
         name: the desired name for encoding.
 
     Return:
-        Hexadecimal represntation of the name argument.
+        Hexadecimal representation of the name argument.
 
     """
     length = len(name)
@@ -112,10 +112,10 @@ def string_to_hexadecimale_device_name(name: str) -> str:
 
 
 def current_timestamp_to_hexadecimal() -> str:
-    """Generate hexadecimal represntation of the current timestamp.
+    """Generate hexadecimal representation of the current timestamp.
 
     Return:
-        Hexadecimal represntation of the current unix time retrieved by ``time.time``.
+        Hexadecimal representation of the current unix time retrieved by ``time.time``.
 
     """
     round_timestamp = int(round(time.time()))

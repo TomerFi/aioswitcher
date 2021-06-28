@@ -27,7 +27,7 @@ class ScheduleState(Enum):
 
 @unique
 class Days(Enum):
-    """Enum class represnting the day entity."""
+    """Enum class representing the day entity."""
 
     MONDAY = ("Monday", 0x02, 2, 0)
     TUESDAY = ("Tuesday", 0x04, 4, 1)
@@ -48,12 +48,12 @@ class Days(Enum):
 
     @property
     def bit_rep(self) -> int:
-        """Return the bit represntation of the day."""
+        """Return the bit representation of the day."""
         return self._bit_rep  # type: ignore
 
     @property
     def hex_rep(self) -> int:
-        """Return the hexadecimal represntation of the day."""
+        """Return the hexadecimal representation of the day."""
         return self._hex_rep  # type: ignore
 
     @property

@@ -16,13 +16,14 @@
 
 from binascii import hexlify
 from dataclasses import InitVar, dataclass, field
-from typing import Set
+from typing import Set, final
 
 from ..device import DeviceState
 from ..device.tools import seconds_to_iso_time, watts_to_amps
 from ..schedule.parser import SwitcherSchedule, get_schedules
 
 
+@final
 @dataclass
 class StateMessageParser:
     """Use for parsing api messages."""
@@ -80,7 +81,7 @@ class StateMessageParser:
 
 @dataclass
 class SwitcherBaseResponse:
-    """Represntation of the switcher base response message.
+    """Representation of the switcher base response message.
 
     Applicable for all messages that do no require post initialization.
     e.g. not applicable for SwitcherLoginResponse, SwitcherStateResponse,
@@ -102,9 +103,10 @@ class SwitcherBaseResponse:
         return self.unparsed_response is not None and len(self.unparsed_response) > 0
 
 
+@final
 @dataclass
 class SwitcherLoginResponse(SwitcherBaseResponse):
-    """Represntation of the switcher login response message."""
+    """Representations of the switcher login response message."""
 
     session_id: str = field(init=False)
 
@@ -116,9 +118,10 @@ class SwitcherLoginResponse(SwitcherBaseResponse):
             raise ValueError("failed to parse login response message") from exc
 
 
+@final
 @dataclass
 class SwitcherStateResponse(SwitcherBaseResponse):
-    """Represntation of the switcher state response message."""
+    """Representation of the switcher state response message."""
 
     state: DeviceState = field(init=False)
     time_left: str = field(init=False)
@@ -139,9 +142,10 @@ class SwitcherStateResponse(SwitcherBaseResponse):
         self.electric_current = watts_to_amps(self.power_consumption)
 
 
+@final
 @dataclass
 class SwitcherGetSchedulesResponse(SwitcherBaseResponse):
-    """represnation of the switcher v2 get schedule message."""
+    """Representation of the switcher get schedule message."""
 
     schedules: Set[SwitcherSchedule] = field(init=False)
 

@@ -21,7 +21,7 @@ from enum import Enum, unique
 from logging import debug, info
 from socket import AF_INET
 from types import TracebackType
-from typing import Optional, Set, Tuple, Type
+from typing import Optional, Set, Tuple, Type, final
 
 from ..device.tools import (
     current_timestamp_to_hexadecimal,
@@ -49,6 +49,7 @@ class Command(Enum):
     OFF = "0"
 
 
+@final
 class SwitcherApi:
     """Switcher TCP based API.
 
@@ -210,7 +211,7 @@ class SwitcherApi:
         """Use for sending the set auto-off packet to the device.
 
         Args:
-            full_time: timedelta value containg the configuration value for
+            full_time: timedelta value containing the configuration value for
             auto-shutdown.
 
         Returns:
@@ -258,7 +259,7 @@ class SwitcherApi:
         return SwitcherBaseResponse(response)
 
     async def get_schedules(self) -> SwitcherGetSchedulesResponse:
-        """Use for retrival of the schedules from the device.
+        """Use for retrieval of the schedules from the device.
 
         Returns:
             An instance of ``SwitcherGetSchedulesResponse``.
@@ -306,8 +307,8 @@ class SwitcherApi:
         """Use for creating a new schedule in the next empty schedule slot.
 
         Args:
-            start_time: a string start time in %H:%M formst. e.g. 13:00.
-            end_time: a string start time in %H:%M formst. e.g. 13:00.
+            start_time: a string start time in %H:%M format. e.g. 13:00.
+            end_time: a string start time in %H:%M format. e.g. 13:00.
             days: for recurring schedules, add ``Days``.
 
         Returns:
