@@ -16,6 +16,7 @@
 
 from asyncio.streams import StreamReader, StreamWriter
 from binascii import unhexlify
+from datetime import timedelta
 from unittest.mock import AsyncMock, Mock, patch
 
 from assertpy import assert_that
@@ -116,6 +117,15 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherStateResponse)
     assert_that(response.unparsed_response).is_equal_to(get_state_response_packet)
+
+
+async def test_set_auto_shutdown_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    three_packets = _get_three_packets(resource_path_root, "set_auto_shutdown_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api.set_auto_shutdown(timedelta(hours=2, minutes=30))
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_get_schedules_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
