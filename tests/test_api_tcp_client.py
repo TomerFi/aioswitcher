@@ -140,5 +140,16 @@ async def test_delete_schedule_function_with_valid_packets(reader_mock, writer_w
     assert_that(response.unparsed_response).is_equal_to(delete_schedule_response_packet)
 
 
+async def test_create_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    login_response_packet = _load_packet(resource_path_root, "login_response")
+    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
+    create_schedule_response_packet = _load_packet(resource_path_root, "create_schedule_response")
+    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet, create_schedule_response_packet]):
+        response = await connected_api.create_schedule("18:00", "19:00")
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(create_schedule_response_packet)
+
+
 def _load_packet(path, file_name):
     return unhexlify((path / ("dummy_responses/" + file_name + ".txt")).read_text().replace('\n', '').encode())
