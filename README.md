@@ -1,11 +1,13 @@
 <!-- markdownlint-disable MD013 -->
-# Switcher Unofficial Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
+# Switcher Unofficial Integration</br>[![python-version]][1] [![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
 <!-- markdownlint-enable MD013 -->
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3]
 
 PyPi module named [aioswitcher][11] for integrating with the [Switcher Devices](https://www.switcher.co.il/).</br>
 Please check out the [documentation][8].
+
+Check the [wiki][0] for a list of supported devices.
 
 ## Install
 
@@ -45,6 +47,8 @@ The contributing guidelines are [here](.github/CONTRIBUTING.md)
 The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 
 <!-- Real Links -->
+[0]: https://github.com/TomerFi/aioswitcher/wiki
+[1]: https://www.python.org
 [2]: https://github.com/TomerFi/aioswitcher/releases
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [4]: https://github.com/TomerFi/aioswitcher
@@ -57,4 +61,5 @@ The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 [license-badge]: https://img.shields.io/github/license/tomerfi/aioswitcher
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi&color=1082C2
 [pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
+[python-version]: https://img.shields.io/badge/python-3.8%2B-1082C2?logo=python
 [read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
