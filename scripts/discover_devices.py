@@ -46,12 +46,8 @@ from asyncio import get_event_loop, sleep
 from dataclasses import asdict
 from pprint import PrettyPrinter
 
-from pkg_resources import require
-
 from aioswitcher.bridge import SwitcherBridge
 from aioswitcher.device import SwitcherBase
-
-require("aioswitcher>=2.0.0")
 
 printer = PrettyPrinter(indent=4)
 

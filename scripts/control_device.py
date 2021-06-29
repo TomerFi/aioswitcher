@@ -22,12 +22,8 @@ from datetime import timedelta
 from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
-from pkg_resources import require
-
 from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.schedule import Days
-
-require("aioswitcher>=2.0.0")
 
 printer = PrettyPrinter(indent=4)
 
