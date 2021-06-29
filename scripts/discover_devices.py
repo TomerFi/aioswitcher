@@ -53,12 +53,21 @@ from aioswitcher.device import SwitcherBase
 
 require("aioswitcher>=2.0.0-dev")
 
-parser = ArgumentParser(description="Discover and print info of Switcher devices")
 printer = PrettyPrinter(indent=4)
+
+parser = ArgumentParser(description="Discover and print info of Switcher devices")
+parser.add_argument(
+    "delay",
+    help="number of seconds to run, defaults to 60",
+    type=int,
+    nargs="?",
+    default=60,
+)
 
 
 async def print_devices(delay: int) -> None:
     """Run the Switcher bridge and register callback for discovered devices."""
+
     def on_device_found_callback(device: SwitcherBase) -> None:
         """Use as a callback printing found devices."""
         printer.pprint(asdict(device))
@@ -69,13 +78,6 @@ async def print_devices(delay: int) -> None:
 
 
 if __name__ == "__main__":
-    parser.add_argument(
-        "delay",
-        help="number of seconds to run",
-        type=int,
-        nargs="?",
-        default=60,
-    )
     args = parser.parse_args()
 
     try:
