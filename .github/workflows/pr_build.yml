@@ -107,7 +107,7 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
 
       - name: Install project package
-        run: poetry install_pkg
+        run: poe install_all
 
       - name: Test project
         if: matrix.python != ${{ env.MAIN_PY_VER }}
