@@ -1,4 +1,4 @@
-# Contributing to `aioswitcher` [![conventional-commits]][0]
+# Contributing to `aioswitcher`</br>[![conventional-commits]][0]
 
 :clap: First off, thank you for taking the time to contribute. :clap:
 
@@ -13,7 +13,7 @@ Please feel free to contribute, even to this contributing guideline file, if you
 - [Package management](#package-management)
 - [Code of Conduct](#code-of-conduct)
 
-## Prepare environment
+## Prepare the environment
 
 With [Python >= 3.9](https://www.python.org/) use [pip](https://pypi.org/project/pip/) to install
 [poetry](https://poetry.eustace.io/) and the used extensions (mainly [poethepoet](https://github.com/nat-n/poethepoet)):
@@ -21,6 +21,8 @@ With [Python >= 3.9](https://www.python.org/) use [pip](https://pypi.org/project
 ```shell
   pip install -rrequirements.txt
 ```
+
+## Get started
 
 Scroll around [pyproject.toml](../pyproject.toml) and get familiarize with the project,
 pay attention to the following section, as most of the developing steps will use these scripts:

@@ -15,23 +15,26 @@ pip install aioswitcher
 
 ## Usage Example
 
-Please check out the [documentation][8] for the full usage section.
+Please check out the [documentation][8] for a more detailed usage section.
 
 ```python
-async with SwitcherApi(device_ip, device_id) as api:
+async with SwitcherApi(device_ip, device_id) as swapi:
     # get the device state
     state_response = await swapi.get_state()
 
     # control the device on for 15 minutes and then turn it off
-    await api.control_device(Command.ON, 15)
-    await api.control_device(Command.OFF)
+    await swapi.control_device(Command.ON, 15)
+    await swapi.control_device(Command.OFF)
+
+    # create a new recurring schedule
+    await swapi.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 ```
 
 ## Command Line Helper Scripts
 
-- [discover_devices.py](scripts/discover_devices.py) can be used to discover devices
-  and their states.
-- [control_device.py](scripts/control_device.py) can be used to control a device.
+- [discover_devices.py](scripts/discover_devices.py) can discover devices and their
+  states.
+- [control_device.py](scripts/control_device.py) can to control a device.
 
 ## Contributing
 
