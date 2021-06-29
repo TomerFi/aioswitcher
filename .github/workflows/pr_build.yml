@@ -19,7 +19,7 @@ jobs:
       - name: Set up Python ${{ env.MAIN_PY_VER }}
         uses: actions/setup-python@v2.2.2
         with:
-          python-version: $MAIN_PY_VER
+          python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
         uses: actions/cache@v2.1.6
