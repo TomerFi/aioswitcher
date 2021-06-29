@@ -29,25 +29,143 @@ from aioswitcher.schedule import Days
 
 require("aioswitcher>=2.0.0-dev")
 
-examples = """example usage:
+printer = PrettyPrinter(indent=4)
 
-python control_device.py -d ab1c2d -i "111.222.11.22" get_state
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_on
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_on -t 15
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_off
-python control_device.py -d ab1c2d -i "111.222.11.22" set_name -n "My Boiler"
-python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30
-python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
-python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3
-python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"
+_examples = """example usage:
+
+python control_device.py -d ab1c2d -i "111.222.11.22" get_state\n
+python control_device.py -d ab1c2d -i "111.222.11.22" turn_on\n
+python control_device.py -d ab1c2d -i "111.222.11.22" turn_on -t 15\n
+python control_device.py -d ab1c2d -i "111.222.11.22" turn_off\n
+python control_device.py -d ab1c2d -i "111.222.11.22" set_name -n "My Boiler"\n
+python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30\n
+python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules\n
+python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3\n
+python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"\n
 python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday"""  # noqa E501
 
+# parent parser
 parent_parser = ArgumentParser(
     description="Control your Switcher device",
-    epilog=examples,
+    epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
 )
-printer = PrettyPrinter(indent=4)
+parent_parser.add_argument(
+    "-v",
+    "--verbose",
+    default=False,
+    action="store_true",
+    help="include the raw message",
+)
+parent_parser.add_argument(
+    "-d",
+    "--device-id",
+    type=str,
+    required=True,
+    help="the identification of the device",
+)
+parent_parser.add_argument(
+    "-i",
+    "--ip-address",
+    type=str,
+    required=True,
+    help="the ip address assigned to the device",
+)
+
+subparsers = parent_parser.add_subparsers(
+    dest="action", description="supported actions"
+)
+
+# get_state parser
+subparsers.add_parser("get_state", help="get the current state of a device")
+
+# turn_on parser
+turn_on_parser = subparsers.add_parser("turn_on", help="turn on the device")
+turn_on_parser.add_argument(
+    "-t",
+    "--timer",
+    type=int,
+    nargs="?",
+    default=0,
+    help="set minutes timer for turn on operation",
+)
+
+# turn_off parser
+turn_on_parser = subparsers.add_parser("turn_off", help="turn off the device")
+
+# set_name parser
+set_name_parser = subparsers.add_parser("set_name", help="set the name of the device")
+set_name_parser.add_argument(
+    "-n",
+    "--name",
+    type=str,
+    required=True,
+    help="new name for the device",
+)
+
+# set_auto_shutdown parser
+set_auto_shutdown_parser = subparsers.add_parser(
+    "set_auto_shutdown", help="set the auto shutdown property (1h-24h)"
+)
+set_auto_shutdown_parser.add_argument(
+    "-r",
+    "--hours",
+    type=int,
+    required=True,
+    help="number hours for the auto shutdown",
+)
+set_auto_shutdown_parser.add_argument(
+    "-m",
+    "--minutes",
+    type=int,
+    nargs="?",
+    default=0,
+    help="number hours for the auto shutdown",
+)
+
+# get_schedules parser
+subparsers.add_parser("get_schedules", help="retrive a device schedules")
+
+# delete_schedule parser
+delete_schedule_parser = subparsers.add_parser(
+    "delete_schedule", help="delete a device schedule"
+)
+delete_schedule_parser.add_argument(
+    "-s",
+    "--schedule-id",
+    type=str,
+    required=True,
+    help="the id of the schedule for deletion",
+)
+
+# create_schedule parser
+create_schedule_parser = subparsers.add_parser(
+    "create_schedule", help="create a new schedule"
+)
+create_schedule_parser.add_argument(
+    "-n",
+    "--start-time",
+    type=str,
+    required=True,
+    help="the on time for the schedule, e.g. 13:00",
+)
+create_schedule_parser.add_argument(
+    "-f",
+    "--end-time",
+    type=str,
+    required=True,
+    help="the off time for the schedule, e.g. 13:30",
+)
+possible_weekdays = [d.value for d in Days]
+create_schedule_parser.add_argument(
+    "-w",
+    "--weekdays",
+    choices=possible_weekdays,
+    nargs="*",
+    required=False,
+    help=f"days for recurring schedules, possible values: {possible_weekdays}",
+    default=list(),
+)
 
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
@@ -136,123 +254,6 @@ async def create_schedule(
 
 if __name__ == "__main__":
     try:
-        parent_parser.add_argument(
-            "-v", "--verbose", default=False, action="store_true"
-        )
-        parent_parser.add_argument(
-            "-d",
-            "--device-id",
-            type=str,
-            required=True,
-            help="the identification of the device",
-        )
-        parent_parser.add_argument(
-            "-i",
-            "--ip-address",
-            type=str,
-            required=True,
-            help="the ip address assigned to the device",
-        )
-
-        subparsers = parent_parser.add_subparsers(
-            dest="action", description="supported actions"
-        )
-
-        # get_state parser
-        subparsers.add_parser("get_state", help="get the current state of a device")
-
-        # turn_on parser
-        turn_on_parser = subparsers.add_parser("turn_on", help="turn on the device")
-        turn_on_parser.add_argument(
-            "-t",
-            "--timer",
-            type=int,
-            nargs="?",
-            default=0,
-            help="set minutes timer for turn on operation",
-        )
-
-        # turn_off parser
-        turn_on_parser = subparsers.add_parser("turn_off", help="turn off the device")
-
-        # set_name parser
-        set_name_parser = subparsers.add_parser(
-            "set_name", help="set the name of the device"
-        )
-        set_name_parser.add_argument(
-            "-n",
-            "--name",
-            type=str,
-            required=True,
-            help="new name for the device",
-        )
-
-        # set_auto_shutdown parser
-        set_auto_shutdown_parser = subparsers.add_parser(
-            "set_auto_shutdown", help="set the auto shutdown property (1h-24h)"
-        )
-        set_auto_shutdown_parser.add_argument(
-            "-r",
-            "--hours",
-            choices=range(1, 24),
-            type=int,
-            required=True,
-            help="number hours for the auto shutdown",
-        )
-        set_auto_shutdown_parser.add_argument(
-            "-m",
-            "--minutes",
-            choices=range(0, 60),
-            type=int,
-            nargs="?",
-            default=0,
-            help="number hours for the auto shutdown",
-        )
-
-        # get_schedules parser
-        subparsers.add_parser("get_schedules", help="retrive a device schedules")
-
-        # delete_schedule parser
-        delete_schedule_parser = subparsers.add_parser(
-            "delete_schedule", help="delete a device schedule"
-        )
-        delete_schedule_parser.add_argument(
-            "-s",
-            "--schedule-id",
-            type=str,
-            required=True,
-            help="the id of the schedule for deletion",
-        )
-
-        # create_schedule parser
-        create_schedule_parser = subparsers.add_parser(
-            "create_schedule", help="create a new schedule"
-        )
-        create_schedule_parser.add_argument(
-            "-n",
-            "--start-time",
-            type=str,
-            required=True,
-            help="the on time for the schedule, e.g. 13:00",
-        )
-        create_schedule_parser.add_argument(
-            "-f",
-            "--end-time",
-            type=str,
-            required=True,
-            help="the off time for the schedule, e.g. 13:30",
-        )
-        possible_weekdays = [d.value for d in Days]
-        create_schedule_parser.add_argument(
-            "-w",
-            "--weekdays",
-            choices=possible_weekdays,
-            nargs="*",
-            required=False,
-            help=f"days for recurring scheduels, possible values: {possible_weekdays}",
-            default=list(),
-        )
-
         args = parent_parser.parse_args()
 
         if args.action == "get_state":
