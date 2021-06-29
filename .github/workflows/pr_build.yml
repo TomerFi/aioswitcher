@@ -110,15 +110,15 @@ jobs:
         run: poetry install_pkg
 
       - name: Test project
-        if: matrix.python != $MAIN_PY_VER
+        if: matrix.python != ${{ env.MAIN_PY_VER }}
         run: poe test
 
       - name: Test project and create reports
-        if: matrix.python == $MAIN_PY_VER
+        if: matrix.python == ${{ env.MAIN_PY_VER }}
         run: poe test_rep
 
       - name: Push coverage report as artifact
-        if: matrix.python == $MAIN_PY_VER
+        if: matrix.python == ${{ env.MAIN_PY_VER }}
         uses: actions/upload-artifact@v2.2.3
         with:
           name: reports
@@ -143,7 +143,7 @@ jobs:
 
       - name: Report test summary
         uses: EnricoMi/publish-unit-test-result-action@v1.17
-        if: matrix.python == $MAIN_PY_VER && always()
+        if: matrix.python == ${{ env.MAIN_PY_VER }} && always()
         with:
           test_changes_limit: 0
           files: reports/junit.xml
