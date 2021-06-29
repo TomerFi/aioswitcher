@@ -51,7 +51,7 @@ from pkg_resources import require
 from aioswitcher.bridge import SwitcherBridge
 from aioswitcher.device import SwitcherBase
 
-require("aioswitcher>=2.0.0-dev")
+require("aioswitcher>=2.0.0")
 
 printer = PrettyPrinter(indent=4)
 
