@@ -83,6 +83,11 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2.3.4
 
+      - name: Setup timezone
+        uses: zcong1993/setup-timezone@v1.1.1
+        with:
+          timezone: Asia/Jerusalem
+
       - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v2.2.2
         with:
