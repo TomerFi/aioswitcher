@@ -57,12 +57,12 @@ def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
     else:
         next_exc_day = list(filter(lambda d: d >= current_weekday, execution_days))[0]
 
-    # if next excution day is tommorow for the current day, or this is the week end
-    # (today is sunday and tommorow is monday)  return "due tommorow"
+    # if next excution day is tomorrow for the current day, or this is the week end
+    # (today is sunday and tomorrow is monday)  return "due tomorrow"
     if next_exc_day - 1 == current_weekday or (
         next_exc_day == Days.MONDAY.weekday and current_weekday == Days.SUNDAY.weekday
     ):
-        return f"Due tommorow at {start_time}"
+        return f"Due tomorrow at {start_time}"
 
     # if here, then the scuedle is due some other day this week, return "due at..."
     weekdays = dict(map(lambda d: (d.weekday, d), Days))
