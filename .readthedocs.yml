@@ -2,6 +2,7 @@
 version: 2
 
 sphinx:
+  builder: singlehtml
   configuration: docs/conf.py
 
 formats: all
