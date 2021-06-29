@@ -31,12 +31,16 @@ release = version = parsed_toml["tool"]["poetry"]["version"]
 
 extensions = [
     "sphinx.ext.autodoc",
+    "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinxcontrib.autoprogram",
     "sphinxcontrib.spelling",
 ]
 
-exclude_patterns = ["_build"]
+exclude_patterns = ["docsbuild"]
 language = "en"
 html_theme = "insegel"
+
+autodoc_default_options = {"members": True}
+autodoc_typehints = "description"

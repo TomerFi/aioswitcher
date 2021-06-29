@@ -36,7 +36,10 @@ To get you going, here are some poe scripts I use constantly while working on *a
 - ```poe test_cov --cov-report html```
 - ```poe install_all```
 - ```poe lic_check``` (requires *deno*)
+- ```poe black_fix```
 - ```poe isort_fix```
+- ```poe sphinx_spelling```
+- ```poe sphinx_build```
 
 ## Code of Conduct
 

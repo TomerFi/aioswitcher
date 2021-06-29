@@ -2,26 +2,18 @@
 Usage
 =====
 
--------
-Install
--------
-
-.. code-block:: shell
-
-    pip install aioswitcher
-
 ------
 Bridge
 ------
 
-We can use the Bridge implementation to discover devices and state.
+We can use the Bridge implementation to discover devices and their state.
 
 The following code will print all discovered devices for 60 seconds.
 
 .. code-block:: python
 
-    async def print_devices(delay: int) -> None:
-        def on_device_found_callback(device: SwitcherBase) -> None:
+    async def print_devices(delay):
+        def on_device_found_callback(device):
             print(asdict(device))
 
         async with SwitcherBridge(on_device_found_callback):
@@ -29,7 +21,9 @@ The following code will print all discovered devices for 60 seconds.
 
     asyncio.get_event_loop().run_until_complete(print_devices(60))
 
-.. note:: Keep in mind a message will be broadcast from it every 4 seconds.
+.. note::
+    | A Switcher device will broadcast every 4 seconds.
+    | Discovered devices can either be a :ref:`Power Plug <switcher-power-plug>` or a :ref:`Water Heater <switcher-water-heater>`.
 
 ---
 API
@@ -47,7 +41,7 @@ We can use the API to gain the following capabilities:
 
 .. code-block:: python
 
-    async def control_device(device_ip: str, device_id: str) -> None:
+    async def control_device(device_ip, device_id) :
         # for connecting to a device we need its id and ip address
         async with SwitcherApi(device_ip, device_id) as api:
             # get the device current state
@@ -71,7 +65,17 @@ We can use the API to gain the following capabilities:
 
 
 .. note::
-    All requests return a response, you can use `dataclasses.asdict`_ utility function to get
-    familiarize with the various responses.
+    All requests return a response, you can use the
+    `asdict <https://docs.python.org/3/library/dataclasses.html#dataclasses.asdict>`__
+    utility function to get familiarize with the various responses.
 
-.. _dataclasses.asdict: https://docs.python.org/3/library/dataclasses.html#dataclasses.asdict
+    You can visit the :ref:`API response messages section <api-response-messages>` and review the
+    various response objects. Note that if a request doesn't have a specific response extending the
+    base response, then the base response is the yielding response.
+
+
+-----------------
+Supported Devices
+-----------------
+
+You can find the supported device types stated as :ref:`this enum <supported-device-types>` members.
