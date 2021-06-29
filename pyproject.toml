@@ -27,7 +27,7 @@ exclude = [
 ] # poetry.lock is automatically excluded
 
 [tool.poetry.dependencies]
-python = "^3.7.0"
+python = "^3.8.0"
 insegel = { version = "1.1.0", optional = true }
 sphinx = { version = "4.0.2", optional = true }
 sphinxcontrib-autoprogram = { version = "0.1.7", optional = true }
