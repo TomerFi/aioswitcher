@@ -106,7 +106,7 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
 
-      - name: Install project pacakge
+      - name: Install project package
         run: poetry install_pkg
 
       - name: Test project

@@ -64,8 +64,8 @@ def test_pretty_next_run_with_multiple_days_should_return_due_the_closest_day(to
     assert_that(tools.pretty_next_run("13:00", {four_days_from_now_day, two_days_from_now_day})).is_equal_to(expected_return)
 
 
-def test_pretty_next_run_on_yesterday_with_todays_day_should_return_due_tommorow(today, todays_day):
-    expected_return = "Due tommorow at 13:00"
+def test_pretty_next_run_on_yesterday_with_todays_day_should_return_due_tomorrow(today, todays_day):
+    expected_return = "Due tomorrow at 13:00"
     yesterday = today - timedelta(days=1)
     with time_machine.travel(yesterday):
         assert_that(tools.pretty_next_run("13:00", {todays_day})).is_equal_to(expected_return)
@@ -78,8 +78,8 @@ def test_pretty_next_run_on_two_days_ago_with_todays_day_should_return_due_on_ne
         assert_that(tools.pretty_next_run("13:00", {todays_day})).is_equal_to(expected_return)
 
 
-def test_pretty_next_run_on_last_sunday_with_monday_selected_should_return_due_tommorow(today):
-    expected_return = "Due tommorow at 13:00"
+def test_pretty_next_run_on_last_sunday_with_monday_selected_should_return_due_tomorrow(today):
+    expected_return = "Due tomorrow at 13:00"
     last_sunday = today - timedelta(days=((today.weekday() + 1) % 7))
     with time_machine.travel(last_sunday):
         assert_that(tools.pretty_next_run("13:00", {Days.MONDAY})).is_equal_to(expected_return)

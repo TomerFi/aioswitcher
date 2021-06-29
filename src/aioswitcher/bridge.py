@@ -180,11 +180,11 @@ class UdpClientProtocol(DatagramProtocol):
         self.transport = transport
 
     def datagram_received(self, data: bytes, addr: Tuple) -> None:
-        """Call on datagram recieved."""
+        """Call on datagram received."""
         self._on_datagram(data)
 
     def error_received(self, exc: Optional[Exception]) -> None:
-        """Call on exception recieved."""
+        """Call on exception received."""
         if exc:
             error(f"udp client received error {exc}")
         else:
@@ -235,7 +235,7 @@ class DatagramParser:
         )
 
     def get_name(self) -> str:
-        """Extract the device name from the braodcast message."""
+        """Extract the device name from the broadcast message."""
         return self.message[42:74].decode().rstrip("\x00")
 
     def get_device_id(self) -> str:

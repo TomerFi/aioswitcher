@@ -94,7 +94,7 @@ def timedelta_to_hexadecimal_seconds(full_time: datetime.timedelta) -> str:
 
 
 def string_to_hexadecimale_device_name(name: str) -> str:
-    """Encode string device name to an apropriate hexadecimal value.
+    """Encode string device name to an appropriate hexadecimal value.
 
     Args:
         name: the desired name for encoding.

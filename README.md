@@ -1,4 +1,6 @@
+<!-- markdownlint-disable MD013 -->
 # Switcher Unofficial Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
+<!-- markdownlint-enable MD013 -->
 
 [![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3]
 
@@ -27,7 +29,8 @@ async with SwitcherApi(device_ip, device_id) as api:
 
 ## Command Line Helper Scripts
 
-- [discover_devices.py](scripts/discover_devices.py) can be used to discover devices and thier states.
+- [discover_devices.py](scripts/discover_devices.py) can be used to discover devices
+  and their states.
 - [control_device.py](scripts/control_device.py) can be used to control a device.
 
 ## Contributing
