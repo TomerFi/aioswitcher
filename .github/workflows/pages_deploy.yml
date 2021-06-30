@@ -1,27 +1,22 @@
 ---
-name: Pre-release
+name: Pages Deploy
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - dev
+  repository_dispatch:
+    types:
+      - aioswitcher-released
 
 env:
   MAIN_PY_VER: 3.9
 
 jobs:
-  pre-release:
+  deploy-pages:
     runs-on: ubuntu-latest
-    name: Build pre-release and publish early access to GitHub
+    name: Build documentation site and deploy to GH-Pages
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.3.4
-
-      - name: Setup timezone
-        uses: zcong1993/setup-timezone@v1.1.1
-        with:
-          timezone: Asia/Jerusalem
 
       - name: Set up Python ${{ env.MAIN_PY_VER }}
         uses: actions/setup-python@v2.2.2
@@ -46,24 +41,15 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Install, test, and build distribution assets
+      - name: Build documenation site
         run: |
-          poe install_all
-          poe test_rep
-          poe build
+          poe install_docs_no_dev
+          poe sphinx_build
 
-      - name: Create release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
+      - name: Deploy to GH-Pages
+        uses: peaceiris/actions-gh-pages@v3.8.0
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: early-access
-          title: early-access
-          files: |
-            dist/*.tar.gz
-            dist/*.whl
-
-      - name: Push to CodeCov
-        uses: codecov/codecov-action@v1.5.0
-        with:
-          file: coverage.xml
-          fail_ci_if_error: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docsbuild
+          cname: aioswitcher.tomfi.info
+          commit_message: 'docs: deployed documentation site '

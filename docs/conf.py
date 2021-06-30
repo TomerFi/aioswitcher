@@ -31,7 +31,6 @@ release = version = parsed_toml["tool"]["poetry"]["version"]
 
 extensions = [
     "sphinx.ext.autodoc",
-    "sphinx.ext.githubpages",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
     "sphinxcontrib.autoprogram",
@@ -41,6 +40,7 @@ extensions = [
 exclude_patterns = ["docsbuild"]
 language = "en"
 html_theme = "insegel"
+html_baseurl = parsed_toml["tool"]["poetry"]["documentation"].replace("https://", "")
 
 autodoc_default_options = {"members": True}
 autodoc_typehints = "description"
