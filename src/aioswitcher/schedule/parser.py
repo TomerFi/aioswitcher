@@ -17,9 +17,7 @@
 from binascii import hexlify
 from dataclasses import dataclass, field
 from textwrap import wrap
-from typing import Set
-
-from typing_extensions import final
+from typing import Set, final
 
 from . import Days, ScheduleState, tools
 

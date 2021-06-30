@@ -18,8 +18,7 @@ from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto, unique
-
-from typing_extensions import final
+from typing import final
 
 
 @unique
