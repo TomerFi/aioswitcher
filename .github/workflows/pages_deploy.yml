@@ -44,7 +44,7 @@ jobs:
       - name: Build documenation site
         run: |
           poe install_docs_no_dev
-          poe sphinx_build
+          poe sphinx_clean_build
 
       - name: Deploy to GH-Pages
         uses: peaceiris/actions-gh-pages@v3.8.0
