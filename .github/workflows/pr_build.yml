@@ -45,7 +45,7 @@ jobs:
           poe lint
 
       - name: Install deno runtime
-        uses: denoland/setup-deno@v1.0.0
+        uses: denoland/setup-deno@v1.1.0
 
       - name: Check license headers on source files
         run: poe lic_check
