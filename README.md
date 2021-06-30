@@ -4,10 +4,9 @@
 
 [![gh-build-status]][7] [![gh-pages-status]][8] [![codecov]][3]
 
-PyPi module named [aioswitcher][11] for integrating with the [Switcher Devices](https://www.switcher.co.il/).</br>
-Please check out the [documentation][8].
-
-Check the [wiki][0] for a list of supported devices.
+PyPi module integrating with various [Switcher][12] smart water heaters and
+power plugs.</br>
+Check out the [wiki pages][0] for a list of supported devices.
 
 ## Install
 
@@ -16,8 +15,6 @@ pip install aioswitcher
 ```
 
 ## Usage Example
-
-Please check out the [documentation][8] for a more detailed usage section.
 
 ```python
 async with SwitcherApi(device_ip, device_id) as swapi:
@@ -31,6 +28,8 @@ async with SwitcherApi(device_ip, device_id) as swapi:
     # create a new recurring schedule
     await swapi.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 ```
+
+Check out the [documentation][8] for a more detailed usage section.
 
 ## Command Line Helper Scripts
 
@@ -54,6 +53,7 @@ The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 [7]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml
 [8]: https://aioswitcher.tomfi.info/
 [11]: https://pypi.org/project/aioswitcher
+[12]: https://www.switcher.co.il/
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml/badge.svg
