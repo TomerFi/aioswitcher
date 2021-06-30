@@ -77,7 +77,6 @@ test_pub = "poetry publish --build --repository testpypi" # this requires a test
 install_all = "poetry install --no-interaction"
 install_dev = "poetry install --no-interaction --no-root"
 install_docs = "poetry install --no-interaction --no-root -E docs"
-install_docs_no_dev = "poetry install --no-interaction --no-root --no-dev -E docs"
 build = "poetry build"
 # helper scripts
 lic_check = "deno run --unstable --allow-read https://deno.land/x/license_checker@v3.1.3/main.ts" # requires local deno

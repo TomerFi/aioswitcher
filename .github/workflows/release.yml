@@ -43,7 +43,7 @@ jobs:
 
       - name: Verify documenation site
         run: |
-          poe install_docs_no_dev
+          poe install_docs
           poe sphinx_linkcheck
           poe sphinx_build
           poe sphinx_spelling

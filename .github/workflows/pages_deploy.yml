@@ -12,13 +12,14 @@ env:
 
 jobs:
   deploy-pages:
+    if: github.actor == 'TomerFi'
     runs-on: ubuntu-latest
     name: Build documentation site and deploy to GH-Pages
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.3.4
 
-      - name: Set up Python ${{ env.MAIN_PY_VER }}
+      - name: Set up Python
         uses: actions/setup-python@v2.2.2
         with:
           python-version: ${{ env.MAIN_PY_VER }}
@@ -43,7 +44,7 @@ jobs:
 
       - name: Build documenation site
         run: |
-          poe install_docs_no_dev
+          poe install_docs
           poe sphinx_clean_build
 
       - name: Deploy to GH-Pages
