@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2D2D2D" />
+  
+  <title>aioswitcher :: aioswitcher 2.0.2-dev documentation</title>
+  
+
+  <link rel="icon" type="image/png" sizes="32x32" href="_static/img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="_static/img/favicon-16x16.png">
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+
+  <link rel="stylesheet" href="_static/css/insegel.css"/>
+
+  <script type="text/javascript">
+    var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:'',
+        VERSION:'2.0.2-dev',
+        LANGUAGE:'en',
+        COLLAPSE_INDEX:false,
+        FILE_SUFFIX:'.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+    };
+  </script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+
+  <script src="https://email.tl.fortawesome.com/c/eJxNjUEOgyAQAF8jR7Kw6wIHDh7sP1Cw2mgxgmn6-3JsMqc5zEQfE8dkxOY1KKMUOI3ACFKRJpSW2AAp7ontYIaxI6i7XPJVwyeVfCQ550Os3jLrGSNOLgbdAy6s0PBk2TFNjEbsfq31LB0OnX407pJa5v2faRadwSW63mn5KuLyR9j2tgx3zecanl-55R_-jjPs"></script>
+
+</head>
+
+<body>
+  <div id="insegel-container">
+    <header>
+      <div id="logo-container">
+          
+          <a href="#"><img src="_static/img/logo.svg"></a>
+          
+
+      </div>
+      <div id="project-container">
+        <h1>aioswitcher Documentation</h1>
+      </div>
+    </header>
+
+    <div id="content-container">
+
+      <div id="main-content-container">
+        <div id="main-content-header">
+          <h1>aioswitcher 2.0.2-dev documentation</h1>
+        </div>
+        <div id="main-content">
+          
+  <div class="toctree-wrapper compound">
+<span id="document-install"></span><section id="install">
+<h1>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip install aioswitcher
+</pre></div>
+</div>
+</section>
+<span id="document-usage"></span><section id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<section id="bridge">
+<h2>Bridge<a class="headerlink" href="#bridge" title="Permalink to this headline">¶</a></h2>
+<p>We can use the Bridge implementation to discover devices and their state.</p>
+<p>The following code will print all discovered devices for 60 seconds.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">print_devices</span><span class="p">(</span><span class="n">delay</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_device_found_callback</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">asdict</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherBridge</span><span class="p">(</span><span class="n">on_device_found_callback</span><span class="p">):</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">print_devices</span><span class="p">(</span><span class="mi">60</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<div class="line-block">
+<div class="line">A Switcher device will broadcast every 4 seconds.</div>
+<div class="line">Discovered devices can either be a <a class="reference internal" href="index.html#switcher-power-plug"><span class="std std-ref">Power Plug</span></a> or a <a class="reference internal" href="index.html#switcher-water-heater"><span class="std std-ref">Water Heater</span></a>.</div>
+</div>
+</div>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="Permalink to this headline">¶</a></h2>
+<p>We can use the API to gain the following capabilities:</p>
+<ul class="simple">
+<li><p>Get the current state</p></li>
+<li><p>Turn on and off</p></li>
+<li><p>Set the name</p></li>
+<li><p>Configure auto shutdown</p></li>
+<li><p>Retrieve the schedules</p></li>
+<li><p>Create and Delete schedules</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">control_device</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its id and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherApi</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+        <span class="c1"># get the device current state</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+        <span class="c1"># turn the device on for 15</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_device</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+        <span class="c1"># turn the device off</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_device</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">OFF</span><span class="p">)</span>
+        <span class="c1"># set the device name</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_device_name</span><span class="p">(</span><span class="s2">&quot;my new name&quot;</span><span class="p">)</span>
+        <span class="c1"># configure the device for 02:30 auto shutdown</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_auto_shutdown</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">))</span>
+        <span class="c1"># get the schedules from the device</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_schedules</span><span class="p">()</span>
+        <span class="c1"># delete and existing schedule with id 1</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">delete_schedule</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
+        <span class="c1"># create a new recurring schedule for 13:00-14:30 executing on sunday and friday</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">create_schedule</span><span class="p">(</span><span class="s2">&quot;13:00&quot;</span><span class="p">,</span> <span class="s2">&quot;14:30&quot;</span><span class="p">,</span> <span class="p">{</span><span class="n">Days</span><span class="o">.</span><span class="n">SUNDAY</span><span class="p">,</span> <span class="n">Days</span><span class="o">.</span><span class="n">FRIDAY</span><span class="p">})</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">control_device</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>All requests return a response, you can use the
+<a class="reference external" href="https://docs.python.org/3/library/dataclasses.html#dataclasses.asdict">asdict</a>
+utility function to get familiarize with the various responses.</p>
+<p>You can visit the <a class="reference internal" href="index.html#api-response-messages"><span class="std std-ref">API response messages section</span></a> and review the
+various response objects. Note that if a request doesn’t have a specific response extending the
+base response, then the base response is the yielding response.</p>
+</div>
+</section>
+<section id="supported-devices">
+<h2>Supported Devices<a class="headerlink" href="#supported-devices" title="Permalink to this headline">¶</a></h2>
+<p>You can find the supported device types stated as <a class="reference internal" href="index.html#supported-device-types"><span class="std std-ref">this enum</span></a> members.</p>
+</section>
+</section>
+<span id="document-scripts"></span><section id="command-line-scripts">
+<h1>Command Line Scripts<a class="headerlink" href="#command-line-scripts" title="Permalink to this headline">¶</a></h1>
+<section id="discover-devices">
+<h2>Discover Devices<a class="headerlink" href="#discover-devices" title="Permalink to this headline">¶</a></h2>
+<section id="discover-devices-py">
+<h3>discover_devices.py<a class="headerlink" href="#discover-devices-py" title="Permalink to this headline">¶</a></h3>
+<p>Discover and print info of Switcher devices</p>
+<p>usage: discover_devices.py [-h] [delay]</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-discover_devices.py-arg-delay">
+<span id="cmdoption-discover-devices-py-arg-delay"></span><span class="sig-name descname"><span class="pre">delay</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-discover_devices.py-arg-delay" title="Permalink to this definition">¶</a></dt>
+<dd><p>number of seconds to run, defaults to 60</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-discover_devices.py-h">
+<span id="cmdoption-discover-devices-py-h"></span><span id="cmdoption-discover_devices.py-help"></span><span id="cmdoption-discover-devices-py-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-discover_devices.py-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+</section>
+</section>
+<section id="control-device">
+<h2>Control Device<a class="headerlink" href="#control-device" title="Permalink to this headline">¶</a></h2>
+<section id="control-device-py">
+<h3>control_device.py<a class="headerlink" href="#control-device-py" title="Permalink to this headline">¶</a></h3>
+<p>Control your Switcher device</p>
+<p>usage: control_device.py [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+                         {get_state,turn_on,turn_off,set_name,set_auto_shutdown,get_schedules,delete_schedule,create_schedule}
+                         …</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-h">
+<span id="cmdoption-control-device-py-h"></span><span id="cmdoption-control_device.py-help"></span><span id="cmdoption-control-device-py-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-v">
+<span id="cmdoption-control-device-py-v"></span><span id="cmdoption-control_device.py-verbose"></span><span id="cmdoption-control-device-py-verbose"></span><span class="sig-name descname"><span class="pre">-v</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--verbose</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-v" title="Permalink to this definition">¶</a></dt>
+<dd><p>include the raw message</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-d">
+<span id="cmdoption-control-device-py-d"></span><span id="cmdoption-control_device.py-device-id"></span><span id="cmdoption-control-device-py-device-id"></span><span class="sig-name descname"><span class="pre">-d</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;device_id&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--device-id</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;device_id&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-d" title="Permalink to this definition">¶</a></dt>
+<dd><p>the identification of the device</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-i">
+<span id="cmdoption-control-device-py-i"></span><span id="cmdoption-control_device.py-ip-address"></span><span id="cmdoption-control-device-py-ip-address"></span><span class="sig-name descname"><span class="pre">-i</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ip_address&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--ip-address</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;ip_address&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-i" title="Permalink to this definition">¶</a></dt>
+<dd><p>the ip address assigned to the device</p>
+</dd></dl>
+
+<p>example usage:</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” get_state</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” turn_on</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” turn_on -t 15</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” turn_off</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” set_name -n “My Boiler”</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” set_auto_shutdown -r 2 -m 30</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” get_schedules</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” delete_schedule -s 3</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” create_schedule -n “14:00” -f “14:30”</p>
+<p>python control_device.py -d ab1c2d -i “111.222.11.22” create_schedule -n “17:30” -f “18:30” -w Sunday Monday Friday</p>
+<section id="control-device-py-create-schedule">
+<h4>control_device.py create_schedule<a class="headerlink" href="#control-device-py-create-schedule" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py create_schedule [-h] -n START_TIME -f END_TIME
+                                         [-w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} …]]</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-create_schedule-h">
+<span id="cmdoption-control-device-py-create-schedule-h"></span><span id="cmdoption-control_device.py-create_schedule-help"></span><span id="cmdoption-control-device-py-create-schedule-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-create_schedule-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-create_schedule-n">
+<span id="cmdoption-control-device-py-create-schedule-n"></span><span id="cmdoption-control_device.py-create_schedule-start-time"></span><span id="cmdoption-control-device-py-create-schedule-start-time"></span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;start_time&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--start-time</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;start_time&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-create_schedule-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>the on time for the schedule, e.g. 13:00</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-create_schedule-f">
+<span id="cmdoption-control-device-py-create-schedule-f"></span><span id="cmdoption-control_device.py-create_schedule-end-time"></span><span id="cmdoption-control-device-py-create-schedule-end-time"></span><span class="sig-name descname"><span class="pre">-f</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;end_time&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--end-time</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;end_time&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-create_schedule-f" title="Permalink to this definition">¶</a></dt>
+<dd><p>the off time for the schedule, e.g. 13:30</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-create_schedule-w">
+<span id="cmdoption-control-device-py-create-schedule-w"></span><span id="cmdoption-control_device.py-create_schedule-weekdays"></span><span id="cmdoption-control-device-py-create-schedule-weekdays"></span><span class="sig-name descname"><span class="pre">-w</span></span><span class="sig-prename descclassname"> <span class="pre">{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday}</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--weekdays</span></span><span class="sig-prename descclassname"> <span class="pre">{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday}</span></span><a class="headerlink" href="#cmdoption-control_device.py-create_schedule-w" title="Permalink to this definition">¶</a></dt>
+<dd><p>days for recurring schedules, possible values: [‘Monday’, ‘Tuesday’, ‘Wednesday’, ‘Thursday’, ‘Friday’, ‘Saturday’, ‘Sunday’]</p>
+</dd></dl>
+
+</section>
+<section id="control-device-py-delete-schedule">
+<h4>control_device.py delete_schedule<a class="headerlink" href="#control-device-py-delete-schedule" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py delete_schedule [-h] -s SCHEDULE_ID</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-delete_schedule-h">
+<span id="cmdoption-control-device-py-delete-schedule-h"></span><span id="cmdoption-control_device.py-delete_schedule-help"></span><span id="cmdoption-control-device-py-delete-schedule-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-delete_schedule-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-delete_schedule-s">
+<span id="cmdoption-control-device-py-delete-schedule-s"></span><span id="cmdoption-control_device.py-delete_schedule-schedule-id"></span><span id="cmdoption-control-device-py-delete-schedule-schedule-id"></span><span class="sig-name descname"><span class="pre">-s</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;schedule_id&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--schedule-id</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;schedule_id&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-delete_schedule-s" title="Permalink to this definition">¶</a></dt>
+<dd><p>the id of the schedule for deletion</p>
+</dd></dl>
+
+</section>
+<section id="control-device-py-get-schedules">
+<h4>control_device.py get_schedules<a class="headerlink" href="#control-device-py-get-schedules" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py get_schedules [-h]</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-get_schedules-h">
+<span id="cmdoption-control-device-py-get-schedules-h"></span><span id="cmdoption-control_device.py-get_schedules-help"></span><span id="cmdoption-control-device-py-get-schedules-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-get_schedules-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+</section>
+<section id="control-device-py-get-state">
+<h4>control_device.py get_state<a class="headerlink" href="#control-device-py-get-state" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py get_state [-h]</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-get_state-h">
+<span id="cmdoption-control-device-py-get-state-h"></span><span id="cmdoption-control_device.py-get_state-help"></span><span id="cmdoption-control-device-py-get-state-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-get_state-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+</section>
+<section id="control-device-py-set-auto-shutdown">
+<h4>control_device.py set_auto_shutdown<a class="headerlink" href="#control-device-py-set-auto-shutdown" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py set_auto_shutdown [-h] -r HOURS [-m [MINUTES]]</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-set_auto_shutdown-h">
+<span id="cmdoption-control-device-py-set-auto-shutdown-h"></span><span id="cmdoption-control_device.py-set_auto_shutdown-help"></span><span id="cmdoption-control-device-py-set-auto-shutdown-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-set_auto_shutdown-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-set_auto_shutdown-r">
+<span id="cmdoption-control-device-py-set-auto-shutdown-r"></span><span id="cmdoption-control_device.py-set_auto_shutdown-hours"></span><span id="cmdoption-control-device-py-set-auto-shutdown-hours"></span><span class="sig-name descname"><span class="pre">-r</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;hours&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--hours</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;hours&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-set_auto_shutdown-r" title="Permalink to this definition">¶</a></dt>
+<dd><p>number hours for the auto shutdown</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-set_auto_shutdown-m">
+<span id="cmdoption-control-device-py-set-auto-shutdown-m"></span><span id="cmdoption-control_device.py-set_auto_shutdown-minutes"></span><span id="cmdoption-control-device-py-set-auto-shutdown-minutes"></span><span class="sig-name descname"><span class="pre">-m</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;minutes&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--minutes</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;minutes&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-set_auto_shutdown-m" title="Permalink to this definition">¶</a></dt>
+<dd><p>number hours for the auto shutdown</p>
+</dd></dl>
+
+</section>
+<section id="control-device-py-set-name">
+<h4>control_device.py set_name<a class="headerlink" href="#control-device-py-set-name" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py set_name [-h] -n NAME</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-set_name-h">
+<span id="cmdoption-control-device-py-set-name-h"></span><span id="cmdoption-control_device.py-set_name-help"></span><span id="cmdoption-control-device-py-set-name-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-set_name-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-set_name-n">
+<span id="cmdoption-control-device-py-set-name-n"></span><span id="cmdoption-control_device.py-set_name-name"></span><span id="cmdoption-control-device-py-set-name-name"></span><span class="sig-name descname"><span class="pre">-n</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;name&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--name</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;name&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-set_name-n" title="Permalink to this definition">¶</a></dt>
+<dd><p>new name for the device</p>
+</dd></dl>
+
+</section>
+<section id="control-device-py-turn-off">
+<h4>control_device.py turn_off<a class="headerlink" href="#control-device-py-turn-off" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py turn_off [-h]</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-turn_off-h">
+<span id="cmdoption-control-device-py-turn-off-h"></span><span id="cmdoption-control_device.py-turn_off-help"></span><span id="cmdoption-control-device-py-turn-off-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-turn_off-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+</section>
+<section id="control-device-py-turn-on">
+<h4>control_device.py turn_on<a class="headerlink" href="#control-device-py-turn-on" title="Permalink to this headline">¶</a></h4>
+<p>usage: control_device.py turn_on [-h] [-t [TIMER]]</p>
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-turn_on-h">
+<span id="cmdoption-control-device-py-turn-on-h"></span><span id="cmdoption-control_device.py-turn_on-help"></span><span id="cmdoption-control-device-py-turn-on-help"></span><span class="sig-name descname"><span class="pre">-h</span></span><span class="sig-prename descclassname"></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--help</span></span><span class="sig-prename descclassname"></span><a class="headerlink" href="#cmdoption-control_device.py-turn_on-h" title="Permalink to this definition">¶</a></dt>
+<dd><p>show this help message and exit</p>
+</dd></dl>
+
+<dl class="std option">
+<dt class="sig sig-object std" id="cmdoption-control_device.py-turn_on-t">
+<span id="cmdoption-control-device-py-turn-on-t"></span><span id="cmdoption-control_device.py-turn_on-timer"></span><span id="cmdoption-control-device-py-turn-on-timer"></span><span class="sig-name descname"><span class="pre">-t</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;timer&gt;</span></span><span class="sig-prename descclassname"><span class="pre">,</span> </span><span class="sig-name descname"><span class="pre">--timer</span></span><span class="sig-prename descclassname"> <span class="pre">&lt;timer&gt;</span></span><a class="headerlink" href="#cmdoption-control_device.py-turn_on-t" title="Permalink to this definition">¶</a></dt>
+<dd><p>set minutes timer for turn on operation</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+</section>
+<span id="document-codedocs"></span><section id="code-documentation">
+<h1>Code Documentation<a class="headerlink" href="#code-documentation" title="Permalink to this headline">¶</a></h1>
+<section id="aioswitcher-api">
+<h2>aioswitcher.api<a class="headerlink" href="#aioswitcher-api" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.api.Command">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.api.</span></span><span class="sig-name descname"><span class="pre">Command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.Command" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum for turning the device on or off.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.Command.OFF">
+<span class="sig-name descname"><span class="pre">OFF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'0'</span></em><a class="headerlink" href="#aioswitcher.api.Command.OFF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.Command.ON">
+<span class="sig-name descname"><span class="pre">ON</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'1'</span></em><a class="headerlink" href="#aioswitcher.api.Command.ON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.api.</span></span><span class="sig-name descname"><span class="pre">SwitcherApi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9957</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi" title="Permalink to this definition">¶</a></dt>
+<dd><p>Switcher TCP based API.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ip_address</strong> (<em>str</em>) – the ip address assigned to the device.</p></li>
+<li><p><strong>device_id</strong> (<em>str</em>) – the id of the desired device.</p></li>
+<li><p><strong>port</strong> (<em>int</em>) – the port of the device, default is 9957.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.connect">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Connect to asynchronous socket and get reader and writer object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.connected">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">connected</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.api.SwitcherApi.connected" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if api is connected.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.control_device">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">control_device</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minutes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.control_device" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for sending the control packet to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>command</strong> (<a class="reference internal" href="index.html#aioswitcher.api.Command" title="aioswitcher.api.Command"><em>aioswitcher.api.Command</em></a>) – use the <code class="docutils literal notranslate"><span class="pre">aioswitcher.api.Command</span></code> enum.</p></li>
+<li><p><strong>minutes</strong> (<em>int</em>) – if turning-on optionally incorporate a timer.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of <code class="docutils literal notranslate"><span class="pre">SwitcherBaseResponse</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="index.html#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse">aioswitcher.api.messages.SwitcherBaseResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.create_schedule">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">create_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">days</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.create_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for creating a new schedule in the next empty schedule slot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start_time</strong> (<em>str</em>) – a string start time in %H:%M format. e.g. 13:00.</p></li>
+<li><p><strong>end_time</strong> (<em>str</em>) – a string start time in %H:%M format. e.g. 13:00.</p></li>
+<li><p><strong>days</strong> (<em>Set</em><em>[</em><a class="reference internal" href="index.html#aioswitcher.schedule.Days" title="aioswitcher.schedule.Days"><em>aioswitcher.schedule.Days</em></a><em>]</em>) – for recurring schedules, add <code class="docutils literal notranslate"><span class="pre">Days</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of <code class="docutils literal notranslate"><span class="pre">SwitcherBaseResponse</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="index.html#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse">aioswitcher.api.messages.SwitcherBaseResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.delete_schedule">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">delete_schedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.delete_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for deleting a schedule from the device.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">get_schedules</span></code> to retrieve the schedule instance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>schedule_id</strong> (<em>str</em>) – the identification of the schedule for deletion.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of <code class="docutils literal notranslate"><span class="pre">SwitcherBaseResponse</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="index.html#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse">aioswitcher.api.messages.SwitcherBaseResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.disconnect">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">disconnect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect from asynchronous socket.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.get_schedules">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">get_schedules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.get_schedules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for retrieval of the schedules from the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An instance of <code class="docutils literal notranslate"><span class="pre">SwitcherGetSchedulesResponse</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="index.html#aioswitcher.api.messages.SwitcherGetSchedulesResponse" title="aioswitcher.api.messages.SwitcherGetSchedulesResponse">aioswitcher.api.messages.SwitcherGetSchedulesResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.get_state">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">get_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.get_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for sending the get state packet to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>An instance of <code class="docutils literal notranslate"><span class="pre">SwitcherStateResponse</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference internal" href="index.html#aioswitcher.api.messages.SwitcherStateResponse" title="aioswitcher.api.messages.SwitcherStateResponse">aioswitcher.api.messages.SwitcherStateResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.set_auto_shutdown">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">set_auto_shutdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">full_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.set_auto_shutdown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for sending the set auto-off packet to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>full_time</strong> (<em>datetime.timedelta</em>) – timedelta value containing the configuration value for</p></li>
+<li><p><strong>auto-shutdown.</strong> – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of <code class="docutils literal notranslate"><span class="pre">SwitcherBaseResponse</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="index.html#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse">aioswitcher.api.messages.SwitcherBaseResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.api.SwitcherApi.set_device_name">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">set_device_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.SwitcherApi.set_device_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for sending the set name packet to the device.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – string name with the length of 2 &gt;= x &gt;= 32.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An instance of <code class="docutils literal notranslate"><span class="pre">SwitcherBaseResponse</span></code>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="index.html#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse">aioswitcher.api.messages.SwitcherBaseResponse</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="aioswitcher-api-messages">
+<span id="api-response-messages"></span><h2>aioswitcher.api.messages<a class="headerlink" href="#aioswitcher-api-messages" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherBaseResponse">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.api.messages.</span></span><span class="sig-name descname"><span class="pre">SwitcherBaseResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unparsed_response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.messages.SwitcherBaseResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Representation of the switcher base response message.</p>
+<p>Applicable for all messages that do no require post initialization.
+e.g. not applicable for SwitcherLoginResponse, SwitcherStateResponse,
+SwitcherGetScheduleResponse.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unparsed_response</strong> (<em>bytes</em>) – the raw response from the device.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherBaseResponse.successful">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">successful</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherBaseResponse.successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the response is not empty.</p>
+<p>Partially indicating the request was successful.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherBaseResponse.unparsed_response">
+<span class="sig-name descname"><span class="pre">unparsed_response</span></span><em class="property"><span class="pre">:</span> <span class="pre">bytes</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherBaseResponse.unparsed_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherLoginResponse">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.api.messages.</span></span><span class="sig-name descname"><span class="pre">SwitcherLoginResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unparsed_response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.messages.SwitcherLoginResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.api.messages.SwitcherBaseResponse</span></code></a></p>
+<p>Representations of the switcher login response message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unparsed_response</strong> (<em>bytes</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherLoginResponse.session_id">
+<span class="sig-name descname"><span class="pre">session_id</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherLoginResponse.session_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherLoginResponse.successful">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">successful</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherLoginResponse.successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the response is not empty.</p>
+<p>Partially indicating the request was successful.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherLoginResponse.unparsed_response">
+<span class="sig-name descname"><span class="pre">unparsed_response</span></span><em class="property"><span class="pre">:</span> <span class="pre">bytes</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherLoginResponse.unparsed_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.api.messages.</span></span><span class="sig-name descname"><span class="pre">SwitcherStateResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unparsed_response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.api.messages.SwitcherBaseResponse</span></code></a></p>
+<p>Representation of the switcher state response message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unparsed_response</strong> (<em>bytes</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.auto_shutdown">
+<span class="sig-name descname"><span class="pre">auto_shutdown</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.auto_shutdown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.electric_current">
+<span class="sig-name descname"><span class="pre">electric_current</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.electric_current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.power_consumption">
+<span class="sig-name descname"><span class="pre">power_consumption</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.power_consumption" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.state">
+<span class="sig-name descname"><span class="pre">state</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="index.html#aioswitcher.device.DeviceState" title="aioswitcher.device.DeviceState"><span class="pre">aioswitcher.device.DeviceState</span></a></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.successful">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">successful</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the response is not empty.</p>
+<p>Partially indicating the request was successful.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.time_left">
+<span class="sig-name descname"><span class="pre">time_left</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.time_left" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.time_on">
+<span class="sig-name descname"><span class="pre">time_on</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.time_on" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherStateResponse.unparsed_response">
+<span class="sig-name descname"><span class="pre">unparsed_response</span></span><em class="property"><span class="pre">:</span> <span class="pre">bytes</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherStateResponse.unparsed_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherGetSchedulesResponse">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.api.messages.</span></span><span class="sig-name descname"><span class="pre">SwitcherGetSchedulesResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">unparsed_response</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.api.messages.SwitcherGetSchedulesResponse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#aioswitcher.api.messages.SwitcherBaseResponse" title="aioswitcher.api.messages.SwitcherBaseResponse"><code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.api.messages.SwitcherBaseResponse</span></code></a></p>
+<p>Representation of the switcher get schedule message.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>unparsed_response</strong> (<em>bytes</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherGetSchedulesResponse.found_schedules">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">found_schedules</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherGetSchedulesResponse.found_schedules" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if found schedules in the response.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherGetSchedulesResponse.schedules">
+<span class="sig-name descname"><span class="pre">schedules</span></span><em class="property"><span class="pre">:</span> <span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="index.html#aioswitcher.schedule.parser.SwitcherSchedule" title="aioswitcher.schedule.parser.SwitcherSchedule"><span class="pre">aioswitcher.schedule.parser.SwitcherSchedule</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherGetSchedulesResponse.schedules" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherGetSchedulesResponse.successful">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">successful</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherGetSchedulesResponse.successful" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if the response is not empty.</p>
+<p>Partially indicating the request was successful.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.api.messages.SwitcherGetSchedulesResponse.unparsed_response">
+<span class="sig-name descname"><span class="pre">unparsed_response</span></span><em class="property"><span class="pre">:</span> <span class="pre">bytes</span></em><a class="headerlink" href="#aioswitcher.api.messages.SwitcherGetSchedulesResponse.unparsed_response" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="aioswitcher-bridge">
+<h2>aioswitcher.bridge<a class="headerlink" href="#aioswitcher-bridge" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.bridge.SwitcherBridge">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.bridge.</span></span><span class="sig-name descname"><span class="pre">SwitcherBridge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">on_device</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">broadcast_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20002</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.bridge.SwitcherBridge" title="Permalink to this definition">¶</a></dt>
+<dd><p>Use for running a UDP client for bridging Switcher devices broadcast messages.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>on_device</strong> (<em>Callable</em><em>[</em><em>[</em><em>aioswitcher.device.SwitcherBase</em><em>]</em><em>, </em><em>Any</em><em>]</em>) – a callable to which every new SwitcherBase device found will be send.</p></li>
+<li><p><strong>broadcast_port</strong> (<em>int</em>) – broadcast port, default is 20002.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.bridge.SwitcherBridge.is_running">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">is_running</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.bridge.SwitcherBridge.is_running" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true if bridge is running.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.bridge.SwitcherBridge.start">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.bridge.SwitcherBridge.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an asynchronous listener and start the bridge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="aioswitcher.bridge.SwitcherBridge.stop">
+<em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">stop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.bridge.SwitcherBridge.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop the asynchronous bridge.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="aioswitcher-device">
+<h2>aioswitcher.device<a class="headerlink" href="#aioswitcher-device" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceCategory">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.device.</span></span><span class="sig-name descname"><span class="pre">DeviceCategory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.device.DeviceCategory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum for relaying the device category.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceCategory.POWER_PLUG">
+<span class="sig-name descname"><span class="pre">POWER_PLUG</span></span><em class="property"> <span class="pre">=</span> <span class="pre">2</span></em><a class="headerlink" href="#aioswitcher.device.DeviceCategory.POWER_PLUG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceCategory.WATER_HEATER">
+<span class="sig-name descname"><span class="pre">WATER_HEATER</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1</span></em><a class="headerlink" href="#aioswitcher.device.DeviceCategory.WATER_HEATER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<span class="target" id="supported-device-types"></span><dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.device.</span></span><span class="sig-name descname"><span class="pre">DeviceType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.device.DeviceType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum for relaying the type of the switcher devices.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.MINI">
+<span class="sig-name descname"><span class="pre">MINI</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Switcher</span> <span class="pre">Mini'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.MINI" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.POWER_PLUG">
+<span class="sig-name descname"><span class="pre">POWER_PLUG</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Switcher</span> <span class="pre">Power</span> <span class="pre">Plug'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.POWER_PLUG" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.TOUCH">
+<span class="sig-name descname"><span class="pre">TOUCH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Switcher</span> <span class="pre">Touch'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.TOUCH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.V2_ESP">
+<span class="sig-name descname"><span class="pre">V2_ESP</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Switcher</span> <span class="pre">V2</span> <span class="pre">(esp)'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.V2_ESP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.V2_QCA">
+<span class="sig-name descname"><span class="pre">V2_QCA</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Switcher</span> <span class="pre">V2</span> <span class="pre">(qualcomm)'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.V2_QCA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.V4">
+<span class="sig-name descname"><span class="pre">V4</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Switcher</span> <span class="pre">V4'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.V4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.category">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">category</span></span><em class="property"><span class="pre">:</span> <span class="pre">aioswitcher.device.DeviceCategory</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.category" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the category of the device type.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceType.hex_rep">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">hex_rep</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.DeviceType.hex_rep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the hexadecimal representation of the device type.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceState">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.device.</span></span><span class="sig-name descname"><span class="pre">DeviceState</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.device.DeviceState" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum class representing the device’s state.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceState.OFF">
+<span class="sig-name descname"><span class="pre">OFF</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'0000'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceState.OFF" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceState.ON">
+<span class="sig-name descname"><span class="pre">ON</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'0100'</span></em><a class="headerlink" href="#aioswitcher.device.DeviceState.ON" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.device.DeviceState.display">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">display</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.DeviceState.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the display name of the state.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="switcher-power-plug"></span><dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.device.</span></span><span class="sig-name descname"><span class="pre">SwitcherPowerPlug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mac_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_consumption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">electric_current</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.device.SwitcherPowerBase</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.device.SwitcherBase</span></code></p>
+<p>Implementation of the Switcher Power Plug device.</p>
+<p>Please Note the order of the inherited classes to understand the order of the
+instantiation parameters and the super call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_type</strong> (<a class="reference internal" href="index.html#aioswitcher.device.DeviceType" title="aioswitcher.device.DeviceType"><em>aioswitcher.device.DeviceType</em></a>) – </p></li>
+<li><p><strong>device_state</strong> (<a class="reference internal" href="index.html#aioswitcher.device.DeviceState" title="aioswitcher.device.DeviceState"><em>aioswitcher.device.DeviceState</em></a>) – </p></li>
+<li><p><strong>device_id</strong> (<em>str</em>) – </p></li>
+<li><p><strong>ip_address</strong> (<em>str</em>) – </p></li>
+<li><p><strong>mac_address</strong> (<em>str</em>) – </p></li>
+<li><p><strong>name</strong> (<em>str</em>) – </p></li>
+<li><p><strong>power_consumption</strong> (<em>int</em>) – </p></li>
+<li><p><strong>electric_current</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.device_id">
+<span class="sig-name descname"><span class="pre">device_id</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.device_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.device_state">
+<span class="sig-name descname"><span class="pre">device_state</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="index.html#aioswitcher.device.DeviceState" title="aioswitcher.device.DeviceState"><span class="pre">aioswitcher.device.DeviceState</span></a></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.device_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.device_type">
+<span class="sig-name descname"><span class="pre">device_type</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="index.html#aioswitcher.device.DeviceType" title="aioswitcher.device.DeviceType"><span class="pre">aioswitcher.device.DeviceType</span></a></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.device_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.electric_current">
+<span class="sig-name descname"><span class="pre">electric_current</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.electric_current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.ip_address">
+<span class="sig-name descname"><span class="pre">ip_address</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.ip_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.last_data_update">
+<span class="sig-name descname"><span class="pre">last_data_update</span></span><em class="property"><span class="pre">:</span> <span class="pre">datetime.datetime</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.last_data_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.mac_address">
+<span class="sig-name descname"><span class="pre">mac_address</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.mac_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherPowerPlug.power_consumption">
+<span class="sig-name descname"><span class="pre">power_consumption</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherPowerPlug.power_consumption" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<span class="target" id="switcher-water-heater"></span><dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.device.</span></span><span class="sig-name descname"><span class="pre">SwitcherWaterHeater</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ip_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mac_address</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">power_consumption</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">electric_current</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remaining_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_shutdown</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.device.SwitcherTimedBase</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.device.SwitcherPowerBase</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">aioswitcher.device.SwitcherBase</span></code></p>
+<p>Implementation of the Switcher Water Heater device.</p>
+<p>Please Note the order of the inherited classes to understand the order of the
+instantiation parameters and the super call.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>device_type</strong> (<a class="reference internal" href="index.html#aioswitcher.device.DeviceType" title="aioswitcher.device.DeviceType"><em>aioswitcher.device.DeviceType</em></a>) – </p></li>
+<li><p><strong>device_state</strong> (<a class="reference internal" href="index.html#aioswitcher.device.DeviceState" title="aioswitcher.device.DeviceState"><em>aioswitcher.device.DeviceState</em></a>) – </p></li>
+<li><p><strong>device_id</strong> (<em>str</em>) – </p></li>
+<li><p><strong>ip_address</strong> (<em>str</em>) – </p></li>
+<li><p><strong>mac_address</strong> (<em>str</em>) – </p></li>
+<li><p><strong>name</strong> (<em>str</em>) – </p></li>
+<li><p><strong>power_consumption</strong> (<em>int</em>) – </p></li>
+<li><p><strong>electric_current</strong> (<em>float</em>) – </p></li>
+<li><p><strong>remaining_time</strong> (<em>str</em>) – </p></li>
+<li><p><strong>auto_shutdown</strong> (<em>str</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.auto_shutdown">
+<span class="sig-name descname"><span class="pre">auto_shutdown</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.auto_shutdown" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.device_id">
+<span class="sig-name descname"><span class="pre">device_id</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.device_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.device_state">
+<span class="sig-name descname"><span class="pre">device_state</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="index.html#aioswitcher.device.DeviceState" title="aioswitcher.device.DeviceState"><span class="pre">aioswitcher.device.DeviceState</span></a></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.device_state" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.device_type">
+<span class="sig-name descname"><span class="pre">device_type</span></span><em class="property"><span class="pre">:</span> <a class="reference internal" href="index.html#aioswitcher.device.DeviceType" title="aioswitcher.device.DeviceType"><span class="pre">aioswitcher.device.DeviceType</span></a></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.device_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.electric_current">
+<span class="sig-name descname"><span class="pre">electric_current</span></span><em class="property"><span class="pre">:</span> <span class="pre">float</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.electric_current" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.ip_address">
+<span class="sig-name descname"><span class="pre">ip_address</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.ip_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.last_data_update">
+<span class="sig-name descname"><span class="pre">last_data_update</span></span><em class="property"><span class="pre">:</span> <span class="pre">datetime.datetime</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.last_data_update" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.mac_address">
+<span class="sig-name descname"><span class="pre">mac_address</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.mac_address" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.name">
+<span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.power_consumption">
+<span class="sig-name descname"><span class="pre">power_consumption</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.power_consumption" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.device.SwitcherWaterHeater.remaining_time">
+<span class="sig-name descname"><span class="pre">remaining_time</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.device.SwitcherWaterHeater.remaining_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="aioswitcher-schedule">
+<h2>aioswitcher.schedule<a class="headerlink" href="#aioswitcher-schedule" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.schedule.</span></span><span class="sig-name descname"><span class="pre">Days</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.schedule.Days" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enum class representing the day entity.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.FRIDAY">
+<span class="sig-name descname"><span class="pre">FRIDAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Friday'</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.FRIDAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.MONDAY">
+<span class="sig-name descname"><span class="pre">MONDAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Monday'</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.MONDAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.SATURDAY">
+<span class="sig-name descname"><span class="pre">SATURDAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Saturday'</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.SATURDAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.SUNDAY">
+<span class="sig-name descname"><span class="pre">SUNDAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Sunday'</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.SUNDAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.THURSDAY">
+<span class="sig-name descname"><span class="pre">THURSDAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Thursday'</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.THURSDAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.TUESDAY">
+<span class="sig-name descname"><span class="pre">TUESDAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Tuesday'</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.TUESDAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.WEDNESDAY">
+<span class="sig-name descname"><span class="pre">WEDNESDAY</span></span><em class="property"> <span class="pre">=</span> <span class="pre">'Wednesday'</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.WEDNESDAY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.bit_rep">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">bit_rep</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.bit_rep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the bit representation of the day.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.hex_rep">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">hex_rep</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.hex_rep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the hexadecimal representation of the day.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="aioswitcher.schedule.Days.weekday">
+<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">weekday</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#aioswitcher.schedule.Days.weekday" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the weekday of the day.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule">
+<em class="property"><span class="pre">final</span> <span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">aioswitcher.schedule.parser.</span></span><span class="sig-name descname"><span class="pre">SwitcherSchedule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">schedule_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recurring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">days</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_time</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>representation of the Switcher schedule slot.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>schedule_id</strong> (<em>str</em>) – the id of the schedule</p></li>
+<li><p><strong>recurring</strong> (<em>bool</em>) – is a recurring schedule</p></li>
+<li><p><strong>days</strong> (<em>Set</em><em>[</em><a class="reference internal" href="index.html#aioswitcher.schedule.Days" title="aioswitcher.schedule.Days"><em>aioswitcher.schedule.Days</em></a><em>]</em>) – a set of schedule days, or empty set for non recurring schedules</p></li>
+<li><p><strong>start_time</strong> (<em>str</em>) – the start time of the schedule</p></li>
+<li><p><strong>end_time</strong> (<em>str</em>) – the end time of the schedule</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule.days">
+<span class="sig-name descname"><span class="pre">days</span></span><em class="property"><span class="pre">:</span> <span class="pre">Set</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="index.html#aioswitcher.schedule.Days" title="aioswitcher.schedule.Days"><span class="pre">aioswitcher.schedule.Days</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule.days" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule.display">
+<span class="sig-name descname"><span class="pre">display</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule.display" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule.duration">
+<span class="sig-name descname"><span class="pre">duration</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule.duration" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule.end_time">
+<span class="sig-name descname"><span class="pre">end_time</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule.end_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule.recurring">
+<span class="sig-name descname"><span class="pre">recurring</span></span><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule.recurring" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule.schedule_id">
+<span class="sig-name descname"><span class="pre">schedule_id</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule.schedule_id" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="aioswitcher.schedule.parser.SwitcherSchedule.start_time">
+<span class="sig-name descname"><span class="pre">start_time</span></span><em class="property"><span class="pre">:</span> <span class="pre">str</span></em><a class="headerlink" href="#aioswitcher.schedule.parser.SwitcherSchedule.start_time" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+</div>
+
+
+        </div>
+      </div>
+
+      <div id="side-menu-container">
+
+        <div id="search" role="search">
+</div>
+
+        <div id="side-menu" role="navigation">
+
+          
+  
+  
+    <div class="local-toc"><ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-install">Install</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-usage">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-scripts">Command Line Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-codedocs">Code Documentation</a></li>
+</ul>
+</div>
+  
+
+
+        </div>
+
+        
+
+      </div>
+
+    </div>
+
+<footer>
+    <div id="footer-info">
+        <ul id="build-details">
+            
+                <li class="footer-element">
+                    
+                </li>
+            
+
+            
+
+            
+        </ul>
+        <div id="credit">
+            created with <a href="http://sphinx-doc.org/">Sphinx</a> and <a href="https://github.com/Autophagy/insegel">Insegel</a>
+
+        </div>
+    </div>
+
+    <a id="menu-toggle" class="fa fa-bars" aria-hidden="true"></a>
+
+    <script type="text/javascript">
+      $("#menu-toggle").click(function() {
+        $("#menu-toggle").toggleClass("toggled");
+        $("#side-menu-container").slideToggle(300);
+      });
+    </script>
+
+</footer> 
+
+</div>
+
+</body>
+</html>
