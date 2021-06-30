@@ -2,7 +2,7 @@
 # Switcher Unofficial Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
 <!-- markdownlint-enable MD013 -->
 
-[![gh-build-status]][7] [![read-the-docs]][8] [![codecov]][3]
+[![gh-build-status]][7] [![gh-pages-status]][8] [![codecov]][3]
 
 PyPi module named [aioswitcher][11] for integrating with the [Switcher Devices](https://www.switcher.co.il/).</br>
 Please check out the [documentation][8].
@@ -57,7 +57,7 @@ The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml/badge.svg
+[gh-pages-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pages_deploy.yml/badge.svg
 [license-badge]: https://img.shields.io/github/license/tomerfi/aioswitcher
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi&color=1082C2
 [pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
-[read-the-docs]: https://readthedocs.org/projects/aioswitcher/badge/?version=stable
