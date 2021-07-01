@@ -115,12 +115,8 @@ jobs:
         run: poe install_all
 
       - name: Test project
-        if: matrix.python != ${{ env.MAIN_PY_VER }}
-        run: poe test
-
-      - name: Test project and create reports
-        if: matrix.python == ${{ env.MAIN_PY_VER }}
-        run: poe test_rep
+        run: |
+          if [ ${{ matrix.python }} == ${{ env.MAIN_PY_VER }} ]; then poe test_rep; else poe test; fi
 
       - name: Push coverage report as artifact
         if: matrix.python == ${{ env.MAIN_PY_VER }}
