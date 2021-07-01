@@ -1,0 +1,56 @@
+---
+name: Bug Report
+description: File a bug report
+labels: ["type: bug"]
+
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to fill out this bug report!
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also share, what did you expect to happen?
+    validations:
+      required: true
+
+  - type: input
+    id: module-version
+    attributes:
+      label: Module Version
+      description: What version of `aioswitcher` are you using?
+      placeholder: ex. 2.0.2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: device-type
+    attributes:
+      label: Device Type
+      description: What device are you trying to work with?
+      options:
+        - Switcher V2
+        - Switcher Mini
+        - Switcher Touch (V3)
+        - Switcher V4
+        - Switcher Power Plug
+    validations:
+      required: true
+
+  - type: input
+    id: firmware-version
+    attributes:
+      label: Firmware Version
+      description: What the firmware version of the device in question?
+      placeholder: ex. 3.2.1
+    validations:
+      required: true
+
+  - type: textarea
+    id: log-output
+    attributes:
+      label: Relevant log output
+      description: Please provide any relevant log output. Check for private info before submitting.
+      render: shell
