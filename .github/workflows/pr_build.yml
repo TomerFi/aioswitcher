@@ -115,7 +115,7 @@ jobs:
         run: poe install_all
 
       - name: Test project
-        run: |
+        run: | # yamllint disable-line rule:line-length
           if [${{ matrix.python }} == ${{ env.MAIN_PY_VER }}]; then poe test_rep; else poe test; fi
 
       - name: Push coverage report as artifact
