@@ -1,4 +1,4 @@
-# https://probot.github.io/apps/auto-assign/
+# https://github.com/marketplace/actions/auto-assign-action
 ---
 addReviewers: true
 addAssignees: author

@@ -1,4 +1,4 @@
-# Contributing to `aioswitcher`</br>[![python-version]][1] [![conventional-commits]][0]
+# Contributing to `aioswitcher`</br>[![conventional-commits]][0]
 
 :clap: First off, thank you for taking the time to contribute. :clap:
 
@@ -7,11 +7,6 @@ Contributing is pretty straight-forward:
 - Fork the repository
 - Commit your changes
 - Create a pull request against the `dev` branch
-
-Please feel free to contribute, even to this contributing guideline file, if you see fit.
-
-- [Package management](#package-management)
-- [Code of Conduct](#code-of-conduct)
 
 ## Prepare the environment
 
@@ -49,7 +44,5 @@ Please check the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 <!-- Real Links -->
 [0]: https://conventionalcommits.org
-[1]: https://www.python.org
 <!-- Badges Links -->
 [conventional-commits]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
-[python-version]: https://img.shields.io/badge/python-3.8%2B-1082C2?logo=python
