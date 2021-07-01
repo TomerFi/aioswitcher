@@ -6,7 +6,7 @@
 
 PyPi module integrating with various [Switcher][12] smart water heaters and
 power plugs.</br>
-Check out the [wiki pages][0] for a list of supported devices.
+Check out the [wiki pages][0] for a list of supported devices. stam.
 
 ## Install
 
