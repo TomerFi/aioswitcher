@@ -88,7 +88,7 @@ jobs:
         with:
           timezone: Asia/Jerusalem
 
-      - name: Set up Python ${{ matrix.python }}
+      - name: Set up Python
         uses: actions/setup-python@v2.2.2
         with:
           python-version: ${{ matrix.python }}
