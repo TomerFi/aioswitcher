@@ -16,7 +16,7 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2.3.4
 
-      - name: Set up Python ${{ env.MAIN_PY_VER }}
+      - name: Set up Python
         uses: actions/setup-python@v2.2.2
         with:
           python-version: ${{ env.MAIN_PY_VER }}
@@ -88,7 +88,7 @@ jobs:
         with:
           timezone: Asia/Jerusalem
 
-      - name: Set up Python ${{ matrix.python }}
+      - name: Set up Python
         uses: actions/setup-python@v2.2.2
         with:
           python-version: ${{ matrix.python }}
@@ -115,12 +115,8 @@ jobs:
         run: poe install_all
 
       - name: Test project
-        if: matrix.python != ${{ env.MAIN_PY_VER }}
-        run: poe test
-
-      - name: Test project and create reports
-        if: matrix.python == ${{ env.MAIN_PY_VER }}
-        run: poe test_rep
+        run: |
+          [ ${{ matrix.python }} = ${{ env.MAIN_PY_VER }} ] && poe test_rep || poe test
 
       - name: Push coverage report as artifact
         if: matrix.python == ${{ env.MAIN_PY_VER }}
