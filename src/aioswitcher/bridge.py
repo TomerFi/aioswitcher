@@ -18,7 +18,7 @@ from asyncio import BaseTransport, DatagramProtocol, get_running_loop
 from binascii import hexlify
 from dataclasses import dataclass
 from functools import partial
-from logging import critical, debug, error, info
+from logging import getLogger
 from socket import AF_INET, inet_ntoa
 from struct import pack
 from types import TracebackType
@@ -36,6 +36,7 @@ from .device import (
 from .device.tools import seconds_to_iso_time, watts_to_amps
 
 __all__ = ["SwitcherBridge"]
+logger = getLogger(__name__)
 
 
 def _parse_device_from_datagram(
@@ -52,7 +53,7 @@ def _parse_device_from_datagram(
     """
     parser = DatagramParser(datagram)
     if not parser.is_switcher_originator():
-        error("received datagram from an unknown source")
+        logger.error("received datagram from an unknown source")
     else:
         device_type = parser.get_device_type()
         device_state = parser.get_device_state()
@@ -64,7 +65,7 @@ def _parse_device_from_datagram(
             electric_current = 0.0
 
         if device_type and device_type.category == DeviceCategory.WATER_HEATER:
-            debug("discovered a water heater switcher device")
+            logger.debug("discovered a water heater switcher device")
             device_callback(
                 SwitcherWaterHeater(
                     device_type,
@@ -85,7 +86,7 @@ def _parse_device_from_datagram(
             )
 
         elif device_type and device_type.category == DeviceCategory.POWER_PLUG:
-            debug("discovered a power plug switcher device")
+            logger.debug("discovered a power plug switcher device")
             device_callback(
                 SwitcherPowerPlug(
                     device_type,
@@ -137,7 +138,7 @@ class SwitcherBridge:
 
     async def start(self) -> None:
         """Create an asynchronous listener and start the bridge."""
-        info("starting the udp bridge")
+        logger.info("starting the udp bridge")
         protocol_factory = UdpClientProtocol(
             partial(_parse_device_from_datagram, self._on_device)
         )
@@ -148,16 +149,16 @@ class SwitcherBridge:
         )
 
         self._is_running = True
-        info("udp bridge started")
+        logger.info("udp bridge started")
         self._transport = transport
 
     async def stop(self) -> None:
         """Stop the asynchronous bridge."""
         if self._transport and not self._transport.is_closing():
-            info("stopping the udp bridge")
+            logger.info("stopping the udp bridge")
             self._transport.close()
         else:
-            info("udp bridge not started")
+            logger.info("udp bridge not started")
         self._is_running = False
 
     @property
@@ -186,16 +187,16 @@ class UdpClientProtocol(DatagramProtocol):
     def error_received(self, exc: Optional[Exception]) -> None:
         """Call on exception received."""
         if exc:
-            error(f"udp client received error {exc}")
+            logger.error(f"udp client received error {exc}")
         else:
             warn("udp client received error")
 
     def connection_lost(self, exc: Optional[Exception]) -> None:
         """Call on connection lost."""
         if exc:
-            critical(f"udp bridge lost its connection {exc}")
+            logger.critical(f"udp bridge lost its connection {exc}")
         else:
-            info("udp connection stopped")
+            logger.info("udp connection stopped")
 
 
 @final

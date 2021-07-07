@@ -18,7 +18,7 @@ from asyncio import open_connection
 from binascii import unhexlify
 from datetime import timedelta
 from enum import Enum, unique
-from logging import debug, info
+from logging import getLogger
 from socket import AF_INET
 from types import TracebackType
 from typing import Optional, Set, Tuple, Type, final
@@ -39,6 +39,8 @@ from .messages import (
     SwitcherLoginResponse,
     SwitcherStateResponse,
 )
+
+logger = getLogger(__name__)
 
 
 @unique
@@ -88,7 +90,7 @@ class SwitcherApi:
 
     async def connect(self) -> None:
         """Connect to asynchronous socket and get reader and writer object."""
-        info("connecting to the switcher device")
+        logger.info("connecting to the switcher device")
         self._reader, self._writer = await open_connection(
             host=self._ip_address,
             port=self._port,
@@ -96,16 +98,16 @@ class SwitcherApi:
         )
 
         self._connected = True
-        info("switcher device connected")
+        logger.info("switcher device connected")
 
     async def disconnect(self) -> None:
         """Disconnect from asynchronous socket."""
         if hasattr(self, "_writer") and self._writer:
-            info("disconnecting from the switcher device")
+            logger.info("disconnecting from the switcher device")
             self._writer.close()
             await self._writer.wait_closed()
         else:
-            info("switcher device not connected")
+            logger.info("switcher device not connected")
         self._connected = False
 
     @property
@@ -128,7 +130,7 @@ class SwitcherApi:
         packet = packets.LOGIN_PACKET.format(timestamp)
         signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a login packet")
+        logger.debug("sending a login packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return timestamp, SwitcherLoginResponse(response)
@@ -153,7 +155,7 @@ class SwitcherApi:
             )
             signed_packet = sign_packet_with_crc_key(packet)
 
-            debug("sending a get state packet")
+            logger.debug("sending a get state packet")
             self._writer.write(unhexlify(signed_packet))
             state_resp = await self._reader.read(1024)
             try:
@@ -202,7 +204,7 @@ class SwitcherApi:
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a control packet")
+        logger.debug("sending a control packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
@@ -228,7 +230,7 @@ class SwitcherApi:
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a set auto shutdown packet")
+        logger.debug("sending a set auto shutdown packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
@@ -253,7 +255,7 @@ class SwitcherApi:
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a set name packet")
+        logger.debug("sending a set name packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
@@ -273,7 +275,7 @@ class SwitcherApi:
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a get schedules packet")
+        logger.debug("sending a get schedules packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherGetSchedulesResponse(response)
@@ -296,7 +298,7 @@ class SwitcherApi:
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a delete schedule packet")
+        logger.debug("sending a delete schedule packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
@@ -335,7 +337,7 @@ class SwitcherApi:
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
-        debug("sending a create schedule packet")
+        logger.debug("sending a create schedule packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
