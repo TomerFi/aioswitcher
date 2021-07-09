@@ -42,6 +42,16 @@ The contributing guidelines are [here](.github/CONTRIBUTING.md)
 
 The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 
+## Thanks
+
+- Preliminary work done by [Shai][13] and Aviad in [Switcher-V2-Python][14].
+- Research and help for advancing and adding features by [Shay][15].
+- Cooperation and general support by the people at [Switcher][12].
+
+## Disclaimer
+
+This is **NOT** an official module and it is **NOT** officially supported by the vendor.
+
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher/wiki
 [2]: https://github.com/TomerFi/aioswitcher/releases
@@ -51,6 +61,9 @@ The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 [8]: https://aioswitcher.tomfi.info/
 [11]: https://pypi.org/project/aioswitcher
 [12]: https://www.switcher.co.il/
+[13]: https://github.com/NightRang3r
+[14]: https://github.com/NightRang3r/Switcher-V2-Python
+[15]: https://github.com/thecode
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml/badge.svg
