@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration TCP socket API module."""
+"""Switcher integration TCP socket API module."""
 
 from asyncio import open_connection
 from binascii import unhexlify

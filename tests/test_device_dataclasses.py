@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration devices dataclasses test cases."""
+"""Switcher integration devices dataclasses test cases."""
 
 from dataclasses import dataclass
 

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration TCP socket API packet formats."""
+"""Switcher integration TCP socket API packet formats."""
 
 # weekdays sum, start-time timestamp, end-time timestamp
 SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"

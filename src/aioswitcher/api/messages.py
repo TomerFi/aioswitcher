@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration TCP socket API messages."""
+"""Switcher integration TCP socket API messages."""
 
 from binascii import hexlify
 from dataclasses import InitVar, dataclass, field

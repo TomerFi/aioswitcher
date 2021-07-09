@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration, UDP Bridge module."""
+"""Switcher integration, UDP Bridge module."""
 
 from asyncio import BaseTransport, DatagramProtocol, get_running_loop
 from binascii import hexlify

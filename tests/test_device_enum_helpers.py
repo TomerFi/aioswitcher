@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration devices enum helpers test cases."""
+"""Switcher integration devices enum helpers test cases."""
 
 from assertpy import assert_that
 from pytest import mark

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration schedule module."""
+"""Switcher integration schedule module."""
 
 from enum import Enum, unique
 

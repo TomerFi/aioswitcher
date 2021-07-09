@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration parsing devices from datagrams test cases."""
+"""Switcher integration parsing devices from datagrams test cases."""
 
 from binascii import unhexlify
 from pathlib import Path

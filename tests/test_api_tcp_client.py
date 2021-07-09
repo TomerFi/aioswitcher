@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration TCP socket API module test cases."""
+"""Switcher integration TCP socket API module test cases."""
 
 from asyncio.streams import StreamReader, StreamWriter
 from binascii import unhexlify

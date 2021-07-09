@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration schedule parser module."""
+"""Switcher integration schedule parser module."""
 
 from binascii import hexlify
 from dataclasses import dataclass, field

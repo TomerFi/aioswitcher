@@ -1,6 +1,4 @@
-<!-- markdownlint-disable MD013 -->
-# Switcher Unofficial Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
-<!-- markdownlint-enable MD013 -->
+# Switcher Python Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
 
 [![gh-build-status]][7] [![gh-pages-status]][8] [![codecov]][3]
 

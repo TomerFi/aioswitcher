@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration pretty next run tool test cases."""
+"""Switcher integration pretty next run tool test cases."""
 
 from binascii import hexlify, unhexlify
 from datetime import datetime, timedelta

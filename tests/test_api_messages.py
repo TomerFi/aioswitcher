@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration TCP socket API messages test cases."""
+"""Switcher integration TCP socket API messages test cases."""
 
 from binascii import unhexlify
 from pathlib import Path

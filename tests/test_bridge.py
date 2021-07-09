@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration UDP bridge module test cases."""
+"""Switcher integration UDP bridge module test cases."""
 import socket
 from asyncio import sleep
 from binascii import unhexlify

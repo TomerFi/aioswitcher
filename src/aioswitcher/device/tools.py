@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Switcher unofficial integration device module tools."""
+"""Switcher integration device module tools."""
 
 import datetime
 import time
