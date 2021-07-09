@@ -2,8 +2,7 @@
 
 [![gh-build-status]][7] [![gh-pages-status]][8] [![codecov]][3]
 
-PyPi module integrating with various [Switcher][12] smart water heaters and
-power plugs.</br>
+PyPi module integrating with various [Switcher][12] devices.</br>
 Check out the [wiki pages][0] for a list of supported devices.
 
 ## Install
