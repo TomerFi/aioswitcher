@@ -38,7 +38,7 @@ jobs:
     name: Handle pull request
     steps:
       - name: Lock pull request
-        uses: dessant/lock-threads@v2.0.3
+        uses: dessant/lock-threads@v2.1.1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           pr-lock-comment: "Locking this pull request."
