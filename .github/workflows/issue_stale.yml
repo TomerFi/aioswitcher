@@ -11,7 +11,7 @@ jobs:
     name: Check for stale issues
     steps:
       - name: Mark non-confirmed stale issues
-        uses: actions/stale@v3.0.19
+        uses: actions/stale@v4
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           stale-issue-message: >
