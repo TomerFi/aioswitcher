@@ -71,6 +71,7 @@ def test_given_a_device_of_type_water_heater_when_instantiating_as_a_water_heate
     assert_that(sut.electric_current).is_equal_to(fake_data.electric_current)
     assert_that(sut.remaining_time).is_equal_to(fake_data.remaining_time)
     assert_that(sut.auto_shutdown).is_equal_to(fake_data.auto_shutdown)
+    assert_that(sut.auto_off_set).is_equal_to(fake_data.auto_shutdown)
 
 
 def test_given_a_device_of_type_power_plug_when_instantiating_as_a_power_plug_should_be_instatiated_properly(fake_data):
