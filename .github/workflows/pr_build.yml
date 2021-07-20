@@ -152,7 +152,7 @@ jobs:
           files: reports/junit.xml
 
       - name: Push to CodeCov
-        uses: codecov/codecov-action@v1.5.2
+        uses: codecov/codecov-action@v2.0.1
         with:
           file: reports/coverage.xml
           fail_ci_if_error: true
