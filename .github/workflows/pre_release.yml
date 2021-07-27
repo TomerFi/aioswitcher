@@ -65,5 +65,5 @@ jobs:
       - name: Push to CodeCov
         uses: codecov/codecov-action@v2.0.2
         with:
-          file: coverage.xml
+          files: coverage.xml
           fail_ci_if_error: true
