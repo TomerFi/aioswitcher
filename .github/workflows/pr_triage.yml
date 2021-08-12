@@ -19,7 +19,7 @@ jobs:
           configuration-path: ".github/configs/auto_assign.yml"
 
       - name: Add review label
-        uses: actions-ecosystem/action-add-labels@v1.1.2
+        uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs review"
@@ -35,7 +35,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add approved label
-        uses: actions-ecosystem/action-add-labels@v1.1.2
+        uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: approved"

@@ -39,7 +39,7 @@ jobs:
           labels: "status: changes requested"
 
       - name: Add approved label
-        uses: actions-ecosystem/action-add-labels@v1.1.2
+        uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: approved"
@@ -57,7 +57,7 @@ jobs:
           labels: "status: approved"
 
       - name: Add changes requested label
-        uses: actions-ecosystem/action-add-labels@v1.1.2
+        uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: changes requested"
