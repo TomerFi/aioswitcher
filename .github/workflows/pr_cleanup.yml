@@ -28,7 +28,7 @@ jobs:
 
       - name: Add merged label if merged
         if: github.event.pull_request.merged == true
-        uses: actions-ecosystem/action-add-labels@v1.1.2
+        uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: merged"
