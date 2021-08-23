@@ -56,7 +56,7 @@ pytest-mockservers = "^0.6.0"
 pytest-sugar = "^0.9.4"
 time-machine = "^2.3.1"
 types-toml = "^0.1.5"
-yamllint = "^1.26.2"
+yamllint = "^1.26.3"
 
 [tool.poetry.extras]
 docs = [
