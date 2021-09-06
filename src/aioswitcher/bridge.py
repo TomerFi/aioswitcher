@@ -53,7 +53,7 @@ def _parse_device_from_datagram(
     """
     parser = DatagramParser(datagram)
     if not parser.is_switcher_originator():
-        logger.error("received datagram from an unknown source")
+        logger.debug("received datagram from an unknown source")
     else:
         device_type = parser.get_device_type()
         device_state = parser.get_device_state()
