@@ -35,11 +35,11 @@ def mock_device():
     return Mock()
 
 
-@patch("logging.Logger.error")
+@patch("logging.Logger.debug")
 @patch.object(DatagramParser, "is_switcher_originator", lambda s: False)
-def test_an_unknown_datagram_produces_an_error(mock_error, mock_callback):
+def test_an_unknown_datagram_not_produces_device(mock_debug, mock_callback):
     assert_that(_parse_device_from_datagram(mock_callback, "a moot datagram")).is_none()
-    mock_error.assert_called_once_with("received datagram from an unknown source")
+    mock_debug.assert_called_once_with("received datagram from an unknown source")
     mock_callback.assert_not_called()
 
 
