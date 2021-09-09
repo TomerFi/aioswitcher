@@ -10,7 +10,7 @@ jobs:
     name: Remove labels
     steps:
       - name: Remove triage label
-        uses: actions-ecosystem/action-remove-labels@v1.1.1
+        uses: actions-ecosystem/action-remove-labels@v1.3.0
         continue-on-error: true
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
