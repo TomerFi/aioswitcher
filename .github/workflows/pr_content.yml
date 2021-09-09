@@ -44,7 +44,7 @@ jobs:
           size_xxl_label: "size: xxl"
 
       - name: Remove stale size labels
-        uses: actions-ecosystem/action-remove-labels@v1.1.1
+        uses: actions-ecosystem/action-remove-labels@v1.3.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.stale_labels }}
