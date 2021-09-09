@@ -2,9 +2,7 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - '[0-9].[0-9].[0-9]*'
+  workflow_dispatch:
 
 env:
   MAIN_PY_VER: 3.9
@@ -41,6 +39,50 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
+      - name: Set up Node 16
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: 16
+
+      - name: Install global node modules
+        run: >
+          npm i -g
+          conventional-changelog-cli
+          conventional-changelog-conventionalcommits
+          conventional-recommended-bump
+          git-semver-tags
+
+      - name: Configure git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
+      - name: Set version info
+        id: version
+        run: |
+          new_version=$(bash deploy/get_next_bump.sh)
+          next_iteration=$(bash deploy/get_next_dev_iteration.sh --tag $new_version)
+          echo "::set-output name=new_version::$new_version"
+          echo "::set-output name=next_iteration::$next_iteration"
+
+      - name: Set new project version
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: pyproject.toml
+          key: tool.poetry.version
+          value: ${{ steps.version.outputs.new_version }}
+
+      - name: Update poetry.lock
+        run: poetry update
+
+      - name: Commit, tag, and push new version
+        run: |
+          git add pyproject.toml poetry.lock
+          git commit -m "build: bump version to ${{ steps.version.outputs.new_version }}"
+          git push
+          git tag ${{ steps.version.outputs.new_version }} -m ${{ steps.version.outputs.new_version }}
+          git push origin ${{ steps.version.outputs.new_version }}
+
       - name: Verify documenation site
         run: |
           poe install_docs
@@ -48,52 +90,75 @@ jobs:
           poe sphinx_build
           poe sphinx_spelling
 
-      - name: Publish development builds for thecode
+      - name: Publish build for thecode
         if: github.actor == 'thecode'
         run: poetry publish --build -u __token__ -p ${{ secrets.THECODE_PYPI_TOKEN }}
 
-      - name: Publish development builds for tomerfi
+      - name: Publish build for tomerfi
         if: github.actor == 'TomerFi'
         run: poetry publish --build -u __token__ -p ${{ secrets.TOMERFI_PYPI_TOKEN }}
 
-      - name: Create release
-        id: create_release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
+      - name: Create CHANGELOG.md for sourcing the release notes
+        run: bash deploy/create_changelog.sh --tag ${{ steps.version.outputs.new_version }}
+
+      - name: Release to GitHub for thecode
+        if: github.actor == 'thecode'
+        id: gh_release_thecode
+        uses: ncipollo/release-action@v1.8.8
         with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          prerelease: false
-          files: |
-            dist/*.tar.gz
-            dist/*.whl
+          bodyFile: CHANGELOG.md
+          tag: ${{ steps.version.outputs.new_version }}
+          token: ${{ secrets.THECODE_GH_RELEASE_PAT }}
+
+      - name: Release to GitHub for tomerfi
+        if: github.actor == 'TomerFi'
+        id: gh_release_tomerfi
+        uses: ncipollo/release-action@v1.8.8
+        with:
+          bodyFile: CHANGELOG.md
+          tag: ${{ steps.version.outputs.new_version }}
+          token: ${{ secrets.TOMERFI_GH_RELEASE_PAT }}
+
+      - name: Set development project version
+        uses: ciiiii/toml-editor@1.0.0
+        with:
+          file: pyproject.toml
+          key: tool.poetry.version
+          value: ${{ steps.version.outputs.next_iteration }}
+
+      - name: Update poetry.lock
+        run: poetry update
+
+      - name: Commit and push development version
+        run: |
+          git add pyproject.toml poetry.lock
+          git commit -m "build: bump version to ${{ steps.version.outputs.next_iteration }}"
+          git push
 
       - name: Tweet new release for thecode
         if: github.actor == 'thecode'
         uses: lazy-actions/tweet-action@1.0.1
-        env:
-          RELEASE_TAG: ${{ steps.create_release.outputs.automatic_releases_tag }}
         with:
           oauth_consumer_key: ${{ secrets.THECODE_TWITTER_API_KEY }}
           oauth_consumer_secret: ${{ secrets.THECODE_TWITTER_API_SECRET_KEY }}
           oauth_token: ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }}
           oauth_token_secret: ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }}
           message: |
-            🚀🎉 Aioswitcher ${{ env.RELEASE_TAG }} has been released! 🎉🚀
-            ${{ github.event.repository.html_url }}/releases/tag/${{ env.RELEASE_TAG }}
+            🚀🎉 Aioswitcher ${{ steps.version.outputs.new_version  }} has been released! 🎉🚀
+            ${{ steps.gh_release_thecode.outputs.html_url }}
 
             #aioswitcher
 
       - name: Tweet new release for tomerfi
         if: github.actor == 'TomerFi'
         uses: lazy-actions/tweet-action@1.0.1
-        env:
-          RELEASE_TAG: ${{ steps.create_release.outputs.automatic_releases_tag }}
         with:
           oauth_consumer_key: ${{ secrets.TOMERFI_TWITTER_API_KEY }}
           oauth_consumer_secret: ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }}
           oauth_token: ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN }}
           oauth_token_secret: ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }}
           message: |
-            🚀🎉 Aioswitcher ${{ env.RELEASE_TAG }} has been released! 🎉🚀
-            ${{ github.event.repository.html_url }}/releases/tag/${{ env.RELEASE_TAG }}
+            🚀🎉 Aioswitcher ${{ steps.version.outputs.new_version  }} has been released! 🎉🚀
+            ${{ steps.gh_release_tomerfi.outputs.html_url }}
 
             #aioswitcher
