@@ -11,14 +11,14 @@ env:
 
 jobs:
   release:
-    if: github.actor == 'TomerFi'
     runs-on: ubuntu-latest
-    name: Build release and publish to PyPi
+    environment: deployment
+    name: Build and publish release
     steps:
-      - name: Source checkout
+      - name: Checkout sources
         uses: actions/checkout@v2.3.4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
           python-version: ${{ env.MAIN_PY_VER }}
@@ -48,8 +48,13 @@ jobs:
           poe sphinx_build
           poe sphinx_spelling
 
-      - name: Build distribution assets
-        run: poe build
+      - name: Publish development builds for thecode
+        if: github.actor == 'thecode'
+        run: poetry publish --build -u __token__ -p ${{ secrets.THECODE_PYPI_TOKEN }}
+
+      - name: Publish development builds for tomerfi
+        if: github.actor == 'TomerFi'
+        run: poetry publish --build -u __token__ -p ${{ secrets.TOMERFI_PYPI_TOKEN }}
 
       - name: Create release
         id: create_release
@@ -61,27 +66,32 @@ jobs:
             dist/*.tar.gz
             dist/*.whl
 
-      - name: Publish python distribution to PyPI
-        uses: pypa/gh-action-pypi-publish@v1.4.2
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
-
-      - name: Dispatch release event
-        uses: peter-evans/repository-dispatch@v1.1.3
-        with:
-          token: ${{ secrets.EVENT_DISPATCH_PAT }}
-          event-type: aioswitcher-released
-
-      - name: Tweet new release
+      - name: Tweet new release for thecode
+        if: github.actor == 'thecode'
         uses: lazy-actions/tweet-action@1.0.1
         env:
           RELEASE_TAG: ${{ steps.create_release.outputs.automatic_releases_tag }}
         with:
-          oauth_consumer_key: ${{ secrets.TWITTER_API_KEY }}
-          oauth_consumer_secret: ${{ secrets.TWITTER_API_SECRET_KEY }}
-          oauth_token: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          oauth_token_secret: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
+          oauth_consumer_key: ${{ secrets.THECODE_TWITTER_API_KEY }}
+          oauth_consumer_secret: ${{ secrets.THECODE_TWITTER_API_SECRET_KEY }}
+          oauth_token: ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }}
+          oauth_token_secret: ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }}
+          message: |
+            🚀🎉 Aioswitcher ${{ env.RELEASE_TAG }} has been released! 🎉🚀
+            ${{ github.event.repository.html_url }}/releases/tag/${{ env.RELEASE_TAG }}
+
+            #aioswitcher
+
+      - name: Tweet new release for tomerfi
+        if: github.actor == 'TomerFi'
+        uses: lazy-actions/tweet-action@1.0.1
+        env:
+          RELEASE_TAG: ${{ steps.create_release.outputs.automatic_releases_tag }}
+        with:
+          oauth_consumer_key: ${{ secrets.TOMERFI_TWITTER_API_KEY }}
+          oauth_consumer_secret: ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }}
+          oauth_token: ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN }}
+          oauth_token_secret: ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }}
           message: |
             🚀🎉 Aioswitcher ${{ env.RELEASE_TAG }} has been released! 🎉🚀
             ${{ github.event.repository.html_url }}/releases/tag/${{ env.RELEASE_TAG }}
