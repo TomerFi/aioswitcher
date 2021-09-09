@@ -8,6 +8,17 @@ Contributing is pretty straight-forward:
 - Commit your changes
 - Create a pull request against the `dev` branch
 
+## Install early-access version
+
+Contributions are welcome in all shapes or forms.
+If you're a user, you can play around with the [early-access][1] version and report back if you see anything suspicious.
+
+Install [early-access][1] version using `pip`:
+
+```shell
+pip install git+https://github.com/TomerFi/aioswitcher#early-access
+```
+
 ## Prepare the environment
 
 With [Python >= 3.9](https://www.python.org/) use [pip](https://pypi.org/project/pip/) to install
@@ -44,5 +55,6 @@ Please check the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 <!-- Real Links -->
 [0]: https://conventionalcommits.org
+[1]: https://github.com/TomerFi/aioswitcher/releases/tag/early-access
 <!-- Badges Links -->
 [conventional-commits]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
