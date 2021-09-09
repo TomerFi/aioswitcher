@@ -13,9 +13,10 @@ env:
 jobs:
   pre-release:
     runs-on: ubuntu-latest
-    name: Build pre-release and publish early access to GitHub
+    environment: staging
+    name: Build and test pre-release
     steps:
-      - name: Source checkout
+      - name: Checkout sources
         uses: actions/checkout@v2.3.4
 
       - name: Setup timezone
@@ -23,7 +24,7 @@ jobs:
         with:
           timezone: Asia/Jerusalem
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v2.2.2
         with:
           python-version: ${{ env.MAIN_PY_VER }}
@@ -46,7 +47,7 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Install, test, and build distribution assets
+      - name: Install, test with coverage report, and build
         run: |
           poe install_all
           poe test_rep
