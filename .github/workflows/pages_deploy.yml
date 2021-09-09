@@ -3,16 +3,19 @@ name: Pages Deploy
 
 on:
   workflow_dispatch:
-  repository_dispatch:
+  workflow_run:
+    workflows:
+      - Release
+    branches:
+      - dev
     types:
-      - aioswitcher-released
+      - completed
 
 env:
   MAIN_PY_VER: 3.9
 
 jobs:
   deploy-pages:
-    if: github.actor == 'TomerFi'
     runs-on: ubuntu-latest
     name: Build documentation site and deploy to GH-Pages
     steps:
