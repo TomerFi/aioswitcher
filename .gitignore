@@ -122,3 +122,7 @@ dmypy.json
 # coverage reports
 coverage.xml
 junit.xml
+
+# project stuff
+CHANGELOG.md
+release-context.json
