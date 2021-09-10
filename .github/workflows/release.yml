@@ -8,13 +8,63 @@ env:
   MAIN_PY_VER: 3.9
 
 jobs:
-  release:
+  user_info:
     runs-on: ubuntu-latest
     environment: deployment
-    name: Build and publish release
+    name: Collect user info
+    outputs:
+      pypi_token: ${{ steps.set_info.outputs.pypi_token }}
+      gh_release_pat: ${{ steps.set_info.outputs.gh_release_pat }}
+      twitter_api_key: ${{ steps.set_info.outputs.twitter_api_key }}
+      twitter_api_secret_key: ${{ steps.set_info.outputs.twitter_api_secret_key }}
+      twitter_access_token: ${{ steps.set_info.outputs.twitter_access_token }}
+      twitter_access_token_secret: ${{ steps.set_info.outputs.twitter_access_token_secret }}
+    steps:
+      - name: Set user info
+        id: set_info
+        run: |
+          pypi_token=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_PYPI_TOKEN }}; \
+                      elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_PYPI_TOKEN }}; fi)
+          gh_release_pat=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_GH_RELEASE_PAT }}; \
+                          elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_GH_RELEASE_PAT }}; fi)
+          twitter_api_key=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_API_KEY }}; \
+                            elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_API_KEY }}; fi)
+          twitter_api_secret_key=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }}; \
+                                  elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_API_SECRET_KEY }}; fi)
+          twitter_access_token=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN }}; \
+                                elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }}; fi)
+          twitter_access_token_secret=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }}; \
+                                        elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }}; fi)
+          echo "::set-output name=pypi_token::$pypi_token"
+          echo "::set-output name=gh_release_pat::$gh_release_pat"
+          echo "::set-output name=twitter_api_key::$twitter_api_key"
+          echo "::set-output name=twitter_api_secret_key::$twitter_api_secret_key"
+          echo "::set-output name=twitter_access_token::$twitter_access_token"
+          echo "::set-output name=twitter_access_token_secret::$twitter_access_token_secret"
+
+      - name: Validate user info
+        if: |
+          ${{ steps.set_info.outputs.pypi_token == '' ||
+              steps.set_info.outputs.gh_release_pat == '' ||
+              steps.set_info.outputs.twitter_api_key == '' ||
+              steps.set_info.outputs.twitter_api_secret_key == '' ||
+              steps.set_info.outputs.twitter_access_token == '' ||
+              steps.set_info.outputs.twitter_access_token_secret == ''}}
+        uses: actions/github-script@v4.1.0
+        with:
+          script: core.setFailed('Missing user info')
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: user_info
+    name: Build and publish to PyPi
+    outputs:
+      new_version: ${{ steps.version.outputs.new_version  }}
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v2.2.2
@@ -39,7 +89,7 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Set up Node 16
+      - name: Setup Node
         uses: actions/setup-node@v2.4.0
         with:
           node-version: 16
@@ -72,10 +122,10 @@ jobs:
           key: tool.poetry.version
           value: ${{ steps.version.outputs.new_version }}
 
-      - name: Update poetry.lock
+      - name: Update poetry lock file
         run: poetry update
 
-      - name: Commit, tag, and push new version
+      - name: Commit, tag, and push
         run: |
           git add pyproject.toml poetry.lock
           git commit -m "build: bump version to ${{ steps.version.outputs.new_version }}"
@@ -83,41 +133,25 @@ jobs:
           git tag ${{ steps.version.outputs.new_version }} -m ${{ steps.version.outputs.new_version }}
           git push origin ${{ steps.version.outputs.new_version }}
 
-      - name: Verify documenation site
+      - name: Verify documenation site build
         run: |
           poe install_docs
           poe sphinx_linkcheck
           poe sphinx_build
           poe sphinx_spelling
 
-      - name: Publish build for thecode
-        if: github.actor == 'thecode'
-        run: poetry publish --build -u __token__ -p ${{ secrets.THECODE_PYPI_TOKEN }}
-
-      - name: Publish build for tomerfi
-        if: github.actor == 'TomerFi'
-        run: poetry publish --build -u __token__ -p ${{ secrets.TOMERFI_PYPI_TOKEN }}
+      - name: Publish build to PyPi
+        run: poetry publish --build -u __token__ -p ${{ needs.user_info.outputs.pypi_token }}
 
       - name: Create CHANGELOG.md for sourcing the release notes
         run: bash deploy/create_changelog.sh --tag ${{ steps.version.outputs.new_version }}
 
-      - name: Release to GitHub for thecode
-        if: github.actor == 'thecode'
-        id: gh_release_thecode
-        uses: ncipollo/release-action@v1.8.8
+      - name: Upload changelog artifact
+        uses: actions/upload-artifact@v2.2.4
         with:
-          bodyFile: CHANGELOG.md
-          tag: ${{ steps.version.outputs.new_version }}
-          token: ${{ secrets.THECODE_GH_RELEASE_PAT }}
-
-      - name: Release to GitHub for tomerfi
-        if: github.actor == 'TomerFi'
-        id: gh_release_tomerfi
-        uses: ncipollo/release-action@v1.8.8
-        with:
-          bodyFile: CHANGELOG.md
-          tag: ${{ steps.version.outputs.new_version }}
-          token: ${{ secrets.TOMERFI_GH_RELEASE_PAT }}
+          name: changelog
+          if-no-files-found: error
+          path: CHANGELOG.md
 
       - name: Set development project version
         uses: ciiiii/toml-editor@1.0.0
@@ -126,39 +160,49 @@ jobs:
           key: tool.poetry.version
           value: ${{ steps.version.outputs.next_iteration }}
 
-      - name: Update poetry.lock
+      - name: Update poetry lock file
         run: poetry update
 
-      - name: Commit and push development version
+      - name: Commit and push
         run: |
           git add pyproject.toml poetry.lock
           git commit -m "build: bump version to ${{ steps.version.outputs.next_iteration }}"
           git push
 
-      - name: Tweet new release for thecode
-        if: github.actor == 'thecode'
+  release:
+    runs-on: ubuntu-latest
+    name: Release to GitHub
+    needs: [user_info, publish]
+    outputs:
+      html_url: ${{ steps.gh_release_thecode.outputs.html_url }}
+    steps:
+      - name: Download changelog artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: changelog
+
+      - name: Release to GitHub
+        id: gh_release
+        uses: ncipollo/release-action@v1.8.8
+        with:
+          bodyFile: CHANGELOG.md
+          tag: ${{ needs.publish.outputs.new_version }}
+          token: ${{ needs.user_info.outputs.gh_release_pat }}
+
+  announce:
+    runs-on: ubuntu-latest
+    name: Announce new release
+    needs: [user_info, publish, release]
+    steps:
+      - name: Tweet new release
         uses: lazy-actions/tweet-action@1.0.1
         with:
-          oauth_consumer_key: ${{ secrets.THECODE_TWITTER_API_KEY }}
-          oauth_consumer_secret: ${{ secrets.THECODE_TWITTER_API_SECRET_KEY }}
-          oauth_token: ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }}
-          oauth_token_secret: ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }}
+          oauth_consumer_key: ${{ needs.user_info.outputs.twitter_api_key }}
+          oauth_consumer_secret: ${{ needs.user_info.outputs.twitter_api_secret_key }}
+          oauth_token: ${{ needs.user_info.outputs.twitter_access_token }}
+          oauth_token_secret: ${{ needs.user_info.outputs.twitter_access_token_secret }}
           message: |
-            🚀🎉 Aioswitcher ${{ steps.version.outputs.new_version  }} has been released! 🎉🚀
-            ${{ steps.gh_release_thecode.outputs.html_url }}
-
-            #aioswitcher
-
-      - name: Tweet new release for tomerfi
-        if: github.actor == 'TomerFi'
-        uses: lazy-actions/tweet-action@1.0.1
-        with:
-          oauth_consumer_key: ${{ secrets.TOMERFI_TWITTER_API_KEY }}
-          oauth_consumer_secret: ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }}
-          oauth_token: ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN }}
-          oauth_token_secret: ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }}
-          message: |
-            🚀🎉 Aioswitcher ${{ steps.version.outputs.new_version  }} has been released! 🎉🚀
-            ${{ steps.gh_release_tomerfi.outputs.html_url }}
+            🚀🎉 Aioswitcher ${{ needs.publish.outputs.new_version  }} has been released! 🎉🚀
+            ${{ needs.release.outputs.html_url }}
 
             #aioswitcher
