@@ -18,7 +18,7 @@ show_usage() {
 	echo "Usage: $0 --tag <tag>"
 	echo ""
 	echo "Example: $0 --tag 2.1.17"
-	echo "Will output: 2.1.18-SNAPSHOT"
+	echo "Will output: 2.1.18.dev"
 }
 if [[ ($# == "--help") || $# == "-h" ]]; then
 	show_usage
