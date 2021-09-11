@@ -1,5 +1,5 @@
 {
-    "{docs,src,tests,scripts}/**/*.py": [
+    "{deploy,docs,src,tests,scripts}/**/*.{py,sh}": [
         "Copyright Tomer Figenblat.",
 
         "Licensed under the Apache License, Version 2.0 (the \"License\");",

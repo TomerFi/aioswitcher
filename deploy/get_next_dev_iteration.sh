@@ -18,6 +18,7 @@ show_usage() {
 	echo "Usage: $0 --tag <tag>"
 	echo ""
 	echo "Example: $0 --tag 2.1.17"
+	echo "Example: $0 --tag 2.1.17 --label .dev"
 	echo "Will output: 2.1.18.dev"
 }
 if [[ ($# == "--help") || $# == "-h" ]]; then
@@ -32,6 +33,8 @@ while [ $# -gt 0 ]; do
 	fi
 	shift
 done
+# default named parameters
+label=${label:-.dev}
 # if no --tag provided show usage and exit
 if [ -z "$tag" ]; then
 	show_usage
@@ -45,6 +48,6 @@ new_patch=$(cut -d"." -f3- <<<$tag)
 # increment the patch part
 next_patch=$(increment $new_patch)
 # concatenate the new major, minor, and next patch parts with the .dev suffix
-next_iteration=$new_major_minor.$next_patch.dev
+next_iteration=$new_major_minor.$next_patch$label
 # return the next development iteration
 echo $next_iteration

@@ -29,8 +29,6 @@ if [[ ($1 == "--help") || $1 == "-h" ]]; then
 	show_usage
 	exit 0
 fi
-# default named parameters
-preset=${preset:-conventionalcommits}
 # iterate over arguments and create named parameters
 while [ $# -gt 0 ]; do
 	if [[ $1 == *"--"* ]]; then
@@ -39,6 +37,8 @@ while [ $# -gt 0 ]; do
 	fi
 	shift
 done
+# default named parameters
+preset=${preset:-conventionalcommits}
 # if no --tag provided show usage and exit
 if [ -z "$tag" ]; then
 	show_usage
