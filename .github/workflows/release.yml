@@ -23,16 +23,20 @@ jobs:
       - name: Set user info
         id: set_info
         run: |
-          pypi_token=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_PYPI_TOKEN }}; \
-                      elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_PYPI_TOKEN }}; fi)
-          twitter_api_key=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_API_KEY }}; \
-                            elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_API_KEY }}; fi)
-          twitter_api_secret_key=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }}; \
-                                  elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_API_SECRET_KEY }}; fi)
-          twitter_access_token=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN }}; \
-                                elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }}; fi)
-          twitter_access_token_secret=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }}; \
-                                        elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }}; fi)
+          if [ "${{ github.actor }}" = "TomerFi" ]; then
+            pypi_token=$(echo ${{ secrets.TOMERFI_PYPI_TOKEN }})
+            twitter_api_key=$(echo ${{ secrets.TOMERFI_TWITTER_API_KEY }})
+            twitter_api_secret_key=$(echo ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }})
+            twitter_access_token=$(echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN }})
+            twitter_access_token_secret=$(echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }})
+          elif [ "${{ github.actor }}" = "thecode" ]; then
+            pypi_token=$(echo ${{ secrets.THECODE_PYPI_TOKEN }})
+            twitter_api_key=$(echo ${{ secrets.THECODE_TWITTER_API_KEY }})
+            twitter_api_secret_key=$(echo ${{ secrets.THECODE_TWITTER_API_SECRET_KEY }})
+            twitter_access_token=$(echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }})
+            twitter_access_token_secret=$(echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }})
+          fi
+
           echo "::set-output name=pypi_token::$pypi_token"
           echo "::set-output name=twitter_api_key::$twitter_api_key"
           echo "::set-output name=twitter_api_secret_key::$twitter_api_secret_key"
