@@ -175,7 +175,7 @@ jobs:
     name: Release to GitHub
     needs: [user_info, publish]
     outputs:
-      html_url: ${{ steps.gh_release_thecode.outputs.html_url }}
+      html_url: ${{ steps.gh_release.outputs.html_url }}
     steps:
       - name: Download changelog artifact
         uses: actions/download-artifact@v2
