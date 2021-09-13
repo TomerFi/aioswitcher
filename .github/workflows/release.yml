@@ -15,7 +15,6 @@ jobs:
     name: Collect user info
     outputs:
       pypi_token: ${{ steps.set_info.outputs.pypi_token }}
-      gh_release_pat: ${{ steps.set_info.outputs.gh_release_pat }}
       twitter_api_key: ${{ steps.set_info.outputs.twitter_api_key }}
       twitter_api_secret_key: ${{ steps.set_info.outputs.twitter_api_secret_key }}
       twitter_access_token: ${{ steps.set_info.outputs.twitter_access_token }}
@@ -26,8 +25,6 @@ jobs:
         run: |
           pypi_token=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_PYPI_TOKEN }}; \
                       elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_PYPI_TOKEN }}; fi)
-          gh_release_pat=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_GH_RELEASE_PAT }}; \
-                          elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_GH_RELEASE_PAT }}; fi)
           twitter_api_key=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_API_KEY }}; \
                             elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_API_KEY }}; fi)
           twitter_api_secret_key=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }}; \
@@ -37,7 +34,6 @@ jobs:
           twitter_access_token_secret=$(if [ "${{ github.actor }}" = "TomerFi" ]; then echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }}; \
                                         elif [ "${{ github.actor }}" = "thecode" ]; then echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }}; fi)
           echo "::set-output name=pypi_token::$pypi_token"
-          echo "::set-output name=gh_release_pat::$gh_release_pat"
           echo "::set-output name=twitter_api_key::$twitter_api_key"
           echo "::set-output name=twitter_api_secret_key::$twitter_api_secret_key"
           echo "::set-output name=twitter_access_token::$twitter_access_token"
@@ -46,7 +42,6 @@ jobs:
       - name: Validate user info
         if: |
           ${{ steps.set_info.outputs.pypi_token == '' ||
-              steps.set_info.outputs.gh_release_pat == '' ||
               steps.set_info.outputs.twitter_api_key == '' ||
               steps.set_info.outputs.twitter_api_secret_key == '' ||
               steps.set_info.outputs.twitter_access_token == '' ||
@@ -173,7 +168,7 @@ jobs:
   release:
     runs-on: ubuntu-latest
     name: Release to GitHub
-    needs: [user_info, publish]
+    needs: [publish]
     outputs:
       html_url: ${{ steps.gh_release.outputs.html_url }}
     steps:
@@ -188,7 +183,7 @@ jobs:
         with:
           bodyFile: CHANGELOG.md
           tag: ${{ needs.publish.outputs.new_version }}
-          token: ${{ needs.user_info.outputs.gh_release_pat }}
+          token: ${{ github.token }}
 
   announce:
     runs-on: ubuntu-latest
