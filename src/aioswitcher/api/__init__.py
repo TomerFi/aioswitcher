@@ -135,17 +135,11 @@ class SwitcherApi:
         response = await self._reader.read(1024)
         return timestamp, SwitcherLoginResponse(response)
 
-    async def _get_full_state(self) -> Tuple[str, str, SwitcherStateResponse]:
+    async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
 
-        Will return extra information needed for other packets.
-
         Returns:
-            A tuple of the hex timestamp, session id and an instance of
-            ``SwitcherStateResponse``.
-
-        Note:
-            This is a private function, please use get_state instead.
+            An instance of ``SwitcherStateResponse``.
 
         """
         timestamp, login_resp = await self._login()
@@ -161,20 +155,10 @@ class SwitcherApi:
             try:
                 response = SwitcherStateResponse(state_resp)
                 if response.successful:
-                    return timestamp, login_resp.session_id, response
+                    return response
             except (KeyError, ValueError) as ve:
                 raise RuntimeError("get state request was not successful") from ve
         raise RuntimeError("login request was not successful")
-
-    async def get_state(self) -> SwitcherStateResponse:
-        """Use for sending the get state packet to the device.
-
-        Returns:
-            An instance of ``SwitcherStateResponse``.
-
-        """
-        _, _, state_response = await self._get_full_state()
-        return state_response
 
     async def control_device(
         self, command: Command, minutes: int = 0
@@ -189,14 +173,14 @@ class SwitcherApi:
             An instance of ``SwitcherBaseResponse``.
 
         """
-        timestamp, session_id, _ = await self._get_full_state()
+        timestamp, login_resp = await self._login()
         timer = (
             minutes_to_hexadecimal_seconds(minutes)
             if minutes > 0
             else packets.NO_TIMER_REQUESTED
         )
         packet = packets.SEND_CONTROL_PACKET.format(
-            session_id,
+            login_resp.session_id,
             timestamp,
             self._device_id,
             command.value,
@@ -220,10 +204,10 @@ class SwitcherApi:
             An instance of ``SwitcherBaseResponse``.
 
         """
-        timestamp, session_id, _ = await self._get_full_state()
+        timestamp, login_resp = await self._login()
         auto_shutdown = timedelta_to_hexadecimal_seconds(full_time)
         packet = packets.SET_AUTO_OFF_SET_PACKET.format(
-            session_id,
+            login_resp.session_id,
             timestamp,
             self._device_id,
             auto_shutdown,
@@ -245,10 +229,10 @@ class SwitcherApi:
             An instance of ``SwitcherBaseResponse``.
 
         """
-        timestamp, session_id, _ = await self._get_full_state()
+        timestamp, login_resp = await self._login()
         device_name = string_to_hexadecimale_device_name(name)
         packet = packets.UPDATE_DEVICE_NAME_PACKET.format(
-            session_id,
+            login_resp.session_id,
             timestamp,
             self._device_id,
             device_name,
@@ -267,9 +251,9 @@ class SwitcherApi:
             An instance of ``SwitcherGetSchedulesResponse``.
 
         """
-        timestamp, session_id, _ = await self._get_full_state()
+        timestamp, login_resp = await self._login()
         packet = packets.GET_SCHEDULES_PACKET.format(
-            session_id,
+            login_resp.session_id,
             timestamp,
             self._device_id,
         )
@@ -292,9 +276,9 @@ class SwitcherApi:
             An instance of ``SwitcherBaseResponse``.
 
         """
-        timestamp, session_id, _ = await self._get_full_state()
+        timestamp, login_resp = await self._login()
         packet = packets.DELETE_SCHEDULE_PACKET.format(
-            session_id, timestamp, self._device_id, schedule_id
+            login_resp.session_id, timestamp, self._device_id, schedule_id
         )
         signed_packet = sign_packet_with_crc_key(packet)
 
@@ -317,7 +301,7 @@ class SwitcherApi:
             An instance of ``SwitcherBaseResponse``.
 
         """
-        timestamp, session_id, _ = await self._get_full_state()
+        timestamp, login_resp = await self._login()
 
         start_time_hex = time_to_hexadecimal_timestamp(start_time)
         end_time_hex = time_to_hexadecimal_timestamp(end_time)
@@ -330,7 +314,7 @@ class SwitcherApi:
             weekdays, start_time_hex, end_time_hex
         )
         packet = packets.CREATE_SCHEDULE_PACKET.format(
-            session_id,
+            login_resp.session_id,
             timestamp,
             self._device_id,
             new_schedule,

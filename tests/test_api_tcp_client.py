@@ -84,28 +84,18 @@ async def test_login_function(reader_mock, writer_write, connected_api, resource
     assert_that(response[1].unparsed_response).is_equal_to(response_packet)
 
 
-async def test_get_full_state_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
-    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
-    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet]):
-        response = await connected_api._get_full_state()
-    assert_that(writer_write.call_count).is_equal_to(2)
-    assert_that(response[2]).is_instance_of(SwitcherStateResponse)
-    assert_that(response[2].unparsed_response).is_equal_to(get_state_response_packet)
-
-
-async def test_get_full_state_function_with_a_faulty_login_response_should_raise_error(reader_mock, writer_write, connected_api):
+async def test_get_state_function_with_a_faulty_login_response_should_raise_error(reader_mock, writer_write, connected_api):
     with raises(RuntimeError, match="login request was not successful"):
         with patch.object(reader_mock, "read", return_value=b''):
-            await connected_api._get_full_state()
+            await connected_api.get_state()
     writer_write.assert_called_once()
 
 
-async def test_get_full_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api, resource_path_root):
+async def test_get_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api, resource_path_root):
     login_response_packet = _load_packet(resource_path_root, "login_response")
     with raises(RuntimeError, match="get state request was not successful"):
         with patch.object(reader_mock, "read", side_effect=[login_response_packet, b'']):
-            await connected_api._get_full_state()
+            await connected_api.get_state()
     assert_that(writer_write.call_count).is_equal_to(2)
 
 
@@ -120,82 +110,81 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
 
 
 async def test_turn_on_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "turn_on_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "turn_on_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.control_device(Command.ON)
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
 async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "turn_on_with_timer_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "turn_on_with_timer_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.control_device(Command.ON, 15)
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
 async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "turn_off_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "turn_off_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.control_device(Command.OFF)
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
 async def test_set_name_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "set_name_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "set_name_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.set_device_name("my boiler")
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
 async def test_set_auto_shutdown_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "set_auto_shutdown_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "set_auto_shutdown_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.set_auto_shutdown(timedelta(hours=2, minutes=30))
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
 async def test_get_schedules_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "get_schedules_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "get_schedules_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.get_schedules()
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherGetSchedulesResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
 async def test_delete_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "delete_schedule_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "delete_schedule_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.delete_schedule("0")
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
 async def test_create_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "create_schedule_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    two_packets = _get_two_packets(resource_path_root, "create_schedule_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.create_schedule("18:00", "19:00")
-    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
-def _get_three_packets(resource_path_root, third_packet):
+def _get_two_packets(resource_path_root, second_packet):
     return [
         _load_packet(resource_path_root, "login_response"),
-        _load_packet(resource_path_root, "get_state_response"),
-        _load_packet(resource_path_root, third_packet),
+        _load_packet(resource_path_root, second_packet),
     ]
 
 
