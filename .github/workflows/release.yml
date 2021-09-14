@@ -108,8 +108,8 @@ jobs:
 
       - name: Configure git
         run: |
-          git config --global user.name ${{ needs.user_info.outputs.commiter_name }}
-          git config --global user.email ${{ needs.user_info.outputs.commiter_email }}
+          git config --global user.name "${{ needs.user_info.outputs.commiter_name }}"
+          git config --global user.email "${{ needs.user_info.outputs.commiter_email }}"
 
       - name: Set version info
         id: version
