@@ -44,12 +44,12 @@ jobs:
           echo "::set-output name=twitter_access_token_secret::$twitter_access_token_secret"
 
       - name: Validate user info
-        if: |
-          ${{ steps.set_info.outputs.pypi_token == '' ||
-              steps.set_info.outputs.twitter_api_key == '' ||
-              steps.set_info.outputs.twitter_api_secret_key == '' ||
-              steps.set_info.outputs.twitter_access_token == '' ||
-              steps.set_info.outputs.twitter_access_token_secret == ''}}
+        if: >
+          steps.set_info.outputs.pypi_token == '' ||
+          steps.set_info.outputs.twitter_api_key == '' ||
+          steps.set_info.outputs.twitter_api_secret_key == '' ||
+          steps.set_info.outputs.twitter_access_token == '' ||
+          steps.set_info.outputs.twitter_access_token_secret == ''
         uses: actions/github-script@v4.1.0
         with:
           script: core.setFailed('Missing user info')
