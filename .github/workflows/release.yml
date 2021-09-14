@@ -36,12 +36,16 @@ jobs:
             twitter_access_token=$(echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }})
             twitter_access_token_secret=$(echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }})
           fi
+          commiter_user=$(echo ${{ secrets.COMMITER_USER }})
+          commiter_email=$(echo ${{ secrets.COMMITER_EMAIL }})
 
           echo "::set-output name=pypi_token::$pypi_token"
           echo "::set-output name=twitter_api_key::$twitter_api_key"
           echo "::set-output name=twitter_api_secret_key::$twitter_api_secret_key"
           echo "::set-output name=twitter_access_token::$twitter_access_token"
           echo "::set-output name=twitter_access_token_secret::$twitter_access_token_secret"
+          echo "::set-output name=commiter_user::$commiter_user"
+          echo "::set-output name=commiter_email::$commiter_email"
 
       - name: Validate user info
         if: >
@@ -104,8 +108,8 @@ jobs:
 
       - name: Configure git
         run: |
-          git config --global user.name "${{ secrets.COMMITER_USER }}"
-          git config --global user.email "${{ secrets.COMMITER_EMAIL }}"
+          git config --global user.name ${{ needs.user_info.outputs.commiter_name }}
+          git config --global user.email ${{ needs.user_info.outputs.commiter_email }}
 
       - name: Set version info
         id: version
