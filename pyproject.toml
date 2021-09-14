@@ -40,7 +40,7 @@ toml = { version = "0.10.2", optional = true }
 [tool.poetry.dev-dependencies]
 assertpy = "^1.1"
 bandit = "^1.7.0"
-black = "^21.8b0"
+black = "^21.9b0"
 codecov = "^2.1.12"
 doc8 = "^0.9.0"
 flake8 = "^3.9.2"
