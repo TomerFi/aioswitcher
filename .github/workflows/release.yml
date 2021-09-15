@@ -63,6 +63,7 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     needs: [user_info]
+    environment: deployment
     name: Build and publish to PyPi
     outputs:
       new_version: ${{ steps.version.outputs.new_version  }}
