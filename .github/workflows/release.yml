@@ -19,6 +19,8 @@ jobs:
       twitter_api_secret_key: ${{ steps.set_info.outputs.twitter_api_secret_key }}
       twitter_access_token: ${{ steps.set_info.outputs.twitter_access_token }}
       twitter_access_token_secret: ${{ steps.set_info.outputs.twitter_access_token_secret }}
+      commiter_name: ${{ steps.set_info.outputs.commiter_name }}
+      commiter_email: ${{ steps.set_info.outputs.commiter_email }}
     steps:
       - name: Set user info
         id: set_info
@@ -60,7 +62,7 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-    needs: user_info
+    needs: [user_info]
     name: Build and publish to PyPi
     outputs:
       new_version: ${{ steps.version.outputs.new_version  }}
