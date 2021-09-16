@@ -5,69 +5,34 @@ name: Release
 on:
   workflow_dispatch:
 
-env:
-  MAIN_PY_VER: 3.9
-
 jobs:
-  user_info:
+  secrets_keys:
     runs-on: ubuntu-latest
-    environment: deployment
-    name: Collect user info
+    name: Determine secrets keys
     outputs:
-      pypi_token: ${{ steps.set_info.outputs.pypi_token }}
-      twitter_api_key: ${{ steps.set_info.outputs.twitter_api_key }}
-      twitter_api_secret_key: ${{ steps.set_info.outputs.twitter_api_secret_key }}
-      twitter_access_token: ${{ steps.set_info.outputs.twitter_access_token }}
-      twitter_access_token_secret: ${{ steps.set_info.outputs.twitter_access_token_secret }}
-      commiter_name: ${{ steps.set_info.outputs.commiter_name }}
-      commiter_email: ${{ steps.set_info.outputs.commiter_email }}
+      pypi_token: ${{ steps.output_keys.outputs.pypi_token }}
+      twitter_api_key: ${{ steps.output_keys.outputs.twitter_api_key }}
+      twitter_api_secret_key: ${{ steps.output_keys.outputs.twitter_api_secret_key }}
+      twitter_access_token: ${{ steps.output_keys.outputs.twitter_access_token }}
+      twitter_access_token_secret: ${{ steps.output_keys.outputs.twitter_access_token_secret }}
     steps:
-      - name: Set user info
-        id: set_info
+      - name: Save keys as output
+        id: output_keys
         run: |
-          if [ "${{ github.actor }}" = "TomerFi" ]; then
-            pypi_token=$(echo ${{ secrets.TOMERFI_PYPI_TOKEN }})
-            twitter_api_key=$(echo ${{ secrets.TOMERFI_TWITTER_API_KEY }})
-            twitter_api_secret_key=$(echo ${{ secrets.TOMERFI_TWITTER_API_SECRET_KEY }})
-            twitter_access_token=$(echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN }})
-            twitter_access_token_secret=$(echo ${{ secrets.TOMERFI_TWITTER_ACCESS_TOKEN_SECRET }})
-          elif [ "${{ github.actor }}" = "thecode" ]; then
-            pypi_token=$(echo ${{ secrets.THECODE_PYPI_TOKEN }})
-            twitter_api_key=$(echo ${{ secrets.THECODE_TWITTER_API_KEY }})
-            twitter_api_secret_key=$(echo ${{ secrets.THECODE_TWITTER_API_SECRET_KEY }})
-            twitter_access_token=$(echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN }})
-            twitter_access_token_secret=$(echo ${{ secrets.THECODE_TWITTER_ACCESS_TOKEN_SECRET }})
-          fi
-          commiter_name=$(echo ${{ secrets.COMMITER_NAME }})
-          commiter_email=$(echo ${{ secrets.COMMITER_EMAIL }})
+          actor=echo ${{ github.actor }} | tr [:lower:] [:upper:]
+          echo "::set-output name=pypi_token::$actor_PYPI_TOKEN"
+          echo "::set-output name=twitter_api_key::$actor_TWITTER_API_KEY"
+          echo "::set-output name=twitter_api_secret_key::$actor_TWITTER_API_SECRET_KEY"
+          echo "::set-output name=twitter_access_token::$actor_TWITTER_ACCESS_TOKEN"
+          echo "::set-output name=twitter_access_token_secret::$actor_TWITTER_ACCESS_TOKEN_SECRET""
 
-          echo "::set-output name=pypi_token::$pypi_token"
-          echo "::set-output name=twitter_api_key::$twitter_api_key"
-          echo "::set-output name=twitter_api_secret_key::$twitter_api_secret_key"
-          echo "::set-output name=twitter_access_token::$twitter_access_token"
-          echo "::set-output name=twitter_access_token_secret::$twitter_access_token_secret"
-          echo "::set-output name=commiter_name::$commiter_name"
-          echo "::set-output name=commiter_email::$commiter_email"
-
-      - name: Validate user info
-        if: >
-          steps.set_info.outputs.pypi_token == '' ||
-          steps.set_info.outputs.twitter_api_key == '' ||
-          steps.set_info.outputs.twitter_api_secret_key == '' ||
-          steps.set_info.outputs.twitter_access_token == '' ||
-          steps.set_info.outputs.twitter_access_token_secret == '' ||
-          steps.set_info.outputs.commiter_name == '' ||
-          steps.set_info.outputs.commiter_email == ''
-        uses: actions/github-script@v4.1.0
-        with:
-          script: core.setFailed('Missing user info')
-
-  publish:
+  release:
     runs-on: ubuntu-latest
-    needs: [user_info]
-    name: Build and publish to PyPi
-    outputs:
-      new_version: ${{ steps.version.outputs.new_version  }}
+    needs: [secrets_keys]
+    environment: deployment
+    name: Build, publish, release, and announce
+    env:
+      MAIN_PY_VER: 3.9
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2.3.4
@@ -97,49 +62,31 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v2.4.0
-        with:
-          node-version: 16
-
-      - name: Install global node modules
-        run: >
-          npm i -g
-          conventional-changelog-cli
-          conventional-changelog-conventionalcommits
-          conventional-recommended-bump
-          git-semver-tags
-
       - name: Configure git
         run: |
-          git config --global user.name "${{ needs.user_info.outputs.commiter_name }}"
-          git config --global user.email "${{ needs.user_info.outputs.commiter_email }}"
+          git config --global user.name "${{ secrets.COMMITER_NAME }}"
+          git config --global user.email "${{ secrets.COMMITER_EMAIL}}"
 
-      - name: Set version info
-        id: version
-        run: |
-          new_version=$(bash deploy/get_next_bump.sh)
-          next_iteration=$(bash deploy/get_next_dev_iteration.sh --tag $new_version)
-          echo "::set-output name=new_version::$new_version"
-          echo "::set-output name=next_iteration::$next_iteration"
+      - name: Determine version and create changelog
+        id: bumper
+        uses: tomerfi/version-bumper-action@1.0.0
+        with:
+          changelog: true
 
       - name: Set new project version
         uses: ciiiii/toml-editor@1.0.0
         with:
           file: pyproject.toml
           key: tool.poetry.version
-          value: ${{ steps.version.outputs.new_version }}
-
-      - name: Update poetry lock file
-        run: poetry update
+          value: ${{ steps.bumper.outputs.new_version }}
 
       - name: Commit, tag, and push
         run: |
-          git add pyproject.toml poetry.lock
-          git commit -m "build: bump version to ${{ steps.version.outputs.new_version }}"
+          git add pyproject.toml
+          git commit -m "build: bump version to ${{ steps.bumper.outputs.new_version }}"
           git push
-          git tag ${{ steps.version.outputs.new_version }} -m ${{ steps.version.outputs.new_version }}
-          git push origin ${{ steps.version.outputs.new_version }}
+          git tag ${{ steps.bumper.outputs.new_version }} -m ${{ steps.bumper.outputs.new_version }}
+          git push origin ${{ steps.bumper.outputs.new_version }}
 
       - name: Verify documenation site build
         run: |
@@ -149,68 +96,37 @@ jobs:
           poe sphinx_spelling
 
       - name: Publish build to PyPi
-        run: poetry publish --build -u __token__ -p ${{ needs.user_info.outputs.pypi_token }}
-
-      - name: Create CHANGELOG.md for sourcing the release notes
-        run: bash deploy/create_changelog.sh --tag ${{ steps.version.outputs.new_version }}
-
-      - name: Upload changelog artifact
-        uses: actions/upload-artifact@v2.2.4
-        with:
-          name: changelog
-          if-no-files-found: error
-          path: CHANGELOG.md
+        run: poetry publish --build -u __token__ -p ${{ secrets[needs.secrets_keys.outputs.pypi_token] }}
 
       - name: Set development project version
         uses: ciiiii/toml-editor@1.0.0
         with:
           file: pyproject.toml
           key: tool.poetry.version
-          value: ${{ steps.version.outputs.next_iteration }}
-
-      - name: Update poetry lock file
-        run: poetry update
+          value: ${{ steps.bumper.outputs.next_dev_iteration }}
 
       - name: Commit and push
         run: |
-          git add pyproject.toml poetry.lock
-          git commit -m "build: bump version to ${{ steps.version.outputs.next_iteration }}"
+          git add pyproject.toml
+          git commit -m "build: bump version to ${{ steps.bumper.outputs.next_dev_iteration }}"
           git push
-
-  release:
-    runs-on: ubuntu-latest
-    name: Release to GitHub
-    needs: [publish]
-    outputs:
-      html_url: ${{ steps.gh_release.outputs.html_url }}
-    steps:
-      - name: Download changelog artifact
-        uses: actions/download-artifact@v2
-        with:
-          name: changelog
 
       - name: Release to GitHub
         id: gh_release
         uses: ncipollo/release-action@v1.8.9
         with:
-          bodyFile: CHANGELOG.md
-          tag: ${{ needs.publish.outputs.new_version }}
-          token: ${{ github.token }}
+          bodyFile: changelog-${{ steps.bumper.outputs.new_version }}.md
+          tag: ${{ steps.bumper.outputs.new_version }}
 
-  announce:
-    runs-on: ubuntu-latest
-    name: Announce new release
-    needs: [user_info, publish, release]
-    steps:
       - name: Tweet new release
         uses: lazy-actions/tweet-action@1.0.1
         with:
-          oauth_consumer_key: ${{ needs.user_info.outputs.twitter_api_key }}
-          oauth_consumer_secret: ${{ needs.user_info.outputs.twitter_api_secret_key }}
-          oauth_token: ${{ needs.user_info.outputs.twitter_access_token }}
-          oauth_token_secret: ${{ needs.user_info.outputs.twitter_access_token_secret }}
+          oauth_consumer_key: ${{ secrets[needs.secrets_keys.outputs.twitter_api_key] }}
+          oauth_consumer_secret: ${{ secrets[needs.secrets_keys.outputs.twitter_api_secret_key] }}
+          oauth_token: ${{ secrets[needs.secrets_keys.outputs.twitter_access_token] }}
+          oauth_token_secret: ${{ secrets[needs.secrets_keys.outputs.twitter_access_token_secret] }}
           message: |
-            🚀🎉 Aioswitcher ${{ needs.publish.outputs.new_version  }} has been released! 🎉🚀
-            ${{ needs.release.outputs.html_url }}
+            🚀🎉 Aioswitcher ${{ steps.bumper.outputs.new_version  }} has been released! 🎉🚀
+            ${{ steps.gh_release.outputs.html_url }}
 
             #aioswitcher
