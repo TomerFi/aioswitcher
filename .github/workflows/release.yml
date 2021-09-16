@@ -24,7 +24,7 @@ jobs:
           echo "::set-output name=twitter_api_key::$actor_TWITTER_API_KEY"
           echo "::set-output name=twitter_api_secret_key::$actor_TWITTER_API_SECRET_KEY"
           echo "::set-output name=twitter_access_token::$actor_TWITTER_ACCESS_TOKEN"
-          echo "::set-output name=twitter_access_token_secret::$actor_TWITTER_ACCESS_TOKEN_SECRET""
+          echo "::set-output name=twitter_access_token_secret::$actor_TWITTER_ACCESS_TOKEN_SECRET"
 
   release:
     runs-on: ubuntu-latest
