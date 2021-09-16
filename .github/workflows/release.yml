@@ -1,9 +1,13 @@
-# yamllint disable rule:line-length
 ---
 name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      tweet:
+        description: "Tweet new release?"
+        required: false
+        default: "yes"
 
 jobs:
   secrets_keys:
@@ -20,11 +24,11 @@ jobs:
         id: output_keys
         run: |
           actor=$( echo ${{ github.actor }} | tr [:lower:] [:upper:])
-          echo "::set-output name=pypi_token::$actor_PYPI_TOKEN"
-          echo "::set-output name=twitter_api_key::$actor_TWITTER_API_KEY"
-          echo "::set-output name=twitter_api_secret_key::$actor_TWITTER_API_SECRET_KEY"
-          echo "::set-output name=twitter_access_token::$actor_TWITTER_ACCESS_TOKEN"
-          echo "::set-output name=twitter_access_token_secret::$actor_TWITTER_ACCESS_TOKEN_SECRET"
+          echo "::set-output name=pypi_token::$actor"_PYPI_TOKEN
+          echo "::set-output name=twitter_api_key::$actor"_TWITTER_API_KEY
+          echo "::set-output name=twitter_api_secret_key::$actor"_TWITTER_API_SECRET_KEY
+          echo "::set-output name=twitter_access_token::$actor"_TWITTER_ACCESS_TOKEN
+          echo "::set-output name=twitter_access_token_secret::$actor"_TWITTER_ACCESS_TOKEN_SECRET
 
   release:
     runs-on: ubuntu-latest
@@ -119,6 +123,7 @@ jobs:
           tag: ${{ steps.bumper.outputs.new_version }}
 
       - name: Tweet new release
+        if: ${{ github.event.inputs.tweet == 'yes' }}
         uses: lazy-actions/tweet-action@1.0.1
         with:
           oauth_consumer_key: ${{ secrets[needs.secrets_keys.outputs.twitter_api_key] }}
