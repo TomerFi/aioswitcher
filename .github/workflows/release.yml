@@ -19,7 +19,7 @@ jobs:
       - name: Save keys as output
         id: output_keys
         run: |
-          actor=echo ${{ github.actor }} | tr [:lower:] [:upper:]
+          actor=$( echo ${{ github.actor }} | tr [:lower:] [:upper:])
           echo "::set-output name=pypi_token::$actor_PYPI_TOKEN"
           echo "::set-output name=twitter_api_key::$actor_TWITTER_API_KEY"
           echo "::set-output name=twitter_api_secret_key::$actor_TWITTER_API_SECRET_KEY"
