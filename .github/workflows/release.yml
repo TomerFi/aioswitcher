@@ -103,7 +103,9 @@ jobs:
           poe sphinx_spelling
 
       - name: Publish build to PyPi
-        run: poetry publish --build -u __token__ -p ${{ secrets[needs.secrets_keys.outputs.pypi_token] }}
+        run: >
+          poetry publish --build -u __token__
+          -p ${{ secrets[needs.secrets_keys.outputs.pypi_token] }}
 
       - name: Set development project version
         uses: ciiiii/toml-editor@1.0.0
