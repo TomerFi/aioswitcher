@@ -7,9 +7,6 @@ on:
     branches:
       - dev
 
-env:
-  MAIN_PY_VER: 3.9
-
 jobs:
   pre-release:
     runs-on: ubuntu-latest
@@ -24,16 +21,16 @@ jobs:
         with:
           timezone: Asia/Jerusalem
 
-      - name: Setup Python
+      - name: Setup Python 3.9
         uses: actions/setup-python@v2.2.2
         with:
-          python-version: ${{ env.MAIN_PY_VER }}
+          python-version: 3.9
 
       - name: Cache pip repository
         uses: actions/cache@v2.1.6
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
       - name: Prepare python environment
         run: |
@@ -45,7 +42,7 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
 
       - name: Install, test with coverage report, and build
         run: |
