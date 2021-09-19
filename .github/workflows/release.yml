@@ -40,7 +40,7 @@ jobs:
         uses: actions/checkout@v2.3.4
         with:
           fetch-depth: 0
-          ssh-key: ${{ secrets.COMMITER_SSH_PRIVATE_KEY }}
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Setup Python 3.9
         uses: actions/setup-python@v2.2.2
@@ -67,13 +67,8 @@ jobs:
 
       - name: Configure git
         run: |
-          git config --global user.name "${{ secrets.COMMITER_NAME }}"
-          git config --global user.email "${{ secrets.COMMITER_EMAIL}}"
-
-      - name: Initiate an ssh agent
-        uses: webfactory/ssh-agent@v0.5.3
-        with:
-          ssh-private-key: ${{ secrets.COMMITER_SSH_PRIVATE_KEY }}
+          git config --global user.name "aioswitcher"
+          git config --global user.email "noreply@aioswitcher.tomfi.info"
 
       - name: Determine version and create changelog
         id: bumper
