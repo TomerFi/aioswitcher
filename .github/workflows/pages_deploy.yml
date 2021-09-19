@@ -2,36 +2,31 @@
 name: Pages Deploy
 
 on:
-  workflow_dispatch:
-  workflow_run:
-    workflows:
-      - Release
-    branches:
-      - dev
-    types:
-      - completed
-
-env:
-  MAIN_PY_VER: 3.9
+  release:
+    types: [published]
 
 jobs:
   deploy-pages:
     runs-on: ubuntu-latest
+    environment: github-pages
+    if: ${{ github.ref != 'refs/tags/early-access' }}
     name: Build documentation site and deploy to GH-Pages
     steps:
-      - name: Source checkout
+      - name: Checkout sources
         uses: actions/checkout@v2.3.4
+        with:
+          ref: ${{ github.ref }}
 
-      - name: Set up Python
+      - name: Setup Python 3.9
         uses: actions/setup-python@v2.2.2
         with:
-          python-version: ${{ env.MAIN_PY_VER }}
+          python-version: 3.9
 
       - name: Cache pip repository
         uses: actions/cache@v2.1.6
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
 
       - name: Prepare python environment
         run: |
@@ -43,7 +38,7 @@ jobs:
         uses: actions/cache@v2.1.6
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
 
       - name: Build documenation site
         run: |
