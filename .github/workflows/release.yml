@@ -72,7 +72,7 @@ jobs:
 
       - name: Determine version and create changelog
         id: bumper
-        uses: tomerfi/version-bumper-action@1.0.0
+        uses: tomerfi/version-bumper-action@1.0.1
         with:
           changelog: true
 
