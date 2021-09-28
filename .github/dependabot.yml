@@ -6,20 +6,19 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "dev"
     assignees:
       - "TomerFi"
     labels:
       - "type: dependencies"
     commit-message:
       prefix: "build"
+      prefix-development: "test"
       include: "scope"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "daily"
-    target-branch: "dev"
     assignees:
       - "TomerFi"
     labels:
