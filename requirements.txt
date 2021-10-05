@@ -1,2 +1,2 @@
 poethepoet==0.10.0
-poetry==1.1.10
+poetry==1.1.11
