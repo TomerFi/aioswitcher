@@ -15,7 +15,7 @@ jobs:
     name: Lint source files
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
 
       - name: Set up Python ${{ env.MAIN_PY_VER }}
         uses: actions/setup-python@v2.2.2
@@ -56,7 +56,7 @@ jobs:
     name: Lint documentation files
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
 
       - name: Lint markdown files
         uses: prologic/action-markdownlint@v0.3
@@ -82,7 +82,7 @@ jobs:
     name: Test project with Python ${{ matrix.python }}
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v1.1.1
@@ -136,7 +136,7 @@ jobs:
     needs: [test]
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.3.4
+        uses: actions/checkout@v2.3.5
 
       - name: Download coverage report from artifacts
         uses: actions/download-artifact@v2
