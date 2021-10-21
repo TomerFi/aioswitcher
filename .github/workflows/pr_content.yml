@@ -56,6 +56,6 @@ jobs:
           labels: ${{ steps.pr_size.outputs.new_label }}
 
       - name: Label if contains large files  # builtin label: "lfs-detected!"
-        uses: actionsdesk/lfs-warning@v2.0
+        uses: actionsdesk/lfs-warning@v3.0
         with:
           filesizelimit: '5242880'
