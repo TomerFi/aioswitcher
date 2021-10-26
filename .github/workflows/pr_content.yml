@@ -55,7 +55,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.new_label }}
 
-      - name: Label if contains large files  # builtin label: "lfs-detected!"
+      - name: Label if contains large files
         uses: actionsdesk/lfs-warning@v3.1
         with:
-          filesizelimit: '5242880'
+          labelName: "warn: lfs detected"
+          filesizelimit: "1mb"
