@@ -68,7 +68,7 @@
   description: "Pull request merged"
 
 # Warning lables
-- name: "lfs-detected!"  # can't modify name https://github.com/marketplace/actions/lfs-warning
+- name: "warn: lfs detected"
   color: "ff1493"
   description: "Warning Label for use when LFS is detected in the commits of a Pull Request"
 
