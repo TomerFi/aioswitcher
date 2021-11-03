@@ -12,7 +12,7 @@ jobs:
     name: Sync repository labels
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
 
       - name: Verify labels
         uses: crazy-max/ghaction-github-labeler@v3.1.1
