@@ -37,7 +37,7 @@ jobs:
     name: Build, publish, release, and announce
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
