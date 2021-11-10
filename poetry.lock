@@ -305,7 +305,7 @@ datarum = "0.3.0"
 
 [[package]]
 name = "isort"
-version = "5.10.0"
+version = "5.10.1"
 description = "A Python utility / library to sort Python imports."
 category = "dev"
 optional = false
@@ -938,7 +938,7 @@ docs = ["insegel", "sphinx", "sphinxcontrib-autoprogram", "sphinxcontrib-spellin
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8.0"
-content-hash = "794ed1875c4c2d00f80b41b6a390c26fb448ba1186689b691f0da8c3e780c26c"
+content-hash = "9aa57b4868e6a0a88c05f89997bfe0294e31e4d469304bca07098e03b308a1a9"
 
 [metadata.files]
 aiohttp = [
@@ -1135,8 +1135,8 @@ insegel = [
     {file = "insegel-1.2.0.tar.gz", hash = "sha256:d736d0ef5b8b0d784d2b97104ff2f054d6396c8dd3d725054fa30e2df3e030b3"},
 ]
 isort = [
-    {file = "isort-5.10.0-py3-none-any.whl", hash = "sha256:1a18ccace2ed8910bd9458b74a3ecbafd7b2f581301b0ab65cfdd4338272d76f"},
-    {file = "isort-5.10.0.tar.gz", hash = "sha256:e52ff6d38012b131628cf0f26c51e7bd3a7c81592eefe3ac71411e692f1b9345"},
+    {file = "isort-5.10.1-py3-none-any.whl", hash = "sha256:6f62d78e2f89b4500b080fe3a81690850cd254227f27f75c3a0c491a1f351ba7"},
+    {file = "isort-5.10.1.tar.gz", hash = "sha256:e8443a5e7a020e9d7f97f1d7d9cd17c88bcb3bc7e218bf9cf5095fe550be2951"},
 ]
 jinja2 = [
     {file = "Jinja2-3.0.1-py3-none-any.whl", hash = "sha256:1f06f2da51e7b56b8f238affdd6b4e2c61e39598a378cc49345bc1bd42a978a4"},
