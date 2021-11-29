@@ -80,9 +80,7 @@ Thanks goes to these wonderful people ([emoji key][1]):
 [8]: https://aioswitcher.tomfi.info/
 [11]: https://pypi.org/project/aioswitcher
 [12]: https://www.switcher.co.il/
-[13]: https://github.com/NightRang3r
 [14]: https://github.com/NightRang3r/Switcher-V2-Python
-[15]: https://github.com/thecode
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml/badge.svg
