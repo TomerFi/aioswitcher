@@ -39,6 +39,17 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "dmatik",
+      "name": "dmatik",
+      "avatar_url": "https://avatars.githubusercontent.com/u/5577386?v=4",
+      "profile": "https://github.com/dmatik",
+      "contributions": [
+        "blog",
+        "ideas",
+        "userTesting"
+      ]
     }
   ]
 }
