@@ -42,18 +42,22 @@ The contributing guidelines are [here](.github/CONTRIBUTING.md)
 
 The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 
-## Thanks
-
-- Preliminary work done by [Shai][13] and Aviad in [Switcher-V2-Python][14].
-- Research and help for advancing and adding features by [Shay][15].
-- Cooperation and general support by the people at [Switcher][12].
-
 ## Disclaimer
 
-This is **NOT** an official module and it is **NOT** officially supported by the vendor.
+This is **NOT** an official module and it is **NOT** officially supported by the vendor.</br>
+That said, thanks are in order to all the people at [Switcher][12] for their cooperation and general support.
+
+## Contributors
+
+Thanks goes to these wonderful people ([emoji key][1]):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher/wiki
+[1]: https://allcontributors.org/docs/en/emoji-key
 [2]: https://github.com/TomerFi/aioswitcher/releases
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [4]: https://github.com/TomerFi/aioswitcher
