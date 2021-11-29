@@ -118,7 +118,7 @@ jobs:
 
       - name: Release to GitHub
         id: gh_release
-        uses: ncipollo/release-action@v1.8.10
+        uses: ncipollo/release-action@v1.9.0
         with:
           bodyFile: changelog-${{ steps.bumper.outputs.new_version }}.md
           tag: ${{ steps.bumper.outputs.new_version }}
