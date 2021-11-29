@@ -8,10 +8,10 @@ on:
     types: [opened]
 
 jobs:
-  triage-non-dependabot:
+  triage-non-bots:
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]'
-    name: Triage non dependabot
+    if: github.actor != 'dependabot[bot]' && github.actor != 'allcontributors[bot]'
+    name: Triage non bots
     steps:
       - name: Set reviewers and assign author
         uses: kentaro-m/auto-assign-action@v1.2.1
@@ -24,10 +24,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs review"
 
-  triage-by-dependabot:
+  triage-by-bots:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
-    name: Triage by dependabot
+    if: github.actor == 'dependabot[bot]' || github.actor == 'allcontributors[bot]'
+    name: Triage by bots
     steps:
       - name: Auto approve
         uses: hmarr/auto-approve-action@v2.1.0
