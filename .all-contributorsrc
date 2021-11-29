@@ -1,0 +1,14 @@
+{
+  "projectName": "aioswitcher",
+  "projectOwner": "TomerFi",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "contributorsPerLine": 7,
+  "contributorsSortAlphabetically": true,
+  "skipCi": true,
+  "contributors": []
+}
