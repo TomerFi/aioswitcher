@@ -119,3 +119,8 @@
 - name: "scope: docs"
   color: "bfe5bf"
   description: "Modify documentation"
+
+# Various labels
+- name: "help wanted"
+  color: "12ba0c"
+  description: "Contributing help wanted"
