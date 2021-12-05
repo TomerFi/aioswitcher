@@ -86,7 +86,7 @@ jobs:
       - name: Commit, tag, and push
         run: |
           git add pyproject.toml
-          git commit -m "build: bump version to ${{ steps.bumper.outputs.new_version }}"
+          git commit -m "build: bump version to ${{ steps.bumper.outputs.new_version }} [skip ci]"
           git push
           git tag ${{ steps.bumper.outputs.new_version }} -m ${{ steps.bumper.outputs.new_version }}
           git push origin ${{ steps.bumper.outputs.new_version }}
@@ -113,7 +113,7 @@ jobs:
       - name: Commit and push
         run: |
           git add pyproject.toml
-          git commit -m "build: bump version to ${{ steps.bumper.outputs.next_dev_iteration }}"
+          git commit -m "build: bump version to ${{ steps.bumper.outputs.next_dev_iteration }} [skip ci]"
           git push
 
       - name: Release to GitHub
