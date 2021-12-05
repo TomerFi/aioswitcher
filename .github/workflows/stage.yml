@@ -1,5 +1,5 @@
 ---
-name: Pre-release
+name: Stage
 
 on:
   workflow_dispatch:
@@ -8,10 +8,10 @@ on:
       - dev
 
 jobs:
-  pre-release:
+  stage:
     runs-on: ubuntu-latest
     environment: staging
-    name: Build and test pre-release
+    name: Build and release early-access
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2.4.0

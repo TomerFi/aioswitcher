@@ -76,14 +76,14 @@ Thanks goes to these wonderful people ([emoji key][1]):
 [2]: https://github.com/TomerFi/aioswitcher/releases
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [4]: https://github.com/TomerFi/aioswitcher
-[7]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml
+[7]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml
 [8]: https://aioswitcher.tomfi.info/
 [11]: https://pypi.org/project/aioswitcher
 [12]: https://www.switcher.co.il/
 [14]: https://github.com/NightRang3r/Switcher-V2-Python
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
-[gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pre_release.yml/badge.svg
+[gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml/badge.svg
 [gh-pages-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pages_deploy.yml/badge.svg
 [license-badge]: https://img.shields.io/github/license/tomerfi/aioswitcher
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi&color=1082C2
