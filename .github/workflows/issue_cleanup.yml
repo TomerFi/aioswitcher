@@ -13,9 +13,8 @@ jobs:
       - name: Lock closed issues
         uses: dessant/lock-threads@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          issue-lock-inactive-days: 0
-          issue-lock-comment: >
+          issue-inactive-days: 0
+          issue-comment: >
             Locking this issue.
             [Open a new issue](https://github.com/TomerFi/aioswitcher/issues/new/choose).
           process-only: issues
