@@ -111,10 +111,12 @@ jobs:
           value: ${{ steps.bumper.outputs.next_dev_iteration }}
 
       - name: Commit and push
+        # yamllint disable rule:line-length
         run: |
           git add pyproject.toml
           git commit -m "build: bump version to ${{ steps.bumper.outputs.next_dev_iteration }} [skip ci]"
           git push
+        # yamllint enable rule:line-length
 
       - name: Release to GitHub
         id: gh_release
