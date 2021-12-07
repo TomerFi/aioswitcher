@@ -6,6 +6,9 @@ on:
       - dev
     types: [opened, edited, synchronize]
 
+permissions:
+  pull-requests: write
+
 jobs:
   label-by-content:
     runs-on: ubuntu-latest
@@ -13,6 +16,8 @@ jobs:
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ github.head_ref }
 
       - name: Label scope by content
         uses: actions/labeler@v3

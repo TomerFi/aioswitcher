@@ -6,6 +6,9 @@ on:
     branches:
       - dev
 
+permissions:
+  pull-requests: read
+
 env:
   MAIN_PY_VER: 3.9
 
@@ -16,6 +19,8 @@ jobs:
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Set up Python ${{ env.MAIN_PY_VER }}
         uses: actions/setup-python@v2.3.1
@@ -54,9 +59,13 @@ jobs:
   lint-docs:
     runs-on: ubuntu-latest
     name: Lint documentation files
+    permissions:
+      pull-requests: write
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ github.head_ref }
 
       - name: Lint markdown files
         uses: prologic/action-markdownlint@v0.3
@@ -83,6 +92,8 @@ jobs:
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
+        with:
+          ref: ${{ github.head_ref }
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v1.1.2
@@ -135,9 +146,6 @@ jobs:
     name: Push coverage report to CodeCov
     needs: [test]
     steps:
-      - name: Source checkout
-        uses: actions/checkout@v2.4.0
-
       - name: Download coverage report from artifacts
         uses: actions/download-artifact@v2
         with:
