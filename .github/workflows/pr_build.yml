@@ -65,7 +65,7 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
         with:
-          ref: ${{ github.head_ref }
+          ref: ${{ github.head_ref }}
 
       - name: Lint markdown files
         uses: prologic/action-markdownlint@v0.3
