@@ -93,7 +93,7 @@ jobs:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
         with:
-          ref: ${{ github.head_ref }
+          ref: ${{ github.head_ref }}
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v1.1.2
