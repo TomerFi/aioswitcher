@@ -145,7 +145,7 @@ jobs:
   report:
     runs-on: ubuntu-latest
     needs: [test]
-    name: Push coverage report to CodeCov
+    name: Publish tests and coverage reports
     permissions:
       checks: write
       issues: write
@@ -163,8 +163,6 @@ jobs:
         with:
           test_changes_limit: 0
           files: reports/junit.xml
-          commit: ${{ github.head_ref }}
-          pull_request_build: commit
 
       - name: Push to CodeCov
         uses: codecov/codecov-action@v2.1.0
