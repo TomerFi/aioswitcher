@@ -148,6 +148,8 @@ jobs:
     name: Push coverage report to CodeCov
     permissions:
       checks: write
+      issues: write
+      pull-requests: write
     steps:
       - name: Download coverage report from artifacts
         uses: actions/download-artifact@v2
@@ -161,6 +163,8 @@ jobs:
         with:
           test_changes_limit: 0
           files: reports/junit.xml
+          commit: ${{ github.head_ref }}
+          pull_request_build: commit
 
       - name: Push to CodeCov
         uses: codecov/codecov-action@v2.1.0
