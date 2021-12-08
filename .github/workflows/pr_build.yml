@@ -6,9 +6,6 @@ on:
     branches:
       - dev
 
-permissions:
-  pull-requests: read
-
 env:
   MAIN_PY_VER: 3.9
 
@@ -16,6 +13,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     name: Lint source files
+    permissions:
+      pull-requests: read
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
@@ -89,6 +88,8 @@ jobs:
       matrix:
         python: [3.8, 3.9]
     name: Test project with Python ${{ matrix.python }}
+    permissions:
+      pull-requests: read
     steps:
       - name: Source checkout
         uses: actions/checkout@v2.4.0
@@ -143,8 +144,10 @@ jobs:
 
   report:
     runs-on: ubuntu-latest
-    name: Push coverage report to CodeCov
     needs: [test]
+    name: Push coverage report to CodeCov
+    permissions:
+      checks: write
     steps:
       - name: Download coverage report from artifacts
         uses: actions/download-artifact@v2
