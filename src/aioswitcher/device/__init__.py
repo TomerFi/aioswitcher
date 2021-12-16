@@ -45,9 +45,9 @@ class DeviceType(Enum):
     ) -> "DeviceType":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
-        new_enum._value = value
-        new_enum._hex_rep = hex_rep
-        new_enum._category = category
+        new_enum._value = value  # type: ignore
+        new_enum._hex_rep = hex_rep  # type: ignore
+        new_enum._category = category  # type: ignore
         return new_enum
 
     @property
@@ -76,8 +76,8 @@ class DeviceState(Enum):
     def __new__(cls, value: str, display: str) -> "DeviceState":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
-        new_enum._value = value
-        new_enum._display = display
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
         return new_enum
 
     @property

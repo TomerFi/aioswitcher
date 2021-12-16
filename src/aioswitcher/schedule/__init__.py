@@ -41,9 +41,9 @@ class Days(Enum):
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
         new_enum._value_ = value
-        new_enum._hex_rep = hex_rep
-        new_enum._bit_rep = bit_rep
-        new_enum._weekday = weekday
+        new_enum._hex_rep = hex_rep  # type: ignore
+        new_enum._bit_rep = bit_rep  # type: ignore
+        new_enum._weekday = weekday  # type: ignore
         return new_enum
 
     @property
