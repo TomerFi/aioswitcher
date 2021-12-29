@@ -74,7 +74,7 @@ jobs:
           level: error
 
       - name: Check for spelling mistakes
-        uses: reviewdog/action-misspell@v1.9
+        uses: reviewdog/action-misspell@v1.10
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           locale: "US"
