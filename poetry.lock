@@ -938,8 +938,8 @@ docs = ["insegel", "sphinx", "sphinxcontrib-autoprogram", "sphinxcontrib-spellin
 
 [metadata]
 lock-version = "1.1"
-  python-versions = "^3.8.0"
-content-hash = "1c3e08859f80337cd36ecdd3ca7acc3e4d208c53f8de1680733a0f27ee6f28b7"
+  python-versions = "^3.9.0"
+content-hash = "fa6febd41747beb3703550ba0daed555dcff8995b69844c3f7f7c947238d5d5f"
 
 [metadata.files]
 aiohttp = [
