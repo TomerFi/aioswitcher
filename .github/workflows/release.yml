@@ -42,10 +42,10 @@ jobs:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Setup Python 3.9
+      - name: Setup Python 3.10
         uses: actions/setup-python@v2.3.1
         with:
-          python-version: 3.9
+          python-version: 3.10
 
       - name: Cache pip repository
         uses: actions/cache@v2.1.7
