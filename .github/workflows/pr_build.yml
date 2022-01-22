@@ -7,7 +7,7 @@ on:
       - dev
 
 env:
-  MAIN_PY_VER: 3.10
+  MAIN_PY_VER: "3.10"
 
 jobs:
   lint:
@@ -86,7 +86,7 @@ jobs:
     needs: [lint, lint-docs]
     strategy:
       matrix:
-        python: [3.9, 3.10]
+        python: ["3.9", "3.10"]
     name: Test project with Python ${{ matrix.python }}
     permissions:
       pull-requests: read
