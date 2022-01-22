@@ -147,7 +147,7 @@ class SwitcherTimedBase(ABC):
 
     @property
     def auto_off_set(self) -> str:
-        """Fix for backward compability issues with home assistant."""
+        """Fix for backward compatibility issues with home assistant."""
         return self.auto_shutdown
 
 

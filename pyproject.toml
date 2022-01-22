@@ -30,7 +30,7 @@ exclude = [
 ]
 
   [tool.poetry.dependencies]
-  python = "^3.8.0"
+  python = "^3.9.0"
 
     [tool.poetry.dependencies.insegel]
     version = "1.2.0"
