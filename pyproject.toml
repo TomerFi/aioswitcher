@@ -4,6 +4,7 @@ version = "2.0.8.dev"
 description = "Switcher Python Integration."
 license = "Apache-2.0"
 authors = [ "Tomer Figenblat <tomer.figenblat@gmail.com>" ]
+maintainers = [ "Shay Levy" ]
 readme = "README.md"
 homepage = "https://pypi.org/project/aioswitcher/"
 repository = "https://github.com/tomerfi/aioswitcher"
