@@ -32,7 +32,7 @@ Check out the [documentation][8] for a more detailed usage section.
 
 - [discover_devices.py](scripts/discover_devices.py) can discover devices and their
   states.
-- [control_device.py](scripts/control_device.py) can to control a device.
+- [control_device.py](scripts/control_device.py) can control a device.
 
 ## Contributing
 
