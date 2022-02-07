@@ -22,7 +22,7 @@ jobs:
           ref: ${{ github.head_ref }}
 
       - name: Set up Python ${{ env.MAIN_PY_VER }}
-        uses: actions/setup-python@v2.3.1
+        uses: actions/setup-python@v2.3.2
         with:
           python-version: ${{ env.MAIN_PY_VER }}
 
@@ -102,7 +102,7 @@ jobs:
           timezone: Asia/Jerusalem
 
       - name: Set up Python
-        uses: actions/setup-python@v2.3.1
+        uses: actions/setup-python@v2.3.2
         with:
           python-version: ${{ matrix.python }}
 
