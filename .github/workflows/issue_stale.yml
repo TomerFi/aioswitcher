@@ -3,7 +3,7 @@ name: Issue stale
 
 on:
   schedule:
-    - cron: "0 */3 * * *"
+    - cron: "0 10 * * *"
 
 jobs:
   check-stale:
