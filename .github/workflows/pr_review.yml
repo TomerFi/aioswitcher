@@ -3,8 +3,6 @@ name: Pull request review
 
 on:
   pull_request_review:
-    branches:
-      - dev
     types: [submitted, edited]
 
 jobs:
@@ -16,14 +14,12 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1.3.0
         continue-on-error: true
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs triage"
 
       - name: Remove review label
         uses: actions-ecosystem/action-remove-labels@v1.3.0
         continue-on-error: true
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs review"
 
   handle-approved:
@@ -35,13 +31,11 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1.3.0
         continue-on-error: true
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: changes requested"
 
       - name: Add approved label
         uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: approved"
 
   handle-change-requested:
@@ -53,11 +47,9 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1.3.0
         continue-on-error: true
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: approved"
 
       - name: Add changes requested label
         uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: changes requested"

@@ -16,21 +16,18 @@ jobs:
         uses: actions-ecosystem/action-remove-labels@v1.3.0
         continue-on-error: true
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs triage"
 
       - name: Remove review label
         uses: actions-ecosystem/action-remove-labels@v1.3.0
         continue-on-error: true
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: needs review"
 
       - name: Add merged label if merged
         if: github.event.pull_request.merged == true
         uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: "status: merged"
 
   handle-pr:

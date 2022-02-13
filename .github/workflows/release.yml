@@ -7,7 +7,7 @@ on:
       tweet:
         description: "Tweet new release?"
         required: false
-        default: "yes"
+        default: "no"
 
 jobs:
   secrets_keys:

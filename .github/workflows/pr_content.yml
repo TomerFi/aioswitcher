@@ -51,13 +51,11 @@ jobs:
       - name: Remove stale size labels
         uses: actions-ecosystem/action-remove-labels@v1.3.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.stale_labels }}
 
       - name: Add size label
         uses: actions-ecosystem/action-add-labels@v1.1.3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           labels: ${{ steps.pr_size.outputs.new_label }}
 
       - name: Label if contains large files
