@@ -11,7 +11,7 @@ jobs:
   stage:
     runs-on: ubuntu-latest
     environment: staging
-    name: Build and release early-access
+    name: Stage project
     steps:
       - name: Checkout sources
         uses: actions/checkout@v2.4.0
@@ -49,16 +49,6 @@ jobs:
           poe install_all
           poe test_rep
           poe build
-
-      - name: Create release
-        uses: marvinpinto/action-automatic-releases@v1.2.1
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: early-access
-          title: early-access
-          files: |
-            dist/*.tar.gz
-            dist/*.whl
 
       - name: Push to CodeCov
         uses: codecov/codecov-action@v2.1.0
