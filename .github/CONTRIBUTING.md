@@ -50,11 +50,19 @@ To get you going, here are some poe scripts I use constantly while working on *a
 - ```poe sphinx_spelling```
 - ```poe sphinx_build```
 
+## Commit messages
+
+Commit messages must:
+
+- adhere the [Conventional Commits Specification][0]
+- be signed-off based on the [Developer Certificate of Origin][1]
+
 ## Code of Conduct
 
 Please check the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
 <!-- Real Links -->
 [0]: https://conventionalcommits.org
+[1]: https://developercertificate.org
 <!-- Badges Links -->
 [conventional-commits]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
