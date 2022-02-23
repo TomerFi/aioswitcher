@@ -158,7 +158,7 @@ jobs:
           path: reports
 
       - name: Report test summary
-        uses: EnricoMi/publish-unit-test-result-action@v1.28
+        uses: EnricoMi/publish-unit-test-result-action@v1.29
         if: always()
         with:
           test_changes_limit: 0
