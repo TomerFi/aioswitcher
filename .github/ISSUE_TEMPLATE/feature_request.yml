@@ -11,7 +11,7 @@ body:
   - type: textarea
     id: feature-idea
     attributes:
-      label: What did you had in mind?
+      label: What did you have in mind?
     validations:
       required: true
 
