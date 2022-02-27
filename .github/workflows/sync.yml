@@ -17,4 +17,4 @@ jobs:
       - name: Verify labels
         uses: crazy-max/ghaction-github-labeler@v3.1.1
         with:
-          yaml-file: ".github/configs/synced_labels.yml"
+          yaml-file: ".github/synced_labels.yml"
