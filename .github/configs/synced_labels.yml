@@ -106,20 +106,6 @@
   color: "0e8a16"
   description: "Priority is low"
 
-# Project specific scope labels
-- name: "scope: project"
-  color: "bfe5bf"
-  description: "Modify root"
-- name: "scope: tests"
-  color: "bfe5bf"
-  description: "Modify test sources"
-- name: "scope: ci"
-  color: "bfe5bf"
-  description: "Modify ci configuration"
-- name: "scope: docs"
-  color: "bfe5bf"
-  description: "Modify documentation"
-
 # Various labels
 - name: "help wanted"
   color: "12ba0c"

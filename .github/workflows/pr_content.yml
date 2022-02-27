@@ -19,13 +19,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Label scope by content
-        uses: actions/labeler@v3
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          configuration-path: ".github/configs/content_labels.yml"
-          sync-labels: true
-
       - name: Label if conflicts found
         uses: mschilde/auto-label-merge-conflicts@v2.0
         with:
