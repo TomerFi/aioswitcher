@@ -10,6 +10,18 @@ env:
   MAIN_PY_VER: "3.10"
 
 jobs:
+  triage:
+    runs-on: ubuntu-latest
+    name: Pull request triage
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Auto approve
+        if: github.actor == 'dependabot[bot]' || github.actor == 'allcontributors[bot]'
+        uses: hmarr/auto-approve-action@v2.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
   label:
     runs-on: ubuntu-latest
     name: Label pull request
