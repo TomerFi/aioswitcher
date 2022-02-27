@@ -32,32 +32,6 @@ jobs:
           CONFLICT_LABEL_NAME: "status: has conflicts"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get pull request size
-        uses: actions-ecosystem/action-size@v2.2.0
-        id: pr_size
-        with:
-          size_xs_label: "size: xs"
-          size_s_threshold: 10
-          size_s_label: "size: s"
-          size_m_threshold: 30
-          size_m_label: "size: m"
-          size_l_threshold: 100
-          size_l_label: "size: l"
-          size_xl_threshold: 500
-          size_xl_label: "size: xl"
-          size_xxl_threshold: 1000
-          size_xxl_label: "size: xxl"
-
-      - name: Remove stale size labels
-        uses: actions-ecosystem/action-remove-labels@v1.3.0
-        with:
-          labels: ${{ steps.pr_size.outputs.stale_labels }}
-
-      - name: Add size label
-        uses: actions-ecosystem/action-add-labels@v1.1.3
-        with:
-          labels: ${{ steps.pr_size.outputs.new_label }}
-
       - name: Label if contains large files
         uses: actionsdesk/lfs-warning@v3.1
         with:
