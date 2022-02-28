@@ -1,4 +1,5 @@
 # https://github.com/marketplace/trafico-pull-request-labeler/
+---
 addWipLabel: true
 labels:
   wip:

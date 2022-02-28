@@ -1,4 +1,5 @@
 # https://github.com/marketplace/pull-request-size
+---
 XS:
   name: "size: xs"
   lines: 0
