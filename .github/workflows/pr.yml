@@ -29,7 +29,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: Label if conflicts found
         uses: mschilde/auto-label-merge-conflicts@v2.0
@@ -50,7 +50,7 @@ jobs:
       pull-requests: read
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: Set up Python ${{ env.MAIN_PY_VER }}
         uses: actions/setup-python@v3
@@ -93,7 +93,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: Lint markdown files
         uses: prologic/action-markdownlint@v0.3
@@ -121,7 +121,7 @@ jobs:
       pull-requests: read
     steps:
       - name: Source checkout
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v1.1.2

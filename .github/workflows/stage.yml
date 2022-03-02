@@ -14,7 +14,7 @@ jobs:
     name: Stage project
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v1.1.2
