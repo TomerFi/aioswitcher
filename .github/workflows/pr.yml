@@ -149,7 +149,7 @@ jobs:
 
       - name: Push coverage report as artifact
         if: ${{ matrix.python == env.MAIN_PY_VER }}
-        uses: actions/upload-artifact@v2.3.1
+        uses: actions/upload-artifact@v3
         with:
           name: reports
           if-no-files-found: error
