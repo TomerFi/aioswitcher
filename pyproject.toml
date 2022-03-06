@@ -55,7 +55,7 @@ exclude = [
 
   [tool.poetry.dev-dependencies]
   assertpy = "^1.1"
-  bandit = "^1.7.3"
+  bandit = "^1.7.4"
   black = "^22.1"
   codecov = "^2.1.12"
   doc8 = "^0.10.1"
