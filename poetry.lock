@@ -88,7 +88,7 @@ pytz = ">=2015.7"
 
 [[package]]
 name = "bandit"
-version = "1.7.3"
+version = "1.7.4"
 description = "Security oriented static analyser for python code."
 category = "dev"
 optional = false
@@ -940,7 +940,7 @@ docs = ["insegel", "sphinx", "sphinxcontrib-autoprogram", "sphinxcontrib-spellin
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9.0"
-content-hash = "93591a9787ec63de20e296f257decad36a5c3a86a97c57f6c8ab37cec0dde9f4"
+content-hash = "ca081acd957177972fde64b60a146859d13f8dcedef38bdd1f4385bfc2136b8c"
 
 [metadata.files]
 aiohttp = [
@@ -1045,8 +1045,8 @@ babel = [
     {file = "Babel-2.9.1.tar.gz", hash = "sha256:bc0c176f9f6a994582230df350aa6e05ba2ebe4b3ac317eab29d9be5d2768da0"},
 ]
 bandit = [
-    {file = "bandit-1.7.3-py3-none-any.whl", hash = "sha256:3ce9b4e6a4f7f41aa966c9543e635dd35e52a793a47e746f0c55c7ecfc69d7e8"},
-    {file = "bandit-1.7.3.tar.gz", hash = "sha256:58772ca951bf1129dda8a280d351547de832720bf7b5c29fac3103927980b8a6"},
+    {file = "bandit-1.7.4-py3-none-any.whl", hash = "sha256:412d3f259dab4077d0e7f0c11f50f650cc7d10db905d98f6520a95a18049658a"},
+    {file = "bandit-1.7.4.tar.gz", hash = "sha256:2d63a8c573417bae338962d4b9b06fbc6080f74ecd955a092849e1e65c717bd2"},
 ]
 black = [
     {file = "black-22.1.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:1297c63b9e1b96a3d0da2d85d11cd9bf8664251fd69ddac068b98dc4f34f73b6"},
