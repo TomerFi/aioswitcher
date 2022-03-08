@@ -1,0 +1,31 @@
+# https://github.com/marketplace/trafico-pull-request-labeler/
+---
+addWipLabel: true
+labels:
+  wip:
+    name: "type: wip"
+    color: "#fbca04"
+    description: "Still work-in-progress, please don't review and don't merge"
+    ignore: false
+  unreviewed:
+    name: "status: needs review"
+    color: "#334796"
+    description: "Pull Request is not reviewed yet"
+    ignore: false
+  approved:
+    name: "status: approved"
+    color: "#0e8a16"
+    description: "Pull Request has been approved and can be merged"
+    ignore: false
+  changesRequested:
+    name: "status: changes requested"
+    color: "#aa2626"
+    description: "Pull Request needs changes before it can be reviewed again"
+    ignore: false
+  merged:
+    name: "status: merged"
+    color: "#6f42c1"
+    description: "Pull Request has been merged successfully"
+    ignore: false
+  needsMoreApprovals:
+    ignore: true
