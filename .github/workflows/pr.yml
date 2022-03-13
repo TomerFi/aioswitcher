@@ -106,7 +106,8 @@ jobs:
         python: ["3.9", "3.10"]
     name: Test project with Python ${{ matrix.python }}
     permissions:
-      pull-requests: read
+      checks: write
+      pull-requests: write
     steps:
       - name: Source checkout
         uses: actions/checkout@v3
@@ -147,40 +148,16 @@ jobs:
           if [ ${{ matrix.python }} == ${{ env.MAIN_PY_VER }} ]; then poe test_rep;
           else poe test; fi
 
-      - name: Push coverage report as artifact
-        if: ${{ matrix.python == env.MAIN_PY_VER }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: reports
-          if-no-files-found: error
-          path: |
-            ./coverage.xml
-            ./junit.xml
-
-  report:
-    runs-on: ubuntu-latest
-    needs: [test]
-    name: Publish tests and coverage reports
-    permissions:
-      checks: write
-      issues: write
-      pull-requests: write
-    steps:
-      - name: Download coverage report from artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: reports
-          path: reports
-
       - name: Report test summary
         uses: EnricoMi/publish-unit-test-result-action@v1.31
-        if: always()
+        if: ${{ matrix.python == env.MAIN_PY_VER && always() }}
         with:
           test_changes_limit: 0
-          files: reports/junit.xml
+          files: ./junit.xml
+          report_individual_runs: true
 
       - name: Push to CodeCov
         uses: codecov/codecov-action@v2.1.0
+        if: ${{ matrix.python == env.MAIN_PY_VER }}
         with:
-          files: reports/coverage.xml
-          fail_ci_if_error: true
+          files: ./coverage.xml
