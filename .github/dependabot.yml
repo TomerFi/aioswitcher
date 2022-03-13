@@ -11,6 +11,9 @@ updates:
     commit-message:
       prefix: "build"
       include: "scope"
+    assignees:
+      - "tomerfi"
+      - "thecode"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -21,3 +24,6 @@ updates:
     commit-message:
       prefix: "ci"
       include: "scope"
+    assignees:
+      - "tomerfi"
+      - "thecode"
