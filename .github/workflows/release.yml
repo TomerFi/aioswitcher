@@ -50,7 +50,7 @@ jobs:
           python-version: "3.10"
 
       - name: Cache pip repository
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
@@ -62,7 +62,7 @@ jobs:
           poetry config virtualenvs.in-project true
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}

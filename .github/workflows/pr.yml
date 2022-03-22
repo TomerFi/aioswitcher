@@ -46,7 +46,7 @@ jobs:
           python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
@@ -58,7 +58,7 @@ jobs:
           poetry config virtualenvs.in-project true
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
@@ -123,7 +123,7 @@ jobs:
           python-version: ${{ matrix.python }}
 
       - name: Cache pip repository
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python }}
@@ -135,7 +135,7 @@ jobs:
           poetry config virtualenvs.in-project true
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v2.1.7
+        uses: actions/cache@v3
         with:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
