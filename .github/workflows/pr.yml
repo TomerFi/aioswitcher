@@ -157,7 +157,7 @@ jobs:
           report_individual_runs: true
 
       - name: Push to CodeCov
-        uses: codecov/codecov-action@v2.1.0
+        uses: codecov/codecov-action@v3
         if: ${{ matrix.python == env.MAIN_PY_VER }}
         with:
           files: ./coverage.xml
