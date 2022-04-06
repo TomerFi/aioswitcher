@@ -88,7 +88,7 @@ jobs:
           git add pyproject.toml
           git commit -m "build: bump version to ${{ steps.bumper.outputs.new_version }} [skip ci]"
           git push
-          git tag ${{ steps.bumper.outputs.new_version }} -m ${{ steps.bumper.outputs.new_version }}
+          git tag ${{ steps.bumper.outputs.new_version }} -m "${{ steps.bumper.outputs.new_version }}"
           git push origin ${{ steps.bumper.outputs.new_version }}
 
       - name: Verify documenation site build
