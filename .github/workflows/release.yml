@@ -74,7 +74,7 @@ jobs:
 
       - name: Determine version and create changelog
         id: bumper
-        uses: tomerfi/version-bumper-action@1.1.2
+        uses: tomerfi/version-bumper-action@1.1.3
 
       - name: Set new project version
         uses: ciiiii/toml-editor@1.0.0
@@ -84,12 +84,16 @@ jobs:
           value: ${{ steps.bumper.outputs.new_version }}
 
       - name: Commit, tag, and push
+        # yamllint disable rule:line-length
+        # editorconfig-checker-disable
         run: |
           git add pyproject.toml
           git commit -m "build: bump version to ${{ steps.bumper.outputs.new_version }} [skip ci]"
           git push
           git tag ${{ steps.bumper.outputs.new_version }} -m "${{ steps.bumper.outputs.new_version }}"
           git push origin ${{ steps.bumper.outputs.new_version }}
+        # yamllint enable rule:line-length
+        # editorconfig-checker-enable
 
       - name: Verify documenation site build
         run: |
