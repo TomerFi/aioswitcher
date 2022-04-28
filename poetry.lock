@@ -884,7 +884,7 @@ python-versions = ">=3.6"
 
 [[package]]
 name = "types-toml"
-version = "0.10.5"
+version = "0.10.6"
 description = "Typing stubs for toml"
 category = "dev"
 optional = false
@@ -941,7 +941,7 @@ docs = ["insegel", "sphinx", "sphinxcontrib-autoprogram", "sphinxcontrib-spellin
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9.0"
-content-hash = "bf6f3b324b32ee2576ee5095da0665de3249fb05c7dda9346477beac2f2ff78c"
+content-hash = "f4bdec133224fbb03831102a855d450b71f5b38cd168ee3c6f9a644d5c82ce34"
 
 [metadata.files]
 aiohttp = [
@@ -1676,8 +1676,8 @@ tomli = [
     {file = "tomli-1.2.3.tar.gz", hash = "sha256:05b6166bff487dc068d322585c7ea4ef78deed501cc124060e0f238e89a9231f"},
 ]
 types-toml = [
-    {file = "types-toml-0.10.5.tar.gz", hash = "sha256:f949463a388200be392ef9399dbad3e1e3bbe6d4543d84ad93d96c3fda028080"},
-    {file = "types_toml-0.10.5-py3-none-any.whl", hash = "sha256:c1bed5926538aa9c4725cd369c250c47310f16f47d20611b7baef5988fed8634"},
+    {file = "types-toml-0.10.6.tar.gz", hash = "sha256:6aeb3ed7bfa869381551c774ed6a9142e3eed98a83efa5108a9632eafd56dcd3"},
+    {file = "types_toml-0.10.6-py3-none-any.whl", hash = "sha256:c1289e9fb748a6a1ed068694ded1eb16f83df22d58cc1abae8ef6262403545d8"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.0.1-py3-none-any.whl", hash = "sha256:7f001e5ac290a0c0401508864c7ec868be4e701886d5b573a9528ed3973d9d3b"},
