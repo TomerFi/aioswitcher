@@ -149,7 +149,7 @@ jobs:
           else poe test; fi
 
       - name: Report test summary
-        uses: EnricoMi/publish-unit-test-result-action@v1.34
+        uses: EnricoMi/publish-unit-test-result-action@v1.35
         if: ${{ matrix.python == env.MAIN_PY_VER && always() }}
         with:
           test_changes_limit: 0
