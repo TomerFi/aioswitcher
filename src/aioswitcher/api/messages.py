@@ -192,32 +192,6 @@ class SwitcherStateResponse(SwitcherBaseResponse):
 
 @final
 @dataclass
-class SwitcherBreezeStateResponse(SwitcherBaseResponse):
-    """Representation of the switcher state response message."""
-
-    state: DeviceState = field(init=False)
-    temprature: int = field(init=False)
-    target_temprature: float = field(init=False)
-    mode: ThermostatMode = field(init=False)
-    fan_level: ThermostatFanLevel = field(init=False)
-    swing: ThermostatSwing = field(init=False)
-    remote_id: str = field(init=False)
-
-    def __post_init__(self) -> None:
-        """Post initialization of the message."""
-        parser = StateMessageParser(self.unparsed_response)
-
-        self.state = parser.get_thermostat_power()
-        self.mode = parser.get_thermostat_mode()
-        self.fan_level = parser.get_thermostat_fan_level()
-        self.swing = parser.get_thermostat_swing()
-        self.temprature = parser.get_thermostat_temp()
-        self.target_temprature = parser.get_thermostat_target_temp()
-        self.remote_id = parser.get_thermostat_remote()
-
-
-@final
-@dataclass
 class SwitcherGetSchedulesResponse(SwitcherBaseResponse):
     """Representation of the switcher get schedule message."""
 
@@ -235,23 +209,25 @@ class SwitcherGetSchedulesResponse(SwitcherBaseResponse):
 
 @final
 @dataclass
-class SwitcherBreezeResponse(SwitcherBaseResponse):
-    """Representation of the switcher get schedule message."""
+class SwitcherBreezeStateResponse(SwitcherBaseResponse):
+    """Representation of the switcher state response message."""
 
     state: DeviceState = field(init=False)
-    time_left: str = field(init=False)
-    time_on: str = field(init=False)
-    auto_shutdown: str = field(init=False)
-    power_consumption: int = field(init=False)
-    electric_current: float = field(init=False)
+    mode: ThermostatMode = field(init=False)
+    fan_level: ThermostatFanLevel = field(init=False)
+    temprature: int = field(init=False)
+    target_temprature: float = field(init=False)
+    swing: ThermostatSwing = field(init=False)
+    remote_id: str = field(init=False)
 
     def __post_init__(self) -> None:
         """Post initialization of the message."""
         parser = StateMessageParser(self.unparsed_response)
 
-        self.state = parser.get_state()
-        self.time_left = parser.get_time_left()
-        self.time_on = parser.get_time_on()
-        self.auto_shutdown = parser.get_auto_shutdown()
-        self.power_consumption = parser.get_power_consumption()
-        self.electric_current = watts_to_amps(self.power_consumption)
+        self.state = parser.get_thermostat_power()
+        self.mode = parser.get_thermostat_mode()
+        self.fan_level = parser.get_thermostat_fan_level()
+        self.temprature = parser.get_thermostat_temp()
+        self.target_temprature = parser.get_thermostat_target_temp()
+        self.swing = parser.get_thermostat_swing()
+        self.remote_id = parser.get_thermostat_remote()
