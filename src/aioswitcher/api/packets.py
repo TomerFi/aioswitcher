@@ -17,14 +17,21 @@
 # weekdays sum, start-time timestamp, end-time timestamp
 SCHEDULE_CREATE_DATA_FORMAT = "01{}01{}{}"
 
+PHONE_ID = "0000"
+DEVICE_PASSWORD = "00000000"
 NO_TIMER_REQUESTED = "00000000"
 NON_RECURRING_SCHEDULE = "00"
 # format values are local session id, timestamp
 REQUEST_FORMAT = "{}340001000000000000000000{}00000000000000000000f0fe"
+REQUEST_FORMAT_BREEZE = "{}000001000000000000000000{}00000000000000000000f0fe"
 PAD_74_ZEROS = "0" * 74
-
 # format value just timestamp (initial session id is "00000000")
 LOGIN_PACKET = "fef052000232a10000000000" + REQUEST_FORMAT[2:] + "1c" + PAD_74_ZEROS
+
+LOGIN_BREEZE_DEVICE_PACKET = (
+    "fef030000305a60000000000ff0301000000000000000000{}00000000000000000000f0fe{}00"
+)
+
 # format values are local session id, timestamp, device id
 GET_STATE_PACKET = "fef0300002320103" + REQUEST_FORMAT + "{}00"
 # format values are local session id, timestamp, device id, command, timer
@@ -52,4 +59,22 @@ DELETE_SCHEDULE_PACKET = (
 #                   (on_off + week + timstate + start_time + end_time)
 CREATE_SCHEDULE_PACKET = (
     "fef0630002320102" + REQUEST_FORMAT + "{}" + PAD_74_ZEROS + "030c00ff{}"
+)
+# format values are local session id, timestamp, device id, phone id, device-
+# passwored, command length, command
+BREEZE_COMMAND_PACKET = (
+    "fef0000003050102"
+    + REQUEST_FORMAT_BREEZE
+    + "{}"
+    + "00"
+    + PHONE_ID
+    + "0000"
+    + DEVICE_PASSWORD
+    + "0000000000000000000000000000000000000000000000000000003701"
+    + "{}{}"
+)
+
+# format values are local session id, timestamp, device id
+BREEZE_GET_REMOTE_UDP_PACKET = (
+    "fef0300003050103{}390001000000000000000000{}00000000000000000000f0fe{}00"
 )

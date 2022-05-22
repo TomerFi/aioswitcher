@@ -27,18 +27,22 @@ class DeviceCategory(Enum):
 
     WATER_HEATER = auto()
     POWER_PLUG = auto()
+    THERMOSTAT = auto()
+    SHUTTER = auto()
 
 
 @unique
 class DeviceType(Enum):
     """Enum for relaying the type of the switcher devices."""
 
-    MINI = "Switcher Mini", "0f", DeviceCategory.WATER_HEATER
-    POWER_PLUG = "Switcher Power Plug", "a8", DeviceCategory.POWER_PLUG
-    TOUCH = "Switcher Touch", "0b", DeviceCategory.WATER_HEATER
-    V2_ESP = "Switcher V2 (esp)", "a7", DeviceCategory.WATER_HEATER
-    V2_QCA = "Switcher V2 (qualcomm)", "a1", DeviceCategory.WATER_HEATER
-    V4 = "Switcher V4", "17", DeviceCategory.WATER_HEATER
+    MINI = "Switcher Mini", "030f", DeviceCategory.WATER_HEATER
+    POWER_PLUG = "Switcher Power Plug", "01a8", DeviceCategory.POWER_PLUG
+    TOUCH = "Switcher Touch", "030b", DeviceCategory.WATER_HEATER
+    V2_ESP = "Switcher V2 (esp)", "01a7", DeviceCategory.WATER_HEATER
+    V2_QCA = "Switcher V2 (qualcomm)", "01a1", DeviceCategory.WATER_HEATER
+    V4 = "Switcher V4", "0317", DeviceCategory.WATER_HEATER
+    BREEZE = "Switcher Breeze", "0e01", DeviceCategory.THERMOSTAT
+    SHUTTER = "Switcher Runner", "0c01", DeviceCategory.SHUTTER
 
     def __new__(
         cls, value: str, hex_rep: str, category: DeviceCategory
@@ -70,8 +74,103 @@ class DeviceType(Enum):
 class DeviceState(Enum):
     """Enum class representing the device's state."""
 
-    ON = "0100", "on"
-    OFF = "0000", "off"
+    ON = "01", "on"
+    OFF = "00", "off"
+
+    def __new__(cls, value: str, display: str) -> "DeviceState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the state."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the state."""
+        return self._value  # type: ignore
+
+
+class ThermostatMode(Enum):
+    NONE = "00", "none"
+    AUTO = "01", "auto"
+    DRY = "02", "dry"
+    FAN = "03", "fan"
+    COOL = "04", "cool"
+    HEAT = "05", "heat"
+
+    def __new__(cls, value: str, display: str) -> "DeviceState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the state."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the state."""
+        return self._value  # type: ignore
+
+
+class ThermostatFanLevel(Enum):
+    LOW = "1", "low"
+    MEDIUM = "2", "medium"
+    HIGH = "3", "high"
+    AUTO = "0", "auto"
+
+    def __new__(cls, value: str, display: str) -> "DeviceState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the state."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the state."""
+        return self._value  # type: ignore
+
+
+class ThermostatSwing(Enum):
+    OFF = "0", "off"
+    ON = "1", "on"  # TODO: Get actual Value
+
+    def __new__(cls, value: str, display: str) -> "DeviceState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the state."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the state."""
+        return self._value  # type: ignore
+
+
+class ShutterPosition(Enum):
+    SHUTTER_STOP = "0000", "stop"
+    SHUTTER_UP = "0100", "up"
+    SHUTTER_DOWN = "0001", "down"
 
     def __new__(cls, value: str, display: str) -> "DeviceState":
         """Override the default enum constructor and include extra properties."""
@@ -133,6 +232,24 @@ class SwitcherPowerBase(ABC):
 
 
 @dataclass
+class SwitcherThermostat(ABC):
+    """Abstraction for all switcher devices reporting power data.
+
+    Args:
+        power_consumption: the current power consumpstion in watts.
+        electric_current: the current power consumpstion in amps.
+
+    """
+
+    mode: ThermostatMode
+    temprature: float
+    target_temprature: int
+    fan_leve: ThermostatFanLevel
+    swing: ThermostatSwing
+    remote_id: str
+
+
+@dataclass
 class SwitcherTimedBase(ABC):
     """Abstraction for all switcher devices supporting timed operations.
 
@@ -181,3 +298,26 @@ class SwitcherWaterHeater(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
         if self.device_type.category != DeviceCategory.WATER_HEATER:
             raise ValueError("only water heaters are allowed")
         super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherThermostat(SwitcherThermostat, SwitcherBase):
+    """Implementation of the Switcher Breeze (Thermostat) device."""
+
+    def __post_init__(self) -> None:
+        if self.device_type.category != DeviceCategory.THERMOSTAT:
+            raise ValueError("only thermostat are allowed")
+        self.remote = None
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherShutter(SwitcherBase):
+    """Implementation of the Switcher Shutter device."""
+
+    def __post_init__(self) -> None:
+        if self.device_type.category != DeviceCategory.SHUTTER:
+            raise ValueError("only shutter are allowed")
+        return super().__post_init__()
