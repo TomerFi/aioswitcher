@@ -23,6 +23,8 @@ NO_TIMER_REQUESTED = "00000000"
 NON_RECURRING_SCHEDULE = "00"
 # format values are local session id, timestamp
 REQUEST_FORMAT = "{}340001000000000000000000{}00000000000000000000f0fe"
+REQUEST_FORMAT2 = "{}390001000000000000000000{}00000000000000000000f0fe"
+
 REQUEST_FORMAT_BREEZE = "{}000001000000000000000000{}00000000000000000000f0fe"
 PAD_74_ZEROS = "0" * 74
 # format value just timestamp (initial session id is "00000000")
@@ -34,6 +36,10 @@ LOGIN_BREEZE_DEVICE_PACKET = (
 
 # format values are local session id, timestamp, device id
 GET_STATE_PACKET = "fef0300002320103" + REQUEST_FORMAT + "{}00"
+
+# format values are local session id, timestamp, device id
+GET_STATE_PACKET2 = "fef0300003050103" + REQUEST_FORMAT2 + "{}00"
+
 # format values are local session id, timestamp, device id, command, timer
 SEND_CONTROL_PACKET = (
     "fef05d0002320102" + REQUEST_FORMAT + "{}" + PAD_74_ZEROS + "0106000{}00{}"
@@ -75,6 +81,4 @@ BREEZE_COMMAND_PACKET = (
 )
 
 # format values are local session id, timestamp, device id
-BREEZE_GET_REMOTE_UDP_PACKET = (
-    "fef0300003050103{}390001000000000000000000{}00000000000000000000f0fe{}00"
-)
+BREEZE_GET_REMOTE_UDP_PACKET = "fef0300003050103" + REQUEST_FORMAT2 + "{}00"

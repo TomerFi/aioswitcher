@@ -29,6 +29,7 @@ from .device import (
     DeviceCategory,
     DeviceState,
     DeviceType,
+    ShutterDirection,
     SwitcherBase,
     SwitcherPowerPlug,
     SwitcherWaterHeater,
@@ -256,7 +257,9 @@ class DatagramParser:
     def is_switcher_originator(self) -> bool:
         """Verify the broadcast message had originated from a switcher device."""
         return hexlify(self.message)[0:4].decode() == "fef0" and (
-            len(self.message) == 165 or len(self.message) == 168
+            len(self.message) == 165
+            or len(self.message) == 168
+            or len(self.message) == 159
         )
 
     def get_ip(self) -> str:
@@ -345,19 +348,14 @@ class DatagramParser:
 
     def get_shutter_position(self) -> int:
         """Return the current position of the shutter."""
-        hex_pos = hexlify(self.message[270:4]).decode()
-        return int(hex_pos[2:2]) + int(hex_pos[0:2], 16)
+        hex_pos = hexlify(self.message[135:2]).decode()
+        return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
 
-    def get_shutter_direction(self) -> DeviceState:
+    def get_shutter_direction(self) -> ShutterDirection:
         """Return the current direction of the shutter."""
-        hex_direction = hexlify(self.message[274:4]).decode()
-
-        if hex_direction == DeviceState.SHUTTER_UP.value:
-            return DeviceState.SHUTTER_UP
-        elif hex_direction == DeviceState.SHUTTER_DOWN.value:
-            return DeviceState.SHUTTER_DOWN
-        else:
-            return DeviceState.SHUTTER_STOP
+        hex_direction = hexlify(self.message[137:2]).decode()
+        directions = dict(map(lambda d: (d.hex_rep, d), ShutterDirection))
+        return directions[hex_direction]
 
     def get_thermostat_temp(self) -> float:
         """Return the current temp of the thermostat."""

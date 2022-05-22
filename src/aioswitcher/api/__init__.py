@@ -151,7 +151,7 @@ class SwitcherApi:
         return self._connected
 
     async def _login(
-        self, device_type: DeviceType = None, device_id: str = None
+        self, device_type: DeviceType = None
     ) -> Tuple[str, SwitcherLoginResponse]:
         """Use for sending the login packet to the device.
 
@@ -165,7 +165,9 @@ class SwitcherApi:
         """
         timestamp = current_timestamp_to_hexadecimal()
         if device_type and device_type == DeviceType.BREEZE:
-            packet = packets.LOGIN_BREEZE_DEVICE_PACKET.format(timestamp, device_id)
+            packet = packets.LOGIN_BREEZE_DEVICE_PACKET.format(
+                timestamp, self._device_id
+            )
         else:
             packet = packets.LOGIN_PACKET.format(timestamp)
         signed_packet = sign_packet_with_crc_key(packet)
@@ -182,11 +184,22 @@ class SwitcherApi:
             An instance of ``SwitcherStateResponse``.
 
         """
-        timestamp, login_resp = await self._login()
+
+        timestamp, login_resp = await self._login(device_type)
         if login_resp.successful:
-            packet = packets.GET_STATE_PACKET.format(
-                login_resp.session_id, timestamp, self._device_id
-            )
+            if (
+                device_type
+                and device_type == DeviceType.BREEZE
+                or device_type == DeviceType.RUNNER
+            ):
+                packet = packets.GET_STATE_PACKET2.format(
+                    login_resp.session_id, timestamp, self._device_id
+                )
+            else:
+                packet = packets.GET_STATE_PACKET.format(
+                    login_resp.session_id, timestamp, self._device_id
+                )
+
             signed_packet = sign_packet_with_crc_key(packet)
 
             logger.debug("sending a get state packet")
@@ -256,7 +269,7 @@ class SwitcherApi:
 
         """
         logger.debug("about to send Breeze command")
-        timestamp, login_resp = await self._login(DeviceType.BREEZE, device.device_id)
+        timestamp, login_resp = await self._login(DeviceType.BREEZE)
         if not login_resp.successful:
             logger.error(
                 "Failed to log into device %s with id %s", device.name, device.device_id
@@ -419,7 +432,7 @@ class SwitcherApi:
 
     async def _get_udp_message_for_remote(self, device_id):
         logger.debug("Trying to login to %s", device_id)
-        timestamp, login_resp = await self._login(DeviceType.BREEZE, device_id)
+        timestamp, login_resp = await self._login(DeviceType.BREEZE)
 
         if not login_resp.successful:
             logger.error("Failed to log into device with id %s", device_id)
@@ -429,7 +442,7 @@ class SwitcherApi:
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        packet = packets.BREEZE_GET_REMOTE_UDP_PACKET.format(
+        packet = packets.GET_STATE_PACKET2.format(
             login_resp.session_id, timestamp, self._device_id
         )
         signed_packet = sign_packet_with_crc_key(packet)

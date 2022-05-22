@@ -42,7 +42,7 @@ class DeviceType(Enum):
     V2_QCA = "Switcher V2 (qualcomm)", "01a1", DeviceCategory.WATER_HEATER
     V4 = "Switcher V4", "0317", DeviceCategory.WATER_HEATER
     BREEZE = "Switcher Breeze", "0e01", DeviceCategory.THERMOSTAT
-    SHUTTER = "Switcher Runner", "0c01", DeviceCategory.SHUTTER
+    RUNNER = "Switcher Runner", "0c01", DeviceCategory.SHUTTER
 
     def __new__(
         cls, value: str, hex_rep: str, category: DeviceCategory
@@ -76,6 +76,32 @@ class DeviceState(Enum):
 
     ON = "01", "on"
     OFF = "00", "off"
+
+    def __new__(cls, value: str, display: str) -> "DeviceState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the state."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the state."""
+        return self._value  # type: ignore
+
+
+@unique
+class ShutterPosition(Enum):
+    """Enum class representing the device's state."""
+
+    UP = "0100", "up"
+    DOWN = "0001", "down"
+    STOP = "000", "stop"
 
     def __new__(cls, value: str, display: str) -> "DeviceState":
         """Override the default enum constructor and include extra properties."""
@@ -167,7 +193,8 @@ class ThermostatSwing(Enum):
         return self._value  # type: ignore
 
 
-class ShutterPosition(Enum):
+@final
+class ShutterDirection(Enum):
     SHUTTER_STOP = "0000", "stop"
     SHUTTER_UP = "0100", "up"
     SHUTTER_DOWN = "0001", "down"
