@@ -17,7 +17,6 @@
 from binascii import hexlify, unhexlify
 from dataclasses import InitVar, dataclass, field
 from typing import Set, final
-from urllib import response
 
 from ..device.tools import seconds_to_iso_time, watts_to_amps
 from ..schedule.parser import SwitcherSchedule, get_schedules

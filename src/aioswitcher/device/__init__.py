@@ -43,6 +43,7 @@ class DeviceType(Enum):
     V4 = "Switcher V4", "0317", DeviceCategory.WATER_HEATER
     BREEZE = "Switcher Breeze", "0e01", DeviceCategory.THERMOSTAT
     RUNNER = "Switcher Runner", "0c01", DeviceCategory.SHUTTER
+    RUNNER_MINI = "Switcher Runner Mini", "0c02", DeviceCategory.SHUTTER
 
     def __new__(
         cls, value: str, hex_rep: str, category: DeviceCategory
@@ -277,6 +278,20 @@ class SwitcherThermostat(ABC):
 
 
 @dataclass
+class SwitcherShutter(ABC):
+    """Abstraction for all switcher devices reporting power data.
+
+    Args:
+        power_consumption: the current power consumpstion in watts.
+        electric_current: the current power consumpstion in amps.
+
+    """
+
+    position: int
+    direction: ShutterDirection
+
+
+@dataclass
 class SwitcherTimedBase(ABC):
     """Abstraction for all switcher devices supporting timed operations.
 
@@ -341,7 +356,7 @@ class SwitcherThermostat(SwitcherThermostat, SwitcherBase):
 
 @final
 @dataclass
-class SwitcherShutter(SwitcherBase):
+class SwitcherShutter(SwitcherShutter, SwitcherBase):
     """Implementation of the Switcher Shutter device."""
 
     def __post_init__(self) -> None:

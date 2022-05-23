@@ -52,6 +52,7 @@ from .messages import (
     SwitcherBreezeStateResponse,
     SwitcherGetSchedulesResponse,
     SwitcherLoginResponse,
+    SwitcherRunnerStateResponse,
     SwitcherStateResponse,
 )
 
@@ -164,10 +165,13 @@ class SwitcherApi:
 
         """
         timestamp = current_timestamp_to_hexadecimal()
-        if device_type and device_type == DeviceType.BREEZE:
-            packet = packets.LOGIN_BREEZE_DEVICE_PACKET.format(
-                timestamp, self._device_id
-            )
+        if (
+            device_type
+            and device_type == DeviceType.BREEZE
+            or device_type == DeviceType.RUNNER
+            or device_type == DeviceType.RUNNER_MINI
+        ):
+            packet = packets.LOGIN2_PACKET.format(timestamp, self._device_id)
         else:
             packet = packets.LOGIN_PACKET.format(timestamp)
         signed_packet = sign_packet_with_crc_key(packet)
@@ -187,11 +191,11 @@ class SwitcherApi:
 
         timestamp, login_resp = await self._login(device_type)
         if login_resp.successful:
-            if (
-                device_type
-                and device_type == DeviceType.BREEZE
-                or device_type == DeviceType.RUNNER
-            ):
+            if device_type and device_type in [
+                DeviceType.BREEZE,
+                device_type == DeviceType.RUNNER,
+                DeviceType.RUNNER_MINI,
+            ]:
                 packet = packets.GET_STATE_PACKET2.format(
                     login_resp.session_id, timestamp, self._device_id
                 )
@@ -208,6 +212,9 @@ class SwitcherApi:
             try:
                 if device_type == DeviceType.BREEZE:
                     response = SwitcherBreezeStateResponse(state_resp)
+
+                elif device_type in [DeviceType.RUNNER, DeviceType.RUNNER_MINI]:
+                    response = SwitcherRunnerStateResponse(state_resp)
                 else:
                     response = SwitcherStateResponse(state_resp)
                 if response.successful:
@@ -218,6 +225,9 @@ class SwitcherApi:
 
     async def get_breeze_state(self):
         return await self.get_state(DeviceType.BREEZE)
+
+    async def get_shutter_state(self):
+        return await self.get_state(DeviceType.RUNNER)
 
     async def control_device(
         self, command: Command, minutes: int = 0
@@ -475,6 +485,34 @@ class SwitcherApi:
                     raise RuntimeError(
                         f"Failed to Download the IR set file for {device.device_id}"
                     )
+
+    async def set_position(self, position: int = 0):
+        hex_pos = "{0:0{1}x}".format(position, 2)
+
+        logger.debug("about to send set position command")
+        timestamp, login_resp = await self._login(DeviceType.RUNNER)
+        if not login_resp.successful:
+            logger.error("Failed to log into device with id %s", self._device_id)
+            raise RuntimeError("login request was not successful")
+
+        logger.debug(
+            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
+        )
+
+        packet = packets.RUNNER_SET_POSITION.format(
+            login_resp.session_id, timestamp, self._device_id, hex_pos
+        )
+
+        print(self._device_id)
+
+        packet = set_message_length(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        logger.debug("sending a control packet")
+
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
 
 
 class BreezeRemote(object):

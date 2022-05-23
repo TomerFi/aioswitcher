@@ -32,6 +32,7 @@ from .device import (
     ShutterDirection,
     SwitcherBase,
     SwitcherPowerPlug,
+    SwitcherShutter,
     SwitcherWaterHeater,
     SwitcherThermostat,
     ThermostatFanLevel,
@@ -119,14 +120,16 @@ def _parse_device_from_datagram(
         elif device_type and device_type.category == DeviceCategory.SHUTTER:
             logger.debug("discovered a Runner switch switcher device")
             device_callback(
-                device_type,
-                device_state,
-                parser.get_device_id(),
-                parser.get_ip(),
-                parser.get_mac(),
-                parser.get_name(),
-                parser.get_shutter_position(),
-                parser.get_shutter_direction(),
+                SwitcherShutter(
+                    device_type,
+                    DeviceState.ON,
+                    parser.get_device_id(),
+                    parser.get_ip2(),
+                    parser.get_mac(),
+                    parser.get_name(),
+                    parser.get_shutter_position(),
+                    parser.get_shutter_direction(),
+                )
             )
 
         elif device_type and device_type.category == DeviceCategory.THERMOSTAT:
@@ -136,7 +139,7 @@ def _parse_device_from_datagram(
                     device_type,
                     device_state,
                     parser.get_device_id(),
-                    parser.get_ip_thermostat(),
+                    parser.get_ip2(),
                     parser.get_mac(),
                     parser.get_name(),
                     parser.get_thermostat_mode(),
@@ -268,7 +271,7 @@ class DatagramParser:
         ip_addr = int(hex_ip[6:8] + hex_ip[4:6] + hex_ip[2:4] + hex_ip[0:2], 16)
         return inet_ntoa(pack("<L", ip_addr))
 
-    def get_ip_thermostat(self) -> str:
+    def get_ip2(self) -> str:
         """Extract the IP address from the broadcast message."""
         hex_ip = hexlify(self.message)[154:162]
         ip_addr = int(hex_ip[0:2] + hex_ip[2:4] + hex_ip[4:6] + hex_ip[6:8], 16)
@@ -348,13 +351,15 @@ class DatagramParser:
 
     def get_shutter_position(self) -> int:
         """Return the current position of the shutter."""
-        hex_pos = hexlify(self.message[135:2]).decode()
+        hex_pos = hexlify(self.message[135:137]).decode()
         return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
 
     def get_shutter_direction(self) -> ShutterDirection:
         """Return the current direction of the shutter."""
-        hex_direction = hexlify(self.message[137:2]).decode()
-        directions = dict(map(lambda d: (d.hex_rep, d), ShutterDirection))
+        hex_direction = hexlify(self.message[137:139]).decode()
+        directions = dict(map(lambda d: (d.value, d), ShutterDirection))
+        print(directions)
+        print(hex_direction)
         return directions[hex_direction]
 
     def get_thermostat_temp(self) -> float:

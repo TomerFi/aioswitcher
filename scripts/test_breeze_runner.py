@@ -44,6 +44,7 @@ Example:
 from asyncio import get_event_loop, sleep
 from dataclasses import asdict
 from pprint import PrettyPrinter
+
 from aioswitcher.api import (
     SWITCHER_DEVICE_TO_TCP_PORT,
     SwitcherApi,
@@ -56,7 +57,7 @@ from aioswitcher.api import (
 )
 
 from aioswitcher.bridge import SWITCHER_DEVICE_TO_UDP_PORT, SwitcherBridge
-from aioswitcher.device import DeviceCategory, SwitcherBase
+from aioswitcher.device import DeviceCategory, DeviceType, SwitcherBase
 
 import logging
 import sys
@@ -84,11 +85,10 @@ async def main() -> None:
             my_devices[device.device_id] = device
 
     rm = BreezeRemoteManager()
-
     async with SwitcherBridge(
         on_device_found_callback, SWITCHER_DEVICE_TO_UDP_PORT[DeviceCategory.THERMOSTAT]
     ):
-        await sleep(3)
+        await sleep(5)
 
     for device_id in my_devices.keys():
         device: SwitcherBase = my_devices[device_id]
@@ -98,22 +98,29 @@ async def main() -> None:
         async with SwitcherApi(
             device.ip_address,
             device_id,
-            SWITCHER_DEVICE_TO_TCP_PORT[DeviceCategory.THERMOSTAT],
+            SWITCHER_DEVICE_TO_TCP_PORT[DeviceCategory.SHUTTER],
         ) as api:
 
-            remote: BreezeRemote = await rm.get_remote(device, api)
+            if device.device_type in [DeviceType.RUNNER_MINI or DeviceType.RUNNER]:
+                # open the shutter to 30%
+                await api.set_position(30)
+                print(await api.get_shutter_state())
 
-            cmd = remote.get_command(
-                device,
-                DeviceState.ON,
-                ThermostatMode.COOL,
-                23,
-                ThermostatFanLevel.HIGH,
-                ThermostatSwing.ON,
-            )
-            await api.control_breeze_device(device, cmd)
+            if device.device_type == DeviceType.BREEZE:
+                remote: BreezeRemote = await rm.get_remote(device, api)
 
-            print(await api.get_breeze_state())
+                cmd = remote.get_command(
+                    device,
+                    DeviceState.ON,
+                    ThermostatMode.COOL,
+                    23,
+                    ThermostatFanLevel.HIGH,
+                    ThermostatSwing.ON,
+                )
+                await api.control_breeze_device(device, cmd)
+
+                print(await api.get_breeze_state())
+
             await api.disconnect()
 
 
