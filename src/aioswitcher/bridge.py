@@ -358,8 +358,6 @@ class DatagramParser:
         """Return the current direction of the shutter."""
         hex_direction = hexlify(self.message[137:139]).decode()
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
-        print(directions)
-        print(hex_direction)
         return directions[hex_direction]
 
     def get_thermostat_temp(self) -> float:

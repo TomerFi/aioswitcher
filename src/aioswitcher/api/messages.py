@@ -132,10 +132,15 @@ class StateMessageParser:
         return remote_hex[84:92].decode().rstrip("\x00")
 
     def get_shutter_poisition(self) -> int:
-        pass
+        """Return the current shutter position."""
+        hex_pos = self._hex_response[152:154].decode()
+        return int(hex_pos, 16)
 
     def get_shutter_direction(self) -> ShutterDirection:
-        pass
+        """Return the current shutter direction."""
+        hex_dir = self._hex_response[156:160].decode()
+        directions = dict(map(lambda s: (s.value, s), ShutterDirection))
+        return directions[hex_dir]
 
 
 @dataclass

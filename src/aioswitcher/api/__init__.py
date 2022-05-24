@@ -223,10 +223,10 @@ class SwitcherApi:
                 raise RuntimeError("get state request was not successful") from ve
         raise RuntimeError("login request was not successful")
 
-    async def get_breeze_state(self):
+    async def get_breeze_state(self) -> SwitcherBreezeStateResponse:
         return await self.get_state(DeviceType.BREEZE)
 
-    async def get_shutter_state(self):
+    async def get_shutter_state(self) -> SwitcherRunnerStateResponse:
         return await self.get_state(DeviceType.RUNNER)
 
     async def control_device(
@@ -503,7 +503,29 @@ class SwitcherApi:
             login_resp.session_id, timestamp, self._device_id, hex_pos
         )
 
-        print(self._device_id)
+        packet = set_message_length(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        logger.debug("sending a control packet")
+
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def stop(self):
+        logger.debug("about to send set stop shutter command")
+        timestamp, login_resp = await self._login(DeviceType.RUNNER)
+        if not login_resp.successful:
+            logger.error("Failed to log into device with id %s", self._device_id)
+            raise RuntimeError("login request was not successful")
+
+        logger.debug(
+            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
+        )
+
+        packet = packets.RUNNER_STOP_COMMAND.format(
+            login_resp.session_id, timestamp, self._device_id
+        )
 
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)
