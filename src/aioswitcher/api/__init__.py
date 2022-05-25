@@ -37,7 +37,6 @@ from aioswitcher.device import (
 
 from ..device.tools import (
     current_timestamp_to_hexadecimal,
-    get_command_length,
     minutes_to_hexadecimal_seconds,
     set_message_length,
     sign_packet_with_crc_key,
@@ -49,10 +48,10 @@ from ..schedule.tools import time_to_hexadecimal_timestamp, weekdays_to_hexadeci
 from . import packets
 from .messages import (
     SwitcherBaseResponse,
-    SwitcherBreezeStateResponse,
+    SwitcherThermostatStateResponse,
     SwitcherGetSchedulesResponse,
     SwitcherLoginResponse,
-    SwitcherRunnerStateResponse,
+    SwitcherShutterStateResponse,
     SwitcherStateResponse,
 )
 
@@ -80,11 +79,15 @@ class Command(Enum):
 
 @final
 class SwitcherBreezeCommand:
-    """Representations of the switcher Breeze command message."""
+    """Representations of the Switcher Breeze command message."""
 
     def __init__(self, command):
         self.command = command
-        self.length = get_command_length(command)
+        self.length = self._get_command_length(command)
+
+    def _get_command_length(self):
+        hex = "{:x}".format(int(len(self.command) / 2)).ljust(4, "0")
+        return hex
 
 
 @final
@@ -185,8 +188,10 @@ class SwitcherApi:
         """Use for sending the get state packet to the device.
 
         Returns:
-            An instance of ``SwitcherStateResponse``.
-
+            An instance of ``SwitcherThermostatStateResponse`` for DeviceType.BREEZE
+            An instance of ``SwitcherShutterStateResponse`` for DeviceType.RUNNER
+                and DeviceType.RUNNER_MIN
+            An instance of ``SwitcherStateResponse`` for the rest of the devices.
         """
 
         timestamp, login_resp = await self._login(device_type)
@@ -211,10 +216,10 @@ class SwitcherApi:
             state_resp = await self._reader.read(1024)
             try:
                 if device_type == DeviceType.BREEZE:
-                    response = SwitcherBreezeStateResponse(state_resp)
+                    response = SwitcherThermostatStateResponse(state_resp)
 
                 elif device_type in [DeviceType.RUNNER, DeviceType.RUNNER_MINI]:
-                    response = SwitcherRunnerStateResponse(state_resp)
+                    response = SwitcherShutterStateResponse(state_resp)
                 else:
                     response = SwitcherStateResponse(state_resp)
                 if response.successful:
@@ -223,10 +228,22 @@ class SwitcherApi:
                 raise RuntimeError("get state request was not successful") from ve
         raise RuntimeError("login request was not successful")
 
-    async def get_breeze_state(self) -> SwitcherBreezeStateResponse:
+    async def get_breeze_state(self) -> SwitcherThermostatStateResponse:
+        """Use for sending the get state packet to the Breeze device.
+
+        Returns:
+            An instance of ``SwitcherThermostatStateResponse``.
+
+        """
         return await self.get_state(DeviceType.BREEZE)
 
-    async def get_shutter_state(self) -> SwitcherRunnerStateResponse:
+    async def get_shutter_state(self) -> SwitcherShutterStateResponse:
+        """Use for sending the get state packet to the Runner device.
+
+        Returns:
+            An instance of ``SwitcherShutterStateResponse``.
+
+        """
         return await self.get_state(DeviceType.RUNNER)
 
     async def control_device(
@@ -266,13 +283,11 @@ class SwitcherApi:
         self,
         device: SwitcherThermostat,
         command: SwitcherBreezeCommand,
-        minutes: int = 0,
     ) -> SwitcherBaseResponse:
-        """Use for sending the control packet to the device.
+        """Use for sending the control packet to the Breeze device.
 
         Args:
-            command: use the ``aioswitcher.api.Command`` enum.
-            minutes: if turning-on optionally incorporate a timer.
+            command: use the ``aioswitcher.api.SwitcherBreezeCommand`` class.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -440,30 +455,14 @@ class SwitcherApi:
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def _get_udp_message_for_remote(self, device_id):
-        logger.debug("Trying to login to %s", device_id)
-        timestamp, login_resp = await self._login(DeviceType.BREEZE)
+    async def download_breeze_remote_ir_set(self) -> dict:
+        """Use for downloading the IRSet json data of the Switcher Breeze.
 
-        if not login_resp.successful:
-            logger.error("Failed to log into device with id %s", device_id)
-            raise RuntimeError("login request was not successful")
+        Returns:
+            dictionary representing the IRSet json file
 
-        logger.debug(
-            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
-        )
-
-        packet = packets.GET_STATE_PACKET2.format(
-            login_resp.session_id, timestamp, self._device_id
-        )
-        signed_packet = sign_packet_with_crc_key(packet)
-        logger.debug("sending a get remote udp packet")
-        self._writer.write(unhexlify(signed_packet))
-        response = await self._reader.read(1024)
-        return SwitcherBaseResponse(response)
-
-    async def get_switcher_breeze_remote_ir_set(self, device: SwitcherThermostat):
-
-        udp_message = await self._get_udp_message_for_remote(device.device_id)
+        """
+        udp_message = await self.get_state(DeviceType.BREEZE)
         if not udp_message.successful:
             raise RuntimeError("Failed to fetch UDP message for remote")
 
@@ -483,10 +482,16 @@ class SwitcherApi:
                     return await resp.json(content_type=None)
                 else:
                     raise RuntimeError(
-                        f"Failed to Download the IR set file for {device.device_id}"
+                        f"Failed to Download the IR set file for {self._device_id}"
                     )
 
-    async def set_position(self, position: int = 0):
+    async def set_position(self, position: int = 0) -> SwitcherBaseResponse:
+        """Use for setting the shutter position of the Runner and Runner Mini devices.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
         hex_pos = "{0:0{1}x}".format(position, 2)
 
         logger.debug("about to send set position command")
@@ -512,8 +517,14 @@ class SwitcherApi:
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def stop(self):
-        logger.debug("about to send set stop shutter command")
+    async def stop(self) -> SwitcherBaseResponse:
+        """Use for stopping the shutter from being rolled for the Runner and Runner Mini devices.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login(DeviceType.RUNNER)
         if not login_resp.successful:
             logger.error("Failed to log into device with id %s", self._device_id)
@@ -530,7 +541,7 @@ class SwitcherApi:
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)
 
-        logger.debug("sending a control packet")
+        logger.debug("sending a stop control packet")
 
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
@@ -538,7 +549,9 @@ class SwitcherApi:
 
 
 class BreezeRemote(object):
-
+    """
+    Class that represent a remote for a Breeze device/s.
+    """
     COMMAND_TO_MODE = {
         "aa": ThermostatMode.AUTO,
         "ad": ThermostatMode.DRY,
@@ -570,6 +583,9 @@ class BreezeRemote(object):
     }
 
     def __init__(self, ir_set: dict) -> None:
+        """
+        Initiliaze the remote by parsing the ir_set data
+        """
         self.cap_min_temp = 100
         self.cap_max_temp = -100
         self.cap_swingable = False
@@ -588,6 +604,9 @@ class BreezeRemote(object):
         fan_level: ThermostatFanLevel,
         swing: ThermostatSwing,
     ):
+        """
+        Construct a command key for a specific command
+        """
         command = ""
         command += BreezeRemote.MODE_TO_COMMAND[mode]
         command += str(target_temp)
@@ -608,6 +627,12 @@ class BreezeRemote(object):
         fan_level: ThermostatFanLevel,
         swing: ThermostatSwing,
     ) -> SwitcherBreezeCommand:
+        """
+        Create a command to be sent to the Breeze device.
+
+        Returns:
+            Instance of ``SwitcherBreezeCommand``.
+        """
 
         if target_temp > self.cap_max_temp or target_temp < self.cap_min_temp:
             raise RuntimeError(
@@ -656,6 +681,9 @@ class BreezeRemote(object):
         )
 
     def _resolve_capabilities(self, ir_set):
+        """
+        Parses the ir_set of the rmeote and 
+        """
 
         if ir_set["OnOffType"] == 0:
             self.on_off_type = True
@@ -695,7 +723,7 @@ class BreezeRemoteManager(object):
         self, device: SwitcherThermostat, api: SwitcherApi
     ) -> BreezeRemote:
         if device.remote_id not in self._remotes_db:
-            ir_set = await api.get_switcher_breeze_remote_ir_set(device)
+            ir_set = await api.download_breeze_remote_ir_set()
             self._remotes_db[device.remote_id] = BreezeRemote(ir_set)
             logger.debug(
                 "Remote %s was downloaded and added to that DB", device.remote_id

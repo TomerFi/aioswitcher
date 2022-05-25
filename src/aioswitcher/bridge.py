@@ -49,10 +49,10 @@ SWITCHER_UDP_PORT = 20002
 SWITCHER_UDP_PORT2 = 20003
 
 SWITCHER_DEVICE_TO_UDP_PORT = {
-    DeviceCategory.THERMOSTAT: SWITCHER_UDP_PORT2,
-    DeviceCategory.SHUTTER: SWITCHER_UDP_PORT2,
     DeviceCategory.WATER_HEATER: SWITCHER_UDP_PORT,
     DeviceCategory.POWER_PLUG: SWITCHER_UDP_PORT,
+    DeviceCategory.THERMOSTAT: SWITCHER_UDP_PORT2,
+    DeviceCategory.SHUTTER: SWITCHER_UDP_PORT2,
 }
 
 
@@ -72,8 +72,11 @@ def _parse_device_from_datagram(
     if not parser.is_switcher_originator():
         logger.debug("received datagram from an unknown source")
     else:
-        device_type = parser.get_device_type()
-        device_state = parser.get_device_state(device_type)
+        device_type: DeviceType = parser.get_device_type()
+        if device_type == DeviceType.BREEZE:
+            device_state = parser.get_thermostat_state()
+        else:
+            device_state = parser.get_device_state()
         if device_state == DeviceState.ON:
             power_consumption = parser.get_power_consumption()
             electric_current = watts_to_amps(power_consumption)
@@ -128,7 +131,7 @@ def _parse_device_from_datagram(
                     parser.get_mac(),
                     parser.get_name(),
                     parser.get_shutter_position(),
-                    parser.get_shutter_direction(),
+                    parser.get_shutter_direction()
                 )
             )
 
@@ -147,7 +150,7 @@ def _parse_device_from_datagram(
                     parser.get_thermostat_target_temp(),
                     parser.get_thermostat_fan_level(),
                     parser.get_thermostat_swing(),
-                    parser.get_thermostat_remote(),
+                    parser.get_thermostat_remote_id()
                 )
             )
         else:
@@ -261,8 +264,8 @@ class DatagramParser:
         """Verify the broadcast message had originated from a switcher device."""
         return hexlify(self.message)[0:4].decode() == "fef0" and (
             len(self.message) == 165
-            or len(self.message) == 168
-            or len(self.message) == 159
+            or len(self.message) == 168     # Switcher Breeze
+            or len(self.message) == 159     # Switcher Runner and RunnerMini
         )
 
     def get_ip(self) -> str:
@@ -272,7 +275,7 @@ class DatagramParser:
         return inet_ntoa(pack("<L", ip_addr))
 
     def get_ip2(self) -> str:
-        """Extract the IP address from the broadcast message."""
+        """Extract the IP address from the broadcast message (Breeze and Runners)."""
         hex_ip = hexlify(self.message)[154:162]
         ip_addr = int(hex_ip[0:2] + hex_ip[2:4] + hex_ip[4:6] + hex_ip[6:8], 16)
         return inet_ntoa(pack(">L", ip_addr))
@@ -302,11 +305,8 @@ class DatagramParser:
         """Extract the device id from the broadcast message."""
         return hexlify(self.message)[36:42].decode()
 
-    def get_device_state(self, device_type: DeviceType = None) -> DeviceState:
+    def get_device_state(self) -> DeviceState:
         """Extract the device state from the broadcast message."""
-        if device_type and device_type.category == DeviceCategory.THERMOSTAT:
-            return self.get_thermostat_power()
-
         hex_device_state = hexlify(self.message)[266:268].decode()
         return (
             DeviceState.ON
@@ -349,24 +349,28 @@ class DatagramParser:
         devices = dict(map(lambda d: (d.hex_rep, d), DeviceType))
         return devices[hex_model]
 
+    # Switcher Runner and Runner Mini methods
+
     def get_shutter_position(self) -> int:
-        """Return the current position of the shutter."""
+        """Return the current position of the shutter 0 <= pos <= 100."""
         hex_pos = hexlify(self.message[135:137]).decode()
         return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
 
     def get_shutter_direction(self) -> ShutterDirection:
-        """Return the current direction of the shutter."""
+        """Return the current direction of the shutter (UP/DOWN/STOP)."""
         hex_direction = hexlify(self.message[137:139]).decode()
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
         return directions[hex_direction]
+
+    # Switcher Breeze methods
 
     def get_thermostat_temp(self) -> float:
         """Return the current temp of the thermostat."""
         hex_temp = hexlify(self.message[135:137]).decode()
         return int(hex_temp[2:4] + hex_temp[0:2], 16) / 10
 
-    def get_thermostat_power(self) -> DeviceState:
-        """Return the current thermostat power."""
+    def get_thermostat_state(self) -> DeviceState:
+        """Return the current thermostat state."""
         hex_power = hexlify(self.message[137:138]).decode()
         return DeviceState.ON if hex_power == DeviceState.ON.value else DeviceState.OFF
 
@@ -397,6 +401,6 @@ class DatagramParser:
             else ThermostatSwing.ON
         )
 
-    def get_thermostat_remote(self) -> str:
+    def get_thermostat_remote_id(self) -> str:
         """Return the current thermostat remote."""
         return self.message[143:151].decode()

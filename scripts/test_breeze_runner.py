@@ -55,7 +55,7 @@ from aioswitcher.api import (
     ThermostatFanLevel,
     DeviceState,
 )
-from aioswitcher.api.messages import SwitcherRunnerStateResponse
+from aioswitcher.api.messages import SwitcherShutterStateResponse
 
 from aioswitcher.bridge import SWITCHER_DEVICE_TO_UDP_PORT, SwitcherBridge
 from aioswitcher.device import (
@@ -107,18 +107,18 @@ async def main() -> None:
             SWITCHER_DEVICE_TO_TCP_PORT[DeviceCategory.SHUTTER],
         ) as api:
 
-            if device.device_type in [DeviceType.RUNNER_MINI or DeviceType.RUNNER]:
-                # open the shutter to 70%
-                await api.set_position(70)
+            # if device.device_type in [DeviceType.RUNNER_MINI or DeviceType.RUNNER]:
+            #     # open the shutter to 70%
+            #     await api.set_position(70)
 
-                state: SwitcherRunnerStateResponse = await api.get_shutter_state()
+            #     state: SwitcherShutterStateResponse = await api.get_shutter_state()
 
-                # stop the shutter from being rolling up
-                if state.direction == ShutterDirection.SHUTTER_UP:
-                    await api.stop()
+            #     # stop the shutter from being rolling up
+            #     if state.direction == ShutterDirection.SHUTTER_UP:
+            #         await api.stop()
 
-                # print hte shuter status
-                print(await api.get_shutter_state())
+            #     # print hte shuter status
+            #     print(await api.get_shutter_state())
 
             if device.device_type == DeviceType.BREEZE:
                 remote: BreezeRemote = await rm.get_remote(device, api)

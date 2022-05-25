@@ -96,33 +96,9 @@ class DeviceState(Enum):
         return self._value  # type: ignore
 
 
-@unique
-class ShutterPosition(Enum):
-    """Enum class representing the device's state."""
-
-    UP = "0100", "up"
-    DOWN = "0001", "down"
-    STOP = "000", "stop"
-
-    def __new__(cls, value: str, display: str) -> "DeviceState":
-        """Override the default enum constructor and include extra properties."""
-        new_enum = object.__new__(cls)
-        new_enum._value = value  # type: ignore
-        new_enum._display = display  # type: ignore
-        return new_enum
-
-    @property
-    def display(self) -> str:
-        """Return the display name of the state."""
-        return self._display  # type: ignore
-
-    @property
-    def value(self) -> str:
-        """Return the value of the state."""
-        return self._value  # type: ignore
-
-
 class ThermostatMode(Enum):
+    """Enum class representing the thermostat device's position."""
+
     NONE = "00", "none"
     AUTO = "01", "auto"
     DRY = "02", "dry"
@@ -139,16 +115,18 @@ class ThermostatMode(Enum):
 
     @property
     def display(self) -> str:
-        """Return the display name of the state."""
+        """Return the display name of the mode."""
         return self._display  # type: ignore
 
     @property
     def value(self) -> str:
-        """Return the value of the state."""
+        """Return the value of the mode."""
         return self._value  # type: ignore
 
 
 class ThermostatFanLevel(Enum):
+    """Enum class representing the thermostat device's fan level."""
+
     LOW = "1", "low"
     MEDIUM = "2", "medium"
     HIGH = "3", "high"
@@ -163,16 +141,18 @@ class ThermostatFanLevel(Enum):
 
     @property
     def display(self) -> str:
-        """Return the display name of the state."""
+        """Return the display name of the fan level."""
         return self._display  # type: ignore
 
     @property
     def value(self) -> str:
-        """Return the value of the state."""
+        """Return the value of the fan level."""
         return self._value  # type: ignore
 
 
 class ThermostatSwing(Enum):
+    """Enum class representing the thermostat device's swing state."""
+
     OFF = "0", "off"
     ON = "1", "on"  # TODO: Get actual Value
 
@@ -185,17 +165,19 @@ class ThermostatSwing(Enum):
 
     @property
     def display(self) -> str:
-        """Return the display name of the state."""
+        """Return the display name of the swing."""
         return self._display  # type: ignore
 
     @property
     def value(self) -> str:
-        """Return the value of the state."""
+        """Return the value of the swing."""
         return self._value  # type: ignore
 
 
 @final
 class ShutterDirection(Enum):
+    """Enum class representing the shutter device's position."""
+
     SHUTTER_STOP = "0000", "stop"
     SHUTTER_UP = "0100", "up"
     SHUTTER_DOWN = "0001", "down"
@@ -209,12 +191,12 @@ class ShutterDirection(Enum):
 
     @property
     def display(self) -> str:
-        """Return the display name of the state."""
+        """Return the display name of the direction."""
         return self._display  # type: ignore
 
     @property
     def value(self) -> str:
-        """Return the value of the state."""
+        """Return the value of the direction."""
         return self._value  # type: ignore
 
 
@@ -260,38 +242,6 @@ class SwitcherPowerBase(ABC):
 
 
 @dataclass
-class SwitcherThermostat(ABC):
-    """Abstraction for all switcher devices reporting power data.
-
-    Args:
-        power_consumption: the current power consumpstion in watts.
-        electric_current: the current power consumpstion in amps.
-
-    """
-
-    mode: ThermostatMode
-    temprature: float
-    target_temprature: int
-    fan_leve: ThermostatFanLevel
-    swing: ThermostatSwing
-    remote_id: str
-
-
-@dataclass
-class SwitcherShutter(ABC):
-    """Abstraction for all switcher devices reporting power data.
-
-    Args:
-        power_consumption: the current power consumpstion in watts.
-        electric_current: the current power consumpstion in amps.
-
-    """
-
-    position: int
-    direction: ShutterDirection
-
-
-@dataclass
 class SwitcherTimedBase(ABC):
     """Abstraction for all switcher devices supporting timed operations.
 
@@ -308,6 +258,40 @@ class SwitcherTimedBase(ABC):
     def auto_off_set(self) -> str:
         """Fix for backward compatibility issues with home assistant."""
         return self.auto_shutdown
+
+
+@dataclass
+class SwitcherThermostatBase(ABC):
+    """Abstraction for switcher thermostat devices.
+
+    Args:
+        mode: the mode of the thermostat.
+        temprature: the current temprature in celsius.
+        target temprature: the current target temprature in celsius.
+        fan_level: the current fan level in celsius.
+        swing: the current swing state.
+        remote_id: the id of the remote used to control this thermostat
+    """
+
+    mode: ThermostatMode
+    temprature: float
+    target_temprature: int
+    fan_leve: ThermostatFanLevel
+    swing: ThermostatSwing
+    remote_id: str
+
+
+@dataclass
+class SwitcherShutterBase(ABC):
+    """Abstraction for all switcher devices controlling shutter.
+
+    Args:
+        position: the current position of the shutter (integer percentage).
+        direction: the current direction of the shutter.
+    """
+
+    position: int
+    direction: ShutterDirection
 
 
 @final
@@ -344,8 +328,8 @@ class SwitcherWaterHeater(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
 
 @final
 @dataclass
-class SwitcherThermostat(SwitcherThermostat, SwitcherBase):
-    """Implementation of the Switcher Breeze (Thermostat) device."""
+class SwitcherThermostat(SwitcherThermostatBase, SwitcherBase):
+    """Implementation of the Switcher Thermostat device."""
 
     def __post_init__(self) -> None:
         if self.device_type.category != DeviceCategory.THERMOSTAT:
@@ -356,7 +340,7 @@ class SwitcherThermostat(SwitcherThermostat, SwitcherBase):
 
 @final
 @dataclass
-class SwitcherShutter(SwitcherShutter, SwitcherBase):
+class SwitcherShutter(SwitcherShutterBase, SwitcherBase):
     """Implementation of the Switcher Shutter device."""
 
     def __post_init__(self) -> None:
