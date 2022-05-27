@@ -267,8 +267,6 @@ async def get_state(device_id: str, device_ip: str, verbose: bool) -> None:
         printer.pprint(asdict(await api.get_state(), verbose))
 
 
-import IRSet
-
 async def control_thermostat(
     device_id: str,
     device_ip: str,
@@ -292,8 +290,8 @@ async def control_thermostat(
         swing = possible_swing[swing] if swing else resp.swing
         target_temp = target_temp if target_temp else resp.target_temprature
 
-        # remote: BreezeRemote = await rm.get_remote(resp.remote_id, api)
-        remote = BreezeRemote(IRSet.ir_set)
+        # First time it'll download the IRSet JSON file from switcher
+        remote: BreezeRemote = await rm.get_remote(resp.remote_id, api)
         if state == DeviceState.OFF:
             command = remote.get_state_command(DeviceState.OFF)
         else:
