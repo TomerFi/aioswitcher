@@ -99,7 +99,6 @@ class DeviceState(Enum):
 class ThermostatMode(Enum):
     """Enum class representing the thermostat device's position."""
 
-    NONE = "00", "none"
     AUTO = "01", "auto"
     DRY = "02", "dry"
     FAN = "03", "fan"

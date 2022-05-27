@@ -29,7 +29,6 @@ from aioswitcher.device import (
     DeviceCategory,
     DeviceType,
     DeviceState,
-    SwitcherThermostat,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
@@ -83,7 +82,7 @@ class SwitcherBreezeCommand:
 
     def __init__(self, command):
         self.command = command
-        self.length = self._get_command_length(command)
+        self.length = self._get_command_length()
 
     def _get_command_length(self):
         hex = "{:x}".format(int(len(self.command) / 2)).ljust(4, "0")
@@ -281,7 +280,6 @@ class SwitcherApi:
 
     async def control_breeze_device(
         self,
-        device: SwitcherThermostat,
         command: SwitcherBreezeCommand,
     ) -> SwitcherBaseResponse:
         """Use for sending the control packet to the Breeze device.
@@ -296,9 +294,7 @@ class SwitcherApi:
         logger.debug("about to send Breeze command")
         timestamp, login_resp = await self._login(DeviceType.BREEZE)
         if not login_resp.successful:
-            logger.error(
-                "Failed to log into device %s with id %s", device.name, device.device_id
-            )
+            logger.error("Failed to log into device id %s", self._device_id)
             raise RuntimeError("login request was not successful")
 
         logger.debug(
@@ -518,7 +514,8 @@ class SwitcherApi:
         return SwitcherBaseResponse(response)
 
     async def stop(self) -> SwitcherBaseResponse:
-        """Use for stopping the shutter from being rolled for the Runner and Runner Mini devices.
+        """Use for stopping the shutter from being rolled for the Runner and Runner 
+           Mini devices.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -552,6 +549,7 @@ class BreezeRemote(object):
     """
     Class that represent a remote for a Breeze device/s.
     """
+
     COMMAND_TO_MODE = {
         "aa": ThermostatMode.AUTO,
         "ad": ThermostatMode.DRY,
@@ -602,43 +600,73 @@ class BreezeRemote(object):
         mode: ThermostatMode,
         target_temp: int,
         fan_level: ThermostatFanLevel,
-        swing: ThermostatSwing,
     ):
         """
         Construct a command key for a specific command
         """
         command = ""
+
         command += BreezeRemote.MODE_TO_COMMAND[mode]
         command += str(target_temp)
         if fan_level in self.cap_fan_levels:
             command += "_" + BreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level]
 
-        if self.cap_swingable and not command:
-            command += "_d1"
-
         return command
 
-    def get_command(
+    def get_swing_command(self, swing: ThermostatSwing):
+        if swing == ThermostatSwing.ON and not self.cap_swingable:
+            raise RuntimeError("This device doesn't have Swing capability")
+
+        command = ""
+        if swing == ThermostatSwing.ON:
+            key = "FUN_d1"
+            command += (
+                self._ir_wave_map[key]["Para"] + "|" + self._ir_wave_map[key]["HexCode"]
+            )
+        else:
+            key = "FUN_d0"
+            command += (
+                self._ir_wave_map[key]["Para"] + "|" + self._ir_wave_map[key]["HexCode"]
+            )
+
+        return SwitcherBreezeCommand(
+            "00000000" + hexlify(str(command).encode()).decode()
+        )
+
+    def get_state_command(self, state: DeviceState):
+
+        command = ""
+        if state == DeviceState.ON:
+            key = "on"
+            command += (
+                self._ir_wave_map[key]["Para"] + "|" + self._ir_wave_map[key]["HexCode"]
+            )
+        else:
+            key = "off"
+            command += (
+                self._ir_wave_map[key]["Para"] + "|" + self._ir_wave_map[key]["HexCode"]
+            )
+
+        return SwitcherBreezeCommand(
+            "00000000" + hexlify(str(command).encode()).decode()
+        )
+
+    def get_mode_command(
         self,
-        device: SwitcherThermostat,
-        state: DeviceState,
         mode: ThermostatMode,
         target_temp: int,
         fan_level: ThermostatFanLevel,
         swing: ThermostatSwing,
-    ) -> SwitcherBreezeCommand:
-        """
-        Create a command to be sent to the Breeze device.
+    ):
 
-        Returns:
-            Instance of ``SwitcherBreezeCommand``.
-        """
+        key = []
+        command = ""
+        # capabilities verfications
+        if target_temp > self.cap_max_temp:
+            target_temp = self.cap_max_temp
 
-        if target_temp > self.cap_max_temp or target_temp < self.cap_min_temp:
-            raise RuntimeError(
-                f"Invalid temprature, the range is between {self.cap_min_temp} \
-                    and {self.cap_max_temp}"
-            )
+        elif target_temp < self.cap_min_temp:
+            target_temp = self.cap_min_temp
 
         if mode not in self.cap_modes:
             raise RuntimeError(
@@ -646,46 +674,50 @@ class BreezeRemote(object):
                     {', '.join(self.cap_modes)}"
             )
 
-        if swing.value == ThermostatSwing.ON and not self.cap_swingable:
-            raise RuntimeError("This device doesn't have Swing capability")
+        if mode == ThermostatMode.AUTO or mode == ThermostatMode.DRY:
+            key.append(BreezeRemote.MODE_TO_COMMAND[mode])
+            # lookup all the states of the mode
+            avail_modes = []
+            for mode_key in self._ir_wave_map.keys():
+                if key[0] in mode_key:
+                    avail_modes.append(mode_key)
+            
+            if len(avail_modes) > 1:
+                for avial_mode in avail_modes:
+                    fan = re.search(r'(f\d)', avial_mode)
+                    if fan and BreezeRemote.COMMAND_TO_FAN_LEVEL[fan.group(0)] == fan_level:
+                        key.append('_' + fan.group(0))
+                    
+        if mode == ThermostatMode.COOL or mode == ThermostatMode.HEAT:
+            key.append(BreezeRemote.MODE_TO_COMMAND[mode])
+            key.append(str(target_temp))
+            key.append("_" + BreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level])
+            key.append("_d1")
+            print(self._ir_wave_map)
+            while len(key) != 0:
+                if "".join(key) not in self._ir_wave_map:
+                    print("".join(key) + " not in map")
+                    key.pop()
+                else:
+                    print("".join(key) + " found in map")
+                    break
 
-        if state == DeviceState.OFF:
-            key = "off"
-
-        elif (
-            state == DeviceState.ON
-            and device.device_state != DeviceState.ON
-            and not self.on_off_type
-        ):
-            key = "on_" + self._construct_breeze_key(
-                mode, target_temp, fan_level, swing
-            )
-        else:
-            key = self._construct_breeze_key(mode, target_temp, fan_level, swing)
-
-        try:
-            command = (
-                self._ir_wave_map[key]["Para"]
-                + "|"
-                + self._ir_wave_map["off"]["HexCode"]
-            )
-        except KeyError:
-            raise RuntimeError(
-                "Failed to locate command for key=%s in IRSet file!", key
-            )
-
-        logger.debug("command key=%s", key)
-        logger.debug("command=%s", command)
+        command = (
+            self._ir_wave_map["".join(key)]["Para"]
+            + "|"
+            + self._ir_wave_map["".join(key)]["HexCode"]
+        )
         return SwitcherBreezeCommand(
             "00000000" + hexlify(str(command).encode()).decode()
         )
 
+
     def _resolve_capabilities(self, ir_set):
         """
-        Parses the ir_set of the rmeote and 
+        Parses the ir_set of the remote
         """
 
-        if ir_set["OnOffType"] == 0:
+        if ir_set["OnOffType"] == 1:
             self.on_off_type = True
 
         for wave in ir_set["IRWaveList"]:
@@ -719,14 +751,10 @@ class BreezeRemoteManager(object):
     def __init__(self):
         self._remotes_db = {}
 
-    async def get_remote(
-        self, device: SwitcherThermostat, api: SwitcherApi
-    ) -> BreezeRemote:
-        if device.remote_id not in self._remotes_db:
+    async def get_remote(self, remote_id: str, api: SwitcherApi) -> BreezeRemote:
+        if remote_id not in self._remotes_db:
             ir_set = await api.download_breeze_remote_ir_set()
-            self._remotes_db[device.remote_id] = BreezeRemote(ir_set)
-            logger.debug(
-                "Remote %s was downloaded and added to that DB", device.remote_id
-            )
+            self._remotes_db[remote_id] = BreezeRemote(ir_set)
+            logger.debug("Remote %s was downloaded and added to that DB", remote_id)
 
-        return self._remotes_db[device.remote_id]
+        return self._remotes_db[remote_id]

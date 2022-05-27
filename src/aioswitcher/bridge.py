@@ -131,7 +131,7 @@ def _parse_device_from_datagram(
                     parser.get_mac(),
                     parser.get_name(),
                     parser.get_shutter_position(),
-                    parser.get_shutter_direction()
+                    parser.get_shutter_direction(),
                 )
             )
 
@@ -150,7 +150,7 @@ def _parse_device_from_datagram(
                     parser.get_thermostat_target_temp(),
                     parser.get_thermostat_fan_level(),
                     parser.get_thermostat_swing(),
-                    parser.get_thermostat_remote_id()
+                    parser.get_thermostat_remote_id(),
                 )
             )
         else:
@@ -264,8 +264,8 @@ class DatagramParser:
         """Verify the broadcast message had originated from a switcher device."""
         return hexlify(self.message)[0:4].decode() == "fef0" and (
             len(self.message) == 165
-            or len(self.message) == 168     # Switcher Breeze
-            or len(self.message) == 159     # Switcher Runner and RunnerMini
+            or len(self.message) == 168  # Switcher Breeze
+            or len(self.message) == 159  # Switcher Runner and RunnerMini
         )
 
     def get_ip(self) -> str:
@@ -378,7 +378,7 @@ class DatagramParser:
         """Return the current thermostat mode."""
         hex_mode = hexlify(self.message[138:139]).decode()
         states = dict(map(lambda s: (s.value, s), ThermostatMode))
-        return states[hex_mode]
+        return ThermostatMode.COOL if hex_mode not in states else states[hex_mode]
 
     def get_thermostat_target_temp(self) -> int:
         """Return the current temp of the thermostat."""
