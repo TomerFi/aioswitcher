@@ -674,32 +674,26 @@ class BreezeRemote(object):
                     {', '.join(self.cap_modes)}"
             )
 
+        # Auto and Dry can sometimes have a FAN level and in other cases it might not have
         if mode == ThermostatMode.AUTO or mode == ThermostatMode.DRY:
             key.append(BreezeRemote.MODE_TO_COMMAND[mode])
-            # lookup all the states of the mode
-            avail_modes = []
-            for mode_key in self._ir_wave_map.keys():
-                if key[0] in mode_key:
-                    avail_modes.append(mode_key)
-            
-            if len(avail_modes) > 1:
-                for avial_mode in avail_modes:
-                    fan = re.search(r'(f\d)', avial_mode)
-                    if fan and BreezeRemote.COMMAND_TO_FAN_LEVEL[fan.group(0)] == fan_level:
-                        key.append('_' + fan.group(0))
-                    
+            key.append("_" + BreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level])
+            key.append("_d1")
+            while len(key) != 0:
+                if "".join(key) not in self._ir_wave_map:
+                    key.pop()
+                else:
+                    break
+        
         if mode == ThermostatMode.COOL or mode == ThermostatMode.HEAT:
             key.append(BreezeRemote.MODE_TO_COMMAND[mode])
             key.append(str(target_temp))
             key.append("_" + BreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level])
             key.append("_d1")
-            print(self._ir_wave_map)
             while len(key) != 0:
                 if "".join(key) not in self._ir_wave_map:
-                    print("".join(key) + " not in map")
                     key.pop()
                 else:
-                    print("".join(key) + " found in map")
                     break
 
         command = (
@@ -710,7 +704,6 @@ class BreezeRemote(object):
         return SwitcherBreezeCommand(
             "00000000" + hexlify(str(command).encode()).decode()
         )
-
 
     def _resolve_capabilities(self, ir_set):
         """

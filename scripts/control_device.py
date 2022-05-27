@@ -60,6 +60,7 @@ python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50
 
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -s on\n
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -m cool -f high -t 24\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -m dry\n
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -s off\n
 """  # noqa E501
 
@@ -210,7 +211,7 @@ control_thermostat_parser.add_argument(
     "-s",
     "--state",
     choices=possible_states.keys(),
-    required=True,
+    required=False,
     help=f"thermostat state, possible values: {possible_states}",
     default=None,
 )
@@ -285,7 +286,7 @@ async def control_thermostat(
         rm = BreezeRemoteManager()
         resp: SwitcherThermostatStateResponse = await api.get_breeze_state()
 
-        state = possible_states[state]
+        state = possible_states[state] if state else None
         mode = possible_modes[mode] if mode else resp.mode
         fan_level = possible_fan_level[fan_level] if fan_level else resp.fan_level
         swing = possible_swing[swing] if swing else resp.swing
