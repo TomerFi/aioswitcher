@@ -24,21 +24,29 @@ from aioswitcher.bridge import DatagramParser
 from aioswitcher.device import DeviceState, DeviceType
 
 
-@mark.parametrize("type_suffix, expected_type", [
-    ("mini", DeviceType.MINI),
-    ("power_plug", DeviceType.POWER_PLUG),
-    ("touch", DeviceType.TOUCH),
-    ("v2_esp", DeviceType.V2_ESP),
-    ("v2_qca", DeviceType.V2_QCA),
-    ("v4", DeviceType.V4),
-])
+@mark.parametrize(
+    "type_suffix, expected_type",
+    [
+        ("mini", DeviceType.MINI),
+        ("power_plug", DeviceType.POWER_PLUG),
+        ("touch", DeviceType.TOUCH),
+        ("v2_esp", DeviceType.V2_ESP),
+        ("v2_qca", DeviceType.V2_QCA),
+        ("v4", DeviceType.V4),
+    ],
+)
 def test_datagram_state_off(resource_path, type_suffix, expected_type):
-    sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = (
+        Path(f"{resource_path}_{type_suffix}.txt")
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
 
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    assert_that(sut_parser.get_ip()).is_equal_to("192.168.1.33")
+    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
     assert_that(sut_parser.get_mac()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
@@ -50,21 +58,29 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
         assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
 
 
-@mark.parametrize("type_suffix, expected_type", [
-    ("mini", DeviceType.MINI),
-    ("power_plug", DeviceType.POWER_PLUG),
-    ("touch", DeviceType.TOUCH),
-    ("v2_esp", DeviceType.V2_ESP),
-    ("v2_qca", DeviceType.V2_QCA),
-    ("v4", DeviceType.V4),
-])
+@mark.parametrize(
+    "type_suffix, expected_type",
+    [
+        ("mini", DeviceType.MINI),
+        ("power_plug", DeviceType.POWER_PLUG),
+        ("touch", DeviceType.TOUCH),
+        ("v2_esp", DeviceType.V2_ESP),
+        ("v2_qca", DeviceType.V2_QCA),
+        ("v4", DeviceType.V4),
+    ],
+)
 def test_datagram_state_on(resource_path, type_suffix, expected_type):
-    sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = (
+        Path(f"{resource_path}_{type_suffix}.txt")
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
 
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    assert_that(sut_parser.get_ip()).is_equal_to("192.168.1.33")
+    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
     assert_that(sut_parser.get_mac()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
@@ -78,6 +94,11 @@ def test_datagram_state_on(resource_path, type_suffix, expected_type):
 
 @mark.parametrize("type_suffix", ["too_short", "wrong_start"])
 def test_a_faulty_datagram(resource_path, type_suffix):
-    sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = (
+        Path(f"{resource_path}_{type_suffix}.txt")
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
     sut_parser = DatagramParser(unhexlify(sut_datagram))
     assert_that(sut_parser.is_switcher_originator()).is_false()
