@@ -775,7 +775,7 @@ class BreezeRemote(object):
                 + self._ir_wave_map["".join(key)]["HexCode"]
             )
         except KeyError:
-            print(
+            logger.error(
                 f'The constructed key "{key}", does not exist in the IRSet database!'
             )
             raise RuntimeError
