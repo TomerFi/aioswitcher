@@ -747,7 +747,11 @@ class BreezeRemote(object):
                 # it might not have. in any case we try to add the request fan
                 # level to the key, if we get a match we fulfill the request, otherwise
                 # we remove the fan and lookup the key again
-                if mode in [ThermostatMode.AUTO, ThermostatMode.DRY, ThermostatMode.FAN]:
+                if mode in [
+                    ThermostatMode.AUTO,
+                    ThermostatMode.DRY,
+                    ThermostatMode.FAN,
+                ]:
                     # the command key should start with mode (aa/ad/ar/ah)
                     key.append(BreezeRemote.MODE_TO_COMMAND[mode])
                     # add the requested fan level (_f0, _f1, _f2, _f3)
