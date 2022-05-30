@@ -265,16 +265,16 @@ class SwitcherThermostatBase(ABC):
 
     Args:
         mode: the mode of the thermostat.
-        temprature: the current temprature in celsius.
-        target temprature: the current target temprature in celsius.
+        temperature: the current temperature in celsius.
+        target temperature: the current target temperature in celsius.
         fan_level: the current fan level in celsius.
         swing: the current swing state.
         remote_id: the id of the remote used to control this thermostat
     """
 
     mode: ThermostatMode
-    temprature: float
-    target_temprature: int
+    temperature: float
+    target_temperature: int
     fan_level: ThermostatFanLevel
     swing: ThermostatSwing
     remote_id: str

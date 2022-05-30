@@ -103,7 +103,7 @@ class StateMessageParser:
         return int(self._hex_response[154:156] + self._hex_response[152:154], 16) / 10
 
     def get_thermostat_target_temp(self) -> int:
-        """Return the current temprature of the thermostat."""
+        """Return the current temperature of the thermostat."""
         hex_temp = self._hex_response[160:162]
         return int(hex_temp, 16)
 
@@ -230,8 +230,8 @@ class SwitcherThermostatStateResponse(SwitcherBaseResponse):
     state: DeviceState = field(init=False)
     mode: ThermostatMode = field(init=False)
     fan_level: ThermostatFanLevel = field(init=False)
-    temprature: float = field(init=False)
-    target_temprature: int = field(init=False)
+    temperature: float = field(init=False)
+    target_temperature: int = field(init=False)
     swing: ThermostatSwing = field(init=False)
     remote_id: str = field(init=False)
 
@@ -242,8 +242,8 @@ class SwitcherThermostatStateResponse(SwitcherBaseResponse):
         self.state = parser.get_thermostat_state()
         self.mode = parser.get_thermostat_mode()
         self.fan_level = parser.get_thermostat_fan_level()
-        self.temprature = parser.get_thermostat_temp()
-        self.target_temprature = parser.get_thermostat_target_temp()
+        self.temperature = parser.get_thermostat_temp()
+        self.target_temperature = parser.get_thermostat_target_temp()
         self.swing = parser.get_thermostat_swing()
         self.remote_id = parser.get_thermostat_remote_id()
 

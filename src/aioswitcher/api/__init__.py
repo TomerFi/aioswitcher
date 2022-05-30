@@ -617,11 +617,11 @@ class BreezeRemote(object):
             < ThermostatMode.AUTO: ('01', 'auto') >: {
                 'swing': False,
                 'fan_levels': set(),
-                'temprature_control': False
+                'temperature_control': False
             }, < ThermostatMode.DRY: ('02', 'dry') >: {
                 'swing': False,
                 'fan_levels': set(),
-                'temprature_control': False
+                'temperature_control': False
             }, < ThermostatMode.FAN: ('03', 'fan') >: {
                 'swing': False,
                 'fan_levels': {
@@ -630,7 +630,7 @@ class BreezeRemote(object):
                     < ThermostatFanLevel.MEDIUM: ('2', 'medium') > ,
                     < ThermostatFanLevel.LOW: ('1', 'low') >
                 },
-                'temprature_control': False
+                'temperature_control': False
             }, < ThermostatMode.COOL: ('04', 'cool') >: {
                 'swing': False,
                 'fan_levels': {
@@ -639,7 +639,7 @@ class BreezeRemote(object):
                     < ThermostatFanLevel.MEDIUM: ('2', 'medium') > ,
                     < ThermostatFanLevel.LOW: ('1', 'low') >
                 },
-                'temprature_control': True
+                'temperature_control': True
             }, < ThermostatMode.HEAT: ('05', 'heat') >: {
                 'swing': True,
                 'fan_levels': {
@@ -648,7 +648,7 @@ class BreezeRemote(object):
                     < ThermostatFanLevel.MEDIUM: ('2', 'medium') > ,
                     < ThermostatFanLevel.LOW: ('1', 'low') >
                 },
-                'temprature_control': True
+                'temperature_control': True
             }
         }
         """
@@ -667,13 +667,13 @@ class BreezeRemote(object):
         return self.modes_features.keys()
 
     @property
-    def max_temprature(self) -> int:
-        """Getter for Maximum supported temprature."""
+    def max_temperature(self) -> int:
+        """Getter for Maximum supported temperature."""
         return self._max_temp
 
     @property
-    def min_temprature(self) -> int:
-        """Getter for Miniumum supported temprature."""
+    def min_temperature(self) -> int:
+        """Getter for Miniumum supported temperature."""
         return self._min_temp
 
     @property
@@ -799,7 +799,7 @@ class BreezeRemote(object):
                     self._modes_features[mode] = {
                         "swing": False,
                         "fan_levels": set(),
-                        "temprature_control": False,
+                        "temperature_control": False,
                     }
 
             except KeyError:
@@ -814,8 +814,8 @@ class BreezeRemote(object):
 
             temp = key[2:4]
             if temp.isdigit():
-                if mode and not self._modes_features[mode]["temprature_control"]:
-                    self._modes_features[mode]["temprature_control"] = True
+                if mode and not self._modes_features[mode]["temperature_control"]:
+                    self._modes_features[mode]["temperature_control"] = True
                 temp = int(temp)
                 if temp > self._max_temp:
                     self._max_temp = temp

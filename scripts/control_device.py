@@ -244,10 +244,10 @@ control_thermostat_parser.add_argument(
 )
 control_thermostat_parser.add_argument(
     "-t",
-    "--temprature",
+    "--temperature",
     type=int,
     required=False,
-    help=f"thermostat temprature, possible values: {possible_swing}",
+    help=f"thermostat temperature, possible values: {possible_swing}",
     default=None,
 )
 
@@ -288,7 +288,7 @@ async def control_thermostat(
         new_mode = possible_modes[mode] if mode else resp.mode
         new_fan_level = possible_fan_level[fan_level] if fan_level else resp.fan_level
         new_swing = possible_swing[swing] if swing else resp.swing
-        new_target_temp = target_temp if target_temp else resp.target_temprature
+        new_target_temp = target_temp if target_temp else resp.target_temperature
 
         # First time it'll download the IRSet JSON file from switcher
         remote: BreezeRemote = await rm.get_remote(resp.remote_id, api)
@@ -479,7 +479,7 @@ if __name__ == "__main__":
                     args.ip_address,
                     args.state,
                     args.mode,
-                    args.temprature,
+                    args.temperature,
                     args.fan_level,
                     args.swing,
                     args.verbose,
