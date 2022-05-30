@@ -57,15 +57,17 @@ from .messages import (
 
 logger = getLogger(__name__)
 
-SWITCHER_TCP_PORT2 = 10000
-SWITCHER_TCP_PORT = 9957
+# Type 1 devices: Heaters (v2, touch, v4), Plug
+SWITCHER_TCP_PORT_TYPE1 = 9957
+# Type 2 devices: Heaters Breeze, Runners
+SWITCHER_TCP_PORT_TYPE2 = 10000
 
 
 SWITCHER_DEVICE_TO_TCP_PORT = {
-    DeviceCategory.THERMOSTAT: SWITCHER_TCP_PORT2,
-    DeviceCategory.SHUTTER: SWITCHER_TCP_PORT2,
-    DeviceCategory.WATER_HEATER: SWITCHER_TCP_PORT,
-    DeviceCategory.POWER_PLUG: SWITCHER_TCP_PORT,
+    DeviceCategory.THERMOSTAT: SWITCHER_TCP_PORT_TYPE2,
+    DeviceCategory.SHUTTER: SWITCHER_TCP_PORT_TYPE2,
+    DeviceCategory.WATER_HEATER: SWITCHER_TCP_PORT_TYPE1,
+    DeviceCategory.POWER_PLUG: SWITCHER_TCP_PORT_TYPE1,
 }
 
 
@@ -92,7 +94,6 @@ class SwitcherBreezeCommand:
         return hex
 
 
-@final
 class SwitcherApi:
     """Switcher TCP based API.
 
@@ -176,9 +177,9 @@ class SwitcherApi:
             or device_type == DeviceType.RUNNER
             or device_type == DeviceType.RUNNER_MINI
         ):
-            packet = packets.LOGIN2_PACKET.format(timestamp, self._device_id)
+            packet = packets.LOGIN2_PACKET_TYPE2.format(timestamp, self._device_id)
         else:
-            packet = packets.LOGIN_PACKET.format(timestamp)
+            packet = packets.LOGIN_PACKET_TYPE1.format(timestamp)
         signed_packet = sign_packet_with_crc_key(packet)
 
         logger.debug("sending a login packet")
@@ -194,7 +195,7 @@ class SwitcherApi:
         """
         timestamp, login_resp = await self._login()
         if login_resp.successful:
-            packet = packets.GET_STATE_PACKET.format(
+            packet = packets.GET_STATE_PACKET_TYPE1.format(
                 login_resp.session_id, timestamp, self._device_id
             )
             signed_packet = sign_packet_with_crc_key(packet)
@@ -220,7 +221,7 @@ class SwitcherApi:
         timestamp, login_resp = await self._login(DeviceType.BREEZE)
         if login_resp.successful:
 
-            packet = packets.GET_STATE_PACKET2.format(
+            packet = packets.GET_STATE_PACKET2_TYPE2.format(
                 login_resp.session_id, timestamp, self._device_id
             )
 
@@ -247,7 +248,7 @@ class SwitcherApi:
         timestamp, login_resp = await self._login(DeviceType.RUNNER)
         if login_resp.successful:
 
-            packet = packets.GET_STATE_PACKET2.format(
+            packet = packets.GET_STATE_PACKET2_TYPE2.format(
                 login_resp.session_id, timestamp, self._device_id
             )
 
@@ -560,6 +561,34 @@ class SwitcherApi:
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
+
+
+@final
+class SwitcherType1Api(SwitcherApi):
+    """Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.
+
+    Args:
+        ip_address: the ip address assigned to the device.
+        device_id: the id of the desired device.
+    """
+
+    def __init__(self, ip_address: str, device_id: str) -> None:
+        """Initialize the Switcher TCP connection API."""
+        super().__init__(ip_address, device_id, SWITCHER_TCP_PORT_TYPE1)
+
+
+@final
+class SwitcherType2Api(SwitcherApi):
+    """Switcher Type2 devices (Breeze, Runners) TCP based API.
+
+    Args:
+        ip_address: the ip address assigned to the device.
+        device_id: the id of the desired device.
+    """
+
+    def __init__(self, ip_address: str, device_id: str) -> None:
+        """Initialize the Switcher TCP connection API."""
+        super().__init__(ip_address, device_id, SWITCHER_TCP_PORT_TYPE2)
 
 
 class BreezeRemote(object):
