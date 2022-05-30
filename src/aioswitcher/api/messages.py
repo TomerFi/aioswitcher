@@ -14,11 +14,17 @@
 
 """Switcher integration TCP socket API messages."""
 
-from binascii import hexlify
+from binascii import hexlify, unhexlify
 from dataclasses import InitVar, dataclass, field
 from typing import Set, final
 
-from ..device import DeviceState
+from ..device import (
+    DeviceState,
+    ShutterDirection,
+    ThermostatFanLevel,
+    ThermostatMode,
+    ThermostatSwing,
+)
 from ..device.tools import seconds_to_iso_time, watts_to_amps
 from ..schedule.parser import SwitcherSchedule, get_schedules
 
@@ -74,9 +80,66 @@ class StateMessageParser:
 
     def get_state(self) -> DeviceState:
         """Return the current device state."""
-        hex_state = self._hex_response[150:154].decode()
+        hex_state = self._hex_response[150:152].decode()
         states = dict(map(lambda s: (s.value, s), DeviceState))
         return states[hex_state]
+
+    def get_thermostat_state(self) -> DeviceState:
+        """Return the current thermostat state."""
+        hex_power = self._hex_response[156:158].decode()
+        return DeviceState.OFF if hex_power == DeviceState.OFF.value else DeviceState.ON
+
+    def get_thermostat_mode(self) -> ThermostatMode:
+        """Return the current thermostat mode."""
+        hex_mode = self._hex_response[158:160]
+        modes = dict(map(lambda s: (s.value, s), ThermostatMode))
+        try:
+            return modes[hex_mode.decode()]
+        except KeyError:
+            return ThermostatMode.COOL
+
+    def get_thermostat_temp(self) -> float:
+        """Return the current temp of the thermostat."""
+        return int(self._hex_response[154:156] + self._hex_response[152:154], 16) / 10
+
+    def get_thermostat_target_temp(self) -> int:
+        """Return the current temperature of the thermostat."""
+        hex_temp = self._hex_response[160:162]
+        return int(hex_temp, 16)
+
+    def get_thermostat_fan_level(self) -> ThermostatFanLevel:
+        """Return the current thermostat fan level."""
+        hex_level = self._hex_response[162:163].decode()
+        levels = dict(map(lambda s: (s.value, s), ThermostatFanLevel))
+        try:
+            return levels[hex_level]
+        except KeyError:
+            return ThermostatFanLevel.LOW
+
+    def get_thermostat_swing(self) -> ThermostatSwing:
+        """Return the current thermostat fan swing."""
+        hex_swing = self._hex_response[163:164].decode()
+        return (
+            ThermostatSwing.OFF
+            if hex_swing == ThermostatSwing.OFF.value
+            else ThermostatSwing.ON
+        )
+
+    def get_thermostat_remote_id(self) -> str:
+        """Return the current thermostat remote."""
+        remote_hex = unhexlify(self._hex_response)
+        return remote_hex[84:92].decode().rstrip("\x00")
+
+    def get_shutter_poisition(self) -> int:
+        """Return the current shutter position."""
+        hex_pos = self._hex_response[152:154].decode()
+        return int(hex_pos, 16)
+
+    def get_shutter_direction(self) -> ShutterDirection:
+        """Return the current shutter direction."""
+        hex_dir = self._hex_response[156:160].decode()
+        directions = dict(map(lambda s: (s.value, s), ShutterDirection))
+        return directions[hex_dir]
 
 
 @dataclass
@@ -157,3 +220,45 @@ class SwitcherGetSchedulesResponse(SwitcherBaseResponse):
     def found_schedules(self) -> bool:
         """Return true if found schedules in the response."""
         return len(self.schedules) > 0
+
+
+@final
+@dataclass
+class SwitcherThermostatStateResponse(SwitcherBaseResponse):
+    """Representation of the Switcher thermostat device state response message."""
+
+    state: DeviceState = field(init=False)
+    mode: ThermostatMode = field(init=False)
+    fan_level: ThermostatFanLevel = field(init=False)
+    temperature: float = field(init=False)
+    target_temperature: int = field(init=False)
+    swing: ThermostatSwing = field(init=False)
+    remote_id: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Post initialization of the message."""
+        parser = StateMessageParser(self.unparsed_response)
+
+        self.state = parser.get_thermostat_state()
+        self.mode = parser.get_thermostat_mode()
+        self.fan_level = parser.get_thermostat_fan_level()
+        self.temperature = parser.get_thermostat_temp()
+        self.target_temperature = parser.get_thermostat_target_temp()
+        self.swing = parser.get_thermostat_swing()
+        self.remote_id = parser.get_thermostat_remote_id()
+
+
+@final
+@dataclass
+class SwitcherShutterStateResponse(SwitcherBaseResponse):
+    """Representation of the Switcher shutter devices state response message."""
+
+    position: int = field(init=False)
+    direction: ShutterDirection = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Post initialization of the message."""
+        parser = StateMessageParser(self.unparsed_response)
+
+        self.direction = parser.get_shutter_direction()
+        self.position = parser.get_shutter_poisition()
