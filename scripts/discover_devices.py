@@ -46,7 +46,11 @@ from asyncio import get_event_loop, sleep
 from dataclasses import asdict
 from pprint import PrettyPrinter
 
-from aioswitcher.bridge import SwitcherBridge
+from aioswitcher.bridge import (
+    SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE2,
+    SwitcherBridge,
+)
 from aioswitcher.device import SwitcherBase
 
 printer = PrettyPrinter(indent=4)
@@ -59,9 +63,26 @@ parser.add_argument(
     nargs="?",
     default=60,
 )
+parser.add_argument(
+    "-t",
+    "--type",
+    required=False,
+    choices={1, 2},
+    help="set protocol type: 1 or 2",
+    type=int,
+)
+parser.add_argument(
+    "-p",
+    "--ports",
+    required=False,
+    help="bridge ports to listen on",
+    nargs="+",
+    type=int,
+    default=[SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2],
+)
 
 
-async def print_devices(delay: int) -> None:
+async def print_devices(delay: int, ports: list[int]) -> None:
     """Run the Switcher bridge and register callback for discovered devices."""
 
     def on_device_found_callback(device: SwitcherBase) -> None:
@@ -69,14 +90,22 @@ async def print_devices(delay: int) -> None:
         printer.pprint(asdict(device))
         print()
 
-    async with SwitcherBridge(on_device_found_callback):
+    async with SwitcherBridge(on_device_found_callback, broadcast_ports=ports):
         await sleep(delay)
 
 
 if __name__ == "__main__":
     args = parser.parse_args()
 
+    if args.type == 1:
+        ports = [SWITCHER_UDP_PORT_TYPE1]
+    elif args.type == 2:
+        ports = [SWITCHER_UDP_PORT_TYPE2]
+    else:
+        ports = args.ports
+
+    print(ports)
     try:
-        get_event_loop().run_until_complete(print_devices(args.delay))
+        get_event_loop().run_until_complete(print_devices(args.delay, ports))
     except KeyboardInterrupt:
         exit()

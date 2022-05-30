@@ -22,7 +22,7 @@ from logging import getLogger
 from socket import AF_INET, inet_ntoa
 from struct import pack
 from types import TracebackType
-from typing import Any, Callable, Optional, Tuple, Type, final
+from typing import Any, Callable, Dict, Optional, Tuple, Type, final
 from warnings import warn
 
 from .device import (
@@ -45,14 +45,16 @@ __all__ = ["SwitcherBridge"]
 logger = getLogger(__name__)
 
 
-SWITCHER_UDP_PORT = 20002
-SWITCHER_UDP_PORT2 = 20003
+# Type 1 devices: Heaters (v2, touch, v4), Plug
+SWITCHER_UDP_PORT_TYPE1 = 20002
+# Type 2 devices: Heaters Breeze, Runners
+SWITCHER_UDP_PORT_TYPE2 = 20003
 
 SWITCHER_DEVICE_TO_UDP_PORT = {
-    DeviceCategory.WATER_HEATER: SWITCHER_UDP_PORT,
-    DeviceCategory.POWER_PLUG: SWITCHER_UDP_PORT,
-    DeviceCategory.THERMOSTAT: SWITCHER_UDP_PORT2,
-    DeviceCategory.SHUTTER: SWITCHER_UDP_PORT2,
+    DeviceCategory.WATER_HEATER: SWITCHER_UDP_PORT_TYPE1,
+    DeviceCategory.POWER_PLUG: SWITCHER_UDP_PORT_TYPE1,
+    DeviceCategory.THERMOSTAT: SWITCHER_UDP_PORT_TYPE2,
+    DeviceCategory.SHUTTER: SWITCHER_UDP_PORT_TYPE2,
 }
 
 
@@ -91,7 +93,7 @@ def _parse_device_from_datagram(
                     device_type,
                     device_state,
                     parser.get_device_id(),
-                    parser.get_ip(),
+                    parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
                     power_consumption,
@@ -112,7 +114,7 @@ def _parse_device_from_datagram(
                     device_type,
                     device_state,
                     parser.get_device_id(),
-                    parser.get_ip(),
+                    parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
                     power_consumption,
@@ -127,7 +129,7 @@ def _parse_device_from_datagram(
                     device_type,
                     DeviceState.ON,
                     parser.get_device_id(),
-                    parser.get_ip2(),
+                    parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
                     parser.get_shutter_position(),
@@ -142,7 +144,7 @@ def _parse_device_from_datagram(
                     device_type,
                     device_state,
                     parser.get_device_id(),
-                    parser.get_ip2(),
+                    parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
                     parser.get_thermostat_mode(),
@@ -163,18 +165,21 @@ class SwitcherBridge:
 
     Args:
         on_device: a callable to which every new SwitcherBase device found will be send.
-        broadcast_port: broadcast port, default is 20002.
+        broadcast_ports: broadcast ports list, default for type 1 devices is 20002,
+        default for type 2 devices is 20003
 
     """
 
     def __init__(
-        self, on_device: Callable[[SwitcherBase], Any], broadcast_port: int = 20002
+        self,
+        on_device: Callable[[SwitcherBase], Any],
+        broadcast_ports: list[int] = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2],
     ) -> None:
         """Initialize the switcher bridge."""
         self._on_device = on_device
-        self._broadcast_port = broadcast_port
+        self._broadcast_ports = broadcast_ports
         self._is_running = False
-        self._transport = None  # type: Optional[BaseTransport]
+        self._transports = {}  # type: Dict[int, Optional[BaseTransport]]
 
     async def __aenter__(self) -> "SwitcherBridge":
         """Enter SwitcherBridge asynchronous context manager."""
@@ -192,27 +197,32 @@ class SwitcherBridge:
 
     async def start(self) -> None:
         """Create an asynchronous listener and start the bridge."""
-        logger.info("starting the udp bridge")
-        protocol_factory = UdpClientProtocol(
-            partial(_parse_device_from_datagram, self._on_device)
-        )
-        transport, protocol = await get_running_loop().create_datagram_endpoint(
-            lambda: protocol_factory,
-            local_addr=("0.0.0.0", self._broadcast_port),  # nosec
-            family=AF_INET,
-        )
+        for broadcast_port in self._broadcast_ports:
+            logger.info("starting the udp bridge on port %s", broadcast_port)
+            protocol_factory = UdpClientProtocol(
+                partial(_parse_device_from_datagram, self._on_device)
+            )
+            transport, protocol = await get_running_loop().create_datagram_endpoint(
+                lambda: protocol_factory,
+                local_addr=("0.0.0.0", broadcast_port),  # nosec
+                family=AF_INET,
+            )
+            self._transports[broadcast_port] = transport
+            logger.debug("udp bridge on port %s started", broadcast_port)
 
         self._is_running = True
-        logger.info("udp bridge started")
-        self._transport = transport
 
     async def stop(self) -> None:
         """Stop the asynchronous bridge."""
-        if self._transport and not self._transport.is_closing():
-            logger.info("stopping the udp bridge")
-            self._transport.close()
-        else:
-            logger.info("udp bridge not started")
+        for broadcast_port in self._broadcast_ports:
+            transport = self._transports.get(broadcast_port)
+
+            if transport and not transport.is_closing():
+                logger.info("stopping the udp bridge on port %s", broadcast_port)
+                transport.close()
+            else:
+                logger.info("udp bridge on port %s not started", broadcast_port)
+
         self._is_running = False
 
     @property
@@ -268,14 +278,14 @@ class DatagramParser:
             or len(self.message) == 159  # Switcher Runner and RunnerMini
         )
 
-    def get_ip(self) -> str:
-        """Extract the IP address from the broadcast message."""
+    def get_ip_type1(self) -> str:
+        """Extract the IP address from the type1 broadcast message (Heater, Plug)."""
         hex_ip = hexlify(self.message)[152:160]
         ip_addr = int(hex_ip[6:8] + hex_ip[4:6] + hex_ip[2:4] + hex_ip[0:2], 16)
         return inet_ntoa(pack("<L", ip_addr))
 
-    def get_ip2(self) -> str:
-        """Extract the IP address from the broadcast message (Breeze and Runners)."""
+    def get_ip_type2(self) -> str:
+        """Extract the IP address from the broadcast message (Breeze, Runners)."""
         hex_ip = hexlify(self.message)[154:162]
         ip_addr = int(hex_ip[0:2] + hex_ip[2:4] + hex_ip[4:6] + hex_ip[6:8], 16)
         return inet_ntoa(pack(">L", ip_addr))
