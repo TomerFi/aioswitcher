@@ -35,23 +35,24 @@ class DeviceCategory(Enum):
 class DeviceType(Enum):
     """Enum for relaying the type of the switcher devices."""
 
-    MINI = "Switcher Mini", "030f", DeviceCategory.WATER_HEATER
-    POWER_PLUG = "Switcher Power Plug", "01a8", DeviceCategory.POWER_PLUG
-    TOUCH = "Switcher Touch", "030b", DeviceCategory.WATER_HEATER
-    V2_ESP = "Switcher V2 (esp)", "01a7", DeviceCategory.WATER_HEATER
-    V2_QCA = "Switcher V2 (qualcomm)", "01a1", DeviceCategory.WATER_HEATER
-    V4 = "Switcher V4", "0317", DeviceCategory.WATER_HEATER
-    BREEZE = "Switcher Breeze", "0e01", DeviceCategory.THERMOSTAT
-    RUNNER = "Switcher Runner", "0c01", DeviceCategory.SHUTTER
-    RUNNER_MINI = "Switcher Runner Mini", "0c02", DeviceCategory.SHUTTER
+    MINI = "Switcher Mini", "030f", 1, DeviceCategory.WATER_HEATER
+    POWER_PLUG = "Switcher Power Plug", "01a8", 1, DeviceCategory.POWER_PLUG
+    TOUCH = "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER
+    V2_ESP = "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER
+    V2_QCA = "Switcher V2 (qualcomm)", "01a1", 1, DeviceCategory.WATER_HEATER
+    V4 = "Switcher V4", "0317", 1, DeviceCategory.WATER_HEATER
+    BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT
+    RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER
+    RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER
 
     def __new__(
-        cls, value: str, hex_rep: str, category: DeviceCategory
+        cls, value: str, hex_rep: str, protocol_type: int, category: DeviceCategory
     ) -> "DeviceType":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
         new_enum._value = value  # type: ignore
         new_enum._hex_rep = hex_rep  # type: ignore
+        new_enum._protocol_type = protocol_type  # type: ignore
         new_enum._category = category  # type: ignore
         return new_enum
 
@@ -64,6 +65,11 @@ class DeviceType(Enum):
     def hex_rep(self) -> str:
         """Return the hexadecimal representation of the device type."""
         return self._hex_rep  # type: ignore
+
+    @property
+    def protocol_type(self) -> int:
+        """Return the protocol type of the device."""
+        return self._protocol_type  # type: ignore
 
     @property
     def category(self) -> DeviceCategory:
