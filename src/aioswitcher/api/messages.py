@@ -80,7 +80,7 @@ class StateMessageParser:
 
     def get_state(self) -> DeviceState:
         """Return the current device state."""
-        hex_state = self._hex_response[150:154].decode()
+        hex_state = self._hex_response[150:152].decode()
         states = dict(map(lambda s: (s.value, s), DeviceState))
         return states[hex_state]
 
