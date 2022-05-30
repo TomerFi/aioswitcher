@@ -602,7 +602,7 @@ class BreezeRemote(object):
         self._on_off_type = False
         self._remote_id = ir_set["IRSetID"]
         self._brand = ir_set["BrandName"]
-        # _ir_wave_map hosts a shrinked version of the ir_set file which ignores
+        # _ir_wave_map hosts a shrunk version of the ir_set file which ignores
         # unused data and map key to dict{"HexCode": str, "Para": str}
         # this is being built by the _resolve_capabilities method
         self._ir_wave_map = {}  # type: Mapping[str, Mapping[str, str]]
@@ -745,7 +745,7 @@ class BreezeRemote(object):
             if self._on_off_type or (not self._on_off_type and state == DeviceState.ON):
                 # Auto and Dry can sometimes have a FAN level and in other cases
                 # it might not have. in any case we try to add the request fan
-                # level to the key, if we get a match we fulfil the request, otherwise
+                # level to the key, if we get a match we fulfill the request, otherwise
                 # we remove the fan and lookup the key again
                 if mode == ThermostatMode.AUTO or mode == ThermostatMode.DRY:
                     # the command key should start with mode (aa/ad/ar/ah)
