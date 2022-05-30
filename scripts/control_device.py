@@ -22,7 +22,21 @@ from datetime import timedelta
 from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
-from aioswitcher.api import Command, SwitcherApi
+from aioswitcher.api import (
+    SWITCHER_DEVICE_TO_TCP_PORT,
+    BreezeRemote,
+    BreezeRemoteManager,
+    Command,
+    SwitcherApi,
+)
+from aioswitcher.api.messages import SwitcherThermostatStateResponse
+from aioswitcher.device import (
+    DeviceCategory,
+    DeviceState,
+    ThermostatFanLevel,
+    ThermostatMode,
+    ThermostatSwing,
+)
 from aioswitcher.schedule import Days
 
 printer = PrettyPrinter(indent=4)
@@ -38,7 +52,16 @@ python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 
 python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules\n
 python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3\n
 python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"\n
-python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday"""  # noqa E501
+python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday\n
+
+python control_device.py -d f2239a -i "192.168.50.98" stop_shutter\n
+python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50\n
+
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -s on\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -m cool -f high -t 24\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -m dry\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -s off\n
+"""  # noqa E501
 
 # parent parser
 parent_parser = ArgumentParser(
@@ -163,6 +186,71 @@ create_schedule_parser.add_argument(
     default=list(),
 )
 
+# stop shutter parser
+stop_shutter_parser = subparsers.add_parser("stop_shutter", help="stop shutter")
+
+# stop shutter parser
+set_shutter_position_parser = subparsers.add_parser(
+    "set_shutter_position", help="set shutter position"
+)
+set_shutter_position_parser.add_argument(
+    "-p",
+    "--position",
+    required=True,
+    type=int,
+    help="Shutter position percentage",
+    default=0,
+)
+
+# control_thermostat parser
+control_thermostat_parser = subparsers.add_parser(
+    "control_thermostat", help="create a new schedule"
+)
+possible_states = dict(map(lambda s: (s.display, s), DeviceState))
+control_thermostat_parser.add_argument(
+    "-s",
+    "--state",
+    choices=possible_states.keys(),
+    required=True,
+    help=f"thermostat state, possible values: {possible_states}",
+    default=None,
+)
+possible_modes = dict(map(lambda s: (s.display, s), ThermostatMode))
+control_thermostat_parser.add_argument(
+    "-m",
+    "--mode",
+    choices=possible_modes.keys(),
+    required=False,
+    help=f"thermostat mode, possible values: {possible_modes}",
+    default=None,
+)
+possible_fan_level = dict(map(lambda s: (s.display, s), ThermostatFanLevel))
+control_thermostat_parser.add_argument(
+    "-f",
+    "--fan-level",
+    choices=possible_fan_level.keys(),
+    required=False,
+    help=f"thermostat fan level, possible values: {possible_fan_level}",
+    default=None,
+)
+possible_swing = dict(map(lambda s: (s.display, s), ThermostatSwing))
+control_thermostat_parser.add_argument(
+    "-w",
+    "--swing",
+    choices=possible_swing.keys(),
+    required=False,
+    help=f"thermostat swing, possible values: {possible_swing}",
+    default=None,
+)
+control_thermostat_parser.add_argument(
+    "-t",
+    "--temprature",
+    type=int,
+    required=False,
+    help=f"thermostat temprature, possible values: {possible_swing}",
+    default=None,
+)
+
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
     """Use as custom implementation of the asdict utility method."""
@@ -177,6 +265,43 @@ async def get_state(device_id: str, device_ip: str, verbose: bool) -> None:
     """Use to launch a get_state request."""
     async with SwitcherApi(device_ip, device_id) as api:
         printer.pprint(asdict(await api.get_state(), verbose))
+
+
+async def control_thermostat(
+    device_id: str,
+    device_ip: str,
+    state: str,
+    mode: str = None,
+    target_temp: int = 0,
+    fan_level: str = None,
+    swing: str = None,
+    verbose: bool = False,
+):
+    """Control Breeze device."""
+    async with SwitcherApi(
+        device_ip, device_id, SWITCHER_DEVICE_TO_TCP_PORT[DeviceCategory.THERMOSTAT]
+    ) as api:
+        rm = BreezeRemoteManager()
+        resp: SwitcherThermostatStateResponse = await api.get_breeze_state()
+
+        new_state = possible_states[state]
+        new_mode = possible_modes[mode] if mode else resp.mode
+        new_fan_level = possible_fan_level[fan_level] if fan_level else resp.fan_level
+        new_swing = possible_swing[swing] if swing else resp.swing
+        new_target_temp = target_temp if target_temp else resp.target_temprature
+
+        # First time it'll download the IRSet JSON file from switcher
+        remote: BreezeRemote = await rm.get_remote(resp.remote_id, api)
+
+        command = remote.get_command(
+            new_state, new_mode, new_target_temp, new_fan_level, new_swing, resp.state
+        )
+        printer.pprint(
+            asdict(
+                await api.control_breeze_device(command),
+                verbose,
+            )
+        )
 
 
 async def turn_on(device_id: str, device_ip: str, timer: int, verbose: bool) -> None:
@@ -248,6 +373,34 @@ async def create_schedule(
         )
 
 
+async def stop_shutter(device_id: str, device_ip: str, verbose: bool):
+    """Stop shutter."""
+    async with SwitcherApi(
+        device_ip, device_id, SWITCHER_DEVICE_TO_TCP_PORT[DeviceCategory.SHUTTER]
+    ) as api:
+        printer.pprint(
+            asdict(
+                await api.stop(),
+                verbose,
+            )
+        )
+
+
+async def set_shutter_position(
+    device_id: str, device_ip: str, position: int, verbose: bool
+):
+    """Use to set the shutter position."""
+    async with SwitcherApi(
+        device_ip, device_id, SWITCHER_DEVICE_TO_TCP_PORT[DeviceCategory.SHUTTER]
+    ) as api:
+        printer.pprint(
+            asdict(
+                await api.set_position(position),
+                verbose,
+            )
+        )
+
+
 if __name__ == "__main__":
     try:
         args = parent_parser.parse_args()
@@ -299,5 +452,39 @@ if __name__ == "__main__":
                     args.verbose,
                 )
             )
+
+        elif args.action == "stop_shutter":
+            get_event_loop().run_until_complete(
+                stop_shutter(
+                    args.device_id,
+                    args.ip_address,
+                    args.verbose,
+                )
+            )
+
+        elif args.action == "set_shutter_position":
+            get_event_loop().run_until_complete(
+                set_shutter_position(
+                    args.device_id,
+                    args.ip_address,
+                    args.position,
+                    args.verbose,
+                )
+            )
+
+        elif args.action == "control_thermostat":
+            get_event_loop().run_until_complete(
+                control_thermostat(
+                    args.device_id,
+                    args.ip_address,
+                    args.state,
+                    args.mode,
+                    args.temprature,
+                    args.fan_level,
+                    args.swing,
+                    args.verbose,
+                )
+            )
+
     except KeyboardInterrupt:
         exit()

@@ -126,3 +126,6 @@ junit.xml
 # project stuff
 CHANGELOG.md
 release-context.json
+
+# OSX stuff
+.DS_Store
