@@ -27,18 +27,23 @@ class DeviceCategory(Enum):
 
     WATER_HEATER = auto()
     POWER_PLUG = auto()
+    THERMOSTAT = auto()
+    SHUTTER = auto()
 
 
 @unique
 class DeviceType(Enum):
     """Enum for relaying the type of the switcher devices."""
 
-    MINI = "Switcher Mini", "0f", DeviceCategory.WATER_HEATER
-    POWER_PLUG = "Switcher Power Plug", "a8", DeviceCategory.POWER_PLUG
-    TOUCH = "Switcher Touch", "0b", DeviceCategory.WATER_HEATER
-    V2_ESP = "Switcher V2 (esp)", "a7", DeviceCategory.WATER_HEATER
-    V2_QCA = "Switcher V2 (qualcomm)", "a1", DeviceCategory.WATER_HEATER
-    V4 = "Switcher V4", "17", DeviceCategory.WATER_HEATER
+    MINI = "Switcher Mini", "030f", DeviceCategory.WATER_HEATER
+    POWER_PLUG = "Switcher Power Plug", "01a8", DeviceCategory.POWER_PLUG
+    TOUCH = "Switcher Touch", "030b", DeviceCategory.WATER_HEATER
+    V2_ESP = "Switcher V2 (esp)", "01a7", DeviceCategory.WATER_HEATER
+    V2_QCA = "Switcher V2 (qualcomm)", "01a1", DeviceCategory.WATER_HEATER
+    V4 = "Switcher V4", "0317", DeviceCategory.WATER_HEATER
+    BREEZE = "Switcher Breeze", "0e01", DeviceCategory.THERMOSTAT
+    RUNNER = "Switcher Runner", "0c01", DeviceCategory.SHUTTER
+    RUNNER_MINI = "Switcher Runner Mini", "0c02", DeviceCategory.SHUTTER
 
     def __new__(
         cls, value: str, hex_rep: str, category: DeviceCategory
@@ -70,8 +75,8 @@ class DeviceType(Enum):
 class DeviceState(Enum):
     """Enum class representing the device's state."""
 
-    ON = "0100", "on"
-    OFF = "0000", "off"
+    ON = "01", "on"
+    OFF = "00", "off"
 
     def __new__(cls, value: str, display: str) -> "DeviceState":
         """Override the default enum constructor and include extra properties."""
@@ -88,6 +93,109 @@ class DeviceState(Enum):
     @property
     def value(self) -> str:
         """Return the value of the state."""
+        return self._value  # type: ignore
+
+
+class ThermostatMode(Enum):
+    """Enum class representing the thermostat device's position."""
+
+    AUTO = "01", "auto"
+    DRY = "02", "dry"
+    FAN = "03", "fan"
+    COOL = "04", "cool"
+    HEAT = "05", "heat"
+
+    def __new__(cls, value: str, display: str) -> "ThermostatMode":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the mode."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the mode."""
+        return self._value  # type: ignore
+
+
+class ThermostatFanLevel(Enum):
+    """Enum class representing the thermostat device's fan level."""
+
+    LOW = "1", "low"
+    MEDIUM = "2", "medium"
+    HIGH = "3", "high"
+    AUTO = "0", "auto"
+
+    def __new__(cls, value: str, display: str) -> "ThermostatFanLevel":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the fan level."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the fan level."""
+        return self._value  # type: ignore
+
+
+class ThermostatSwing(Enum):
+    """Enum class representing the thermostat device's swing state."""
+
+    OFF = "0", "off"
+    ON = "1", "on"
+
+    def __new__(cls, value: str, display: str) -> "ThermostatSwing":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the swing."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the swing."""
+        return self._value  # type: ignore
+
+
+@final
+class ShutterDirection(Enum):
+    """Enum class representing the shutter device's position."""
+
+    SHUTTER_STOP = "0000", "stop"
+    SHUTTER_UP = "0100", "up"
+    SHUTTER_DOWN = "0001", "down"
+
+    def __new__(cls, value: str, display: str) -> "ShutterDirection":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the direction."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the direction."""
         return self._value  # type: ignore
 
 
@@ -151,6 +259,40 @@ class SwitcherTimedBase(ABC):
         return self.auto_shutdown
 
 
+@dataclass
+class SwitcherThermostatBase(ABC):
+    """Abstraction for switcher thermostat devices.
+
+    Args:
+        mode: the mode of the thermostat.
+        temperature: the current temperature in celsius.
+        target temperature: the current target temperature in celsius.
+        fan_level: the current fan level in celsius.
+        swing: the current swing state.
+        remote_id: the id of the remote used to control this thermostat
+    """
+
+    mode: ThermostatMode
+    temperature: float
+    target_temperature: int
+    fan_level: ThermostatFanLevel
+    swing: ThermostatSwing
+    remote_id: str
+
+
+@dataclass
+class SwitcherShutterBase(ABC):
+    """Abstraction for all switcher devices controlling shutter.
+
+    Args:
+        position: the current position of the shutter (integer percentage).
+        direction: the current direction of the shutter.
+    """
+
+    position: int
+    direction: ShutterDirection
+
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -181,3 +323,28 @@ class SwitcherWaterHeater(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
         if self.device_type.category != DeviceCategory.WATER_HEATER:
             raise ValueError("only water heaters are allowed")
         super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherThermostat(SwitcherThermostatBase, SwitcherBase):
+    """Implementation of the Switcher Thermostat device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as THRMOSTAT."""
+        if self.device_type.category != DeviceCategory.THERMOSTAT:
+            raise ValueError("only thermostats are allowed")
+        self.remote = None
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherShutter(SwitcherShutterBase, SwitcherBase):
+    """Implementation of the Switcher Shutter device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as SHUTTER."""
+        if self.device_type.category != DeviceCategory.SHUTTER:
+            raise ValueError("only shutters are allowed")
+        return super().__post_init__()

@@ -127,3 +127,9 @@ def current_timestamp_to_hexadecimal() -> str:
 def watts_to_amps(watts: int) -> float:
     """Convert power consumption to watts to electric current in amps."""
     return round((watts / float(220)), 1)
+
+
+def set_message_length(message: str):
+    """Set the message length."""
+    length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
+    return "fef0" + str(length) + message[8:]
