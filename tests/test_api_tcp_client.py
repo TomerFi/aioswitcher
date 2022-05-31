@@ -151,7 +151,6 @@ async def test_control_breeze_device_function_with_valid_packets(reader_mock, wr
     elec7022_set = load(open((str(resource_path_root) + "/dummy_responses/ELEC7022.txt")))
     with patch.object(reader_mock, "read", side_effect=two_packets):
         remote = BreezeRemote(elec7022_set)
-        print(remote)
         command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
         response = await connected_api.control_breeze_device(command)
     assert_that(writer_write.call_count).is_equal_to(2)
