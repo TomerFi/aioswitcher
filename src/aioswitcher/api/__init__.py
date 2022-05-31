@@ -839,6 +839,10 @@ class BreezeRemoteManager(object):
         """Initialize the Remote manager."""
         self._remotes_db = {}
 
+    async def add_remote(self, ir_set: dict):
+        """Add remote locally via json file."""
+        self._remotes_db[ir_set["IRSetID"]] = BreezeRemote(ir_set)
+
     async def get_remote(self, remote_id: str, api: SwitcherApi) -> BreezeRemote:
         """Get Breeze remote by the remote id."""
         if remote_id not in self._remotes_db:
