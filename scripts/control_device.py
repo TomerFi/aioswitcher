@@ -272,11 +272,11 @@ async def control_thermostat(
     device_id: str,
     device_ip: str,
     state: str,
-    mode: str = None,
-    target_temp: int = 0,
-    fan_level: str = None,
-    swing: str = None,
-    verbose: bool = False,
+    mode: str,
+    target_temp: int,
+    fan_level: str,
+    swing: str,
+    verbose: bool,
 ):
     """Control Breeze device."""
     async with SwitcherType2Api(device_ip, device_id) as api:
@@ -296,12 +296,35 @@ async def control_thermostat(
         command = remote.get_command(
             new_state, new_mode, new_target_temp, new_fan_level, new_swing, resp.state
         )
+
         printer.pprint(
             asdict(
                 await api.control_breeze_device(command),
                 verbose,
             )
         )
+
+        # Here is a special case to handle swing on special remotes
+        # if we entered here with only swing mode change, we perform it
+        if (
+            new_state == possible_states[state]
+            and new_mode == possible_modes[mode]
+            and new_fan_level == possible_fan_level[fan_level]
+            and new_target_temp == target_temp
+        ):
+            # due to a bug in Switcher can't read swing mode on remotes
+            # with separated_swing_command ,the new_swing mode will always be OFF
+            # so it doesn't make any difference comparing
+            # new_swing != possible_swing[swing]
+            if remote.separated_swing_command:
+                printer.pprint(
+                    asdict(
+                        await api.control_breeze_device(
+                            remote.get_swing_command(new_swing)
+                        ),
+                        verbose,
+                    )
+                )
 
 
 async def turn_on(device_id: str, device_ip: str, timer: int, verbose: bool) -> None:
