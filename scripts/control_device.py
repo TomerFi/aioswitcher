@@ -214,7 +214,7 @@ control_thermostat_parser.add_argument(
     choices=possible_states.keys(),
     required=True,
     help=f"thermostat state, possible values: {possible_states}",
-    default=None,
+    default="",
 )
 possible_modes = dict(map(lambda s: (s.display, s), ThermostatMode))
 control_thermostat_parser.add_argument(
@@ -223,7 +223,7 @@ control_thermostat_parser.add_argument(
     choices=possible_modes.keys(),
     required=False,
     help=f"thermostat mode, possible values: {possible_modes}",
-    default=None,
+    default="",
 )
 possible_fan_level = dict(map(lambda s: (s.display, s), ThermostatFanLevel))
 control_thermostat_parser.add_argument(
@@ -232,7 +232,7 @@ control_thermostat_parser.add_argument(
     choices=possible_fan_level.keys(),
     required=False,
     help=f"thermostat fan level, possible values: {possible_fan_level}",
-    default=None,
+    default="",
 )
 possible_swing = dict(map(lambda s: (s.display, s), ThermostatSwing))
 control_thermostat_parser.add_argument(
@@ -241,7 +241,7 @@ control_thermostat_parser.add_argument(
     choices=possible_swing.keys(),
     required=False,
     help=f"thermostat swing, possible values: {possible_swing}",
-    default=None,
+    default="",
 )
 control_thermostat_parser.add_argument(
     "-t",
@@ -249,7 +249,7 @@ control_thermostat_parser.add_argument(
     type=int,
     required=False,
     help=f"thermostat temperature, possible values: {possible_swing}",
-    default=None,
+    default=0,
 )
 
 
@@ -307,10 +307,13 @@ async def control_thermostat(
         # Here is a special case to handle swing on special remotes
         # if we entered here with only swing mode change, we perform it
         if (
-            new_state == possible_states[state]
-            and new_mode == possible_modes[mode]
-            and new_fan_level == possible_fan_level[fan_level]
-            and new_target_temp == target_temp
+            ((state and new_state == possible_states[state]) or not new_state)
+            and ((mode and new_mode == possible_modes[mode]) or not mode)
+            and (
+                (fan_level and new_fan_level == possible_fan_level[fan_level])
+                or not fan_level
+            )
+            and ((target_temp and new_target_temp == target_temp) or not target_temp)
         ):
             # due to a bug in Switcher can't read swing mode on remotes
             # with separated_swing_command ,the new_swing mode will always be OFF
