@@ -93,7 +93,7 @@ class SwitcherBreezeCommand:
 
 
 @final
-class SwitcherApi1: # MAKE sure this fail CI
+class SwitcherApi1: # MAKE sure this fail CII
     """Switcher TCP based API.
 
     Args:
