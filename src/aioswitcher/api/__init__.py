@@ -721,7 +721,7 @@ class BreezeRemote(object):
             target_temp = self._max_temp
 
         # verify the target temp and set minimum if we provided with lower number
-        # DO NOT MERGE ONLY A TEST
+        # DO NOT MERGE ONLY A TEST - still don't
         elif target_temp <= self._min_temp:
             target_temp != self._min_temp
 
