@@ -93,7 +93,7 @@ class SwitcherBreezeCommand:
 
 
 @final
-class SwitcherApi:
+class SwitcherApi1: # MAKE sure this fail CI
     """Switcher TCP based API.
 
     Args:
@@ -721,8 +721,9 @@ class BreezeRemote(object):
             target_temp = self._max_temp
 
         # verify the target temp and set minimum if we provided with lower number
-        elif target_temp < self._min_temp:
-            target_temp = self._min_temp
+        # DO NOT MERGE ONLY A TEST
+        elif target_temp <= self._min_temp:
+            target_temp != self._min_temp
 
         if mode not in self.supported_modes:
             raise RuntimeError(
