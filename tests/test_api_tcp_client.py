@@ -17,18 +17,26 @@
 from asyncio.streams import StreamReader, StreamWriter
 from binascii import unhexlify
 from datetime import timedelta
+from json import load
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest_asyncio
 from assertpy import assert_that
 from pytest import fixture, mark, raises
 
-from aioswitcher.api import Command, SwitcherApi
+from aioswitcher.api import BreezeRemote, Command, SwitcherApi, SwitcherBreezeCommand
 from aioswitcher.api.messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
     SwitcherLoginResponse,
     SwitcherStateResponse,
+    SwitcherThermostatStateResponse,
+)
+from aioswitcher.device import (
+    DeviceState,
+    ThermostatFanLevel,
+    ThermostatMode,
+    ThermostatSwing,
 )
 
 device_id = "aaaaaa"
@@ -85,6 +93,15 @@ async def test_login_function(reader_mock, writer_write, connected_api, resource
     assert_that(response[1].unparsed_response).is_equal_to(response_packet)
 
 
+async def test_login2_function(reader_mock, writer_write, connected_api, resource_path_root):
+    response_packet = _load_packet(resource_path_root, "login2_response")
+    with patch.object(reader_mock, "read", return_value=response_packet):
+        response = await connected_api._login()
+    writer_write.assert_called_once()
+    assert_that(response[1]).is_instance_of(SwitcherLoginResponse)
+    assert_that(response[1].unparsed_response).is_equal_to(response_packet)
+
+
 async def test_get_state_function_with_a_faulty_login_response_should_raise_error(reader_mock, writer_write, connected_api):
     with raises(RuntimeError, match="login request was not successful"):
         with patch.object(reader_mock, "read", return_value=b''):
@@ -110,10 +127,33 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
     assert_that(response.unparsed_response).is_equal_to(get_state_response_packet)
 
 
+async def test_get_breeze_state_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    login_response_packet = _load_packet(resource_path_root, "login2_response")
+    get_breeze_state_response_packet = _load_packet(resource_path_root, "get_breeze_state")
+    with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_breeze_state_response_packet]):
+        response = await connected_api.get_breeze_state()
+    assert_that(writer_write.call_count).is_equal_to(2)
+    assert_that(response).is_instance_of(SwitcherThermostatStateResponse)
+    assert_that(response.unparsed_response).is_equal_to(get_breeze_state_response_packet)
+
+
 async def test_turn_on_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
     two_packets = _get_two_packets(resource_path_root, "turn_on_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api.control_device(Command.ON)
+    assert_that(writer_write.call_count).is_equal_to(2)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+
+
+async def test_control_breeze_device_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
+    two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
+    elec7022_set = load(open((str(resource_path_root) + "/dummy_responses/ELEC7022.txt")))
+    with patch.object(reader_mock, "read", side_effect=two_packets):
+        remote = BreezeRemote(elec7022_set)
+        print(remote)
+        command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+        response = await connected_api.control_breeze_device(command)
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
