@@ -144,7 +144,7 @@ jobs:
           oauth_token: ${{ secrets[needs.secrets_keys.outputs.twitter_access_token] }}
           oauth_token_secret: ${{ secrets[needs.secrets_keys.outputs.twitter_access_token_secret] }}
           message: |
-            🚀🎉 Aioswitcher ${{ steps.bumper.outputs.new_version  }} has been released! 🎉🚀
+            🚀🎉 Aioswitcher ${{ steps.bumper.outputs.new_version }} has been released! 🎉🚀
             ${{ steps.gh_release.outputs.html_url }}
 
             #aioswitcher #smarthome #python
