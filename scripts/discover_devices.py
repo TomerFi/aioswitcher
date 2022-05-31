@@ -14,16 +14,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Python script for printing discovered Swithcer devices info.
+"""Python script for discovering Switcher devices."""
 
-Executing this script will print a serialized version of the discovered Switcher
-devices broadcasting on the local network for 60 seconds. You can change the delay
-by passing an int argument: ``discover_devices.py 30``.
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
+from asyncio import get_event_loop, sleep
+from dataclasses import asdict
+from pprint import PrettyPrinter
+
+from aioswitcher.bridge import (
+    SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE2,
+    SwitcherBridge,
+)
+from aioswitcher.device import SwitcherBase
+
+printer = PrettyPrinter(indent=4)
+
+_examples = """Executing this script will print a serialized version of the discovered Switcher
+devices broadcasting on the local network for 60 seconds.
+You can change the delay by passing an int argument: discover_devices.py 30
+
+Switcher devices uses two protocol types:
+    Protocol type 1 (UDP port 20002), used by: V2, Touch, V4, Mini, Power Plug
+    Protocol type 2 (UDP port 20003), used by: Breeze, Runner, Runner Mini
+You can change the scanned protocol type by passing an int argument: discover_devices.py -t 1
 
 Note:
     WILL PRINT PRIVATE INFO SUCH AS DEVICE ID AND MAC.
 
-Example:
+Example output:
     Switcher devices broadcast a status message every approximantly 4 seconds. This
     script listens for these messages and prints a serialized version of the to the
     standard output, for example (note the ``device_id`` and ``mac_address`` properties)::
@@ -39,23 +58,21 @@ Example:
             'power_consumption': 0,
             'remaining_time': '00:00:00'}
 
-"""  # noqa: E501
+Print all protocol types devices for 30 seconds:
+    python discover_devices.py 30 -t all\n
 
-from argparse import ArgumentParser
-from asyncio import get_event_loop, sleep
-from dataclasses import asdict
-from pprint import PrettyPrinter
+Print only protocol type 1 devices:
+    python discover_devices.py -t 1\n
 
-from aioswitcher.bridge import (
-    SWITCHER_UDP_PORT_TYPE1,
-    SWITCHER_UDP_PORT_TYPE2,
-    SwitcherBridge,
+Print only protocol type 2 devices:
+    python discover_devices.py -t 2\n
+"""  # noqa E501
+
+parser = ArgumentParser(
+    description="Discover and print info of Switcher devices",
+    epilog=_examples,
+    formatter_class=RawDescriptionHelpFormatter,
 )
-from aioswitcher.device import SwitcherBase
-
-printer = PrettyPrinter(indent=4)
-
-parser = ArgumentParser(description="Discover and print info of Switcher devices")
 parser.add_argument(
     "delay",
     help="number of seconds to run, defaults to 60",
@@ -63,22 +80,14 @@ parser.add_argument(
     nargs="?",
     default=60,
 )
+possible_types = ["1", "2", "all"]
 parser.add_argument(
     "-t",
     "--type",
     required=False,
-    choices={1, 2},
-    help="set protocol type: 1 or 2",
-    type=int,
-)
-parser.add_argument(
-    "-p",
-    "--ports",
-    required=False,
-    help="bridge ports to listen on",
-    nargs="+",
-    type=int,
-    default=[SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2],
+    choices=possible_types,
+    help=f"set protocol type: {possible_types}",
+    type=str,
 )
 
 
@@ -97,14 +106,13 @@ async def print_devices(delay: int, ports: list[int]) -> None:
 if __name__ == "__main__":
     args = parser.parse_args()
 
-    if args.type == 1:
+    if args.type == "1":
         ports = [SWITCHER_UDP_PORT_TYPE1]
-    elif args.type == 2:
+    elif args.type == "2":
         ports = [SWITCHER_UDP_PORT_TYPE2]
     else:
-        ports = args.ports
+        ports = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2]
 
-    print(ports)
     try:
         get_event_loop().run_until_complete(print_devices(args.delay, ports))
     except KeyboardInterrupt:
