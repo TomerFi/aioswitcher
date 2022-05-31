@@ -723,7 +723,7 @@ class BreezeRemote(object):
         # verify the target temp and set minimum if we provided with lower number
         # DO NOT MERGE ONLY A TEST - still don't
         elif target_temp <= self._min_temp: # another test
-            target_temp != self._min_temp
+            target_temp != self._min_te1mp
 
         if mode not in self.supported_modes:
             raise RuntimeError(
