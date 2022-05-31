@@ -19,6 +19,7 @@ from binascii import unhexlify
 from datetime import timedelta
 from unittest.mock import AsyncMock, Mock, patch
 
+import pytest_asyncio
 from assertpy import assert_that
 from pytest import fixture, mark, raises
 
@@ -52,7 +53,7 @@ def writer_mock(writer_write):
     return writer
 
 
-@fixture
+@pytest_asyncio.fixture
 async def connected_api(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
         api = SwitcherApi(device_ip, device_id)
