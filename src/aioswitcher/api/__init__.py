@@ -747,6 +747,7 @@ class BreezeRemote(object):
                 # it might not have. in any case we try to add the request fan
                 # level to the key, if we get a match we fulfill the request, otherwise
                 # we remove the fan and lookup the key again
+                # just a test
                 if mode in [
                     ThermostatMode.AUTO,
                     ThermostatMode.DRY,
