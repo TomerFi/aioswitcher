@@ -475,7 +475,9 @@ class SwitcherApi:
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def download_breeze_remote_ir_set(self) -> dict:
+    async def download_breeze_remote_ir_set(
+        self, client_session: ClientSession
+    ) -> dict:
         """Use for downloading the IRSet json data of the Switcher Breeze.
 
         Returns:
@@ -490,20 +492,19 @@ class SwitcherApi:
         form = FormData()
         form.add_field("token", "d41d8cd98f00b204e9800998ecf8427e")
         form.add_field("rtps", hexlify(udp_message.unparsed_response).decode())
-        async with ClientSession() as session:
-            async with session.post(
-                "https://switcher.co.il/misc/irGet/getIR.php", data=form
-            ) as resp:
-                if resp.status == 200:
-                    logger.debug(
-                        "IR Set file successfully downloaded from Switcher (length=%s)",
-                        resp.content_length,
-                    )
-                    return await resp.json(content_type=None)
-                else:
-                    raise RuntimeError(
-                        f"Failed to Download the IR set file for {self._device_id}"
-                    )
+        async with client_session.post(
+            "https://switcher.co.il/misc/irGet/getIR.php", data=form
+        ) as resp:
+            if resp.status == 200:
+                logger.debug(
+                    "IR Set file successfully downloaded from Switcher (length=%s)",
+                    resp.content_length,
+                )
+                return await resp.json(content_type=None)
+            else:
+                raise RuntimeError(
+                    f"Failed to Download the IR set file for {self._device_id}"
+                )
 
     async def set_position(self, position: int = 0) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
@@ -876,10 +877,12 @@ class BreezeRemoteManager(object):
         """Add remote locally via json file."""
         self._remotes_db[ir_set["IRSetID"]] = BreezeRemote(ir_set)
 
-    async def get_remote(self, remote_id: str, api: SwitcherApi) -> BreezeRemote:
+    async def get_remote(
+        self, remote_id: str, api: SwitcherApi, client_session: ClientSession
+    ) -> BreezeRemote:
         """Get Breeze remote by the remote id."""
         if remote_id not in self._remotes_db:
-            ir_set = await api.download_breeze_remote_ir_set()
+            ir_set = await api.download_breeze_remote_ir_set(client_session)
             self._remotes_db[remote_id] = BreezeRemote(ir_set)
             logger.debug("Remote %s was downloaded and added to that DB", remote_id)
 
