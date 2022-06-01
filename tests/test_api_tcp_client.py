@@ -21,6 +21,7 @@ from json import load
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest_asyncio
+from aiohttp import ClientSession
 from assertpy import assert_that
 from pytest import fixture, mark, raises
 
@@ -283,9 +284,10 @@ async def test_breeze_remote_manager(reader_mock, resource_path_root, connected_
     elec7022 = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
     remote_manager = BreezeRemoteManager()
     remote_manager.add_remote(elec7001)
-    remote_7001 = await remote_manager.get_remote("ELEC7001", connected_api)
-    with patch.object(connected_api, "download_breeze_remote_ir_set", return_value=elec7022):
-        remote_7022 = await remote_manager.get_remote("ELEC7022", connected_api)
+    async with ClientSession() as session:
+        remote_7001 = await remote_manager.get_remote("ELEC7001", connected_api, session)
+        with patch.object(connected_api, "download_breeze_remote_ir_set", return_value=elec7022):
+            remote_7022 = await remote_manager.get_remote("ELEC7022", connected_api, session)
     assert_that(remote_7001).is_type_of(BreezeRemote)
     assert_that(remote_7001.remote_id).is_equal_to("ELEC7001")
     assert_that(remote_7022).is_type_of(BreezeRemote)
