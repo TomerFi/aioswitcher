@@ -84,7 +84,6 @@ def test_a_breeze_datagram_produces_device(mock_device_cls, mock_device, resourc
     _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
     mock_callback.assert_called_once_with(mock_device)
 
-
 @patch.object(SwitcherShutter, "__new__")
 @patch.object(DatagramParser, "is_switcher_originator", lambda s: True)
 def test_a_runner_datagram_produces_device(mock_device_cls, mock_device, resource_path, mock_callback):
