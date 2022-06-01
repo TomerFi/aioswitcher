@@ -24,7 +24,13 @@ import pytest_asyncio
 from assertpy import assert_that
 from pytest import fixture, mark, raises
 
-from aioswitcher.api import BreezeRemote, BreezeRemoteManager, Command, SwitcherApi, SwitcherBreezeCommand
+from aioswitcher.api import (
+    BreezeRemote,
+    BreezeRemoteManager,
+    Command,
+    SwitcherApi,
+    SwitcherBreezeCommand,
+)
 from aioswitcher.api.messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
@@ -201,18 +207,6 @@ async def test_breeze_get_brand(resource_path_root):
     assert_that(brand).is_instance_of(str)
 
 
-async def test_control_breeze_device_function_with_valid_packets(reader_mock, writer_write, connected_api, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
-    elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.txt")))
-    with patch.object(reader_mock, "read", side_effect=two_packets):
-        remote = BreezeRemote(elec7022_set)
-        command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
-        response = await connected_api.control_breeze_device(command)
-    assert_that(writer_write.call_count).is_equal_to(2)
-    assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
-
-
 async def test_control_breeze_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api, resource_path_root):
     with raises(RuntimeError, match="login request was not successful"):
         elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.txt")))
@@ -286,7 +280,6 @@ async def test_breeze_get_command_function_key_not_found(resource_path_root):
 async def test_breeze_remote_manager(reader_mock, resource_path_root, connected_api):
     elec7001 = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.txt")))
     elec7022 = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.txt")))
-    two_packets = [_load_packet(resource_path_root, "login2_response"), _load_packet(resource_path_root, "get_breeze_state")]
     remote_manager = BreezeRemoteManager()
     remote_manager.add_remote(elec7001)
     remote_7001 = await remote_manager.get_remote("ELEC7001", connected_api)
