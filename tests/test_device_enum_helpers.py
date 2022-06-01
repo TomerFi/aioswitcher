@@ -17,7 +17,15 @@
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher.device import DeviceCategory, DeviceState, DeviceType, ShutterDirection, ThermostatFanLevel, ThermostatMode, ThermostatSwing
+from aioswitcher.device import (
+    DeviceCategory,
+    DeviceState,
+    DeviceType,
+    ShutterDirection,
+    ThermostatFanLevel,
+    ThermostatMode,
+    ThermostatSwing,
+)
 
 
 @mark.parametrize(
