@@ -234,7 +234,7 @@ class SwitcherApi:
                 if response.successful:
                     return response
             except (KeyError, ValueError) as ve:
-                raise RuntimeError("get state request was not successful") from ve
+                raise RuntimeError("get breeze state request was not successful") from ve
         raise RuntimeError("login request was not successful")
 
     async def get_shutter_state(self) -> SwitcherShutterStateResponse:
@@ -261,7 +261,7 @@ class SwitcherApi:
                 if response.successful:
                     return response
             except (KeyError, ValueError) as ve:
-                raise RuntimeError("get state request was not successful") from ve
+                raise RuntimeError("get shutter state request was not successful") from ve
         raise RuntimeError("login request was not successful")
 
     async def control_device(
@@ -726,8 +726,8 @@ class BreezeRemote(object):
 
         if mode not in self.supported_modes:
             raise RuntimeError(
-                f"Invalid mode, available modes for this device are: \
-                    {', '.join(self.supported_modes)}"
+                f"Invalid mode \"{mode.display}\", available modes for this device are: "
+                    f"{', '.join([x.display for x in self.supported_modes])}"
             )
 
         # non toggle AC, just turn it off
@@ -839,7 +839,7 @@ class BreezeRemoteManager(object):
         """Initialize the Remote manager."""
         self._remotes_db = {}
 
-    async def add_remote(self, ir_set: dict):
+    def add_remote(self, ir_set: dict):
         """Add remote locally via json file."""
         self._remotes_db[ir_set["IRSetID"]] = BreezeRemote(ir_set)
 

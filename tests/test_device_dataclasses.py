@@ -22,8 +22,14 @@ from pytest import fixture, mark
 from aioswitcher.device import (
     DeviceState,
     DeviceType,
+    ShutterDirection,
     SwitcherPowerPlug,
+    SwitcherShutter,
+    SwitcherThermostat,
     SwitcherWaterHeater,
+    ThermostatFanLevel,
+    ThermostatMode,
+    ThermostatSwing,
 )
 
 
@@ -39,6 +45,14 @@ class FakeData:
     electric_current: float = 11.8
     remaining_time: str = "01:30:00"
     auto_shutdown: str = "03:00:00"
+    mode: ThermostatMode = ThermostatMode.COOL
+    fan_level: ThermostatFanLevel = ThermostatFanLevel.HIGH
+    swing: ThermostatSwing = ThermostatSwing.OFF
+    target_temperature: int = 24
+    temperature: float = 26.5
+    remote_id: str = "ELEC7022"
+    position: int = 50
+    direction: ShutterDirection = ShutterDirection.SHUTTER_STOP
 
 
 @fixture
@@ -96,6 +110,58 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_power_plug_sh
     assert_that(sut.electric_current).is_equal_to(fake_data.electric_current)
 
 
+def test_given_a_device_of_type_thermostat_when_instantiating_as_a_thermostat_should_be_instatiated_properly(fake_data):
+    sut = SwitcherThermostat(
+        DeviceType.BREEZE,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.mode,
+        fake_data.temperature,
+        fake_data.target_temperature,
+        fake_data.fan_level,
+        fake_data.swing,
+        fake_data.remote_id
+    )
+
+    assert_that(sut.device_type).is_equal_to(DeviceType.BREEZE)
+    assert_that(sut.device_state).is_equal_to(DeviceState.ON)
+    assert_that(sut.device_id).is_equal_to(fake_data.device_id)
+    assert_that(sut.ip_address).is_equal_to(fake_data.ip_address)
+    assert_that(sut.mac_address).is_equal_to(fake_data.mac_address)
+    assert_that(sut.name).is_equal_to(fake_data.name)
+    assert_that(sut.mode).is_equal_to(fake_data.mode)
+    assert_that(sut.temperature).is_equal_to(fake_data.temperature)
+    assert_that(sut.target_temperature).is_equal_to(fake_data.target_temperature)
+    assert_that(sut.fan_level).is_equal_to(fake_data.fan_level)
+    assert_that(sut.swing).is_equal_to(fake_data.swing)
+    assert_that(sut.remote_id).is_equal_to(fake_data.remote_id)
+
+
+def test_given_a_device_of_type_shutter_when_instantiating_as_a_shutter_should_be_instatiated_properly(fake_data):
+    sut = SwitcherShutter(
+        DeviceType.RUNNER,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.position,
+        fake_data.direction
+    )
+
+    assert_that(sut.device_type).is_equal_to(DeviceType.RUNNER)
+    assert_that(sut.device_state).is_equal_to(DeviceState.ON)
+    assert_that(sut.device_id).is_equal_to(fake_data.device_id)
+    assert_that(sut.ip_address).is_equal_to(fake_data.ip_address)
+    assert_that(sut.mac_address).is_equal_to(fake_data.mac_address)
+    assert_that(sut.name).is_equal_to(fake_data.name)
+    assert_that(sut.position).is_equal_to(fake_data.position)
+    assert_that(sut.direction).is_equal_to(fake_data.direction)
+
+
 @mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4])
 def test_given_a_device_of_type_water_heater_when_instantiating_as_a_power_plug_should_raise_an_error(fake_data, device_type):
     assert_that(SwitcherPowerPlug).raises(ValueError).when_called_with(
@@ -123,3 +189,33 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_water_heater_
         fake_data.remaining_time,
         fake_data.auto_shutdown,
     ).is_equal_to("only water heaters are allowed")
+
+
+def test_given_a_device_of_type_power_plug_when_instantiating_as_a_thermostatr_should_raise_an_error(fake_data):
+    assert_that(SwitcherThermostat).raises(ValueError).when_called_with(
+        DeviceType.POWER_PLUG,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.mode,
+        fake_data.temperature,
+        fake_data.target_temperature,
+        fake_data.fan_level,
+        fake_data.swing,
+        fake_data.remote_id
+    ).is_equal_to("only thermostats are allowed")
+
+
+def test_given_a_device_of_type_power_plug_when_instantiating_as_a_shutter_should_raise_an_error(fake_data):
+    assert_that(SwitcherShutter).raises(ValueError).when_called_with(
+        DeviceType.POWER_PLUG,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.position,
+        fake_data.direction
+    ).is_equal_to("only shutters are allowed")
