@@ -17,7 +17,7 @@
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher.device import DeviceCategory, DeviceState, DeviceType
+from aioswitcher.device import DeviceCategory, DeviceState, DeviceType, ShutterDirection, ThermostatFanLevel, ThermostatMode, ThermostatSwing
 
 
 @mark.parametrize(
@@ -58,3 +58,47 @@ def test_the_given_state_custom_properties_are_returning_the_expected_data(
 ):
     assert_that(sut_state.value).is_equal_to(expected_value)
     assert_that(sut_state.display).is_equal_to(expected_display)
+
+
+@mark.parametrize(
+    "sut_fan_level, expected_value, expected_display",
+    [(ThermostatFanLevel.AUTO, "0", "auto"), (ThermostatFanLevel.LOW, "1", "low"), (ThermostatFanLevel.MEDIUM, "2", "medium"), (ThermostatFanLevel.HIGH, "3", "high")],
+)
+def test_the_given_fan_level_custom_properties_are_returning_the_expected_data(
+    sut_fan_level, expected_value, expected_display
+):
+    assert_that(sut_fan_level.value).is_equal_to(expected_value)
+    assert_that(sut_fan_level.display).is_equal_to(expected_display)
+
+
+@mark.parametrize(
+    "sut_mode, expected_value, expected_display",
+    [(ThermostatMode.AUTO, "01", "auto"), (ThermostatMode.DRY, "02", "dry"), (ThermostatMode.FAN, "03", "fan"), (ThermostatMode.COOL, "04", "cool"), (ThermostatMode.HEAT, "05", "heat")],
+)
+def test_the_given_thermostat_mode_custom_properties_are_returning_the_expected_data(
+    sut_mode, expected_value, expected_display
+):
+    assert_that(sut_mode.value).is_equal_to(expected_value)
+    assert_that(sut_mode.display).is_equal_to(expected_display)
+
+
+@mark.parametrize(
+    "sut_swing, expected_value, expected_display",
+    [(ThermostatSwing.OFF, "0", "off"), (ThermostatSwing.ON, "1", "on")],
+)
+def test_the_given_thermostat_swing_custom_properties_are_returning_the_expected_data(
+    sut_swing, expected_value, expected_display
+):
+    assert_that(sut_swing.value).is_equal_to(expected_value)
+    assert_that(sut_swing.display).is_equal_to(expected_display)
+
+
+@mark.parametrize(
+    "sut_shutter_dir, expected_value, expected_display",
+    [(ShutterDirection.SHUTTER_STOP, "0000", "stop"), (ShutterDirection.SHUTTER_DOWN, "0001", "down"), (ShutterDirection.SHUTTER_UP, "0100", "up")],
+)
+def test_the_given_shutter_direction_custom_properties_are_returning_the_expected_data(
+    sut_shutter_dir, expected_value, expected_display
+):
+    assert_that(sut_shutter_dir.value).is_equal_to(expected_value)
+    assert_that(sut_shutter_dir.display).is_equal_to(expected_display)
