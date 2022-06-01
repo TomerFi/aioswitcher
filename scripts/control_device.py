@@ -22,6 +22,8 @@ from datetime import timedelta
 from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
+from aiohttp import ClientSession
+
 from aioswitcher.api import (
     BreezeRemote,
     BreezeRemoteManager,
@@ -288,7 +290,8 @@ async def control_thermostat(
         new_target_temp = target_temp if target_temp else resp.target_temperature
 
         # First time it'll download the IRSet JSON file from switcher
-        remote: BreezeRemote = await rm.get_remote(resp.remote_id, api)
+        async with ClientSession() as session:
+            remote: BreezeRemote = await rm.get_remote(resp.remote_id, api, session)
 
         command = remote.get_command(
             new_state, new_mode, new_target_temp, new_fan_level, new_swing, resp.state
