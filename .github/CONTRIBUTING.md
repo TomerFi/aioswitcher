@@ -26,7 +26,7 @@ With [Python >= 3.10](https://www.python.org/) use [pip](https://pypi.org/projec
 [poetry](https://poetry.eustace.io/) and the used extensions (mainly [poethepoet](https://github.com/nat-n/poethepoet)):
 
 ```shell
-  pip install -rrequirements.txt
+  pip install -r requirements.txt
 ```
 
 ## Get started
