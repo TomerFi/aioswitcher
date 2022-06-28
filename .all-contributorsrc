@@ -68,6 +68,15 @@
       "contributions": [
         "data"
       ]
+    },
+    {
+      "login": "dolby360",
+      "name": "Dolev Ben Aharon",
+      "avatar_url": "https://avatars.githubusercontent.com/u/22151399?v=4",
+      "profile": "https://github.com/dolby360",
+      "contributions": [
+        "doc"
+      ]
     }
   ]
 }
