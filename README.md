@@ -24,6 +24,49 @@ async with SwitcherApi(device_ip, device_id) as swapi:
 
     # create a new recurring schedule
     await swapi.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
+
+
+# control Type 2 devices such as Breeze, Runner and Runner Mini
+
+# control a breeze device
+async with SwitcherType2Api(device_ip, device_id) as api_type2:
+    # get the Breeze device state
+    resp: SwitcherThermostatStateResponse = await api_type2.get_breeze_state()
+
+    # initialize the Breeze RemoteManager
+    rm = BreezeRemoteManager()
+
+    # get the remote structure (downloaded from the internet)
+    async with ClientSession() as session:
+    remote: BreezeRemote = await rm.get_remote(resp.remote_id, api_type2, session)
+
+    # prepare a control command that turns on the Breeze on 24 celsius degrees cooling and Fan level high with vertical swing  
+    command = remote.get_command(
+          DeviceState.ON, 
+          ThermostatMode.COOL, 
+          24, 
+          ThermostatFanLevel.HIGH, 
+          ThermostatSwing.ON,
+          resp.state
+      )
+
+    # send command to the device
+    await api_type2.control_breeze_device(command)
+  
+# control Runner device  
+async with SwitcherType2Api(device_ip, device_id) as api:
+  # get the runner state
+  state_response: SwitcherShutterStateResponse = api.get_shutter_state()
+
+  # open the shutter all the way up
+  await api.set_position(100)
+  # stop the shutter from rolling
+  await api.stop()
+  # set the shutter position to 30% opened
+  await api.set_position(30)
+  # close the shutter all the way down
+  await api.set_position(0)
+
 ```
 
 Check out the [documentation][8] for a more detailed usage section.
