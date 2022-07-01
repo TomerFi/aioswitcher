@@ -29,31 +29,37 @@ from aioswitcher.device import (
 
 
 @mark.parametrize(
-    "sut_type, expected_value, expected_hex_rep, expected_category",
+    "sut_type, expected_value, expected_hex_rep, expected_protocol_type, expected_category",
     [
-        (DeviceType.MINI, "Switcher Mini", "030f", DeviceCategory.WATER_HEATER),
+        (DeviceType.MINI, "Switcher Mini", "030f", 1, DeviceCategory.WATER_HEATER),
         (
             DeviceType.POWER_PLUG,
             "Switcher Power Plug",
             "01a8",
+            1,
             DeviceCategory.POWER_PLUG,
         ),
-        (DeviceType.TOUCH, "Switcher Touch", "030b", DeviceCategory.WATER_HEATER),
-        (DeviceType.V2_ESP, "Switcher V2 (esp)", "01a7", DeviceCategory.WATER_HEATER),
+        (DeviceType.TOUCH, "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER),
+        (DeviceType.V2_ESP, "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER),
         (
             DeviceType.V2_QCA,
             "Switcher V2 (qualcomm)",
             "01a1",
+            1,
             DeviceCategory.WATER_HEATER,
         ),
-        (DeviceType.V4, "Switcher V4", "0317", DeviceCategory.WATER_HEATER),
+        (DeviceType.V4, "Switcher V4", "0317", 1, DeviceCategory.WATER_HEATER),
+        (DeviceType.BREEZE, "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT),
+        (DeviceType.RUNNER, "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER),
+        (DeviceType.RUNNER_MINI, "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER),
     ],
 )
 def test_the_given_type_custom_properties_are_returning_the_expected_data(
-    sut_type, expected_value, expected_hex_rep, expected_category
+    sut_type, expected_value, expected_hex_rep, expected_category, expected_protocol_type
 ):
     assert_that(sut_type.value).is_equal_to(expected_value)
     assert_that(sut_type.hex_rep).is_equal_to(expected_hex_rep)
+    assert_that(sut_type.protocol_type).is_equal_to(expected_protocol_type)
     assert_that(sut_type.category).is_equal_to(expected_category)
 
 

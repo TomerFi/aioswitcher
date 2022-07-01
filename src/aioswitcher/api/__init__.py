@@ -15,6 +15,9 @@
 """Switcher integration TCP socket API module."""
 
 import re
+from pathlib import Path
+from os import path
+from json import load
 from asyncio import open_connection
 from binascii import hexlify, unhexlify
 from datetime import timedelta
@@ -485,8 +488,6 @@ class SwitcherApi:
 
         """
         udp_message = await self.get_breeze_state()
-        if not udp_message.successful:
-            raise RuntimeError("Failed to fetch UDP message for remote")
 
         logger.debug("Building HTTP Post Request for downloading the IR Set file")
         form = FormData()
@@ -806,17 +807,11 @@ class BreezeRemote(object):
 
                     self._lookup_key_in_irset(key)
 
-        try:
-            command = (
-                self._ir_wave_map["".join(key)]["Para"]
-                + "|"
-                + self._ir_wave_map["".join(key)]["HexCode"]
-            )
-        except KeyError:
-            logger.error(
-                f'The constructed key "{key}", does not exist in the IRSet database!'
-            )
-            raise RuntimeError
+        command = (
+            self._ir_wave_map["".join(key)]["Para"]
+            + "|"
+            + self._ir_wave_map["".join(key)]["HexCode"]
+        )
 
         return SwitcherBreezeCommand(
             "00000000" + hexlify(str(command).encode()).decode()
@@ -869,9 +864,15 @@ class BreezeRemote(object):
 class BreezeRemoteManager(object):
     """Class the used to download and hold all Breeze remotes."""
 
-    def __init__(self):
+    def __init__(self, cache_directory: str = None):
         """Initialize the Remote manager."""
         self._remotes_db = {}
+        self._cache_dir = cache_directory
+        # verify the directory is a valid existing path in case it was provided
+        if cache_directory and not path.isdir(cache_directory):
+            raise OSError(
+                f"The specified directory path {cache_directory} does not exist"
+            )
 
     def add_remote(self, ir_set: dict):
         """Add remote locally via json file."""
@@ -882,8 +883,18 @@ class BreezeRemoteManager(object):
     ) -> BreezeRemote:
         """Get Breeze remote by the remote id."""
         if remote_id not in self._remotes_db:
-            ir_set = await api.download_breeze_remote_ir_set(client_session)
-            self._remotes_db[remote_id] = BreezeRemote(ir_set)
-            logger.debug("Remote %s was downloaded and added to that DB", remote_id)
+            # first, look for the IR set file in the local cache
+            if self._cache_dir and path.isfile(
+                Path(self._cache_dir).joinpath(f"{remote_id}.json")
+            ):
+                # found in cache, load the file and add it to the BRM DB
+                with open(Path(self._cache_dir).joinpath(f"{remote_id}.json")) as file:
+                    self._remotes_db[remote_id] = BreezeRemote(load(file))
+
+            # not in cache, probably first time, we are going to download it.
+            else:
+                ir_set = await api.download_breeze_remote_ir_set(client_session)
+                self._remotes_db[remote_id] = BreezeRemote(ir_set)
+                logger.debug("Remote %s was downloaded and added to that DB", remote_id)
 
         return self._remotes_db[remote_id]
