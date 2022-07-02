@@ -40,7 +40,8 @@ async with SwitcherType2Api(device_ip, device_id) as api_type2:
     async with ClientSession() as session:
     remote: BreezeRemote = await rm.get_remote(resp.remote_id, api_type2, session)
 
-    # prepare a control command that turns on the Breeze on 24 celsius degrees cooling and Fan level high with vertical swing  
+    # prepare a control command that turns on the Breeze 
+    # (24 degree (Celsius), cooling and high Fan level with vertical swing)  
     command = remote.get_command(
           DeviceState.ON, 
           ThermostatMode.COOL, 
