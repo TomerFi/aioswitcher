@@ -15,14 +15,14 @@
 """Switcher integration TCP socket API module."""
 
 import re
-from pathlib import Path
-from os import path
-from json import load
 from asyncio import open_connection
 from binascii import hexlify, unhexlify
 from datetime import timedelta
 from enum import Enum, unique
+from json import load
 from logging import getLogger
+from os import path
+from pathlib import Path
 from socket import AF_INET
 from types import TracebackType
 from typing import Iterable, Mapping, Optional, Set, Tuple, Type, Union, final

@@ -29,9 +29,9 @@ from aioswitcher.api import (
     BreezeRemote,
     BreezeRemoteManager,
     Command,
+    SwitcherBreezeCommand,
     SwitcherType1Api,
     SwitcherType2Api,
-    SwitcherBreezeCommand,
 )
 from aioswitcher.api.messages import (
     SwitcherBaseResponse,
