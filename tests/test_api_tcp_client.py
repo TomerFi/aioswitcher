@@ -89,6 +89,7 @@ async def connected_api_type2(reader_mock, writer_mock):
 
 
 class MockResponse:
+    """Mock response for the aiohttp response object."""
 
     def __init__(self, text, status):
         """Initialize the aiohttp response object."""
