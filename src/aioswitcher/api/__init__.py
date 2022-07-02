@@ -25,7 +25,7 @@ from os import path
 from pathlib import Path
 from socket import AF_INET
 from types import TracebackType
-from typing import Iterable, Mapping, Optional, Set, Tuple, Type, Union, final
+from typing import Dict, Iterable, Mapping, Optional, Set, Tuple, Type, Union, final
 
 from aiohttp import ClientSession, FormData
 
@@ -866,7 +866,7 @@ class BreezeRemoteManager(object):
 
     def __init__(self, cache_directory: str = None):
         """Initialize the Remote manager."""
-        self._remotes_db = {}
+        self._remotes_db: Dict[str, BreezeRemote] = {}
         self._cache_dir = cache_directory
         # verify the directory is a valid existing path in case it was provided
         if cache_directory and not path.isdir(cache_directory):
