@@ -4,3 +4,10 @@ instantiation
 ip
 timedelta
 py
+SwitcherThermostatStateResponse
+SwitcherShutterStateResponse
+qualcomm
+DeviceState
+ThermostatMode
+ThermostatFanLevel
+ThermostatSwing
