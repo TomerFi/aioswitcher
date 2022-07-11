@@ -913,11 +913,11 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "yamllint"
-version = "1.26.3"
+version = "1.27.1"
 description = "A linter for YAML files."
 category = "dev"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [package.dependencies]
 pathspec = ">=0.5.3"
@@ -941,7 +941,7 @@ docs = ["insegel", "sphinx", "sphinxcontrib-autoprogram", "sphinxcontrib-spellin
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9.0"
-content-hash = "7127ff2d2c857c41035a3d00e412eb74b1713a866fc7ab9f4c0b4e5999f69edd"
+content-hash = "53929d2a2c9cf2f3d12fe5405ebe409708220c722e4d5b4ca7829580ddf5e12c"
 
 [metadata.files]
 aiohttp = []
