@@ -71,7 +71,7 @@ exclude = [
   pytest-mockservers = "^0.6.0"
   pytest-sugar = "^0.9.5"
   time-machine = "^2.7.1"
-  types-toml = "^0.10.7"
+  types-toml = "^0.10.8"
   yamllint = "^1.27.1"
 
   [tool.poetry.extras]
