@@ -109,12 +109,11 @@ doc8 = "poetry run doc8 docs/"
 flake8 = "poetry run flake8 src/ tests/ docs/ scripts/"
 isort = "poetry run isort --check-only src/ tests/ docs/ scripts/"
 isort_fix = "poetry run isort src/ tests/ docs/ scripts/"
-mypy = "poetry run mypy src/ tests/ docs/ scripts/"
-yamllint = "poetry run yamllint --format colored --strict ."
-sphinx_build = "sphinx-build -b singlehtml docs docsbuild"
-sphinx_clean_build = "sphinx-build -a -b singlehtml docs docsbuild"
-sphinx_linkcheck = "sphinx-build -b linkcheck docs docsbuild"
-sphinx_spelling = "sphinx-build -b spelling docs docsbuild"
+mypy = "poetry run mypy src/ tests/ scripts/"
+yamllint = "poetry run yamllint -d yamllint_conf.yml --format colored --strict ."
+docs_clean = "mkdocs build clean"
+docs_linkcheck = "mkdocs-linkcheck -r ./docs --exclude ./codedocs.md"
+docs_build = "mkdocs build"
 
 [build-system]
 requires = [ "poetry-core>=1.0.0" ]
