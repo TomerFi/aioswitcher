@@ -461,7 +461,7 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "poethepoet"
-version = "0.15.0"
+version = "0.16.0"
 description = "A task runner that works well with poetry."
 category = "dev"
 optional = false
@@ -941,7 +941,7 @@ docs = ["insegel", "sphinx", "sphinxcontrib-autoprogram", "sphinxcontrib-spellin
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9.0"
-content-hash = "84aa70ecb4cd988b11e16bc0ea8bc8fee9e345812e145be66e641ad8610d6982"
+content-hash = "e5636ae4519639097345a83042acb4a76f4ecef0f546452afe314d3a9bbb0884"
 
 [metadata.files]
 aiohttp = [
@@ -1463,8 +1463,8 @@ pluggy = [
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
 ]
 poethepoet = [
-    {file = "poethepoet-0.15.0-py3-none-any.whl", hash = "sha256:8ca49d8a9928a3ce1753315d6df0866888557eccb0fe37a8c88fea47454cfe12"},
-    {file = "poethepoet-0.15.0.tar.gz", hash = "sha256:5843260c9074b6c42bf2e51f21107efe37e230cf75da3dd3f4b43904f365b26c"},
+    {file = "poethepoet-0.16.0-py3-none-any.whl", hash = "sha256:87482ea8bba4e5db4abbd8e6360baee73b2ce0f3d5f5e99e81cdfa39d72d118f"},
+    {file = "poethepoet-0.16.0.tar.gz", hash = "sha256:6455aec39f198be92dbf210a4416e1635119e967204c092b431c8b10024db1d1"},
 ]
 py = [
     {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
