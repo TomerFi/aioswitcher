@@ -61,6 +61,18 @@ exclude = [
   time-machine = "^2.7.0"
   yamllint = "^1.26.3"
 
+  [tool.poetry.extras]
+  docs = [
+  "mkdocs",
+  "mkdocs-git-revision-date-plugin",
+  "mkdocs-material",
+  "mkdocstrings",
+  "mkdocstrings-python",
+  "mkdocs-autorefs",
+  "mkdocs-linkcheck",
+  "mkdocs-spellcheck"
+  ]
+
 [tool.poe.tasks]
 test = "poetry run pytest -v"
 test_cov = "poetry run pytest -v --cov --cov-report=term"
