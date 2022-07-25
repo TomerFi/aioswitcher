@@ -65,6 +65,16 @@ SWITCHER_TCP_PORT_TYPE1 = 9957
 # Type 2 devices: Breeze, Runners
 SWITCHER_TCP_PORT_TYPE2 = 10000
 
+# The following are remote IDs (list provided by Switcher) which
+# behaves differently in commanding their swing.
+# with the following IDs, the swing is transmitted as a separate command.
+SPECIAL_SWING_COMMAND_REMOTE_IDS = [
+    "ELEC7022",
+    "ZM079055",
+    "ZM079065",
+    "ZM079049",
+    "ZM079065",
+]
 
 SWITCHER_DEVICE_TO_TCP_PORT = {
     DeviceCategory.THERMOSTAT: SWITCHER_TCP_PORT_TYPE2,
@@ -687,13 +697,10 @@ class BreezeRemote(object):
             }
         }
         """
-        self._separated_swing_command = self._remote_id in [
-            "ELEC7022",
-            "ZM079055",
-            "ZM079065",
-            "ZM079049",
-            "ZM079065",
-        ]
+        self._separated_swing_command = (
+            self._remote_id in SPECIAL_SWING_COMMAND_REMOTE_IDS
+        )
+
         self._resolve_capabilities(ir_set)
 
     @property
