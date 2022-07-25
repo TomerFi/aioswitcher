@@ -162,3 +162,46 @@ jobs:
         if: ${{ matrix.python == env.MAIN_PY_VER }}
         with:
           files: ./coverage.xml
+
+
+  docs:
+    runs-on: ubuntu-latest
+    needs: [test]
+    name: Verify documentation site
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Source checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ env.MAIN_PY_VER }}
+
+      - name: Cache pip repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
+
+      - name: Prepare python environment
+        run: |
+          pip install -rrequirements.txt
+          poetry config virtualenvs.create true
+          poetry config virtualenvs.in-project true
+
+      - name: Cache poetry virtual environment
+        uses: actions/cache@v3
+        with:
+          path: .venv
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
+
+      - name: Install site dependencies
+        run: poe install_docs
+
+      - name: Verify reference links
+        run: poe docs_linkcheck
+
+      - name: Build documentation site
+        run: poe docs_build
