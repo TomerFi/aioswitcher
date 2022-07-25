@@ -901,28 +901,12 @@ python-versions = ">=3.7"
 python-dateutil = "*"
 
 [[package]]
-name = "toml"
-version = "0.10.2"
-description = "Python Library for Tom's Obvious, Minimal Language"
-category = "main"
-optional = true
-python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
-
-[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
-
-[[package]]
-name = "types-toml"
-version = "0.10.8"
-description = "Typing stubs for toml"
-category = "dev"
-optional = false
-python-versions = "*"
 
 [[package]]
 name = "typing-extensions"
@@ -995,7 +979,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
   python-versions = "^3.9.0"
-content-hash = "1f47c6224e9f62ba2a528eec5b7916b2b8caa09b96b51c19aad7dda52abe318a"
+content-hash = "7daa2f90817d10f0150d3cef001ebadc2d311041bd7eca9d136c2262639b190a"
 
 [metadata.files]
 aiohttp = [
@@ -1681,17 +1665,9 @@ time-machine = [
     {file = "time_machine-2.7.1-cp39-cp39-win32.whl", hash = "sha256:8c6314e7e0ffd7af82c8026786d5551aff973e0c86ec1368b0590be9a7620cad"},
     {file = "time_machine-2.7.1-cp39-cp39-win_amd64.whl", hash = "sha256:d50a2620d726788cbde97c58e0f6f61d10337d16d088a1fad789f50a1b5ff4d1"},
 ]
-toml = [
-    {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
-    {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
-]
 tomli = [
     {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
     {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
-]
-types-toml = [
-    {file = "types-toml-0.10.8.tar.gz", hash = "sha256:b7e7ea572308b1030dc86c3ba825c5210814c2825612ec679eb7814f8dd9295a"},
-    {file = "types_toml-0.10.8-py3-none-any.whl", hash = "sha256:8300fd093e5829eb9c1fba69cee38130347d4b74ddf32d0a7df650ae55c2b599"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.3.0-py3-none-any.whl", hash = "sha256:25642c956049920a5aa49edcdd6ab1e06d7e5d467fc00e0506c44ac86fbfca02"},
