@@ -1,0 +1,102 @@
+---
+site_name: aioswitcher
+site_url: https://aioswitcher.info
+site_author: Tomer Figenblat
+site_description: PyPi module integrating with various Switcher devices.
+
+repo_name: TomerFi/aioswitcher
+repo_url: https://github.com/TomerFi/aioswitcher
+edit_uri: ""
+
+nav:
+  - Home: index.md
+  - Install: install.md
+  - Usage: usage.md
+  - Command line scripts: scripts.md
+  - Code documentation: codedocs.md
+
+markdown_extensions:
+  - admonition
+  - def_list
+  - pymdownx.betterem
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.smartsymbols
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: ⚓︎
+
+extra:
+  version: "2.0.9"
+  social:
+    - icon: fontawesome/brands/twitter
+      link: https://twitter.com/realTomFi
+      name: realTomfi on Twitter
+    - icon: fontawesome/brands/github
+      link: https://github.com/TomerFi
+      name: TomerFi on GitHub
+    - icon: fontawesome/brands/dev
+      link: https://dev.to/tomerfi
+      name: tomerfi on Dev.to
+    - icon: fontawesome/brands/redhat
+      link: https://developers.redhat.com/author/tomerfi
+      name: tomerfi on Red Hat Developer
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/tomerfi/
+      name: tomerfi on LinkedIn
+
+plugins:
+  - search
+  - git-revision-date
+  - autorefs
+  - mkdocstrings:
+      custom_templates: templates
+      default_handler: python
+      handlers:
+        python:
+          selection:
+            filters:
+              - "!^_"
+          options:
+            show_source: true
+  - spellcheck:
+      # known_words can also be a list of words
+      known_words: known_words.txt
+      # ignore words in <code> tags
+      ignore_code: yes
+      # minimum length of words to consider
+      min_length: 2
+      # maximum number of capital letters in a word
+      max_capital: 1
+      # keep unicode characters
+      allow_unicode: no
+
+theme:
+  name: material
+  font:
+    code: Fira Code
+    text: Open Sans
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features:
+    - content.code.annotate
+    - header.autohide
+    - navigation.indexes
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
