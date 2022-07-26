@@ -101,7 +101,7 @@ isort = "poetry run isort --check-only src/ tests/ docs/ scripts/"
 isort_fix = "poetry run isort src/ tests/ docs/ scripts/"
 mypy = "poetry run mypy src/ tests/ scripts/"
 yamllint = "poetry run yamllint --format colored --strict ."
-docs_clean = "mkdocs build clean"
+docs_clean = "mkdocs build --clean"
 docs_linkcheck = "mkdocs-linkcheck -r ./docs --exclude ./codedocs.md"
 docs_build = "mkdocs build"
 
