@@ -166,7 +166,7 @@ class SwitcherBridge:
     Args:
         on_device: a callable to which every new SwitcherBase device found will be send.
         broadcast_ports: broadcast ports list, default for type 1 devices is 20002,
-        default for type 2 devices is 20003
+            default for type 2 devices is 20003
 
     """
 
