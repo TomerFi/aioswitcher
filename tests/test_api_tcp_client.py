@@ -339,6 +339,29 @@ async def test_breeze_get_command_function_invalid_mode(resource_path_root):
         remote.get_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.AUTO, ThermostatSwing.ON, DeviceState.OFF)
 
 
+async def test_breeze_get_swing_command_function(resource_path_root):
+    remote_manager = BreezeRemoteManager(str(resource_path_root) + "/breeze_data/")
+    async with ClientSession() as session:
+        remote = await remote_manager.get_remote("ELEC7022", connected_api_type2, session)
+        command: SwitcherBreezeCommand = remote.get_swing_command(ThermostatSwing.ON)
+
+    assert_that(command).is_type_of(SwitcherBreezeCommand)
+
+
+async def test_breeze_get_swing_command_function_invalid_irset(resource_path_root):
+    elec7022_invalid_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022_INVALID.json")))
+    remote = BreezeRemote(elec7022_invalid_set)
+    with raises(RuntimeError, match="The special swing key \"FUN_d1\" does not exist in the IRSet database!"):
+        remote.get_swing_command(ThermostatSwing.ON)
+
+
+async def test_breeze_get_swing_command_function_non_special_swing_remote(resource_path_root):
+    saka_25_irset = load(open((str(resource_path_root) + "/breeze_data/SAKA_25.json")))
+    remote = BreezeRemote(saka_25_irset)
+    with raises(RuntimeWarning, match=f"Swing special function doesn't apply on this remote {remote.remote_id}"):
+        remote.get_swing_command(ThermostatSwing.ON)
+
+
 async def test_breeze_remote_manager(reader_mock, resource_path_root, connected_api_type2):
     elec7001 = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.json")))
     elec7022 = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
