@@ -350,7 +350,7 @@ class SwitcherApi:
 
         Args:
             full_time: timedelta value containing the configuration value for
-            auto-shutdown.
+                auto-shutdown.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.

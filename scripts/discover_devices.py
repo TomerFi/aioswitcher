@@ -52,6 +52,7 @@ Example output:
     Switcher devices broadcast a status message every approximately 4 seconds. This
     script listens for these messages and prints a serialized version of the to the
     standard output, for example (note the ``device_id`` and ``mac_address`` properties)::
+    ```
         {   'auto_shutdown': '03:00:00',
             'device_id': 'aaaaaa',
             'device_state': <DeviceState.OFF: ('0000', 'off')>,
@@ -63,7 +64,7 @@ Example output:
             'name': 'My Switcher Boiler',
             'power_consumption': 0,
             'remaining_time': '00:00:00'}
-
+    ```
 Print all protocol types devices for 30 seconds:
     python discover_devices.py 30 -t all\n
 
