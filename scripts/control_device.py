@@ -200,7 +200,6 @@ set_shutter_position_parser.add_argument(
     required=True,
     type=int,
     help="Shutter position percentage",
-    default=0,
 )
 
 # control_thermostat parser
@@ -212,44 +211,35 @@ control_thermostat_parser.add_argument(
     "-s",
     "--state",
     choices=possible_states.keys(),
-    required=True,
+    default="on",
     help=f"thermostat state, possible values: {possible_states}",
-    default=None,
 )
 possible_modes = dict(map(lambda s: (s.display, s), ThermostatMode))
 control_thermostat_parser.add_argument(
     "-m",
     "--mode",
     choices=possible_modes.keys(),
-    required=False,
     help=f"thermostat mode, possible values: {possible_modes}",
-    default=None,
 )
 possible_fan_level = dict(map(lambda s: (s.display, s), ThermostatFanLevel))
 control_thermostat_parser.add_argument(
     "-f",
     "--fan-level",
     choices=possible_fan_level.keys(),
-    required=False,
     help=f"thermostat fan level, possible values: {possible_fan_level}",
-    default=None,
 )
 possible_swing = dict(map(lambda s: (s.display, s), ThermostatSwing))
 control_thermostat_parser.add_argument(
     "-w",
     "--swing",
     choices=possible_swing.keys(),
-    required=False,
     help=f"thermostat swing, possible values: {possible_swing}",
-    default=None,
 )
 control_thermostat_parser.add_argument(
     "-t",
     "--temperature",
     type=int,
-    required=False,
     help=f"thermostat temperature, possible values: {possible_swing}",
-    default=None,
 )
 
 
@@ -273,11 +263,11 @@ async def control_thermostat(
     device_ip: str,
     state: str,
     mode: str = None,
-    target_temp: int = 0,
+    target_temp: int = None,
     fan_level: str = None,
     swing: str = None,
     verbose: bool = False,
-):
+) -> None:
     """Control Breeze device."""
     async with SwitcherType2Api(device_ip, device_id) as api:
         rm = BreezeRemoteManager()
@@ -296,12 +286,42 @@ async def control_thermostat(
         command = remote.get_command(
             new_state, new_mode, new_target_temp, new_fan_level, new_swing, resp.state
         )
+
+        # This won't change the swing state on some special remotes,
+        # the swing change on special remotes is handled next on
         printer.pprint(
             asdict(
                 await api.control_breeze_device(command),
                 verbose,
             )
         )
+
+        # Here is a special case to handle swing on special remotes
+        # if we entered here with only swing mode change, we perform it
+        if remote.separated_swing_command:
+            no_state_change_requested = new_state == resp.state
+            no_mode_change_requested = new_mode == resp.mode
+            no_fan_level_change_requested = new_fan_level == resp.fan_level
+            no_temperature_change_requested = new_target_temp == resp.target_temperature
+
+            if (
+                no_state_change_requested
+                and no_mode_change_requested
+                and no_fan_level_change_requested
+                and no_temperature_change_requested
+            ):
+                # due to a bug in Switcher can't read swing mode on remotes
+                # with separated_swing_command ,the new_swing mode will always be OFF
+                # so it doesn't make any difference comparing
+                # new_swing != possible_swing[swing]
+                printer.pprint(
+                    asdict(
+                        await api.control_breeze_device(
+                            remote.get_swing_command(new_swing)
+                        ),
+                        verbose,
+                    )
+                )
 
 
 async def turn_on(device_id: str, device_ip: str, timer: int, verbose: bool) -> None:
