@@ -65,6 +65,16 @@ SWITCHER_TCP_PORT_TYPE1 = 9957
 # Type 2 devices: Breeze, Runners
 SWITCHER_TCP_PORT_TYPE2 = 10000
 
+# The following are remote IDs (list provided by Switcher) which
+# behaves differently in commanding their swing.
+# with the following IDs, the swing is transmitted as a separate command.
+SPECIAL_SWING_COMMAND_REMOTE_IDS = [
+    "ELEC7022",
+    "ZM079055",
+    "ZM079065",
+    "ZM079049",
+    "ZM079065",
+]
 
 SWITCHER_DEVICE_TO_TCP_PORT = {
     DeviceCategory.THERMOSTAT: SWITCHER_TCP_PORT_TYPE2,
@@ -687,6 +697,10 @@ class BreezeRemote(object):
             }
         }
         """
+        self._separated_swing_command = (
+            self._remote_id in SPECIAL_SWING_COMMAND_REMOTE_IDS
+        )
+
         self._resolve_capabilities(ir_set)
 
     @property
@@ -721,6 +735,11 @@ class BreezeRemote(object):
         """Getter for brand name."""
         return self._brand
 
+    @property
+    def separated_swing_command(self) -> bool:
+        """Getter for which indicates if the AC has a separated swing command."""
+        return self._separated_swing_command
+
     def _lookup_key_in_irset(self, key: list):
         # start looking up for such key in the IRSet file
         while (
@@ -738,6 +757,32 @@ class BreezeRemote(object):
             else:
                 # found a match, with modified list
                 return
+
+    def get_swing_command(self, swing: ThermostatSwing):
+        """Build a special command to control swing on special remotes."""
+        if self._separated_swing_command:
+            key = "FUN_d0" if swing == ThermostatSwing.OFF else "FUN_d1"
+
+            try:
+                command = (
+                    self._ir_wave_map["".join(key)]["Para"]
+                    + "|"
+                    + self._ir_wave_map["".join(key)]["HexCode"]
+                )
+            except KeyError:
+                logger.error(
+                    f'The special swing key "{key}",        \
+                        does not exist in the IRSet database!'
+                )
+                raise RuntimeError
+
+            return SwitcherBreezeCommand(
+                "00000000" + hexlify(str(command).encode()).decode()
+            )
+        else:
+            raise RuntimeWarning(
+                f"Swing special function doesn't apply on this remote {self.remote_id}"
+            )
 
     def get_command(
         self,
@@ -834,6 +879,10 @@ class BreezeRemote(object):
                         "fan_levels": set(),
                         "temperature_control": False,
                     }
+
+                    # This type of ACs support swing mode in every mode
+                    if self.separated_swing_command:
+                        self._modes_features[mode]["swing"] = True
 
             except KeyError:
                 pass
