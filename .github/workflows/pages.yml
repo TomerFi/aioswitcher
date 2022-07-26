@@ -39,7 +39,7 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
 
-      - name: Build documenation site
+      - name: Build documentation site
         run: |
           poe install_docs
           poe docs_build
@@ -48,6 +48,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docsbuild
+          publish_dir: ./site
           cname: aioswitcher.tomfi.info
           commit_message: 'docs: deployed documentation site '

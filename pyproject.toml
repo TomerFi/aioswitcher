@@ -22,7 +22,7 @@ exclude = [
   ".*",
   "dist",
   "docs",
-  "docsbuild",
+  "site",
   "htmlcov",
   "scripts",
   "tests",
