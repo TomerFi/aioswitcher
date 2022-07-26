@@ -758,11 +758,10 @@ class BreezeRemote(object):
                 # found a match, with modified list
                 return
 
-    def get_swing_command(self, swing: ThermostatSwing):
+    def get_swing_command(self, swing: ThermostatSwing) -> SwitcherBreezeCommand:
         """Build a special command to control swing on special remotes."""
         if self._separated_swing_command:
             key = "FUN_d0" if swing == ThermostatSwing.OFF else "FUN_d1"
-
             try:
                 command = (
                     self._ir_wave_map["".join(key)]["Para"]
@@ -771,10 +770,13 @@ class BreezeRemote(object):
                 )
             except KeyError:
                 logger.error(
-                    f'The special swing key "{key}",        \
+                    f'The special swing key "{key}"        \
                         does not exist in the IRSet database!'
                 )
-                raise RuntimeError
+                raise RuntimeError(
+                    f'The special swing key "{key}"'
+                    " does not exist in the IRSet database!"
+                )
 
             return SwitcherBreezeCommand(
                 "00000000" + hexlify(str(command).encode()).decode()
