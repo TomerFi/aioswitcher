@@ -6,6 +6,7 @@ locale: en_US.UTF-8
 ignore: |
   .git/
   .mypy_cache/
+  .venv/
 
 rules:
   line-length:

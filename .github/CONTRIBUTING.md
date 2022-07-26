@@ -47,8 +47,7 @@ To get you going, here are some poe scripts I use constantly while working on *a
 - ```poe lic_check``` (requires *deno*)
 - ```poe black_fix```
 - ```poe isort_fix```
-- ```poe sphinx_spelling```
-- ```poe sphinx_build```
+- ```poe docs_build```
 
 ## Commit messages
 
