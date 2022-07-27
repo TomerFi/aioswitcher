@@ -740,7 +740,7 @@ class BreezeRemote(object):
         """Getter for which indicates if the AC has a separated swing command."""
         return self._separated_swing_command
 
-    def _lookup_key_in_irset(self, key: list):
+    def _lookup_key_in_irset(self, key: list) -> None:
         # start looking up for such key in the IRSet file
         while (
             len(key) != 1
@@ -792,7 +792,7 @@ class BreezeRemote(object):
         fan_level: ThermostatFanLevel,
         swing: ThermostatSwing,
         current_state: DeviceState,
-    ):
+    ) -> SwitcherBreezeCommand:
         """Build command that controls the Breeze device."""
         key = []
         command = ""
@@ -913,7 +913,7 @@ class BreezeRemote(object):
 class BreezeRemoteManager(object):
     """Class the used to download and hold all Breeze remotes."""
 
-    def __init__(self, cache_directory: str = None):
+    def __init__(self, cache_directory: str = None) -> None:
         """Initialize the Remote manager."""
         self._remotes_db: Dict[str, BreezeRemote] = {}
         self._cache_dir = cache_directory
@@ -923,7 +923,7 @@ class BreezeRemoteManager(object):
                 f"The specified directory path {cache_directory} does not exist"
             )
 
-    def add_remote(self, ir_set: dict):
+    def add_remote(self, ir_set: dict) -> None:
         """Add remote locally via json file."""
         self._remotes_db[ir_set["IRSetID"]] = BreezeRemote(ir_set)
 
