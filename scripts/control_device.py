@@ -212,34 +212,34 @@ control_thermostat_parser.add_argument(
     "--state",
     choices=possible_states.keys(),
     default="on",
-    help=f"thermostat state, possible values: {possible_states}",
+    help="thermostat state",
 )
 possible_modes = dict(map(lambda s: (s.display, s), ThermostatMode))
 control_thermostat_parser.add_argument(
     "-m",
     "--mode",
     choices=possible_modes.keys(),
-    help=f"thermostat mode, possible values: {possible_modes}",
+    help="thermostat mode",
 )
 possible_fan_level = dict(map(lambda s: (s.display, s), ThermostatFanLevel))
 control_thermostat_parser.add_argument(
     "-f",
     "--fan-level",
     choices=possible_fan_level.keys(),
-    help=f"thermostat fan level, possible values: {possible_fan_level}",
+    help="thermostat fan level",
 )
 possible_swing = dict(map(lambda s: (s.display, s), ThermostatSwing))
 control_thermostat_parser.add_argument(
     "-w",
     "--swing",
     choices=possible_swing.keys(),
-    help=f"thermostat swing, possible values: {possible_swing}",
+    help="thermostat swing",
 )
 control_thermostat_parser.add_argument(
     "-t",
     "--temperature",
     type=int,
-    help=f"thermostat temperature, possible values: {possible_swing}",
+    help="thermostat temperature",
 )
 
 

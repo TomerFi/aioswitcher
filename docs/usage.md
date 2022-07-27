@@ -23,7 +23,10 @@ The following code will print all discovered devices for 60 seconds.
 
 ## API
 
-We can use the API to gain the following capabilities:
+### Type1 API (Switcher Plug, V2, Touch, V4)
+
+We can use the Type1 API to gain the following capabilities:
+
 - Get the current state
 - Turn on and off
 - Set the name
@@ -34,7 +37,7 @@ We can use the API to gain the following capabilities:
 ```python
     async def control_device(device_ip, device_id) :
         # for connecting to a device we need its id and ip address
-        async with SwitcherApi(device_ip, device_id) as api:
+        async with SwitcherType1Api(device_ip, device_id) as api:
             # get the device current state
             await api.get_state()
             # turn the device on for 15
@@ -53,6 +56,70 @@ We can use the API to gain the following capabilities:
             await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
     asyncio.get_event_loop().run_until_complete(control_device("111.222.11.22", "ab1c2d"))
+```
+
+### Type2 API (Switcher Breeze and Runner)
+
+We can use the Type2 API to gain the following capabilities on Switcher Breeze and Runner:
+
+- Get the current state
+- Control Runner position
+- Control Breeze (State, Mode, Fan Level, Target Temperature, Vertical Swing)
+
+```python
+    async def control_runner_device(device_ip, device_id) :
+        # for connecting to a device we need its id and ip address
+        async with SwitcherType2Api(device_ip, device_id) as api:
+            
+            # get the device current state
+            state: SwitcherShutterStateResponse = await api.get_shutter_state()
+            # state.position (int) holds the current position of the shutter
+            # state.direction (ShutterDirection) holds the current direction
+
+            # open the shutter to 30%
+            await api.set_position(30)
+            # stop the shutter if currently rolling
+            await api.stop()
+
+    asyncio.get_event_loop().run_until_complete(control_runner_device("192.168.50.98", "f2239a"))
+```
+
+```python
+    async def control_breeze_device(device_ip, device_id) :
+        # for connecting to a device we need its id and ip address
+        async with SwitcherType2Api(device_ip, device_id) as api:
+            
+            # get the device current state
+            response: SwitcherThermostatStateResponse = await api.get_breeze_state()
+
+            # Control Breeze Device
+            
+            # initialize the Breeze RemoteManager
+            rm = BreezeRemoteManager()
+
+            # get the remote structure (downloaded from the internet)
+            # alternatively, you can get supply local directory path to the BreezeRemoteManager
+            # and the BreezeRemoteManager will save and cache downloaded remotes into the directory
+
+            async with ClientSession() as session:
+                remote: BreezeRemote = await rm.get_remote(response.remote_id, api, session)
+                
+                # prepare a control command that turns on the Breeze 
+                # (24 degree (Celsius), cooling with vertical swing and keep the current Fan Level)  
+                command: SwitcherBreezeCommand = remote.get_command(
+                        DeviceState.ON, 
+                        ThermostatMode.COOL, 
+                        24, 
+                        resp.fan_level, 
+                        ThermostatSwing.ON,
+                        response.state
+                    )
+
+        # send command to the device
+        await api.control_breeze_device(command)
+
+    asyncio.get_event_loop().run_until_complete(control_breeze_device("192.168.50.77", "3a20b7"))
+
 ```
 
 !!! note

@@ -38,21 +38,21 @@ async with SwitcherType2Api(device_ip, device_id) as api_type2:
 
     # get the remote structure (downloaded from the internet)
     async with ClientSession() as session:
-    remote: BreezeRemote = await rm.get_remote(resp.remote_id, api_type2, session)
+      remote: BreezeRemote = await rm.get_remote(resp.remote_id, api_type2, session)
 
-    # prepare a control command that turns on the Breeze 
-    # (24 degree (Celsius), cooling and high Fan level with vertical swing)  
-    command = remote.get_command(
-          DeviceState.ON, 
-          ThermostatMode.COOL, 
-          24, 
-          ThermostatFanLevel.HIGH, 
-          ThermostatSwing.ON,
-          resp.state
-      )
+      # prepare a control command that turns on the Breeze 
+      # (24 degree (Celsius), cooling and high Fan level with vertical swing)  
+      command = remote.get_command(
+            DeviceState.ON, 
+            ThermostatMode.COOL, 
+            24, 
+            ThermostatFanLevel.HIGH, 
+            ThermostatSwing.ON,
+            resp.state
+        )
 
-    # send command to the device
-    await api_type2.control_breeze_device(command)
+      # send command to the device
+      await api_type2.control_breeze_device(command)
   
 # control Runner device  
 async with SwitcherType2Api(device_ip, device_id) as api:

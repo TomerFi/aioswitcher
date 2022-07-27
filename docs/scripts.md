@@ -174,3 +174,42 @@ options:
                         set minutes timer for turn on operation
 ```
 
+## script/control_device.py set_shutter_position
+
+```shell
+usage: control_device.py set_shutter_position [-h] -p POSITION
+
+options:
+  -h, --help            show this help message and exit
+  -p POSITION, --position POSITION
+                        Shutter position percentage
+```
+
+## script/control_device.py stop_shutter
+
+```shell
+usage: control_device.py stop_shutter [-h]
+
+options:
+  -h, --help  show this help message and exit
+```
+
+## script/control_device.py control_thermostat
+
+```shell
+usage: control_device.py control_thermostat [-h] [-s {on,off}] [-m {auto,dry,fan,cool,heat}] [-f {low,medium,high,auto}]
+                                            [-w {off,on}] [-t TEMPERATURE]
+
+options:
+  -h, --help            show this help message and exit
+  -s {on,off}, --state {on,off}
+                        thermostat state, possible values
+  -m {auto,dry,fan,cool,heat}, --mode {auto,dry,fan,cool,heat}
+                        thermostat mode
+  -f {low,medium,high,auto}, --fan-level {low,medium,high,auto}
+                        thermostat fan level
+  -w {off,on}, --swing {off,on}
+                        thermostat swing
+  -t TEMPERATURE, --temperature TEMPERATURE
+                        thermostat temperature
+```
