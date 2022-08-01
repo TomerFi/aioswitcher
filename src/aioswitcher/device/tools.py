@@ -61,20 +61,20 @@ def sign_packet_with_crc_key(hex_packet: str) -> str:
 
 
 def minutes_to_hexadecimal_seconds(minutes: int) -> str:
-    """Encode minutes to an hexadecimal packed as little endian unsinged int.
+    """Encode minutes to an hexadecimal packed as little endian unsigned int.
 
     Args:
         minutes: minutes to encode.
 
     Return:
-        Hexadecimal representation of the mintues argument.
+        Hexadecimal representation of the minutes argument.
 
     """
     return hexlify(pack("<I", minutes * 60)).decode()
 
 
 def timedelta_to_hexadecimal_seconds(full_time: datetime.timedelta) -> str:
-    """Encode timedelta as seconds to an hexadecimal packed as little endian unsinged int.
+    """Encode timedelta as seconds to an hexadecimal packed as little endian unsigned.
 
     Args:
         full_time: timedelta time between 1 and 24 hours, seconds are ignored.
