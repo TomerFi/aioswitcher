@@ -74,7 +74,7 @@ jobs:
 
       - name: Determine version and create changelog
         id: bumper
-        uses: tomerfi/version-bumper-action@1.1.3
+        uses: tomerfi/version-bumper-action@1.2.0
 
       - name: Set new project version
         uses: ciiiii/toml-editor@1.0.0
