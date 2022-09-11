@@ -3,7 +3,7 @@ name = "aioswitcher"
 version = "2.0.11.dev"
 description = "Switcher Python Integration."
 license = "Apache-2.0"
-authors = [ "Tomer Figenblat <tomer.figenblat@gmail.com>" ]
+authors =  [ "Tomer Figenblat <tomer.figenblat@gmail.com>" ]
 maintainers = [ "Shay Levy" ]
 readme = "README.md"
 homepage = "https://pypi.org/project/aioswitcher/"
@@ -17,7 +17,9 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed"
 ]
-include = [ ]
+include = [ 
+  "resources/irset_db.json"
+]
 exclude = [
   ".*",
   "dist",
