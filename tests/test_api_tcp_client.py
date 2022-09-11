@@ -21,7 +21,6 @@ from json import load, loads
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest_asyncio
-from aiohttp import ClientSession
 from assertpy import assert_that
 from pytest import fixture, mark, raises
 
@@ -207,9 +206,8 @@ async def test_get_breeze_state_function_with_a_faulty_get_state_response_should
 
 async def test_control_breeze_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
     two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
-    elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        remote = BreezeRemote(elec7022_set)
+        remote = BreezeRemoteManager().get_remote('ELEC7022')
         command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
         response = await connected_api_type2.control_breeze_device(command)
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -217,9 +215,8 @@ async def test_control_breeze_device_function_with_valid_packets(reader_mock, wr
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
-async def test_breeze_remote_min_max_temp(resource_path_root):
-    elec7001_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.json")))
-    remote = BreezeRemote(elec7001_set)
+async def test_breeze_remote_min_max_temp():
+    remote = BreezeRemoteManager().get_remote('ELEC7001')
     max_temp = remote.max_temperature
     min_temp = remote.min_temperature
     assert_that(min_temp).is_equal_to(16)
@@ -228,26 +225,16 @@ async def test_breeze_remote_min_max_temp(resource_path_root):
     assert_that(max_temp).is_instance_of(int)
 
 
-async def test_breeze_get_remote_id(resource_path_root):
-    elec7001_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.json")))
-    remote = BreezeRemote(elec7001_set)
+async def test_breeze_get_remote_id():
+    remote = BreezeRemoteManager().get_remote('ELEC7001')
     remote_id = remote.remote_id
     assert_that(remote_id).is_equal_to("ELEC7001")
     assert_that(remote_id).is_instance_of(str)
 
 
-async def test_breeze_get_brand(resource_path_root):
-    elec7001_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.json")))
-    remote = BreezeRemote(elec7001_set)
-    brand = remote.brand
-    assert_that(brand).is_equal_to("ELECTRA")
-    assert_that(brand).is_instance_of(str)
-
-
-async def test_control_breeze_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2, resource_path_root):
+async def test_control_breeze_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2):
     with raises(RuntimeError, match="login request was not successful"):
-        elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
-        remote = BreezeRemote(elec7022_set)
+        remote = BreezeRemoteManager().get_remote('ELEC7022')
         command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
         with patch.object(reader_mock, "read", return_value=b''):
             await connected_api_type2.control_breeze_device(command)
@@ -256,9 +243,8 @@ async def test_control_breeze_function_with_a_faulty_get_state_response_should_r
 
 async def test_get_breeze_command_function_with_low_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
     two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
-    elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        remote = BreezeRemote(elec7022_set)
+        remote = BreezeRemoteManager().get_remote('ELEC7022')
         command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 10, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
         response = await connected_api_type2.control_breeze_device(command)
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -268,9 +254,8 @@ async def test_get_breeze_command_function_with_low_temp(reader_mock, writer_wri
 
 async def test_get_breeze_command_function_with_high_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
     two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
-    elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        remote = BreezeRemote(elec7022_set)
+        remote = BreezeRemoteManager().get_remote('ELEC7022')
         command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 100, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
         response = await connected_api_type2.control_breeze_device(command)
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -288,47 +273,71 @@ async def test_breeze_get_command_function_with_non_supported_mode(resource_path
 
 
 async def test_breeze_get_command_function_non_toggle_type_off_state(resource_path_root):
-    elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
     elec7022_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7022_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
-
-    remote = BreezeRemote(elec7022_set)
+    remote = BreezeRemoteManager().get_remote('ELEC7022')
     command = remote.get_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7022_turn_off_cmd).decode())
 
 
 async def test_breeze_get_command_function_toggle_type(resource_path_root):
-    elec7001_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.json")))
     elec7001_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7001_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
 
-    remote = BreezeRemote(elec7001_set)
+    remote = BreezeRemoteManager().get_remote('ELEC7001')
     command = remote.get_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
 
 
 async def test_breeze_get_command_function_should_raise_command_does_not_eixst(resource_path_root):
-    elec7001_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.json")))
     elec7001_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7001_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
 
-    remote = BreezeRemote(elec7001_set)
+    remote = BreezeRemoteManager().get_remote('ELEC7001')
     command = remote.get_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
 
 
-async def test_breeze_remote_manager_with_wrong_cache_directory():
-    cache_directory = "/wrong/directory"
-    with raises(OSError, match=f"The specified directory path {cache_directory} does not exist"):
-        BreezeRemoteManager(cache_directory)
+async def test_breeze_remote_manager_with_none_existing_remotes_db():
+    local_remotes_db = "/wrong/directory/remotes_db.json"
+    with raises(OSError, match=f"The specified remote db path {local_remotes_db} does not exist"):
+        BreezeRemoteManager(local_remotes_db)
 
 
-async def test_breeze_remote_manager_get_from_cache(resource_path_root, connected_api_type2):
-    remote_manager = BreezeRemoteManager(str(resource_path_root) + "/breeze_data/")
-    async with ClientSession() as session:
-        remote_7022 = await remote_manager.get_remote("ELEC7022", connected_api_type2, session)
+async def test_breeze_remote_manager_get_from_local_database():
+    remote_manager = BreezeRemoteManager()
+    remote_7022 = remote_manager.get_remote("ELEC7022")
     assert_that(remote_7022).is_type_of(BreezeRemote)
     assert_that(remote_7022.remote_id).is_equal_to("ELEC7022")
+
+
+async def test_breeze_remote_manager_invalid_remote_file(resource_path_root):
+    invalid_remote_db_file_path = str(resource_path_root) + '/breeze_data/breeze_elec7022_turn_off_command.txt'
+    with raises(RuntimeError, match=f"The file {invalid_remote_db_file_path} is not a valid JSON file!"):
+        remote_manager = BreezeRemoteManager(invalid_remote_db_file_path)
+        remote_manager.get_remote("ELEC7022")
+
+
+async def test_breeze_get_swing_command():
+    remote_manager = BreezeRemoteManager()
+    remote_7022 = remote_manager.get_remote("ELEC7022")
+    command = remote_7022.get_swing_command(swing=ThermostatSwing.ON)
+    assert_that(command.command).is_equal_to("00000000423234443642393445303146")
+
+
+async def test_breeze_get_swing_command_on_wrong_remote():
+    remote_manager = BreezeRemoteManager()
+    remote_7001 = remote_manager.get_remote("ELEC7001")
+    with raises(RuntimeWarning, match=f"Swing special function doesn't apply on this remote {remote_7001.remote_id}"):
+        remote_7001.get_swing_command(swing=ThermostatSwing.ON)
+
+
+async def test_breeze_get_swing_command_on_invalid_remote(resource_path_root):
+    elec7022_invalid_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022_INVALID.json")))
+
+    remote_7022 = BreezeRemote(elec7022_invalid_set)
+    with raises(RuntimeError):
+        remote_7022.get_swing_command(swing=ThermostatSwing.ON)
 
 
 async def test_breeze_get_command_function_invalid_mode(resource_path_root):
@@ -337,43 +346,6 @@ async def test_breeze_get_command_function_invalid_mode(resource_path_root):
     remote = BreezeRemote(elec7022_invalid_set)
     with raises(RuntimeError, match="Invalid mode \"cool\", available modes for this device are: auto, dry, fan"):
         remote.get_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.AUTO, ThermostatSwing.ON, DeviceState.OFF)
-
-
-async def test_breeze_remote_manager(reader_mock, resource_path_root, connected_api_type2):
-    elec7001 = load(open((str(resource_path_root) + "/breeze_data/ELEC7001.json")))
-    elec7022 = load(open((str(resource_path_root) + "/breeze_data/ELEC7022.json")))
-    remote_manager = BreezeRemoteManager()
-    remote_manager.add_remote(elec7001)
-    async with ClientSession() as session:
-        remote_7001 = await remote_manager.get_remote("ELEC7001", connected_api_type2, session)
-        with patch.object(connected_api_type2, "download_breeze_remote_ir_set", return_value=elec7022):
-            remote_7022 = await remote_manager.get_remote("ELEC7022", connected_api_type2, session)
-    assert_that(remote_7001).is_type_of(BreezeRemote)
-    assert_that(remote_7001.remote_id).is_equal_to("ELEC7001")
-    assert_that(remote_7022).is_type_of(BreezeRemote)
-    assert_that(remote_7022.remote_id).is_equal_to("ELEC7022")
-
-
-async def test_download_breeze_remote(reader_mock, resource_path_root, connected_api_type2):
-    two_packets = _get_two_packets(resource_path_root, "get_breeze_state")
-    elec7001 = open((str(resource_path_root) + "/breeze_data/ELEC7001.json")).read()
-    response_mock = MockResponse(elec7001, 200)
-    async with ClientSession() as session:
-        remote_manager = BreezeRemoteManager()
-        with patch.object(reader_mock, "read", side_effect=two_packets), patch("aiohttp.ClientSession.post", return_value=response_mock):
-            remote_7001 = await remote_manager.get_remote("ELEC7001", connected_api_type2, session)
-        assert_that(remote_7001.brand).is_equal_to('ELECTRA')
-
-
-async def test_download_breeze_remote_failed(reader_mock, resource_path_root, connected_api_type2):
-    two_packets = _get_two_packets(resource_path_root, "get_breeze_state")
-    elec7001 = open((str(resource_path_root) + "/breeze_data/ELEC7001.json")).read()
-    response_mock = MockResponse(elec7001, 404)
-    with raises(RuntimeError):
-        async with ClientSession() as session:
-            remote_manager = BreezeRemoteManager()
-            with patch.object(reader_mock, "read", side_effect=two_packets), patch("aiohttp.ClientSession.post", return_value=response_mock):
-                await remote_manager.get_remote("ELEC7001", connected_api_type2, session)
 
 
 async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, writer_write, resource_path_root, connected_api_type2):

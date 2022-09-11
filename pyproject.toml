@@ -17,7 +17,9 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed"
 ]
-include = [ ]
+include = [
+  "resources/irset_db.json"
+]
 exclude = [
   ".*",
   "dist",
