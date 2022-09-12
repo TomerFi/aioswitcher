@@ -19,7 +19,7 @@ from asyncio import open_connection
 from binascii import hexlify, unhexlify
 from datetime import timedelta
 from enum import Enum, unique
-from json import JSONDecodeError, load
+from json import load
 from logging import getLogger
 from os import path
 from pathlib import Path
@@ -887,13 +887,6 @@ class BreezeRemoteManager(object):
         if remote_id not in self._remotes_db:
             # load the remote into the memory
             with open(self._remotes_db_fpath) as remotes_fd:
-                try:
-                    self._remotes_db[remote_id] = BreezeRemote(
-                        load(remotes_fd)[remote_id]
-                    )
-                except JSONDecodeError as exp:
-                    raise RuntimeError(
-                        f"The file {self._remotes_db_fpath} is not a valid JSON file!"
-                    ) from exp
+                self._remotes_db[remote_id] = BreezeRemote(load(remotes_fd)[remote_id])
 
         return self._remotes_db[remote_id]

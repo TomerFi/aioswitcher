@@ -17,7 +17,7 @@
 from asyncio.streams import StreamReader, StreamWriter
 from binascii import hexlify, unhexlify
 from datetime import timedelta
-from json import load, loads
+from json import loads
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest_asyncio
@@ -265,9 +265,8 @@ async def test_get_breeze_command_function_with_high_temp(reader_mock, writer_wr
 
 async def test_breeze_get_command_function_with_non_supported_mode(resource_path_root):
     # test invalid non existing mode (cool)
-    elec7022_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022_INVALID.json")))
-
-    remote = BreezeRemote(elec7022_set)
+    brm = BreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_invalid_elec7022_data.json")
+    remote = brm.get_remote('ELEC7022')
     with raises(RuntimeError, match=f"Invalid mode \"{ThermostatMode.COOL.display}\", available modes for this device are: {', '.join([x.display for x in remote.supported_modes])}"):
         remote.get_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
 
@@ -311,13 +310,6 @@ async def test_breeze_remote_manager_get_from_local_database():
     assert_that(remote_7022.remote_id).is_equal_to("ELEC7022")
 
 
-async def test_breeze_remote_manager_invalid_remote_file(resource_path_root):
-    invalid_remote_db_file_path = str(resource_path_root) + '/breeze_data/breeze_elec7022_turn_off_command.txt'
-    with raises(RuntimeError, match=f"The file {invalid_remote_db_file_path} is not a valid JSON file!"):
-        remote_manager = BreezeRemoteManager(invalid_remote_db_file_path)
-        remote_manager.get_remote("ELEC7022")
-
-
 async def test_breeze_get_swing_command():
     remote_manager = BreezeRemoteManager()
     remote_7022 = remote_manager.get_remote("ELEC7022")
@@ -333,17 +325,15 @@ async def test_breeze_get_swing_command_on_wrong_remote():
 
 
 async def test_breeze_get_swing_command_on_invalid_remote(resource_path_root):
-    elec7022_invalid_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022_INVALID.json")))
-
-    remote_7022 = BreezeRemote(elec7022_invalid_set)
+    brm = BreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_invalid_elec7022_data.json")
+    remote_7022 = brm.get_remote('ELEC7022')
     with raises(RuntimeError):
         remote_7022.get_swing_command(swing=ThermostatSwing.ON)
 
 
 async def test_breeze_get_command_function_invalid_mode(resource_path_root):
-    elec7022_invalid_set = load(open((str(resource_path_root) + "/breeze_data/ELEC7022_INVALID.json")))
-
-    remote = BreezeRemote(elec7022_invalid_set)
+    brm = BreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_invalid_elec7022_data.json")
+    remote = brm.get_remote('ELEC7022')
     with raises(RuntimeError, match="Invalid mode \"cool\", available modes for this device are: auto, dry, fan"):
         remote.get_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.AUTO, ThermostatSwing.ON, DeviceState.OFF)
 
