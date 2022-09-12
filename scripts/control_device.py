@@ -22,8 +22,6 @@ from datetime import timedelta
 from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
-from aiohttp import ClientSession
-
 from aioswitcher.api import (
     BreezeRemote,
     BreezeRemoteManager,
@@ -212,34 +210,34 @@ control_thermostat_parser.add_argument(
     "--state",
     choices=possible_states.keys(),
     default="on",
-    help="thermostat state",
+    help=f"thermostat state, possible values: {possible_states}",
 )
 possible_modes = dict(map(lambda s: (s.display, s), ThermostatMode))
 control_thermostat_parser.add_argument(
     "-m",
     "--mode",
     choices=possible_modes.keys(),
-    help="thermostat mode",
+    help=f"thermostat mode, possible values: {possible_modes}",
 )
 possible_fan_level = dict(map(lambda s: (s.display, s), ThermostatFanLevel))
 control_thermostat_parser.add_argument(
     "-f",
     "--fan-level",
     choices=possible_fan_level.keys(),
-    help="thermostat fan level",
+    help=f"thermostat fan level, possible values: {possible_fan_level}",
 )
 possible_swing = dict(map(lambda s: (s.display, s), ThermostatSwing))
 control_thermostat_parser.add_argument(
     "-w",
     "--swing",
     choices=possible_swing.keys(),
-    help="thermostat swing",
+    help=f"thermostat swing, possible values: {possible_swing}",
 )
 control_thermostat_parser.add_argument(
     "-t",
     "--temperature",
     type=int,
-    help="thermostat temperature",
+    help=f"thermostat temperature, possible values: {possible_swing}",
 )
 
 
@@ -280,8 +278,7 @@ async def control_thermostat(
         new_target_temp = target_temp if target_temp else resp.target_temperature
 
         # First time it'll download the IRSet JSON file from switcher
-        async with ClientSession() as session:
-            remote: BreezeRemote = await rm.get_remote(resp.remote_id, api, session)
+        remote: BreezeRemote = rm.get_remote(resp.remote_id)
 
         command = remote.get_command(
             new_state, new_mode, new_target_temp, new_fan_level, new_swing, resp.state
