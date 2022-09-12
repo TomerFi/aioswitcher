@@ -27,8 +27,6 @@ from socket import AF_INET
 from types import TracebackType
 from typing import Dict, Iterable, Mapping, Optional, Set, Tuple, Type, Union, final
 
-from aiohttp import ClientSession, FormData
-
 from aioswitcher.device import (
     DeviceCategory,
     DeviceState,
@@ -59,6 +57,8 @@ from .messages import (
 )
 
 logger = getLogger(__name__)
+
+BREEZE_REMOTE_DB_FPATH = str(Path(__file__).parent.parent) + "/resources/irset_db.json"
 
 # Type 1 devices: Heaters (v2, touch, v4, Heater), Plug
 SWITCHER_TCP_PORT_TYPE1 = 9957
@@ -488,35 +488,6 @@ class SwitcherApi:
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def download_breeze_remote_ir_set(
-        self, client_session: ClientSession
-    ) -> dict:
-        """Use for downloading the IRSet json data of the Switcher Breeze.
-
-        Returns:
-            dictionary representing the IRSet json file
-
-        """
-        udp_message = await self.get_breeze_state()
-
-        logger.debug("Building HTTP Post Request for downloading the IR Set file")
-        form = FormData()
-        form.add_field("token", "d41d8cd98f00b204e9800998ecf8427e")
-        form.add_field("rtps", hexlify(udp_message.unparsed_response).decode())
-        async with client_session.post(
-            "https://switcher.co.il/misc/irGet/getIR.php", data=form
-        ) as resp:
-            if resp.status == 200:
-                logger.debug(
-                    "IR Set file successfully downloaded from Switcher (length=%s)",
-                    resp.content_length,
-                )
-                return await resp.json(content_type=None)
-            else:
-                raise RuntimeError(
-                    f"Failed to Download the IR set file for {self._device_id}"
-                )
-
     async def set_position(self, position: int = 0) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
@@ -646,9 +617,8 @@ class BreezeRemote(object):
         self._max_temp = -100  # ridiculously low number
         self._on_off_type = False
         self._remote_id = ir_set["IRSetID"]
-        self._brand = ir_set["BrandName"]
         # _ir_wave_map hosts a shrunk version of the ir_set file which ignores
-        # unused data and map key to dict{"HexCode": str, "Para": str}
+        # unused data and map key to dict{"HexCode": str}
         # this is being built by the _resolve_capabilities method
         self._ir_wave_map = {}  # type: Mapping[str, Mapping[str, str]]
         self._modes_features = (
@@ -731,11 +701,6 @@ class BreezeRemote(object):
         return self._remote_id
 
     @property
-    def brand(self) -> str:
-        """Getter for brand name."""
-        return self._brand
-
-    @property
     def separated_swing_command(self) -> bool:
         """Getter for which indicates if the AC has a separated swing command."""
         return self._separated_swing_command
@@ -763,11 +728,7 @@ class BreezeRemote(object):
         if self._separated_swing_command:
             key = "FUN_d0" if swing == ThermostatSwing.OFF else "FUN_d1"
             try:
-                command = (
-                    self._ir_wave_map["".join(key)]["Para"]
-                    + "|"
-                    + self._ir_wave_map["".join(key)]["HexCode"]
-                )
+                command = self._ir_wave_map["".join(key)]["HexCode"]
             except KeyError:
                 logger.error(
                     f'The special swing key "{key}"        \
@@ -854,12 +815,7 @@ class BreezeRemote(object):
 
                     self._lookup_key_in_irset(key)
 
-        command = (
-            self._ir_wave_map["".join(key)]["Para"]
-            + "|"
-            + self._ir_wave_map["".join(key)]["HexCode"]
-        )
-
+        command = self._ir_wave_map["".join(key)]["HexCode"]
         return SwitcherBreezeCommand(
             "00000000" + hexlify(str(command).encode()).decode()
         )
@@ -909,43 +865,28 @@ class BreezeRemote(object):
             if mode:
                 self._modes_features[mode]["swing"] |= "d1" in key
 
-            self._ir_wave_map[key] = {"Para": wave["Para"], "HexCode": wave["HexCode"]}
+            self._ir_wave_map[key] = {"HexCode": wave["HexCode"]}
 
 
 class BreezeRemoteManager(object):
     """Class the used to download and hold all Breeze remotes."""
 
-    def __init__(self, cache_directory: str = None) -> None:
+    def __init__(self, remotes_db_path: str = BREEZE_REMOTE_DB_FPATH):
         """Initialize the Remote manager."""
         self._remotes_db: Dict[str, BreezeRemote] = {}
-        self._cache_dir = cache_directory
-        # verify the directory is a valid existing path in case it was provided
-        if cache_directory and not path.isdir(cache_directory):
+        self._remotes_db_fpath = remotes_db_path
+        # verify the file exists
+        if not path.isfile(self._remotes_db_fpath):
             raise OSError(
-                f"The specified directory path {cache_directory} does not exist"
+                f"The specified remote db path {self._remotes_db_fpath} does not exist"
             )
 
-    def add_remote(self, ir_set: dict) -> None:
-        """Add remote locally via json file."""
-        self._remotes_db[ir_set["IRSetID"]] = BreezeRemote(ir_set)
-
-    async def get_remote(
-        self, remote_id: str, api: SwitcherApi, client_session: ClientSession
-    ) -> BreezeRemote:
+    def get_remote(self, remote_id: str) -> BreezeRemote:
         """Get Breeze remote by the remote id."""
+        # check if the remote was already loaded
         if remote_id not in self._remotes_db:
-            # first, look for the IR set file in the local cache
-            if self._cache_dir and path.isfile(
-                Path(self._cache_dir).joinpath(f"{remote_id}.json")
-            ):
-                # found in cache, load the file and add it to the BRM DB
-                with open(Path(self._cache_dir).joinpath(f"{remote_id}.json")) as file:
-                    self._remotes_db[remote_id] = BreezeRemote(load(file))
-
-            # not in cache, probably first time, we are going to download it.
-            else:
-                ir_set = await api.download_breeze_remote_ir_set(client_session)
-                self._remotes_db[remote_id] = BreezeRemote(ir_set)
-                logger.debug("Remote %s was downloaded and added to that DB", remote_id)
+            # load the remote into the memory
+            with open(self._remotes_db_fpath) as remotes_fd:
+                self._remotes_db[remote_id] = BreezeRemote(load(remotes_fd)[remote_id])
 
         return self._remotes_db[remote_id]
