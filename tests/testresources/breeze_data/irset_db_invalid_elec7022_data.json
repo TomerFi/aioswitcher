@@ -1,0 +1,20 @@
+{
+    "ELEC7022": {
+        "IRSetID": "ELEC7022",
+        "OnOffType": 0,
+        "IRWaveList": [
+            {
+                "Key": "aa",
+                "HexCode": "B24D1FE048B7"
+            },
+            {
+                "Key": "ad",
+                "HexCode": "B24D1FE044BB"
+            },
+            {
+                "Key": "aw_f0",
+                "HexCode": "B24DBF40E41B"
+            }
+        ]
+    }
+}
