@@ -58,9 +58,7 @@ from .messages import (
 
 logger = getLogger(__name__)
 
-BREEZE_REMOTE_DB_FPATH = (
-    str(Path(__file__).parent.parent) + "/resources/irset_db.json"
-)
+BREEZE_REMOTE_DB_FPATH = str(Path(__file__).parent.parent) + "/resources/irset_db.json"
 
 # Type 1 devices: Heaters (v2, touch, v4, Heater), Plug
 SWITCHER_TCP_PORT_TYPE1 = 9957
