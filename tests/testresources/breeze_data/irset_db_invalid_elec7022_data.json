@@ -5,14 +5,17 @@
         "IRWaveList": [
             {
                 "Key": "aa",
+                "Para": "NECX|26|32|15,15|15,40|15|T00BE|30|01|ABAB[30]",
                 "HexCode": "B24D1FE048B7"
             },
             {
                 "Key": "ad",
+                "Para": "NECX|26|32|15,15|15,40|15|T00BE|30|01|ABAB[30]",
                 "HexCode": "B24D1FE044BB"
             },
             {
                 "Key": "aw_f0",
+                "Para": "NECX|26|32|15,15|15,40|15|T00BE|30|01|ABAB[30]",
                 "HexCode": "B24DBF40E41B"
             }
         ]
