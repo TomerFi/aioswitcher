@@ -71,7 +71,7 @@ exclude = [
   pytest-sugar = "^0.9.5"
   time-machine = "^2.8.1"
   types-toml = "^0.10.8"
-  yamllint = "^1.27.1"
+  yamllint = "^1.28.0"
 
   [tool.poetry.extras]
   docs = [
