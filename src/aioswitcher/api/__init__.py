@@ -618,7 +618,7 @@ class BreezeRemote(object):
         self._on_off_type = False
         self._remote_id = ir_set["IRSetID"]
         # _ir_wave_map hosts a shrunk version of the ir_set file which ignores
-        # unused data and map key to dict{"HexCode": str}
+        # unused data and map key to dict{"HexCode": str, "Para": str}
         # this is being built by the _resolve_capabilities method
         self._ir_wave_map = {}  # type: Mapping[str, Mapping[str, str]]
         self._modes_features = (
@@ -728,7 +728,11 @@ class BreezeRemote(object):
         if self._separated_swing_command:
             key = "FUN_d0" if swing == ThermostatSwing.OFF else "FUN_d1"
             try:
-                command = self._ir_wave_map["".join(key)]["HexCode"]
+                command = (
+                    self._ir_wave_map["".join(key)]["Para"]
+                    + "|"
+                    + self._ir_wave_map["".join(key)]["HexCode"]
+                )
             except KeyError:
                 logger.error(
                     f'The special swing key "{key}"        \
@@ -815,7 +819,11 @@ class BreezeRemote(object):
 
                     self._lookup_key_in_irset(key)
 
-        command = self._ir_wave_map["".join(key)]["HexCode"]
+        command = (
+            self._ir_wave_map["".join(key)]["Para"]
+            + "|"
+            + self._ir_wave_map["".join(key)]["HexCode"]
+        )
         return SwitcherBreezeCommand(
             "00000000" + hexlify(str(command).encode()).decode()
         )
@@ -865,7 +873,7 @@ class BreezeRemote(object):
             if mode:
                 self._modes_features[mode]["swing"] |= "d1" in key
 
-            self._ir_wave_map[key] = {"HexCode": wave["HexCode"]}
+            self._ir_wave_map[key] = {"Para": wave["Para"], "HexCode": wave["HexCode"]}
 
 
 class BreezeRemoteManager(object):
