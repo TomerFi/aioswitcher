@@ -11,27 +11,6 @@ env:
   MAIN_PY_VER: "3.10"
 
 jobs:
-  label:
-    runs-on: ubuntu-latest
-    name: Label pull request
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Source checkout
-        uses: actions/checkout@v3
-
-      - name: Label if conflicts found
-        uses: mschilde/auto-label-merge-conflicts@v2.0
-        with:
-          CONFLICT_LABEL_NAME: "status: has conflicts"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Label if contains large files
-        uses: actionsdesk/lfs-warning@v3.2
-        with:
-          labelName: "warn: lfs detected"
-          filesizelimit: "1mb"
-
   lint:
     runs-on: ubuntu-latest
     name: Lint source files
@@ -54,7 +33,7 @@ jobs:
 
       - name: Prepare python environment
         run: |
-          pip install -rrequirements.txt
+          pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
 
@@ -75,33 +54,9 @@ jobs:
       - name: Check license headers on source files
         run: poe lic_check
 
-  lint-docs:
-    runs-on: ubuntu-latest
-    name: Lint documentation files
-    permissions:
-      pull-requests: write
-    steps:
-      - name: Source checkout
-        uses: actions/checkout@v3
-
-      - name: Lint markdown files
-        uses: prologic/action-markdownlint@v0.9
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          reporter: github-pr-check
-          level: error
-
-      - name: Check for spelling mistakes
-        uses: reviewdog/action-misspell@v1.12
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          locale: "US"
-          reporter: github-pr-check
-          level: error
-
   test:
     runs-on: ubuntu-latest
-    needs: [lint, lint-docs]
+    needs: [lint]
     strategy:
       matrix:
         python: ["3.9", "3.10"]
@@ -131,7 +86,7 @@ jobs:
 
       - name: Prepare python environment
         run: |
-          pip install -rrequirements.txt
+          pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
 
@@ -163,10 +118,9 @@ jobs:
         with:
           files: ./coverage.xml
 
-
   docs:
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [lint]
     name: Verify documentation site
     permissions:
       pull-requests: read
@@ -187,7 +141,7 @@ jobs:
 
       - name: Prepare python environment
         run: |
-          pip install -rrequirements.txt
+          pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
 
