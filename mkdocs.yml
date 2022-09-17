@@ -32,7 +32,6 @@ markdown_extensions:
       permalink: ⚓︎
 
 extra:
-  version: "2.0.9"
   social:
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/realTomFi
@@ -53,28 +52,7 @@ extra:
 plugins:
   - search
   - git-revision-date
-  - autorefs
-  - mkdocstrings:
-      custom_templates: templates
-      default_handler: python
-      handlers:
-        python:
-          selection:
-            filters:
-              - "!^_"
-          options:
-            show_source: true
-  - spellcheck:
-      # known_words can also be a list of words
-      known_words: known_words.txt
-      # ignore words in <code> tags
-      ignore_code: yes
-      # minimum length of words to consider
-      min_length: 2
-      # maximum number of capital letters in a word
-      max_capital: 1
-      # keep unicode characters
-      allow_unicode: no
+  - mkdocstrings
 
 theme:
   name: material
