@@ -57,7 +57,7 @@ jobs:
 
       - name: Prepare python environment
         run: |
-          pip install -rrequirements.txt
+          pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
 
@@ -95,7 +95,7 @@ jobs:
         # yamllint enable rule:line-length
         # editorconfig-checker-enable
 
-      - name: Verify documenation site build
+      - name: Verify documentation site build
         run: |
           poe install_docs
           poe docs_linkcheck

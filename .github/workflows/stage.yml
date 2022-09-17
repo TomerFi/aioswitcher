@@ -6,6 +6,9 @@ on:
   push:
     branches:
       - dev
+    paths-ignore:
+      - ".github"
+      - ".vscode"
 
 jobs:
   stage:
@@ -34,7 +37,7 @@ jobs:
 
       - name: Prepare python environment
         run: |
-          pip install -rrequirements.txt
+          pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
 

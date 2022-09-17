@@ -36,6 +36,9 @@ body:
         - Switcher Touch (V3)
         - Switcher V4
         - Switcher Power Plug
+        - Switcher Breeze
+        - Switcher Runner
+        - Switcher Runner Mini
     validations:
       required: true
 
