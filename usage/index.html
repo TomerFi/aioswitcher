@@ -14,8 +14,8 @@
       
         <link rel="canonical" href="https://aioswitcher.info/usage/">
       
-      <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.5.0">
+      <link rel="icon" href="../img/favicon.ico">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.5.1">
     
     
       
@@ -83,10 +83,6 @@
       
     </div>
     
-      <div data-md-component="outdated" hidden>
-        
-      </div>
-    
     
       
 
@@ -94,8 +90,7 @@
   <nav class="md-header__inner md-grid" aria-label="Header">
     <a href=".." title="aioswitcher" class="md-header__button md-logo" aria-label="aioswitcher" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../img/logo.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -220,8 +215,7 @@
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="aioswitcher" class="md-nav__button md-logo" aria-label="aioswitcher" data-md-component="logo">
       
-  
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+  <img src="../img/logo.png" alt="logo">
 
     </a>
     aioswitcher
@@ -346,13 +340,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#supported-devices" class="md-nav__link">
-    Supported Devices
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -451,13 +438,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#supported-devices" class="md-nav__link">
-    Supported Devices
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -477,19 +457,25 @@
 <h2 id="bridge">Bridge<a class="headerlink" href="#bridge" title="Permanent link">⚓︎</a></h2>
 <p>We can use the Bridge implementation to discover devices and their state.
 The following code will print all discovered devices for 60 seconds.</p>
-<div class="highlight"><pre><span></span><code>    <span class="k">async</span> <span class="k">def</span> <span class="nf">print_devices</span><span class="p">(</span><span class="n">delay</span><span class="p">):</span>
-        <span class="k">def</span> <span class="nf">on_device_found_callback</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">asdict</span><span class="p">(</span><span class="n">device</span><span class="p">))</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">print_devices</span><span class="p">(</span><span class="n">delay</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">on_device_found_callback</span><span class="p">(</span><span class="n">device</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">asdict</span><span class="p">(</span><span class="n">device</span><span class="p">))</span> <span class="c1"># (1)</span>
 
-        <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherBridge</span><span class="p">(</span><span class="n">on_device_found_callback</span><span class="p">):</span>
-            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherBridge</span><span class="p">(</span><span class="n">on_device_found_callback</span><span class="p">):</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
 
-    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">print_devices</span><span class="p">(</span><span class="mi">60</span><span class="p">))</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">print_devices</span><span class="p">(</span><span class="mi">60</span><span class="p">))</span>
 </code></pre></div>
+<ol>
+<li>the callback device will be an implementation of <a href="../codedocs/#src.aioswitcher.device.SwitcherBase">SwitcherBase</a>,
+    i.e. <a href="../codedocs/#src.aioswitcher.device.SwitcherPowerPlug">SwitcherPowerPlug</a>,
+    <a href="../codedocs/#src.aioswitcher.device.SwitcherWaterHeater">SwitcherWaterHeater</a>,
+    <a href="../codedocs/#src.aioswitcher.device.SwitcherThermostat">SwitcherThermostat</a>, and
+    <a href="../codedocs/#src.aioswitcher.device.SwitcherShutter">SwitcherShutter</a>.</li>
+</ol>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>A Switcher device will broadcast every 4 seconds.
-Discovered devices can either be a <a href="../codedocs/#switcherpowerplug">Power Plug</a> or a <a href="../codedocs/#switcherwaterheater">Power Plug</a></p>
+<p>A Switcher device will broadcast a state message to the bridge approximately every 4 seconds.</p>
 </div>
 <h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">⚓︎</a></h2>
 <h3 id="type1-api-switcher-plug-v2-touch-v4">Type1 API (Switcher Plug, V2, Touch, V4)<a class="headerlink" href="#type1-api-switcher-plug-v2-touch-v4" title="Permanent link">⚓︎</a></h3>
@@ -502,28 +488,41 @@ Discovered devices can either be a <a href="../codedocs/#switcherpowerplug">Powe
 <li>Retrieve the schedules</li>
 <li>Create and Delete schedules</li>
 </ul>
-<div class="highlight"><pre><span></span><code>    <span class="k">async</span> <span class="k">def</span> <span class="nf">control_device</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
-        <span class="c1"># for connecting to a device we need its id and ip address</span>
-        <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType1Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
-            <span class="c1"># get the device current state</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
-            <span class="c1"># turn the device on for 15</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_device</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
-            <span class="c1"># turn the device off</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_device</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">OFF</span><span class="p">)</span>
-            <span class="c1"># set the device name</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_device_name</span><span class="p">(</span><span class="s2">&quot;my new name&quot;</span><span class="p">)</span>
-            <span class="c1"># configure the device for 02:30 auto shutdown</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_auto_shutdown</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">))</span>
-            <span class="c1"># get the schedules from the device</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_schedules</span><span class="p">()</span>
-            <span class="c1"># delete and existing schedule with id 1</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">delete_schedule</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
-            <span class="c1"># create a new recurring schedule for 13:00-14:30 executing on sunday and friday</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">create_schedule</span><span class="p">(</span><span class="s2">&quot;13:00&quot;</span><span class="p">,</span> <span class="s2">&quot;14:30&quot;</span><span class="p">,</span> <span class="p">{</span><span class="n">Days</span><span class="o">.</span><span class="n">SUNDAY</span><span class="p">,</span> <span class="n">Days</span><span class="o">.</span><span class="n">FRIDAY</span><span class="p">})</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_device</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its id and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType1Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+        <span class="c1"># get the device current state (1)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
+        <span class="c1"># turn the device on for 15 minutes (2)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_device</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+        <span class="c1"># turn the device off (3)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_device</span><span class="p">(</span><span class="n">Command</span><span class="o">.</span><span class="n">OFF</span><span class="p">)</span>
+        <span class="c1"># set the device name to &#39;my new name&#39; (4)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_device_name</span><span class="p">(</span><span class="s2">&quot;my new name&quot;</span><span class="p">)</span>
+        <span class="c1"># configure the device for 02:30 auto shutdown (5)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_auto_shutdown</span><span class="p">(</span><span class="n">timedelta</span><span class="p">(</span><span class="n">hours</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">minutes</span><span class="o">=</span><span class="mi">30</span><span class="p">))</span>
+        <span class="c1"># get the schedules from the device (6)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_schedules</span><span class="p">()</span>
+        <span class="c1"># delete and existing schedule with id 1 (7)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">delete_schedule</span><span class="p">(</span><span class="s2">&quot;1&quot;</span><span class="p">)</span>
+        <span class="c1"># create a new recurring schedule for 13:00-14:30</span>
+        <span class="c1"># executing on sunday and friday (8)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">create_schedule</span><span class="p">(</span><span class="s2">&quot;13:00&quot;</span><span class="p">,</span> <span class="s2">&quot;14:30&quot;</span><span class="p">,</span> <span class="p">{</span><span class="n">Days</span><span class="o">.</span><span class="n">SUNDAY</span><span class="p">,</span> <span class="n">Days</span><span class="o">.</span><span class="n">FRIDAY</span><span class="p">})</span>
 
-    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">control_device</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">))</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+    <span class="n">control_device</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
+<ol>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherStateResponse">SwitcherStateResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherGetSchedulesResponse">SwitcherGetSchedulesResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+</ol>
 <h3 id="type2-api-switcher-breeze-and-runner">Type2 API (Switcher Breeze and Runner)<a class="headerlink" href="#type2-api-switcher-breeze-and-runner" title="Permanent link">⚓︎</a></h3>
 <p>We can use the Type2 API to gain the following capabilities on Switcher Breeze and Runner:</p>
 <ul>
@@ -531,70 +530,62 @@ Discovered devices can either be a <a href="../codedocs/#switcherpowerplug">Powe
 <li>Control Runner position</li>
 <li>Control Breeze (State, Mode, Fan Level, Target Temperature, Vertical Swing)</li>
 </ul>
-<div class="highlight"><pre><span></span><code>    <span class="k">async</span> <span class="k">def</span> <span class="nf">control_runner_device</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
-        <span class="c1"># for connecting to a device we need its id and ip address</span>
-        <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_runner</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its id and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+        <span class="c1"># get the device current state (1)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_shutter_state</span><span class="p">()</span>
+        <span class="c1"># open the shutter to 30% (2)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+        <span class="c1"># stop the shutter if currently rolling (3)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
-            <span class="c1"># get the device current state</span>
-            <span class="n">state</span><span class="p">:</span> <span class="n">SwitcherShutterStateResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_shutter_state</span><span class="p">()</span>
-            <span class="c1"># state.position (int) holds the current position of the shutter</span>
-            <span class="c1"># state.direction (ShutterDirection) holds the current direction</span>
-
-            <span class="c1"># open the shutter to 30%</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-            <span class="c1"># stop the shutter if currently rolling</span>
-            <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
-
-    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">control_runner_device</span><span class="p">(</span><span class="s2">&quot;192.168.50.98&quot;</span><span class="p">,</span> <span class="s2">&quot;f2239a&quot;</span><span class="p">))</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+    <span class="n">control_runner</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>    <span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
-        <span class="c1"># for connecting to a device we need its id and ip address</span>
-        <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
-
-            <span class="c1"># get the device current state</span>
-            <span class="n">response</span><span class="p">:</span> <span class="n">SwitcherThermostatStateResponse</span> <span class="o">=</span> <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_breeze_state</span><span class="p">()</span>
-
-            <span class="c1"># Control Breeze Device</span>
-
-            <span class="c1"># initialize the Breeze RemoteManager</span>
-            <span class="n">rm</span> <span class="o">=</span> <span class="n">BreezeRemoteManager</span><span class="p">()</span>
-
-            <span class="c1"># get the remote structure (downloaded from the internet)</span>
-            <span class="c1"># alternatively, you can get supply local directory path to the BreezeRemoteManager</span>
-            <span class="c1"># and the BreezeRemoteManager will save and cache downloaded remotes into the directory</span>
-
-            <span class="k">async</span> <span class="k">with</span> <span class="n">ClientSession</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
-                <span class="n">remote</span><span class="p">:</span> <span class="n">BreezeRemote</span> <span class="o">=</span> <span class="k">await</span> <span class="n">rm</span><span class="o">.</span><span class="n">get_remote</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">remote_id</span><span class="p">,</span> <span class="n">api</span><span class="p">,</span> <span class="n">session</span><span class="p">)</span>
-
-                <span class="c1"># prepare a control command that turns on the Breeze </span>
-                <span class="c1"># (24 degree (Celsius), cooling with vertical swing and keep the current Fan Level)  </span>
-                <span class="n">command</span><span class="p">:</span> <span class="n">SwitcherBreezeCommand</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">get_command</span><span class="p">(</span>
-                        <span class="n">DeviceState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> 
-                        <span class="n">ThermostatMode</span><span class="o">.</span><span class="n">COOL</span><span class="p">,</span> 
-                        <span class="mi">24</span><span class="p">,</span> 
-                        <span class="n">resp</span><span class="o">.</span><span class="n">fan_level</span><span class="p">,</span> 
-                        <span class="n">ThermostatSwing</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span>
-                        <span class="n">response</span><span class="o">.</span><span class="n">state</span>
-                    <span class="p">)</span>
-
-        <span class="c1"># send command to the device</span>
+<ol>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherShutterStateResponse">SwitcherShutterStateResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherShutterStateResponse">SwitcherShutterStateResponse</a></li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its id and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+        <span class="c1"># get the device current state (1)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_breeze_state</span><span class="p">()</span>
+        <span class="c1"># initialize the Breeze RemoteManager and get the remote (2)</span>
+        <span class="n">remote</span> <span class="o">=</span> <span class="n">remote_manager</span><span class="o">.</span><span class="n">get_remote</span><span class="p">(</span><span class="n">remote_id</span><span class="p">)</span>
+        <span class="c1"># prepare a control command that turns on the Breeze</span>
+        <span class="c1"># set to 24 degree (Celsius) cooling with vertical swing</span>
+        <span class="c1"># and keep the current Fan Level (3)</span>
+        <span class="n">command</span><span class="p">:</span> <span class="n">SwitcherBreezeCommand</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">get_command</span><span class="p">(</span>
+            <span class="n">DeviceState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span>
+            <span class="n">ThermostatMode</span><span class="o">.</span><span class="n">COOL</span><span class="p">,</span>
+            <span class="mi">24</span><span class="p">,</span>
+            <span class="n">resp</span><span class="o">.</span><span class="n">fan_level</span><span class="p">,</span>
+            <span class="n">ThermostatSwing</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span>
+            <span class="n">response</span><span class="o">.</span><span class="n">state</span>
+        <span class="p">)</span>
+        <span class="c1"># send command to the device (4)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_breeze_device</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
 
-    <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">control_breeze_device</span><span class="p">(</span><span class="s2">&quot;192.168.50.77&quot;</span><span class="p">,</span> <span class="s2">&quot;3a20b7&quot;</span><span class="p">))</span>
+<span class="c1"># create the remote manager outside the context for re-using (5)</span>
+<span class="n">remote_manager</span> <span class="o">=</span> <span class="n">SwitcherBreezeRemoteManager</span><span class="p">()</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+    <span class="n">control_breeze</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="s2">&quot;DLK65863&quot;</span><span class="p">)</span>
+<span class="p">)</span>
 </code></pre></div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>All requests return a response, you can use the
-<a href="https://docs.python.org/3/library/dataclasses.html#dataclasses.asdict">asdict</a>
-__utility function to get familiarize with the various responses.
-You can visit the <a href="../codedocs/#switcherbaseresponse">API response messages section</a> and review the
-various response objects. Note that if a request doesn't have a specific response extending the
-base response, then the base response is the yielding response.</p>
-</div>
-<h2 id="supported-devices">Supported Devices<a class="headerlink" href="#supported-devices" title="Permanent link">⚓︎</a></h2>
+<ol>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherThermostatStateResponse">SwitcherThermostatStateResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBreezeRemote">SwitcherBreezeRemote</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.SwitcherBreezeCommand">SwitcherBreezeCommand</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.SwitcherBreezeRemoteManager">SwitcherBreezeRemoteManager</a></li>
+</ol>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
-<p>You can find the supported device types stated as <a href="../codedocs/#devicetype">this enum</a> members.</p>
+<p>You can find the supported device types stated in <a href="../codedocs/#src.aioswitcher.device.DeviceType">this enum</a> members.</p>
 </div>
 
   <hr>
@@ -602,7 +593,7 @@ base response, then the base response is the yielding response.</p>
   <small>
     
       Last update:
-      2022-09-13
+      2022-09-17
     
   </small>
 </div>
@@ -713,10 +704,10 @@ base response, then the base response is the yielding response.</p>
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "header.autohide", "navigation.indexes", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": "2.0.9"}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "header.autohide", "navigation.indexes", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.48f2be22.min.js"></script>
+      <script src="../assets/javascripts/bundle.d691e9de.min.js"></script>
       
     
   </body>
