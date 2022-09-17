@@ -98,9 +98,7 @@ jobs:
       - name: Verify documentation site build
         run: |
           poetry install --no-interaction --without dev
-          poetry shell
-          poe docs_build
-          exit
+          poetry run poe docs_build
 
       - name: Publish build to PyPi
         run: >
