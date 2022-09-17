@@ -134,10 +134,6 @@ jobs:
             })
             core.setOutput('html_url', response.data.html_url)
 
-      - name: Update documentation with new version
-        run: |
-          sed -i 's/  version: .*/  version: "${{ steps.bumper.outputs.new_version }}"/g' mkdocs.yml
-
       - name: Tweet new release
         if: ${{ github.event.inputs.tweet == 'yes' }}
         uses: lazy-actions/tweet-action@1.0.1

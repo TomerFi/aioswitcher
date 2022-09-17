@@ -82,7 +82,7 @@ def bit_summary_to_days(sum_weekdays_bit: int) -> Set[Days]:
     """Decode a weekdays bit summary to a set of weekdays.
 
     Args:
-        sum_weekdays: the sum of all weekdays
+        sum_weekdays_bit: the sum of all weekdays
 
     Return:
         Set of Weekday memebers decoded from the summary value.

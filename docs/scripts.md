@@ -97,9 +97,9 @@ options:
   -f END_TIME, --end-time END_TIME
                         the off time for the schedule, e.g. 13:30
   -w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...], --weekdays [{Monday,Tuesday,Wednesday,Thursday,
-                                                                                    Friday,Saturday,Sunday} ...]      
+                                                                                    Friday,Saturday,Sunday} ...]
                         days for recurring schedules, possible values: ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
-                                                                        'Friday', 'Saturday', 'Sunday']   
+                                                                        'Friday', 'Saturday', 'Sunday']
 ```
 
 ## script/control_device.py delete_schedule

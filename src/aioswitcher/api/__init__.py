@@ -101,10 +101,9 @@ class SwitcherBreezeCommand:
         self.command = command
         self.length = self._get_command_length()
 
-    def _get_command_length(self):
+    def _get_command_length(self) -> str:
         """Get command length."""
-        hex = "{:x}".format(int(len(self.command) / 2)).ljust(4, "0")
-        return hex
+        return "{:x}".format(int(len(self.command) / 2)).ljust(4, "0")
 
 
 class SwitcherApi:

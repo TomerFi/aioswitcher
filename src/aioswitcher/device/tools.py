@@ -41,7 +41,7 @@ def sign_packet_with_crc_key(hex_packet: str) -> str:
     """Sign the packets with the designated crc key.
 
     Args:
-        packet: packet to sign.
+        hex_packet: packet to sign.
 
     Return:
         The calculated and signed packet.

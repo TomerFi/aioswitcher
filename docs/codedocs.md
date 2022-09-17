@@ -1,77 +1,20 @@
 
 # Code documentation
 
-## aioswitcher.api
+::: src.aioswitcher
 
-### Command
+::: src.aioswitcher.api
 
-::: src.aioswitcher.api.Command
-___
+::: src.aioswitcher.api.messages
 
-### SwitcherApi
+::: src.aioswitcher.bridge
 
-::: src.aioswitcher.api.SwitcherApi
-___
+::: src.aioswitcher.device
 
-## aioswitcher.api.messages
+::: src.aioswitcher.device.tools
 
-### SwitcherBaseResponse
+::: src.aioswitcher.schedule
 
-::: src.aioswitcher.api.messages.SwitcherBaseResponse
-___
+::: src.aioswitcher.schedule.parser
 
-### SwitcherLoginResponse
-
-::: src.aioswitcher.api.messages.SwitcherLoginResponse
-___
-
-### SwitcherStateResponse
-
-::: src.aioswitcher.api.messages.SwitcherStateResponse
-___
-
-### SwitcherGetSchedulesResponse
-
-::: src.aioswitcher.api.messages.SwitcherGetSchedulesResponse
-___
-
-## aioswitcher.bridge
-
-### SwitcherBridge
-
-::: src.aioswitcher.bridge.SwitcherBridge
-___
-
-## aioswitcher.device
-
-### DeviceCategory
-
-::: src.aioswitcher.device.DeviceCategory
-___
-
-### DeviceType
-
-::: src.aioswitcher.device.DeviceType
-___
-
-### DeviceState
-
-::: src.aioswitcher.device.DeviceState
-___
-
-### SwitcherPowerPlug
-
-::: src.aioswitcher.device.SwitcherPowerPlug
-___
-
-### SwitcherWaterHeater
-
-::: src.aioswitcher.device.SwitcherWaterHeater
-___
-
-## aioswitcher.schedule
-
-::: src.aioswitcher.schedule.Days
-___
-
-::: src.aioswitcher.schedule.parser.SwitcherSchedule
+::: src.aioswitcher.schedule.tools

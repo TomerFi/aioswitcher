@@ -58,16 +58,6 @@ exclude = [
     version = "^0.7.1"
     optional = true
 
-    [tool.poetry.dependencies.mkdocs-autorefs]
-    extras = [ "docs" ]
-    version = "^0.4.1"
-    optional = true
-
-    [tool.poetry.dependencies.mkdocs-linkcheck]
-    extras = [ "docs" ]
-    version = "^1.0.6"
-    optional = true
-
     [tool.poetry.dependencies.mkdocs-spellcheck]
     extras = [ "docs" ]
     version = "^0.2.1"
@@ -99,8 +89,6 @@ exclude = [
   "mkdocs-material",
   "mkdocstrings",
   "mkdocstrings-python",
-  "mkdocs-autorefs",
-  "mkdocs-linkcheck",
   "mkdocs-spellcheck"
 ]
 
@@ -123,7 +111,6 @@ isort_fix = "poetry run isort src/ tests/ docs/ scripts/"
 mypy = "poetry run mypy src/ tests/ scripts/"
 yamllint = "poetry run yamllint --format colored --strict ."
 docs_clean = "mkdocs build --clean"
-docs_linkcheck = "mkdocs-linkcheck -r ./docs --exclude ./codedocs.md"
 docs_build = "mkdocs build"
 
 [build-system]
