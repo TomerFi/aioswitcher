@@ -20,6 +20,23 @@ pip install aioswitcher
 ## Example Usage
 
 <details>
+  <summary>State Bridge</summary>
+
+```python
+async def print_devices(delay):
+    def on_device_found_callback(device):
+        # a switcher device will broadcast a state message approximately every 4 seconds
+        print(asdict(device))
+
+    async with SwitcherBridge(on_device_found_callback):
+        await asyncio.sleep(delay)
+
+asyncio.get_event_loop().run_until_complete(print_devices(60))
+```
+
+</details>
+
+<details>
   <summary>Power Plug API</summary>
 
   ```python
