@@ -56,6 +56,8 @@ plugins:
 
 theme:
   name: material
+  logo: img/logo.png
+  favicon: img/favicon.ico
   font:
     code: Fira Code
     text: Open Sans
