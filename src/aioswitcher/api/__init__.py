@@ -577,7 +577,7 @@ class SwitcherType2Api(SwitcherApi):
         super().__init__(ip_address, device_id, SWITCHER_TCP_PORT_TYPE2)
 
 
-class BreezeRemote(object):
+class SwitcherBreezeRemote(object):
     """Class that represent a remote for a Breeze device/s."""
 
     COMMAND_TO_MODE = {
@@ -799,9 +799,11 @@ class BreezeRemote(object):
                     ThermostatMode.FAN,
                 ]:
                     # the command key should start with mode (aa/ad/ar/ah)
-                    key.append(BreezeRemote.MODE_TO_COMMAND[mode])
+                    key.append(SwitcherBreezeRemote.MODE_TO_COMMAND[mode])
                     # add the requested fan level (_f0, _f1, _f2, _f3)
-                    key.append("_" + BreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level])
+                    key.append(
+                        "_" + SwitcherBreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level]
+                    )
 
                     # add the swing On (_d1) to the key
                     if swing == ThermostatSwing.ON:
@@ -810,9 +812,11 @@ class BreezeRemote(object):
                     self._lookup_key_in_irset(key)
 
                 if mode in [ThermostatMode.COOL, ThermostatMode.HEAT]:
-                    key.append(BreezeRemote.MODE_TO_COMMAND[mode])
+                    key.append(SwitcherBreezeRemote.MODE_TO_COMMAND[mode])
                     key.append(str(target_temp))
-                    key.append("_" + BreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level])
+                    key.append(
+                        "_" + SwitcherBreezeRemote.FAN_LEVEL_TO_COMMAND[fan_level]
+                    )
                     if swing == ThermostatSwing.ON:
                         key.append("_d1")
 
@@ -837,7 +841,7 @@ class BreezeRemote(object):
         for wave in ir_set["IRWaveList"]:
             key = wave["Key"]
             try:
-                mode = BreezeRemote.COMMAND_TO_MODE[key[0:2]]
+                mode = SwitcherBreezeRemote.COMMAND_TO_MODE[key[0:2]]
                 if mode not in self._modes_features:
                     self._modes_features[mode] = {
                         "swing": False,
@@ -856,7 +860,7 @@ class BreezeRemote(object):
             if fan_level:
                 if mode:
                     self._modes_features[mode]["fan_levels"].add(
-                        BreezeRemote.COMMAND_TO_FAN_LEVEL[fan_level.group(1)]
+                        SwitcherBreezeRemote.COMMAND_TO_FAN_LEVEL[fan_level.group(1)]
                     )
 
             temp = key[2:4]
@@ -875,12 +879,12 @@ class BreezeRemote(object):
             self._ir_wave_map[key] = {"Para": wave["Para"], "HexCode": wave["HexCode"]}
 
 
-class BreezeRemoteManager(object):
+class SwitcherBreezeRemoteManager(object):
     """Class the used to download and hold all Breeze remotes."""
 
     def __init__(self, remotes_db_path: str = BREEZE_REMOTE_DB_FPATH):
         """Initialize the Remote manager."""
-        self._remotes_db: Dict[str, BreezeRemote] = {}
+        self._remotes_db: Dict[str, SwitcherBreezeRemote] = {}
         self._remotes_db_fpath = remotes_db_path
         # verify the file exists
         if not path.isfile(self._remotes_db_fpath):
@@ -888,12 +892,14 @@ class BreezeRemoteManager(object):
                 f"The specified remote db path {self._remotes_db_fpath} does not exist"
             )
 
-    def get_remote(self, remote_id: str) -> BreezeRemote:
+    def get_remote(self, remote_id: str) -> SwitcherBreezeRemote:
         """Get Breeze remote by the remote id."""
         # check if the remote was already loaded
         if remote_id not in self._remotes_db:
             # load the remote into the memory
             with open(self._remotes_db_fpath) as remotes_fd:
-                self._remotes_db[remote_id] = BreezeRemote(load(remotes_fd)[remote_id])
+                self._remotes_db[remote_id] = SwitcherBreezeRemote(
+                    load(remotes_fd)[remote_id]
+                )
 
         return self._remotes_db[remote_id]

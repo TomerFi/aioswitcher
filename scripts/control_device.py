@@ -23,9 +23,9 @@ from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
 from aioswitcher.api import (
-    BreezeRemote,
-    BreezeRemoteManager,
     Command,
+    SwitcherBreezeRemote,
+    SwitcherBreezeRemoteManager,
     SwitcherType1Api,
     SwitcherType2Api,
 )
@@ -268,7 +268,7 @@ async def control_thermostat(
 ) -> None:
     """Control Breeze device."""
     async with SwitcherType2Api(device_ip, device_id) as api:
-        rm = BreezeRemoteManager()
+        rm = SwitcherBreezeRemoteManager()
         resp: SwitcherThermostatStateResponse = await api.get_breeze_state()
 
         new_state = possible_states[state]
@@ -278,7 +278,7 @@ async def control_thermostat(
         new_target_temp = target_temp if target_temp else resp.target_temperature
 
         # First time it'll download the IRSet JSON file from switcher
-        remote: BreezeRemote = rm.get_remote(resp.remote_id)
+        remote: SwitcherBreezeRemote = rm.get_remote(resp.remote_id)
 
         command = remote.get_command(
             new_state, new_mode, new_target_temp, new_fan_level, new_swing, resp.state
