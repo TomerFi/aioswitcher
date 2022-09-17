@@ -43,16 +43,16 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Install dev dependencies and lint project
-        run: |
-          poe install_dev
-          poe lint
-
       - name: Install deno runtime
         uses: denoland/setup-deno@v1.1.0
 
-      - name: Check license headers on source files
-        run: poe lic_check
+      - name: Lint the project
+        run: |
+          poetry install --no-interaction
+          poetry shell
+          poe lint
+          poe lic_check
+          exit
 
   test:
     runs-on: ubuntu-latest
@@ -96,13 +96,14 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
 
-      - name: Install project package
-        run: poe install_all
-
-      - name: Test project
-        run: >
-          if [ ${{ matrix.python }} == ${{ env.MAIN_PY_VER }} ]; then poe test_rep;
-          else poe test; fi
+      - name: Test the project
+        # yamllint disable rule:line-length
+        run: |
+          poetry install --no-interaction
+          poetry shell
+          if [ ${{ matrix.python }} == ${{ env.MAIN_PY_VER }} ]; then poe test_rep; else poe test; fi
+          exit
+        # yamllint enable rule:line-length
 
       - name: Report test summary
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -151,11 +152,9 @@ jobs:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
-      - name: Install site dependencies
-        run: poe install_docs
-
-      - name: Verify reference links
-        run: poe docs_linkcheck
-
       - name: Build documentation site
-        run: poe docs_build
+        run: |
+          poetry install --no-interaction
+          poetry shell
+          poe docs_build
+          exit

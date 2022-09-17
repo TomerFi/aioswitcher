@@ -49,9 +49,11 @@ jobs:
 
       - name: Install, test with coverage report, and build
         run: |
-          poe install_all
+          poetry install --no-interaction
+          poetry shell
           poe test_rep
-          poe build
+          poetry build
+          exit
 
       - name: Push to CodeCov
         uses: codecov/codecov-action@v3

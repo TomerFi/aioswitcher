@@ -32,6 +32,20 @@ With [Python >= 3.10](https://www.python.org/) use [pip](https://pypi.org/projec
 
 ## Get started
 
+Install the project in a virtual environment:
+
+```shell
+poetry install
+```
+
+Start a shell inside the virtual environment:
+
+```shell
+poetry shell
+```
+
+> Exit the shell using `exit`.
+
 Scroll around [pyproject.toml](../pyproject.toml) and get familiarize with the project,
 pay attention to the following section, as most of the developing steps will use these scripts:
 
@@ -41,14 +55,15 @@ pay attention to the following section, as most of the developing steps will use
 
 To get you going, here are some poe scripts I use constantly while working on *aioswitcher*:
 
-- ```poe lint```
-- ```poe test```
-- ```poe test_cov --cov-report html```
-- ```poe install_all```
-- ```poe lic_check``` (requires *deno*)
-- ```poe black_fix```
-- ```poe isort_fix```
-- ```poe docs_build```
+- `poe lint`
+- `poe test`
+- `poe test_cov --cov-report html`
+- `poe lic_check` (requires *deno*)
+- `poe black_fix`
+- `poe isort_fix`
+- `poe docs_build`
+
+> Note, `poethepoet` in installed inside the virtual environment.
 
 ## Commit messages
 
