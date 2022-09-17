@@ -31,6 +31,7 @@ async def print_devices(delay):
     async with SwitcherBridge(on_device_found_callback):
         await asyncio.sleep(delay)
 
+# run the bridge for 60 seconds
 asyncio.get_event_loop().run_until_complete(print_devices(60))
 ```
 
@@ -52,9 +53,7 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
           # set the device name to 'my new name'
           await api.set_device_name("my new name")
 
-  asyncio.get_event_loop().run_until_complete(
-      control_power_plug("111.222.11.22", "ab1c2d")
-  )
+  asyncio.get_event_loop().run_until_complete(control_power_plug("111.222.11.22", "ab1c2d"))
   ```
 
 </details>
@@ -66,27 +65,25 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
   async def control_water_heater(device_ip, device_id) :
       # for connecting to a device we need its id and ip address
       async with SwitcherType1Api(device_ip, device_id) as api:
-          # get the device current state (1)
+          # get the device current state
           await api.get_state()
-          # turn the device on for 15 minutes (2)
+          # turn the device on for 15 minutes
           await api.control_device(Command.ON, 15)
-          # turn the device off (3)
+          # turn the device off
           await api.control_device(Command.OFF)
-          # set the device name to 'my new name' (4)
+          # set the device name to 'my new name'
           await api.set_device_name("my new name")
-          # configure the device for 02:30 auto shutdown (5)
+          # configure the device for 02:30 auto shutdown
           await api.set_auto_shutdown(timedelta(hours=2, minutes=30))
-          # get the schedules from the device (6)
+          # get the schedules from the device
           await api.get_schedules()
-          # delete and existing schedule with id 1 (7)
+          # delete and existing schedule with id 1
           await api.delete_schedule("1")
           # create a new recurring schedule for 13:00-14:30
-          # executing on sunday and friday (8)
+          # executing on sunday and friday
           await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
-  asyncio.get_event_loop().run_until_complete(
-      control_water_heater("111.222.11.22", "ab1c2d")
-  )
+  asyncio.get_event_loop().run_until_complete(control_water_heater("111.222.11.22", "ab1c2d"))
   ```
 
 </details>
@@ -98,16 +95,14 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
   async def control_runner(device_ip, device_id) :
       # for connecting to a device we need its id and ip address
       async with SwitcherType2Api(device_ip, device_id) as api:
-          # get the device current state (1)
+          # get the device current state
           await api.get_shutter_state()
-          # open the shutter to 30% (2)
+          # open the shutter to 30%
           await api.set_position(30)
-          # stop the shutter if currently rolling (3)
+          # stop the shutter if currently rolling
           await api.stop()
 
-  asyncio.get_event_loop().run_until_complete(
-      control_runner("111.222.11.22", "ab1c2d")
-  )
+  asyncio.get_event_loop().run_until_complete(control_runner("111.222.11.22", "ab1c2d"))
   ```
 
 </details>
@@ -119,13 +114,13 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
   async def control_breeze(device_ip, device_id, remote_manager, remote_id) :
       # for connecting to a device we need its id and ip address
       async with SwitcherType2Api(device_ip, device_id) as api:
-          # get the device current state (1)
+          # get the device current state
           await api.get_breeze_state()
-          # initialize the Breeze RemoteManager and get the remote (2)
+          # initialize the Breeze RemoteManager and get the remote
           remote = remote_manager.get_remote(remote_id)
           # prepare a control command that turns on the Breeze
           # set to 24 degree (Celsius) cooling with vertical swing
-          # and keep the current Fan Level (3)
+          # and keep the current Fan Level
           command: SwitcherBreezeCommand = remote.get_command(
               DeviceState.ON,
               ThermostatMode.COOL,
@@ -134,14 +129,12 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
               ThermostatSwing.ON,
               response.state
           )
-          # send command to the device (4)
+          # send command to the device
           await api.control_breeze_device(command)
 
-  # create the remote manager outside the context for re-using (5)
+  # create the remote manager outside the context for re-using
   remote_manager = SwitcherBreezeRemoteManager()
-  asyncio.get_event_loop().run_until_complete(
-      control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863")
-  )
+  asyncio.get_event_loop().run_until_complete(control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863"))
   ```
 
 </details>
