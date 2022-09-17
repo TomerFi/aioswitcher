@@ -2,7 +2,7 @@
 name = "aiohttp"
 version = "3.8.1"
 description = "Async http client/server framework (asyncio)"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -22,7 +22,7 @@ speedups = ["Brotli", "aiodns", "cchardet"]
 name = "aiosignal"
 version = "1.2.0"
 description = "aiosignal: a list of registered asynchronous callbacks"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -41,7 +41,7 @@ python-versions = "*"
 name = "async-timeout"
 version = "4.0.2"
 description = "Timeout context manager for asyncio programs"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -49,7 +49,7 @@ python-versions = ">=3.6"
 name = "attrs"
 version = "22.1.0"
 description = "Classes Without Boilerplate"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.5"
 
@@ -85,7 +85,7 @@ uvloop = ["uvloop (>=0.15.2)"]
 name = "certifi"
 version = "2022.9.14"
 description = "Python package for providing Mozilla's CA Bundle."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -93,7 +93,7 @@ python-versions = ">=3.6"
 name = "charset-normalizer"
 version = "2.1.1"
 description = "The Real First Universal Charset Detector. Open, modern and actively maintained alternative to Chardet."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6.0"
 
@@ -104,7 +104,7 @@ unicode_backport = ["unicodedata2"]
 name = "click"
 version = "8.1.3"
 description = "Composable command line interface toolkit"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 
@@ -127,7 +127,7 @@ requests = ">=2.7.9"
 name = "colorama"
 version = "0.4.5"
 description = "Cross-platform colored terminal text."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -144,14 +144,6 @@ tomli = {version = "*", optional = true, markers = "python_full_version <= \"3.1
 
 [package.extras]
 toml = ["tomli"]
-
-[[package]]
-name = "editdistpy"
-version = "0.1.3"
-description = "Fast Levenshtein and Damerau optimal string alignment algorithms."
-category = "main"
-optional = true
-python-versions = ">=3.6"
 
 [[package]]
 name = "flake8"
@@ -197,7 +189,7 @@ test = ["pyTest", "pyTest-cov"]
 name = "frozenlist"
 version = "1.3.1"
 description = "A list-like structure which implements collections.abc.MutableSequence"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 
@@ -205,8 +197,8 @@ python-versions = ">=3.7"
 name = "ghp-import"
 version = "2.1.0"
 description = "Copy your docs directly to the gh-pages branch."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = "*"
 
 [package.dependencies]
@@ -219,8 +211,8 @@ dev = ["flake8", "markdown", "twine", "wheel"]
 name = "gitdb"
 version = "4.0.9"
 description = "Git Object Database"
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -230,8 +222,8 @@ smmap = ">=3.0.1,<6"
 name = "GitPython"
 version = "3.1.27"
 description = "GitPython is a python library used to interact with Git repositories"
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -241,8 +233,8 @@ gitdb = ">=4.0.1,<5"
 name = "griffe"
 version = "0.22.1"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.extras]
@@ -252,7 +244,7 @@ async = ["aiofiles (>=0.7,<1.0)"]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.5"
 
@@ -260,8 +252,8 @@ python-versions = ">=3.5"
 name = "importlib-metadata"
 version = "4.12.0"
 description = "Read metadata from Python packages"
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -298,8 +290,8 @@ requirements_deprecated_finder = ["pip-api", "pipreqs"]
 name = "Jinja2"
 version = "3.1.2"
 description = "A very fast and expressive template engine."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -312,8 +304,8 @@ i18n = ["Babel (>=2.7)"]
 name = "Markdown"
 version = "3.3.7"
 description = "Python implementation of Markdown."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -326,8 +318,8 @@ testing = ["coverage", "pyyaml"]
 name = "MarkupSafe"
 version = "2.1.1"
 description = "Safely add untrusted strings to HTML/XML markup."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [[package]]
@@ -342,16 +334,16 @@ python-versions = ">=3.6"
 name = "mergedeep"
 version = "1.3.4"
 description = "A deep merge function for 🐍."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
 name = "mkdocs"
 version = "1.3.1"
 description = "Project documentation with Markdown."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -373,8 +365,8 @@ i18n = ["babel (>=2.9.0)"]
 name = "mkdocs-autorefs"
 version = "0.4.1"
 description = "Automatically link across pages in MkDocs."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -385,8 +377,8 @@ mkdocs = ">=1.1"
 name = "mkdocs-git-revision-date-plugin"
 version = "0.3.2"
 description = "MkDocs plugin for setting revision date from git per markdown file."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.4"
 
 [package.dependencies]
@@ -395,27 +387,11 @@ jinja2 = "*"
 mkdocs = ">=0.17"
 
 [[package]]
-name = "mkdocs-linkcheck"
-version = "1.0.6"
-description = "Check links for Mkdocs-based sites, as well as any markdown-based website"
-category = "main"
-optional = true
-python-versions = ">=3.7"
-
-[package.dependencies]
-aiohttp = ">=3.3"
-
-[package.extras]
-lint = ["flake8", "flake8-blind-except", "flake8-bugbear", "flake8-builtins", "mypy"]
-requests = ["requests"]
-tests = ["pytest"]
-
-[[package]]
 name = "mkdocs-material"
 version = "8.5.1"
 description = "Documentation that simply works"
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -431,27 +407,16 @@ requests = ">=2.26"
 name = "mkdocs-material-extensions"
 version = "1.0.3"
 description = "Extension pack for Python Markdown."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
-
-[[package]]
-name = "mkdocs-spellcheck"
-version = "0.2.1"
-description = "A spell checker plugin for MkDocs."
-category = "main"
-optional = true
-python-versions = ">=3.7"
-
-[package.dependencies]
-symspellpy = ">=6.7.6"
 
 [[package]]
 name = "mkdocstrings"
 version = "0.19.0"
 description = "Automatic documentation from sources, for MkDocs."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -471,8 +436,8 @@ python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
 name = "mkdocstrings-python"
 version = "0.7.1"
 description = "A Python handler for mkdocstrings."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -483,7 +448,7 @@ mkdocstrings = ">=0.19"
 name = "multidict"
 version = "6.0.2"
 description = "multidict implementation"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 
@@ -517,7 +482,7 @@ python-versions = "*"
 name = "packaging"
 version = "21.3"
 description = "Core utilities for Python packages"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -621,8 +586,8 @@ python-versions = ">=3.6"
 name = "Pygments"
 version = "2.13.0"
 description = "Pygments is a syntax highlighting package written in Python."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [package.extras]
@@ -632,8 +597,8 @@ plugins = ["importlib-metadata"]
 name = "pymdown-extensions"
 version = "9.5"
 description = "Extension pack for Python Markdown."
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
@@ -643,7 +608,7 @@ markdown = ">=3.2"
 name = "pyparsing"
 version = "3.0.9"
 description = "pyparsing module - Classes and methods to define and execute parsing grammars"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6.8"
 
@@ -741,7 +706,7 @@ termcolor = ">=1.1.0"
 name = "python-dateutil"
 version = "2.8.2"
 description = "Extensions to the standard Python datetime module"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
 
@@ -752,7 +717,7 @@ six = ">=1.5"
 name = "PyYAML"
 version = "6.0"
 description = "YAML parser and emitter for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.6"
 
@@ -760,8 +725,8 @@ python-versions = ">=3.6"
 name = "pyyaml_env_tag"
 version = "0.1"
 description = "A custom YAML tag for referencing environment variables in YAML files. "
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
@@ -771,7 +736,7 @@ pyyaml = "*"
 name = "requests"
 version = "2.28.1"
 description = "Python HTTP for Humans."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7, <4"
 
@@ -802,7 +767,7 @@ testing-integration = ["build[virtualenv]", "filelock (>=3.4.0)", "jaraco.envs (
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 
@@ -810,8 +775,8 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
 name = "smmap"
 version = "5.0.0"
 description = "A pure Python implementation of a sliding window memory map manager"
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [[package]]
@@ -821,17 +786,6 @@ description = "This package provides 29 stemmers for 28 languages generated from
 category = "dev"
 optional = false
 python-versions = "*"
-
-[[package]]
-name = "symspellpy"
-version = "6.7.6"
-description = "Python SymSpell"
-category = "main"
-optional = true
-python-versions = ">=3.6"
-
-[package.dependencies]
-editdistpy = ">=0.1.3"
 
 [[package]]
 name = "termcolor"
@@ -875,7 +829,7 @@ python-versions = ">=3.7"
 name = "urllib3"
 version = "1.26.12"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, <4"
 
@@ -888,8 +842,8 @@ socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 name = "watchdog"
 version = "2.1.9"
 description = "Filesystem events monitoring"
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.6"
 
 [package.extras]
@@ -912,7 +866,7 @@ setuptools = "*"
 name = "yarl"
 version = "1.8.1"
 description = "Yet another URL library"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 
@@ -924,21 +878,18 @@ multidict = ">=4.0"
 name = "zipp"
 version = "3.8.1"
 description = "Backport of pathlib-compatible object wrapper for zip files"
-category = "main"
-optional = true
+category = "dev"
+optional = false
 python-versions = ">=3.7"
 
 [package.extras]
 docs = ["jaraco.packaging (>=9)", "jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "sphinx"]
 testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=0.3.7)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=1.3)", "pytest-flake8", "pytest-mypy (>=0.9.1)"]
 
-[extras]
-docs = ["mkdocs", "mkdocs-git-revision-date-plugin", "mkdocs-material", "mkdocstrings", "mkdocstrings-python", "mkdocs-linkcheck", "mkdocs-spellcheck"]
-
 [metadata]
 lock-version = "1.1"
-  python-versions = "^3.9.0"
-content-hash = "d83c3ab64918be76386dece97d1d77b50f7c85dbef5eb29fe74cb56a6797fa03"
+python-versions = "^3.9.0"
+content-hash = "ffb0ecfbbd42f0f8a305f06640a71cdaf9538a3ede44d792f6170fd9b77ea6f1"
 
 [metadata.files]
 aiohttp = [
@@ -1128,16 +1079,6 @@ coverage = [
     {file = "coverage-6.4.4-pp36.pp37.pp38-none-any.whl", hash = "sha256:f67cf9f406cf0d2f08a3515ce2db5b82625a7257f88aad87904674def6ddaec1"},
     {file = "coverage-6.4.4.tar.gz", hash = "sha256:e16c45b726acb780e1e6f88b286d3c10b3914ab03438f32117c4aa52d7f30d58"},
 ]
-editdistpy = [
-    {file = "editdistpy-0.1.3-cp36-cp36m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:7f951243c0f7074415849ca18d107891e98afe0f5381fb65bd39768633ab6748"},
-    {file = "editdistpy-0.1.3-cp36-cp36m-win_amd64.whl", hash = "sha256:4e7e1ac3c59d479f568e38729b022240cc46f5e6753ba1c023456314970bb149"},
-    {file = "editdistpy-0.1.3-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b747995aebe987a565cff0e56812bf08e4e4e9ba8b7f094804845d9e53b20533"},
-    {file = "editdistpy-0.1.3-cp37-cp37m-win_amd64.whl", hash = "sha256:a74fdc3becf0dc115d9f34cc45dcfa0e5154f5348f2b34ccc71026b064c22689"},
-    {file = "editdistpy-0.1.3-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:28f71c6343a996776f5691da19136a558593428ad6a10baab85795fa21a461ff"},
-    {file = "editdistpy-0.1.3-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:aa559312e07ff8835470d0d9b2f245aa2bc9c2d3370a6c5812508e6f0265a523"},
-    {file = "editdistpy-0.1.3-cp38-cp38-win_amd64.whl", hash = "sha256:7c00a540d17b998519b100a610acc1e1f2aa015b2b8dc268dcd62eeae4259916"},
-    {file = "editdistpy-0.1.3.tar.gz", hash = "sha256:b3cad07319d79fe8b3ba6bf92293de962932917d88e9c624df7b6a44bddf1dcc"},
-]
 flake8 = [
     {file = "flake8-5.0.4-py2.py3-none-any.whl", hash = "sha256:7a1cf6b73744f5806ab95e526f6f0d8c01c66d7bbe349562d22dfca20610b248"},
     {file = "flake8-5.0.4.tar.gz", hash = "sha256:6fbe320aad8d6b95cec8b8e47bc933004678dc63095be98528b7bdd2a9f510db"},
@@ -1311,10 +1252,6 @@ mkdocs-autorefs = [
 mkdocs-git-revision-date-plugin = [
     {file = "mkdocs_git_revision_date_plugin-0.3.2-py3-none-any.whl", hash = "sha256:2e67956cb01823dd2418e2833f3623dee8604cdf223bddd005fe36226a56f6ef"},
 ]
-mkdocs-linkcheck = [
-    {file = "mkdocs_linkcheck-1.0.6-py3-none-any.whl", hash = "sha256:70dceae090101778002d949dc7b55f56eeb0c294bd9053fb6b197c26591665b1"},
-    {file = "mkdocs_linkcheck-1.0.6.tar.gz", hash = "sha256:908ca6f370eee0b55b5337142e2f092f1a0af9e50ab3046712b4baefdc989672"},
-]
 mkdocs-material = [
     {file = "mkdocs-material-8.5.1.tar.gz", hash = "sha256:2daf604d00d554d5496c02b4c4d14dfa57dd689c90f639da5020601baef4b235"},
     {file = "mkdocs_material-8.5.1-py2.py3-none-any.whl", hash = "sha256:79e9b65e481edb539eda6a3a939a0e02609a5c54afc315c3b05f57ff40db3188"},
@@ -1322,10 +1259,6 @@ mkdocs-material = [
 mkdocs-material-extensions = [
     {file = "mkdocs-material-extensions-1.0.3.tar.gz", hash = "sha256:bfd24dfdef7b41c312ede42648f9eb83476ea168ec163b613f9abd12bbfddba2"},
     {file = "mkdocs_material_extensions-1.0.3-py3-none-any.whl", hash = "sha256:a82b70e533ce060b2a5d9eb2bc2e1be201cf61f901f93704b4acf6e3d5983a44"},
-]
-mkdocs-spellcheck = [
-    {file = "mkdocs-spellcheck-0.2.1.tar.gz", hash = "sha256:83c9de6e8016186374e045ac4812a3e281f229537f88a3f8c0034ef816b79c8e"},
-    {file = "mkdocs_spellcheck-0.2.1-py3-none-any.whl", hash = "sha256:058fdcc9755b2a35e7ed325912f1ea513467fd4b7b5e55c4a73f8542b9bc0c30"},
 ]
 mkdocstrings = [
     {file = "mkdocstrings-0.19.0-py3-none-any.whl", hash = "sha256:3217d510d385c961f69385a670b2677e68e07b5fea4a504d86bf54c006c87c7d"},
@@ -1563,10 +1496,6 @@ smmap = [
 snowballstemmer = [
     {file = "snowballstemmer-2.2.0-py2.py3-none-any.whl", hash = "sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a"},
     {file = "snowballstemmer-2.2.0.tar.gz", hash = "sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1"},
-]
-symspellpy = [
-    {file = "symspellpy-6.7.6-py3-none-any.whl", hash = "sha256:c7fb73beaf251903ea8ab71e214e7b31cf1def9351d098b6a2aacb04f4478f41"},
-    {file = "symspellpy-6.7.6.tar.gz", hash = "sha256:3f96149a424411fb5f292a15a650a17ccf8d4946c61e06eae6bf7f9ebcd67ba8"},
 ]
 termcolor = [
     {file = "termcolor-2.0.1-py3-none-any.whl", hash = "sha256:7e597f9de8e001a3208c4132938597413b9da45382b6f1d150cff8d062b7aaa3"},
