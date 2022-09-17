@@ -39,21 +39,21 @@ async with SwitcherType2Api(device_ip, device_id) as api_type2:
     # get the remote structure
     remote: BreezeRemote = rm.get_remote(resp.remote_id)
 
-    # prepare a control command that turns on the Breeze 
-    # (24 degree (Celsius), cooling and high Fan level with vertical swing)  
+    # prepare a control command that turns on the Breeze
+    # (24 degree (Celsius), cooling and high Fan level with vertical swing)
     command = remote.get_command(
-          DeviceState.ON, 
-          ThermostatMode.COOL, 
-          24, 
-          ThermostatFanLevel.HIGH, 
+          DeviceState.ON,
+          ThermostatMode.COOL,
+          24,
+          ThermostatFanLevel.HIGH,
           ThermostatSwing.ON,
           resp.state
       )
 
     # send command to the device
     await api_type2.control_breeze_device(command)
-  
-# control Runner device  
+
+# control Runner device
 async with SwitcherType2Api(device_ip, device_id) as api:
   # get the runner state
   state_response: SwitcherShutterStateResponse = api.get_shutter_state()
@@ -120,14 +120,12 @@ Thanks goes to these wonderful people ([emoji key][1]):
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher/wiki
 [1]: https://allcontributors.org/docs/en/emoji-key
-[2]: https://github.com/TomerFi/aioswitcher/releases
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [4]: https://github.com/TomerFi/aioswitcher
 [7]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml
 [8]: https://aioswitcher.tomfi.info/
 [11]: https://pypi.org/project/aioswitcher
 [12]: https://www.switcher.co.il/
-[14]: https://github.com/NightRang3r/Switcher-V2-Python
 <!-- Badges Links -->
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml/badge.svg
