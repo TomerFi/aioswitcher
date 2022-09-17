@@ -97,9 +97,10 @@ jobs:
 
       - name: Verify documentation site build
         run: |
-          poe install_docs
-          poe docs_linkcheck
+          poetry install --no-interaction --without dev
+          poetry shell
           poe docs_build
+          exit
 
       - name: Publish build to PyPi
         run: >
