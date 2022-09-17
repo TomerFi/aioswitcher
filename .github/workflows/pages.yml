@@ -42,9 +42,7 @@ jobs:
       - name: Build documentation site
         run: |
           poetry install --no-interaction --without dev
-          poetry shell
-          poe docs_build
-          exit
+          poetry run poe docs_build
 
       - name: Deploy to GH-Pages
         uses: peaceiris/actions-gh-pages@v3.8.0
