@@ -126,17 +126,17 @@ async def control_breeze(device_ip, device_id, remote_manager, remote_id) :
         await api.control_breeze_device(command)
 
 # create the remote manager outside the context for re-using (5)
-remote_manager = BreezeRemoteManager()
+remote_manager = SwitcherBreezeRemoteManager()
 asyncio.get_event_loop().run_until_complete(
     control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863")
 )
 ```
 
 1. [SwitcherThermostatStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherThermostatStateResponse)
-2. [BreezeRemote](./codedocs.md#src.aioswitcher.api.messages.BreezeRemote)
+2. [SwitcherBreezeRemote](./codedocs.md#src.aioswitcher.api.messages.SwitcherBreezeRemote)
 3. [SwitcherBreezeCommand](./codedocs.md#src.aioswitcher.api.SwitcherBreezeCommand)
 4. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
-5. [BreezeRemoteManager](./codedocs.md#src.aioswitcher.api.BreezeRemoteManager)
+5. [SwitcherBreezeRemoteManager](./codedocs.md#src.aioswitcher.api.SwitcherBreezeRemoteManager)
 
 !!! info
     You can find the supported device types stated in [this enum](./codedocs.md#src.aioswitcher.device.DeviceType) members.

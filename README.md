@@ -121,7 +121,7 @@ pip install aioswitcher
           await api.control_breeze_device(command)
 
   # create the remote manager outside the context for re-using (5)
-  remote_manager = BreezeRemoteManager()
+  remote_manager = SwitcherBreezeRemoteManager()
   asyncio.get_event_loop().run_until_complete(
       control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863")
   )
