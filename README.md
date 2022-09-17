@@ -1,3 +1,4 @@
+<!-- markdownlint-disable MD033 -->
 # Switcher Python Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
 
 [![gh-build-status]][7] [![gh-pages-status]][8] [![codecov]][3]
@@ -5,85 +6,134 @@
 PyPi module integrating with various [Switcher][12] devices.</br>
 Check out the [wiki pages][0] for a list of supported devices.
 
-## Install
-
 ```shell
 pip install aioswitcher
 ```
 
-## Usage Example
+<table>
+  <td><a href="https://aioswitcher.tomfi.info/">Documentation</a></td>
+  <td><a href="https://github.com/TomerFi/aioswitcher/wiki">Wiki</a></td>
+  <td><a href="https://github.com/TomerFi/aioswitcher/blob/dev/.github/CONTRIBUTING.md">Contributing</a></td>
+  <td><a href="https://github.com/TomerFi/.github/blob/main/.github/CODE_OF_CONDUCT.md">Code of Conduct</a></td>
+</table>
 
-```python
-async with SwitcherApi(device_ip, device_id) as swapi:
-    # get the device state
-    state_response = await swapi.get_state()
+## Example Usage
 
-    # control the device on for 15 minutes and then turn it off
-    await swapi.control_device(Command.ON, 15)
-    await swapi.control_device(Command.OFF)
+<details>
+  <summary>Power Plug API</summary>
 
-    # create a new recurring schedule
-    await swapi.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
+  ```python
+  async def control_power_plug(device_ip, device_id) :
+      # for connecting to a device we need its id and ip address
+      async with SwitcherType1Api(device_ip, device_id) as api:
+          # get the device current state
+          await api.get_state()
+          # turn the device on
+          await api.control_device(Command.ON)
+          # turn the device off
+          await api.control_device(Command.OFF)
+          # set the device name to 'my new name'
+          await api.set_device_name("my new name")
 
+  asyncio.get_event_loop().run_until_complete(
+      control_power_plug("111.222.11.22", "ab1c2d")
+  )
+  ```
 
-# control Type 2 devices such as Breeze, Runner and Runner Mini
+</details>
 
-# control a breeze device
-async with SwitcherType2Api(device_ip, device_id) as api_type2:
-    # get the Breeze device state
-    resp: SwitcherThermostatStateResponse = await api_type2.get_breeze_state()
+<details>
+  <summary>Water Heater API</summary>
 
-    # initialize the Breeze RemoteManager
-    rm = BreezeRemoteManager()
+  ```python
+  async def control_water_heater(device_ip, device_id) :
+      # for connecting to a device we need its id and ip address
+      async with SwitcherType1Api(device_ip, device_id) as api:
+          # get the device current state (1)
+          await api.get_state()
+          # turn the device on for 15 minutes (2)
+          await api.control_device(Command.ON, 15)
+          # turn the device off (3)
+          await api.control_device(Command.OFF)
+          # set the device name to 'my new name' (4)
+          await api.set_device_name("my new name")
+          # configure the device for 02:30 auto shutdown (5)
+          await api.set_auto_shutdown(timedelta(hours=2, minutes=30))
+          # get the schedules from the device (6)
+          await api.get_schedules()
+          # delete and existing schedule with id 1 (7)
+          await api.delete_schedule("1")
+          # create a new recurring schedule for 13:00-14:30
+          # executing on sunday and friday (8)
+          await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
-    # get the remote structure
-    remote: BreezeRemote = rm.get_remote(resp.remote_id)
+  asyncio.get_event_loop().run_until_complete(
+      control_water_heater("111.222.11.22", "ab1c2d")
+  )
+  ```
 
-    # prepare a control command that turns on the Breeze
-    # (24 degree (Celsius), cooling and high Fan level with vertical swing)
-    command = remote.get_command(
-          DeviceState.ON,
-          ThermostatMode.COOL,
-          24,
-          ThermostatFanLevel.HIGH,
-          ThermostatSwing.ON,
-          resp.state
-      )
+</details>
 
-    # send command to the device
-    await api_type2.control_breeze_device(command)
+<details>
+  <summary>Runner API</summary>
 
-# control Runner device
-async with SwitcherType2Api(device_ip, device_id) as api:
-  # get the runner state
-  state_response: SwitcherShutterStateResponse = api.get_shutter_state()
+  ```python
+  async def control_runner(device_ip, device_id) :
+      # for connecting to a device we need its id and ip address
+      async with SwitcherType2Api(device_ip, device_id) as api:
+          # get the device current state (1)
+          await api.get_shutter_state()
+          # open the shutter to 30% (2)
+          await api.set_position(30)
+          # stop the shutter if currently rolling (3)
+          await api.stop()
 
-  # open the shutter all the way up
-  await api.set_position(100)
-  # stop the shutter from rolling
-  await api.stop()
-  # set the shutter position to 30% opened
-  await api.set_position(30)
-  # close the shutter all the way down
-  await api.set_position(0)
+  asyncio.get_event_loop().run_until_complete(
+      control_runner("111.222.11.22", "ab1c2d")
+  )
+  ```
 
-```
+</details>
 
-Check out the [documentation][8] for a more detailed usage section.
+<details>
+  <summary>Breeze API</summary>
+
+  ```python
+  async def control_breeze(device_ip, device_id, remote_manager, remote_id) :
+      # for connecting to a device we need its id and ip address
+      async with SwitcherType2Api(device_ip, device_id) as api:
+          # get the device current state (1)
+          await api.get_breeze_state()
+          # initialize the Breeze RemoteManager and get the remote (2)
+          remote = remote_manager.get_remote(remote_id)
+          # prepare a control command that turns on the Breeze
+          # set to 24 degree (Celsius) cooling with vertical swing
+          # and keep the current Fan Level (3)
+          command: SwitcherBreezeCommand = remote.get_command(
+              DeviceState.ON,
+              ThermostatMode.COOL,
+              24,
+              resp.fan_level,
+              ThermostatSwing.ON,
+              response.state
+          )
+          # send command to the device (4)
+          await api.control_breeze_device(command)
+
+  # create the remote manager outside the context for re-using (5)
+  remote_manager = BreezeRemoteManager()
+  asyncio.get_event_loop().run_until_complete(
+      control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863")
+  )
+  ```
+
+</details>
 
 ## Command Line Helper Scripts
 
 - [discover_devices.py](scripts/discover_devices.py) can discover devices and their
   states.
 - [control_device.py](scripts/control_device.py) can control a device.
-
-## Contributing
-
-The contributing guidelines are [here](.github/CONTRIBUTING.md)
-
-## Code of Conduct
-
-The code of conduct is [here](.github/CODE_OF_CONDUCT.md)
 
 ## Disclaimer
 
