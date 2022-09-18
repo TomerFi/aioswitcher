@@ -120,17 +120,17 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
           remote = remote_manager.get_remote(remote_id)
           # prepare a control command that turns on the Breeze
           # set to 24 degree (Celsius) cooling with vertical swing
-          # and keep the current Fan Level
-          command: SwitcherBreezeCommand = remote.get_command(
+          # send command to the device
+          await api.control_breeze_device(
+              remote,
               DeviceState.ON,
               ThermostatMode.COOL,
               24,
-              resp.fan_level,
+              ThermostatFanLevel.MEDIUM,
               ThermostatSwing.ON,
-              response.state
           )
-          # send command to the device
-          await api.control_breeze_device(command)
+          # if you're writing stateful software,
+          # you can include the current state for toggle devices
 
   # create the remote manager outside the context for re-using
   remote_manager = SwitcherBreezeRemoteManager()
