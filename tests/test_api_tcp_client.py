@@ -24,14 +24,7 @@ import pytest_asyncio
 from assertpy import assert_that
 from pytest import fixture, mark, raises
 
-from aioswitcher.api import (
-    Command,
-    SwitcherBreezeCommand,
-    SwitcherBreezeRemote,
-    SwitcherBreezeRemoteManager,
-    SwitcherType1Api,
-    SwitcherType2Api,
-)
+from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
 from aioswitcher.api.messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
@@ -39,6 +32,11 @@ from aioswitcher.api.messages import (
     SwitcherShutterStateResponse,
     SwitcherStateResponse,
     SwitcherThermostatStateResponse,
+)
+from aioswitcher.api.remotes import (
+    SwitcherBreezeCommand,
+    SwitcherBreezeRemote,
+    SwitcherBreezeRemoteManager,
 )
 from aioswitcher.device import (
     DeviceState,
@@ -205,14 +203,13 @@ async def test_get_breeze_state_function_with_a_faulty_get_state_response_should
 
 
 async def test_control_breeze_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
-    with patch.object(reader_mock, "read", side_effect=two_packets):
+    three_packets = _get_three_packets(resource_path_root, "control_breeze_response", "control_breeze_swing_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-        command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
-        response = await connected_api_type2.control_breeze_device(command)
-    assert_that(writer_write.call_count).is_equal_to(2)
+        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+    assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_breeze_remote_min_max_temp():
@@ -235,32 +232,29 @@ async def test_breeze_get_remote_id():
 async def test_control_breeze_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2):
     with raises(RuntimeError, match="login request was not successful"):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-        command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
         with patch.object(reader_mock, "read", return_value=b''):
-            await connected_api_type2.control_breeze_device(command)
+            await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
     writer_write.assert_called_once()
 
 
 async def test_get_breeze_command_function_with_low_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
-    with patch.object(reader_mock, "read", side_effect=two_packets):
+    three_packets = _get_three_packets(resource_path_root, "control_breeze_response", "control_breeze_swing_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-        command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 10, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
-        response = await connected_api_type2.control_breeze_device(command)
-    assert_that(writer_write.call_count).is_equal_to(2)
+        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 10, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+    assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_get_breeze_command_function_with_high_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "control_breeze_response")
-    with patch.object(reader_mock, "read", side_effect=two_packets):
+    three_packets = _get_three_packets(resource_path_root, "control_breeze_response", "control_breeze_swing_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-        command: SwitcherBreezeCommand = remote.get_command(DeviceState.ON, ThermostatMode.COOL, 100, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
-        response = await connected_api_type2.control_breeze_device(command)
-    assert_that(writer_write.call_count).is_equal_to(2)
+        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 100, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+    assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_breeze_get_command_function_with_non_supported_mode(resource_path_root):
@@ -268,13 +262,13 @@ async def test_breeze_get_command_function_with_non_supported_mode(resource_path
     brm = SwitcherBreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_invalid_elec7022_data.json")
     remote = brm.get_remote('ELEC7022')
     with raises(RuntimeError, match=f"Invalid mode \"{ThermostatMode.COOL.display}\", available modes for this device are: {', '.join([x.display for x in remote.supported_modes])}"):
-        remote.get_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+        remote.build_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
 
 
 async def test_breeze_get_command_function_non_toggle_type_off_state(resource_path_root):
     elec7022_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7022_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
     remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-    command = remote.get_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+    command = remote.build_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7022_turn_off_cmd).decode())
 
@@ -283,7 +277,7 @@ async def test_breeze_get_command_function_toggle_type(resource_path_root):
     elec7001_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7001_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
 
     remote = SwitcherBreezeRemoteManager().get_remote('ELEC7001')
-    command = remote.get_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
+    command = remote.build_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
 
@@ -292,7 +286,7 @@ async def test_breeze_get_command_function_should_raise_command_does_not_eixst(r
     elec7001_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7001_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
 
     remote = SwitcherBreezeRemoteManager().get_remote('ELEC7001')
-    command = remote.get_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
+    command = remote.build_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
 
@@ -310,38 +304,24 @@ async def test_breeze_remote_manager_get_from_local_database():
     assert_that(remote_7022.remote_id).is_equal_to("ELEC7022")
 
 
-async def test_breeze_get_swing_command():
+async def test_breeze_build_swing_command():
     remote_manager = SwitcherBreezeRemoteManager()
     remote_7022 = remote_manager.get_remote("ELEC7022")
-    command = remote_7022.get_swing_command(swing=ThermostatSwing.ON)
+    command = remote_7022.build_swing_command(swing=ThermostatSwing.ON)
     assert_that(command.command).is_equal_to("000000004e4543587c32367c33327c31352c31357c31352c34307c31357c54303043387c33307c30317c414241425b33305d7c423234443642393445303146")
 
 
-async def test_breeze_get_swing_command_on_wrong_remote():
-    remote_manager = SwitcherBreezeRemoteManager()
-    remote_7001 = remote_manager.get_remote("ELEC7001")
-    with raises(RuntimeWarning, match=f"Swing special function doesn't apply on this remote {remote_7001.remote_id}"):
-        remote_7001.get_swing_command(swing=ThermostatSwing.ON)
-
-
-async def test_breeze_get_swing_command_on_invalid_remote(resource_path_root):
-    brm = SwitcherBreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_invalid_elec7022_data.json")
-    remote_7022 = brm.get_remote('ELEC7022')
-    with raises(RuntimeError):
-        remote_7022.get_swing_command(swing=ThermostatSwing.ON)
-
-
-async def test_breeze_get_command_function_invalid_mode(resource_path_root):
+async def test_breeze_build_command_function_invalid_mode(resource_path_root):
     brm = SwitcherBreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_invalid_elec7022_data.json")
     remote = brm.get_remote('ELEC7022')
     with raises(RuntimeError, match="Invalid mode \"cool\", available modes for this device are: auto, dry, fan"):
-        remote.get_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.AUTO, ThermostatSwing.ON, DeviceState.OFF)
+        remote.build_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.AUTO, ThermostatSwing.ON, DeviceState.OFF)
 
 
-async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, writer_write, resource_path_root, connected_api_type2):
+async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, writer_write, resource_path_root, connected_api_type1):
     two_packets = _get_two_packets(resource_path_root, "turn_on_with_timer_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        response = await connected_api_type2.control_device(Command.ON, 15)
+        response = await connected_api_type1.control_device(Command.ON, 15)
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
@@ -462,6 +442,14 @@ def _get_two_packets(resource_path_root, second_packet):
     return [
         _load_packet(resource_path_root, "login_response"),
         _load_packet(resource_path_root, second_packet),
+    ]
+
+
+def _get_three_packets(resource_path_root, second_packet, third_packet):
+    return [
+        _load_packet(resource_path_root, "login_response"),
+        _load_packet(resource_path_root, second_packet),
+        _load_packet(resource_path_root, third_packet),
     ]
 
 

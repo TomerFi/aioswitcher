@@ -22,14 +22,9 @@ from datetime import timedelta
 from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
-from aioswitcher.api import (
-    Command,
-    SwitcherBreezeRemote,
-    SwitcherBreezeRemoteManager,
-    SwitcherType1Api,
-    SwitcherType2Api,
-)
+from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
 from aioswitcher.api.messages import SwitcherThermostatStateResponse
+from aioswitcher.api.remotes import SwitcherBreezeRemote, SwitcherBreezeRemoteManager
 from aioswitcher.device import (
     DeviceState,
     ThermostatFanLevel,
@@ -277,48 +272,22 @@ async def control_thermostat(
         new_swing = possible_swing[swing] if swing else resp.swing
         new_target_temp = target_temp if target_temp else resp.target_temperature
 
-        # First time it'll download the IRSet JSON file from switcher
         remote: SwitcherBreezeRemote = rm.get_remote(resp.remote_id)
 
-        command = remote.get_command(
-            new_state, new_mode, new_target_temp, new_fan_level, new_swing, resp.state
-        )
-
-        # This won't change the swing state on some special remotes,
-        # the swing change on special remotes is handled next on
         printer.pprint(
             asdict(
-                await api.control_breeze_device(command),
+                await api.control_breeze_device(
+                    remote,
+                    new_state,
+                    new_mode,
+                    new_target_temp,
+                    new_fan_level,
+                    new_swing,
+                    resp.state,
+                ),
                 verbose,
             )
         )
-
-        # Here is a special case to handle swing on special remotes
-        # if we entered here with only swing mode change, we perform it
-        if remote.separated_swing_command:
-            no_state_change_requested = new_state == resp.state
-            no_mode_change_requested = new_mode == resp.mode
-            no_fan_level_change_requested = new_fan_level == resp.fan_level
-            no_temperature_change_requested = new_target_temp == resp.target_temperature
-
-            if (
-                no_state_change_requested
-                and no_mode_change_requested
-                and no_fan_level_change_requested
-                and no_temperature_change_requested
-            ):
-                # due to a bug in Switcher can't read swing mode on remotes
-                # with separated_swing_command ,the new_swing mode will always be OFF
-                # so it doesn't make any difference comparing
-                # new_swing != possible_swing[swing]
-                printer.pprint(
-                    asdict(
-                        await api.control_breeze_device(
-                            remote.get_swing_command(new_swing)
-                        ),
-                        verbose,
-                    )
-                )
 
 
 async def turn_on(device_id: str, device_ip: str, timer: int, verbose: bool) -> None:
