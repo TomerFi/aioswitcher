@@ -250,8 +250,6 @@ class SwitcherApi(ABC):
             target_temp: the target temperature
             fan_level: the desired fan level
             swing: the desired swing state
-            current_state: optionally, for toggle device, pass previous state to avoid
-                redundant requests
 
         Returns:
             An instance of ``SwitcherBaseResponse``.

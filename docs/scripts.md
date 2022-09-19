@@ -197,13 +197,17 @@ options:
 ## script/control_device.py control_thermostat
 
 ```shell
-usage: control_device.py control_thermostat [-h] [-s {on,off}] [-m {auto,dry,fan,cool,heat}] [-f {low,medium,high,auto}]
+usage: control_device.py control_thermostat [-h] -r REMOTE_ID [-s {on,off}]
+                                            [-m {auto,dry,fan,cool,heat}]
+                                            [-f {low,medium,high,auto}]
                                             [-w {off,on}] [-t TEMPERATURE]
 
 options:
   -h, --help            show this help message and exit
+  -r REMOTE_ID, --remote-id REMOTE_ID
+                        remote id of your device
   -s {on,off}, --state {on,off}
-                        thermostat state, possible values
+                        thermostat state
   -m {auto,dry,fan,cool,heat}, --mode {auto,dry,fan,cool,heat}
                         thermostat mode
   -f {low,medium,high,auto}, --fan-level {low,medium,high,auto}
@@ -211,5 +215,6 @@ options:
   -w {off,on}, --swing {off,on}
                         thermostat swing
   -t TEMPERATURE, --temperature TEMPERATURE
-                        thermostat temperature
+                        thermostat temperature, a positive integer
+
 ```

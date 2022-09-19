@@ -7,6 +7,8 @@
 
 ::: src.aioswitcher.api.messages
 
+::: src.aioswitcher.api.remotes
+
 ::: src.aioswitcher.bridge
 
 ::: src.aioswitcher.device
