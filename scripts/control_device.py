@@ -50,10 +50,10 @@ python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30"
 python control_device.py -d f2239a -i "192.168.50.98" stop_shutter\n
 python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50\n
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -s on\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -m cool -f high -t 24\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -m dry\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -s off\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s on\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m cool -f high -t 24\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m dry\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s off\n
 """  # noqa E501
 
 # parent parser
