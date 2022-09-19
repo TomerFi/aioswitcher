@@ -235,12 +235,11 @@ class SwitcherApi(ABC):
     async def control_breeze_device(
         self,
         remote: SwitcherBreezeRemote,
-        state: DeviceState,
-        mode: ThermostatMode,
-        target_temp: int,
-        fan_level: ThermostatFanLevel,
-        swing: ThermostatSwing,
-        current_state: DeviceState = None,
+        state: DeviceState = None,
+        mode: ThermostatMode = None,
+        target_temp: int = 0,
+        fan_level: ThermostatFanLevel = None,
+        swing: ThermostatSwing = None,
     ) -> SwitcherBaseResponse:
         """Use for sending the control packet to the Breeze device.
 
@@ -607,7 +606,7 @@ class SwitcherType2Api(SwitcherApi):
             command = remote.build_command(
                 state or current_state.state,
                 mode or current_state.mode,
-                target_temp or current_state.target_temp,
+                target_temp or current_state.target_temperature,
                 fan_level or current_state.fan_level,
                 set_swing,
             )
