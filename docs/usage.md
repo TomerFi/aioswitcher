@@ -122,8 +122,6 @@ async def control_breeze(device_ip, device_id, remote_manager, remote_id) :
             ThermostatFanLevel.MEDIUM,
             ThermostatSwing.ON,
         )
-        # if you're writing stateful software,
-        # you can include the previous state for toggle devices
 
 # create the remote manager outside the context for re-using (4)
 remote_manager = SwitcherBreezeRemoteManager()
