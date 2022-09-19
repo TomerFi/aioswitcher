@@ -129,8 +129,6 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
               ThermostatFanLevel.MEDIUM,
               ThermostatSwing.ON,
           )
-          # if you're writing stateful software,
-          # you can include the current state for toggle devices
 
   # create the remote manager outside the context for re-using
   remote_manager = SwitcherBreezeRemoteManager()

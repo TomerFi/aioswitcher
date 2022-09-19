@@ -23,8 +23,7 @@ from pprint import PrettyPrinter
 from typing import Any, Dict, List
 
 from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
-from aioswitcher.api.messages import SwitcherThermostatStateResponse
-from aioswitcher.api.remotes import SwitcherBreezeRemote, SwitcherBreezeRemoteManager
+from aioswitcher.api.remotes import SwitcherBreezeRemoteManager
 from aioswitcher.device import (
     DeviceState,
     ThermostatFanLevel,
@@ -51,10 +50,10 @@ python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30"
 python control_device.py -d f2239a -i "192.168.50.98" stop_shutter\n
 python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50\n
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -s on\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -m cool -f high -t 24\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -m dry\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -s off\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -s on\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -m cool -f high -t 24\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -m dry\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" -r ELEC7001 control_thermostat -s off\n
 """  # noqa E501
 
 # parent parser
@@ -197,14 +196,16 @@ set_shutter_position_parser.add_argument(
 
 # control_thermostat parser
 control_thermostat_parser = subparsers.add_parser(
-    "control_thermostat", help="create a new schedule"
+    "control_thermostat", help="control a breeze device"
+)
+control_thermostat_parser.add_argument(
+    "-r", "--remote-id", required=True, type=str, help="remote id of your device"
 )
 possible_states = dict(map(lambda s: (s.display, s), DeviceState))
 control_thermostat_parser.add_argument(
     "-s",
     "--state",
     choices=possible_states.keys(),
-    default="on",
     help=f"thermostat state, possible values: {possible_states}",
 )
 possible_modes = dict(map(lambda s: (s.display, s), ThermostatMode))
@@ -254,36 +255,25 @@ async def get_state(device_id: str, device_ip: str, verbose: bool) -> None:
 async def control_thermostat(
     device_id: str,
     device_ip: str,
+    remote_id: str,
     state: str,
     mode: str = None,
-    target_temp: int = None,
+    target_temp: int = 0,
     fan_level: str = None,
     swing: str = None,
     verbose: bool = False,
 ) -> None:
     """Control Breeze device."""
     async with SwitcherType2Api(device_ip, device_id) as api:
-        rm = SwitcherBreezeRemoteManager()
-        resp: SwitcherThermostatStateResponse = await api.get_breeze_state()
-
-        new_state = possible_states[state]
-        new_mode = possible_modes[mode] if mode else resp.mode
-        new_fan_level = possible_fan_level[fan_level] if fan_level else resp.fan_level
-        new_swing = possible_swing[swing] if swing else resp.swing
-        new_target_temp = target_temp if target_temp else resp.target_temperature
-
-        remote: SwitcherBreezeRemote = rm.get_remote(resp.remote_id)
-
         printer.pprint(
             asdict(
                 await api.control_breeze_device(
-                    remote,
-                    new_state,
-                    new_mode,
-                    new_target_temp,
-                    new_fan_level,
-                    new_swing,
-                    resp.state,
+                    SwitcherBreezeRemoteManager().get_remote(remote_id),
+                    possible_states[state] if state else None,
+                    possible_modes[mode] if mode else None,
+                    target_temp,
+                    possible_fan_level[fan_level] if fan_level else None,
+                    possible_swing[swing] if swing else None,
                 ),
                 verbose,
             )
@@ -459,6 +449,7 @@ if __name__ == "__main__":
                 control_thermostat(
                     args.device_id,
                     args.ip_address,
+                    args.remote_id,
                     args.state,
                     args.mode,
                     args.temperature,
