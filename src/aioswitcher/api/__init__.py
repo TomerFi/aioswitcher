@@ -607,6 +607,7 @@ class SwitcherType2Api(SwitcherApi):
                 target_temp or current_state.target_temperature,
                 fan_level or current_state.fan_level,
                 set_swing,
+                current_state.state,
             )
 
             packet = packets.BREEZE_COMMAND_PACKET.format(
