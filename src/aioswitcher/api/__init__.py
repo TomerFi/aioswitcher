@@ -586,7 +586,13 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if state or mode or target_temp or fan_level:
+        if (
+            state
+            or mode
+            or target_temp
+            or fan_level
+            or (swing and not remote._separated_swing_command)
+        ):
             current_state = await self.get_breeze_state()
             if not current_state.successful:
                 raise RuntimeError("get state request was not successful")
