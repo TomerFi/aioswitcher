@@ -132,7 +132,7 @@ async def test_api_as_a_context_manager(reader_mock, writer_mock):
 
 
 async def test_login_function(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    response_packet = _load_packet(resource_path_root, "login_response")
+    response_packet = _load_dummy_packet(resource_path_root, "login_response")
     with patch.object(reader_mock, "read", return_value=response_packet):
         response = await connected_api_type1._login()
     writer_write.assert_called_once()
@@ -141,7 +141,7 @@ async def test_login_function(reader_mock, writer_write, connected_api_type1, re
 
 
 async def test_login2_function(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    response_packet = _load_packet(resource_path_root, "login2_response")
+    response_packet = _load_dummy_packet(resource_path_root, "login2_response")
     with patch.object(reader_mock, "read", return_value=response_packet):
         response = await connected_api_type2._login()
     writer_write.assert_called_once()
@@ -157,7 +157,7 @@ async def test_get_state_function_with_a_faulty_login_response_should_raise_erro
 
 
 async def test_get_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
+    login_response_packet = _load_dummy_packet(resource_path_root, "login_response")
     with raises(RuntimeError, match="get state request was not successful"):
         with patch.object(reader_mock, "read", side_effect=[login_response_packet, b'']):
             await connected_api_type1.get_state()
@@ -165,8 +165,8 @@ async def test_get_state_function_with_a_faulty_get_state_response_should_raise_
 
 
 async def test_get_state_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
-    get_state_response_packet = _load_packet(resource_path_root, "get_state_response")
+    login_response_packet = _load_dummy_packet(resource_path_root, "login_response")
+    get_state_response_packet = _load_dummy_packet(resource_path_root, "get_state_response")
     with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet]):
         response = await connected_api_type1.get_state()
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -175,8 +175,8 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
 
 
 async def test_get_breeze_state_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login2_response")
-    get_breeze_state_response_packet = _load_packet(resource_path_root, "get_breeze_state")
+    login_response_packet = _load_dummy_packet(resource_path_root, "login2_response")
+    get_breeze_state_response_packet = _load_dummy_packet(resource_path_root, "get_breeze_state")
     with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_breeze_state_response_packet]):
         response = await connected_api_type2.get_breeze_state()
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -185,7 +185,7 @@ async def test_get_breeze_state_function_with_valid_packets(reader_mock, writer_
 
 
 async def test_turn_on_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "turn_on_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "turn_on_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.control_device(Command.ON)
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -201,7 +201,7 @@ async def test_get_breeze_state_function_with_a_faulty_login_response_should_rai
 
 
 async def test_get_breeze_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
+    login_response_packet = _load_dummy_packet(resource_path_root, "login_response")
     with raises(RuntimeError, match="get breeze state request was not successful"):
         with patch.object(reader_mock, "read", side_effect=[login_response_packet, b'']):
             await connected_api_type2.get_breeze_state()
@@ -210,7 +210,7 @@ async def test_get_breeze_state_function_with_a_faulty_get_state_response_should
 
 @faulty_dummy_response
 async def test_control_breeze_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    four_packets = _get_four_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
+    four_packets = _get_dummy_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
     with patch.object(reader_mock, "read", side_effect=four_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
         response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON)
@@ -246,7 +246,7 @@ async def test_control_breeze_function_with_a_faulty_get_state_response_should_r
 
 @faulty_dummy_response
 async def test_get_breeze_command_function_with_low_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    four_packets = _get_four_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
+    four_packets = _get_dummy_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
     with patch.object(reader_mock, "read", side_effect=four_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
         response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 10, ThermostatFanLevel.HIGH, ThermostatSwing.ON)
@@ -257,7 +257,7 @@ async def test_get_breeze_command_function_with_low_temp(reader_mock, writer_wri
 
 @faulty_dummy_response
 async def test_get_breeze_command_function_with_high_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    four_packets = _get_four_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
+    four_packets = _get_dummy_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
     with patch.object(reader_mock, "read", side_effect=four_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
         response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 100, ThermostatFanLevel.HIGH, ThermostatSwing.ON)
@@ -328,7 +328,7 @@ async def test_breeze_build_command_function_invalid_mode(resource_path_root):
 
 
 async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, writer_write, resource_path_root, connected_api_type1):
-    two_packets = _get_two_packets(resource_path_root, "turn_on_with_timer_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "turn_on_with_timer_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.control_device(Command.ON, 15)
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -337,7 +337,7 @@ async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, write
 
 
 async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "turn_off_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "turn_off_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.control_device(Command.OFF)
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -346,7 +346,7 @@ async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, c
 
 
 async def test_set_name_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "set_name_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_name_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.set_device_name("my boiler")
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -355,7 +355,7 @@ async def test_set_name_function_with_valid_packets(reader_mock, writer_write, c
 
 
 async def test_set_auto_shutdown_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "set_auto_shutdown_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_auto_shutdown_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.set_auto_shutdown(timedelta(hours=2, minutes=30))
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -364,7 +364,7 @@ async def test_set_auto_shutdown_function_with_valid_packets(reader_mock, writer
 
 
 async def test_get_schedules_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "get_schedules_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "get_schedules_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.get_schedules()
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -373,7 +373,7 @@ async def test_get_schedules_function_with_valid_packets(reader_mock, writer_wri
 
 
 async def test_delete_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "delete_schedule_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "delete_schedule_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.delete_schedule("0")
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -382,7 +382,7 @@ async def test_delete_schedule_function_with_valid_packets(reader_mock, writer_w
 
 
 async def test_create_schedule_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "create_schedule_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "create_schedule_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.create_schedule("18:00", "19:00")
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -391,7 +391,7 @@ async def test_create_schedule_function_with_valid_packets(reader_mock, writer_w
 
 
 async def test_stop_shutter_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "stop_shutter_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "stop_shutter_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type2.stop()
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -400,7 +400,7 @@ async def test_stop_shutter_device_function_with_valid_packets(reader_mock, writ
 
 
 async def test_set_shutter_position_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    two_packets = _get_two_packets(resource_path_root, "set_shutter_position_response")
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_shutter_position_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type2.set_position(50)
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -409,8 +409,8 @@ async def test_set_shutter_position_device_function_with_valid_packets(reader_mo
 
 
 async def test_get_shutter_state_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login2_response")
-    get_state_response_packet = _load_packet(resource_path_root, "get_shutter_state_response")
+    login_response_packet = _load_dummy_packet(resource_path_root, "login2_response")
+    get_state_response_packet = _load_dummy_packet(resource_path_root, "get_shutter_state_response")
     with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet]):
         response = await connected_api_type2.get_shutter_state()
     assert_that(writer_write.call_count).is_equal_to(2)
@@ -426,7 +426,7 @@ async def test_get_shutter_state_function_with_a_faulty_login_response_should_ra
 
 
 async def test_get_shutter_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    login_response_packet = _load_packet(resource_path_root, "login_response")
+    login_response_packet = _load_dummy_packet(resource_path_root, "login_response")
     with raises(RuntimeError, match="get shutter state request was not successful"):
         with patch.object(reader_mock, "read", side_effect=[login_response_packet, b'']):
             await connected_api_type2.get_shutter_state()
@@ -447,21 +447,9 @@ async def test_stop_position_function_with_a_faulty_get_state_response_should_ra
     writer_write.assert_called_once()
 
 
-def _get_two_packets(resource_path_root, second_packet):
-    return [
-        _load_packet(resource_path_root, "login_response"),
-        _load_packet(resource_path_root, second_packet),
-    ]
+def _get_dummy_packets(resource_path_root, *packets):
+    return [_load_dummy_packet(resource_path_root, packet) for packet in packets]
 
 
-def _get_four_packets(resource_path_root, first_packet, second_packet, third_packet, fourth_packet):
-    return [
-        _load_packet(resource_path_root, first_packet),
-        _load_packet(resource_path_root, second_packet),
-        _load_packet(resource_path_root, third_packet),
-        _load_packet(resource_path_root, fourth_packet),
-    ]
-
-
-def _load_packet(path, file_name):
+def _load_dummy_packet(path, file_name):
     return unhexlify((path / ("dummy_responses/" + file_name + ".txt")).read_text().replace('\n', '').encode())
