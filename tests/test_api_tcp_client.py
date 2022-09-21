@@ -14,10 +14,12 @@
 
 """Switcher integration TCP socket API module test cases."""
 
+import os
 from asyncio.streams import StreamReader, StreamWriter
 from binascii import hexlify, unhexlify
 from datetime import timedelta
 from json import loads
+from unittest import skipUnless
 from unittest.mock import AsyncMock, Mock, patch
 
 import pytest_asyncio
@@ -48,6 +50,10 @@ from aioswitcher.device import (
 device_id = "aaaaaa"
 device_ip = "1.2.3.4"
 pytestmark = mark.asyncio
+faulty_dummy_response = skipUnless(
+    os.environ.get('CI'),
+    'this fails because "get_breeze_state.txt" dummy response is faulty, it is ON but fails temperature parsing'
+)
 
 
 @fixture
@@ -202,14 +208,15 @@ async def test_get_breeze_state_function_with_a_faulty_get_state_response_should
     assert_that(writer_write.call_count).is_equal_to(2)
 
 
+@faulty_dummy_response
 async def test_control_breeze_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "control_breeze_response", "control_breeze_swing_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    four_packets = _get_four_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
+    with patch.object(reader_mock, "read", side_effect=four_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON)
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(four_packets[-1])
 
 
 async def test_breeze_remote_min_max_temp():
@@ -233,28 +240,30 @@ async def test_control_breeze_function_with_a_faulty_get_state_response_should_r
     with raises(RuntimeError, match="login request was not successful"):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
         with patch.object(reader_mock, "read", return_value=b''):
-            await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+            await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON)
     writer_write.assert_called_once()
 
 
+@faulty_dummy_response
 async def test_get_breeze_command_function_with_low_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "control_breeze_response", "control_breeze_swing_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    four_packets = _get_four_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
+    with patch.object(reader_mock, "read", side_effect=four_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 10, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 10, ThermostatFanLevel.HIGH, ThermostatSwing.ON)
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(four_packets[-1])
 
 
+@faulty_dummy_response
 async def test_get_breeze_command_function_with_high_temp(reader_mock, writer_write, connected_api_type2, resource_path_root):
-    three_packets = _get_three_packets(resource_path_root, "control_breeze_response", "control_breeze_swing_response")
-    with patch.object(reader_mock, "read", side_effect=three_packets):
+    four_packets = _get_four_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response", "control_breeze_swing_response")
+    with patch.object(reader_mock, "read", side_effect=four_packets):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
-        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 100, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
+        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 100, ThermostatFanLevel.HIGH, ThermostatSwing.ON)
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(four_packets[-1])
 
 
 async def test_breeze_get_command_function_with_non_supported_mode(resource_path_root):
@@ -445,11 +454,12 @@ def _get_two_packets(resource_path_root, second_packet):
     ]
 
 
-def _get_three_packets(resource_path_root, second_packet, third_packet):
+def _get_four_packets(resource_path_root, first_packet, second_packet, third_packet, fourth_packet):
     return [
-        _load_packet(resource_path_root, "login_response"),
+        _load_packet(resource_path_root, first_packet),
         _load_packet(resource_path_root, second_packet),
         _load_packet(resource_path_root, third_packet),
+        _load_packet(resource_path_root, fourth_packet),
     ]
 
 
