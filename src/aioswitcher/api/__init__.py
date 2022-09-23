@@ -590,7 +590,7 @@ class SwitcherType2Api(SwitcherApi):
             or fan_level
             or (swing and not remote._separated_swing_command)
         ):
-            current_state = await self.get_breeze_state()
+            current_state = await self._get_breeze_state(timestamp, login_resp)
             if not current_state.successful:
                 raise RuntimeError("get state request was not successful")
 
@@ -720,25 +720,28 @@ class SwitcherType2Api(SwitcherApi):
         """
         timestamp, login_resp = await self._login(DeviceType.BREEZE)
         if login_resp.successful:
+            return await self._get_breeze_state(timestamp, login_resp)
+        else:
+            raise RuntimeError("login request was not successful")
 
-            packet = packets.GET_STATE_PACKET2_TYPE2.format(
-                login_resp.session_id, timestamp, self._device_id
-            )
+    async def _get_breeze_state(
+        self, timestamp: str, login_resp: SwitcherLoginResponse
+    ) -> SwitcherThermostatStateResponse:
+        packet = packets.GET_STATE_PACKET2_TYPE2.format(
+            login_resp.session_id, timestamp, self._device_id
+        )
 
-            signed_packet = sign_packet_with_crc_key(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
 
-            logger.debug("sending a get state packet")
-            self._writer.write(unhexlify(signed_packet))
-            state_resp = await self._reader.read(1024)
-            try:
-                response = SwitcherThermostatStateResponse(state_resp)
-                if response.successful:
-                    return response
-            except (KeyError, ValueError) as ve:
-                raise RuntimeError(
-                    "get breeze state request was not successful"
-                ) from ve
-        raise RuntimeError("login request was not successful")
+        logger.debug("sending a get state packet")
+        self._writer.write(unhexlify(signed_packet))
+        state_resp = await self._reader.read(1024)
+        try:
+            response = SwitcherThermostatStateResponse(state_resp)
+            if response.successful:
+                return response
+        except (KeyError, ValueError) as ve:
+            raise RuntimeError("get breeze state request was not successful") from ve
 
     async def get_shutter_state(self) -> SwitcherShutterStateResponse:
         """Use for sending the get state packet to the Runner device.
