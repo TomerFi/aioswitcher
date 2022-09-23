@@ -763,8 +763,7 @@ class SwitcherType2Api(SwitcherApi):
             state_resp = await self._reader.read(1024)
             try:
                 response = SwitcherShutterStateResponse(state_resp)
-                if response.successful:
-                    return response
+                return response
             except (KeyError, ValueError) as ve:
                 raise RuntimeError(
                     "get shutter state request was not successful"
