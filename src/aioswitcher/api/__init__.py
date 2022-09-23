@@ -721,8 +721,7 @@ class SwitcherType2Api(SwitcherApi):
         timestamp, login_resp = await self._login(DeviceType.BREEZE)
         if login_resp.successful:
             return await self._get_breeze_state(timestamp, login_resp)
-        else:
-            raise RuntimeError("login request was not successful")
+        raise RuntimeError("login request was not successful")
 
     async def _get_breeze_state(
         self, timestamp: str, login_resp: SwitcherLoginResponse
