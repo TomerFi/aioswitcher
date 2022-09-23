@@ -751,13 +751,17 @@ options:
   -h, --help  show this <span class="nb">help</span> message and <span class="nb">exit</span>
 </code></pre></div>
 <h2 id="scriptcontrol_devicepy-control_thermostat">script/control_device.py control_thermostat<a class="headerlink" href="#scriptcontrol_devicepy-control_thermostat" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py control_thermostat <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-s <span class="o">{</span>on,off<span class="o">}]</span> <span class="o">[</span>-m <span class="o">{</span>auto,dry,fan,cool,heat<span class="o">}]</span> <span class="o">[</span>-f <span class="o">{</span>low,medium,high,auto<span class="o">}]</span>
+<div class="highlight"><pre><span></span><code>usage: control_device.py control_thermostat <span class="o">[</span>-h<span class="o">]</span> -r REMOTE_ID <span class="o">[</span>-s <span class="o">{</span>on,off<span class="o">}]</span>
+                                            <span class="o">[</span>-m <span class="o">{</span>auto,dry,fan,cool,heat<span class="o">}]</span>
+                                            <span class="o">[</span>-f <span class="o">{</span>low,medium,high,auto<span class="o">}]</span>
                                             <span class="o">[</span>-w <span class="o">{</span>off,on<span class="o">}]</span> <span class="o">[</span>-t TEMPERATURE<span class="o">]</span>
 
 options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -r REMOTE_ID, --remote-id REMOTE_ID
+                        remote id of your device
   -s <span class="o">{</span>on,off<span class="o">}</span>, --state <span class="o">{</span>on,off<span class="o">}</span>
-                        thermostat state, possible values
+                        thermostat state
   -m <span class="o">{</span>auto,dry,fan,cool,heat<span class="o">}</span>, --mode <span class="o">{</span>auto,dry,fan,cool,heat<span class="o">}</span>
                         thermostat mode
   -f <span class="o">{</span>low,medium,high,auto<span class="o">}</span>, --fan-level <span class="o">{</span>low,medium,high,auto<span class="o">}</span>
@@ -765,7 +769,7 @@ options:
   -w <span class="o">{</span>off,on<span class="o">}</span>, --swing <span class="o">{</span>off,on<span class="o">}</span>
                         thermostat swing
   -t TEMPERATURE, --temperature TEMPERATURE
-                        thermostat temperature
+                        thermostat temperature, a positive integer
 </code></pre></div>
 
   <hr>
@@ -773,7 +777,7 @@ options:
   <small>
     
       Last update:
-      2022-09-17
+      2022-09-23
     
   </small>
 </div>

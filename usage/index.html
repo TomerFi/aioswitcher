@@ -558,19 +558,17 @@ The following code will print all discovered devices for 60 seconds.</p>
         <span class="n">remote</span> <span class="o">=</span> <span class="n">remote_manager</span><span class="o">.</span><span class="n">get_remote</span><span class="p">(</span><span class="n">remote_id</span><span class="p">)</span>
         <span class="c1"># prepare a control command that turns on the Breeze</span>
         <span class="c1"># set to 24 degree (Celsius) cooling with vertical swing</span>
-        <span class="c1"># and keep the current Fan Level (3)</span>
-        <span class="n">command</span><span class="p">:</span> <span class="n">SwitcherBreezeCommand</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">get_command</span><span class="p">(</span>
+        <span class="c1"># send command to the device (3)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_breeze_device</span><span class="p">(</span>
+            <span class="n">remote</span><span class="p">,</span>
             <span class="n">DeviceState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span>
             <span class="n">ThermostatMode</span><span class="o">.</span><span class="n">COOL</span><span class="p">,</span>
             <span class="mi">24</span><span class="p">,</span>
-            <span class="n">resp</span><span class="o">.</span><span class="n">fan_level</span><span class="p">,</span>
+            <span class="n">ThermostatFanLevel</span><span class="o">.</span><span class="n">MEDIUM</span><span class="p">,</span>
             <span class="n">ThermostatSwing</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">state</span>
         <span class="p">)</span>
-        <span class="c1"># send command to the device (4)</span>
-        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">control_breeze_device</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
 
-<span class="c1"># create the remote manager outside the context for re-using (5)</span>
+<span class="c1"># create the remote manager outside the context for re-using (4)</span>
 <span class="n">remote_manager</span> <span class="o">=</span> <span class="n">SwitcherBreezeRemoteManager</span><span class="p">()</span>
 <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
     <span class="n">control_breeze</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="s2">&quot;DLK65863&quot;</span><span class="p">)</span>
@@ -579,7 +577,6 @@ The following code will print all discovered devices for 60 seconds.</p>
 <ol>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherThermostatStateResponse">SwitcherThermostatStateResponse</a></li>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBreezeRemote">SwitcherBreezeRemote</a></li>
-<li><a href="../codedocs/#src.aioswitcher.api.SwitcherBreezeCommand">SwitcherBreezeCommand</a></li>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
 <li><a href="../codedocs/#src.aioswitcher.api.SwitcherBreezeRemoteManager">SwitcherBreezeRemoteManager</a></li>
 </ol>
@@ -593,7 +590,7 @@ The following code will print all discovered devices for 60 seconds.</p>
   <small>
     
       Last update:
-      2022-09-17
+      2022-09-23
     
   </small>
 </div>
