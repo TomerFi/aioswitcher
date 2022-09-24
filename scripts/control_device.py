@@ -56,27 +56,23 @@ python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s off\n
 """  # noqa E501
 
-# parent parser
-parent_parser = ArgumentParser(
-    description="Control your Switcher device",
-    epilog=_examples,
-    formatter_class=RawDescriptionHelpFormatter,
-)
-parent_parser.add_argument(
+# shared parse
+shared_parser = ArgumentParser(add_help=False)
+shared_parser.add_argument(
     "-v",
     "--verbose",
     default=False,
     action="store_true",
     help="include the raw message",
 )
-parent_parser.add_argument(
+shared_parser.add_argument(
     "-d",
     "--device-id",
     type=str,
     required=True,
     help="the identification of the device",
 )
-parent_parser.add_argument(
+shared_parser.add_argument(
     "-i",
     "--ip-address",
     type=str,
@@ -84,119 +80,22 @@ parent_parser.add_argument(
     help="the ip address assigned to the device",
 )
 
-subparsers = parent_parser.add_subparsers(
+# parent parser
+main_parser = ArgumentParser(
+    description="Control your Switcher device",
+    epilog=_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+)
+
+subparsers = main_parser.add_subparsers(
     dest="action", description="supported actions"
-)
-
-# get_state parser
-subparsers.add_parser("get_state", help="get the current state of a device")
-
-# turn_on parser
-turn_on_parser = subparsers.add_parser("turn_on", help="turn on the device")
-turn_on_parser.add_argument(
-    "-t",
-    "--timer",
-    type=int,
-    nargs="?",
-    default=0,
-    help="set minutes timer for turn on operation",
-)
-
-# turn_off parser
-turn_on_parser = subparsers.add_parser("turn_off", help="turn off the device")
-
-# set_name parser
-set_name_parser = subparsers.add_parser("set_name", help="set the name of the device")
-set_name_parser.add_argument(
-    "-n",
-    "--name",
-    type=str,
-    required=True,
-    help="new name for the device",
-)
-
-# set_auto_shutdown parser
-set_auto_shutdown_parser = subparsers.add_parser(
-    "set_auto_shutdown", help="set the auto shutdown property (1h-24h)"
-)
-set_auto_shutdown_parser.add_argument(
-    "-r",
-    "--hours",
-    type=int,
-    required=True,
-    help="number hours for the auto shutdown",
-)
-set_auto_shutdown_parser.add_argument(
-    "-m",
-    "--minutes",
-    type=int,
-    nargs="?",
-    default=0,
-    help="number hours for the auto shutdown",
-)
-
-# get_schedules parser
-subparsers.add_parser("get_schedules", help="retrive a device schedules")
-
-# delete_schedule parser
-delete_schedule_parser = subparsers.add_parser(
-    "delete_schedule", help="delete a device schedule"
-)
-delete_schedule_parser.add_argument(
-    "-s",
-    "--schedule-id",
-    type=str,
-    required=True,
-    help="the id of the schedule for deletion",
-)
-
-# create_schedule parser
-create_schedule_parser = subparsers.add_parser(
-    "create_schedule", help="create a new schedule"
-)
-create_schedule_parser.add_argument(
-    "-n",
-    "--start-time",
-    type=str,
-    required=True,
-    help="the on time for the schedule, e.g. 13:00",
-)
-create_schedule_parser.add_argument(
-    "-f",
-    "--end-time",
-    type=str,
-    required=True,
-    help="the off time for the schedule, e.g. 13:30",
-)
-possible_weekdays = [d.value for d in Days]
-create_schedule_parser.add_argument(
-    "-w",
-    "--weekdays",
-    choices=possible_weekdays,
-    nargs="*",
-    required=False,
-    help="days for recurring schedules",
-    default=list(),
-)
-
-# stop shutter parser
-stop_shutter_parser = subparsers.add_parser("stop_shutter", help="stop shutter")
-
-# stop shutter parser
-set_shutter_position_parser = subparsers.add_parser(
-    "set_shutter_position", help="set shutter position"
-)
-set_shutter_position_parser.add_argument(
-    "-p",
-    "--position",
-    required=True,
-    type=int,
-    help="Shutter position percentage",
 )
 
 # control_thermostat parser
 control_thermostat_parser = subparsers.add_parser(
-    "control_thermostat", help="control a breeze device"
+    "control_thermostat",
+    help="control a breeze device",
+    parents=[shared_parser],
 )
 control_thermostat_parser.add_argument(
     "-r", "--remote-id", required=True, type=str, help="remote id of your device"
@@ -236,6 +135,119 @@ control_thermostat_parser.add_argument(
     help="thermostat temperature, a positive integer",
 )
 
+# create_schedule parser
+create_schedule_parser = subparsers.add_parser(
+    "create_schedule",
+    help="create a new schedule",
+    parents=[shared_parser],
+)
+create_schedule_parser.add_argument(
+    "-n",
+    "--start-time",
+    type=str,
+    required=True,
+    help="the on time for the schedule, e.g. 13:00",
+)
+create_schedule_parser.add_argument(
+    "-f",
+    "--end-time",
+    type=str,
+    required=True,
+    help="the off time for the schedule, e.g. 13:30",
+)
+possible_weekdays = [d.value for d in Days]
+create_schedule_parser.add_argument(
+    "-w",
+    "--weekdays",
+    choices=possible_weekdays,
+    nargs="*",
+    required=False,
+    help="days for recurring schedules",
+    default=list(),
+)
+
+# delete_schedule parser
+delete_schedule_parser = subparsers.add_parser(
+    "delete_schedule",
+    help="delete a device schedule",
+    parents=[shared_parser],
+)
+delete_schedule_parser.add_argument(
+    "-s",
+    "--schedule-id",
+    type=str,
+    required=True,
+    help="the id of the schedule for deletion",
+)
+
+# get_schedules parser
+subparsers.add_parser("get_schedules", help="retrieve a device schedules", parents=[shared_parser])
+
+# get_state parser
+subparsers.add_parser("get_state", help="get the current state of a device", parents=[shared_parser])
+
+# set_auto_shutdown parser
+set_auto_shutdown_parser = subparsers.add_parser(
+    "set_auto_shutdown",
+    help="set the auto shutdown property (1h-24h)",
+    parents=[shared_parser],
+)
+set_auto_shutdown_parser.add_argument(
+    "-r",
+    "--hours",
+    type=int,
+    required=True,
+    help="number hours for the auto shutdown",
+)
+set_auto_shutdown_parser.add_argument(
+    "-m",
+    "--minutes",
+    type=int,
+    nargs="?",
+    default=0,
+    help="number hours for the auto shutdown",
+)
+
+# set_name parser
+set_name_parser = subparsers.add_parser("set_name", help="set the name of the device", parents=[shared_parser])
+set_name_parser.add_argument(
+    "-n",
+    "--name",
+    type=str,
+    required=True,
+    help="new name for the device",
+)
+
+# stop shutter parser
+set_shutter_position_parser = subparsers.add_parser(
+    "set_shutter_position",
+    help="set shutter position",
+    parents=[shared_parser],
+)
+set_shutter_position_parser.add_argument(
+    "-p",
+    "--position",
+    required=True,
+    type=int,
+    help="Shutter position percentage",
+)
+
+# stop shutter parser
+stop_shutter_parser = subparsers.add_parser("stop_shutter", help="stop shutter", parents=[shared_parser])
+
+# turn_off parser
+turn_on_parser = subparsers.add_parser("turn_off", help="turn off the device", parents=[shared_parser])
+
+# turn_on parser
+turn_on_parser = subparsers.add_parser("turn_on", help="turn on the device", parents=[shared_parser])
+turn_on_parser.add_argument(
+    "-t",
+    "--timer",
+    type=int,
+    nargs="?",
+    default=0,
+    help="set minutes timer for turn on operation",
+)
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
     """Use as custom implementation of the asdict utility method."""
@@ -375,7 +387,7 @@ async def set_shutter_position(
 
 if __name__ == "__main__":
     try:
-        args = parent_parser.parse_args()
+        args = main_parser.parse_args()
 
         if args.action == "get_state":
             get_event_loop().run_until_complete(
