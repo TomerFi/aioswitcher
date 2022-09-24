@@ -58,7 +58,7 @@ Print only protocol type 2 devices:
 
 ```shell
 usage: control_device.py [-h]
-                         {control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on}
+                         {control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,get_thermostat_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on}
                          ...
 
 Control your Switcher device
@@ -69,12 +69,14 @@ options:
 subcommands:
   supported actions
 
-  {control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on}
+  {control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,get_thermostat_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on}
     control_thermostat  control a breeze device
     create_schedule     create a new schedule
     delete_schedule     delete a device schedule
     get_schedules       retrieve a device schedules
     get_state           get the current state of a device
+    get_thermostat_state
+                        get the current state a thermostat (breeze) device
     set_auto_shutdown   set the auto shutdown property (1h-24h)
     set_name            set the name of the device
     set_shutter_position
@@ -108,6 +110,8 @@ python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30"
 python control_device.py -d f2239a -i "192.168.50.98" stop_shutter
 
 python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50
+
+python control_device.py -d 3a20b7 -i "192.168.50.77" get_thermostat_state
 
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s on
 
@@ -206,6 +210,21 @@ options:
 
 ```shell
 usage: control_device.py get_state [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+```
+
+### script/control_device.py get_thermostat_state
+
+```shell
+usage: control_device.py get_thermostat_state [-h] [-v] -d DEVICE_ID -i
+                                              IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
