@@ -583,6 +583,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
+        cmd_response = None  # type: SwitcherBaseResponse | None
         if (
             state
             or mode
@@ -632,11 +633,13 @@ class SwitcherType2Api(SwitcherApi):
 
         if remote._separated_swing_command and swing:
             # if device is SPECIAL SWING device and user requested a swing change
-            return await self._control_breeze_swing_device(
+            cmd_response = await self._control_breeze_swing_device(
                 timestamp, login_resp.session_id, remote, swing
             )
 
-        return cmd_response
+        if cmd_response:
+            return cmd_response
+        raise RuntimeError("control breeze device failed")
 
     async def _control_breeze_swing_device(
         self,
