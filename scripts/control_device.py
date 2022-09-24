@@ -50,6 +50,8 @@ python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30"
 python control_device.py -d f2239a -i "192.168.50.98" stop_shutter\n
 python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50\n
 
+python control_device.py -d 3a20b7 -i "192.168.50.77" get_thermostat_state\n
+
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s on\n
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m cool -f high -t 24\n
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m dry\n
@@ -87,9 +89,7 @@ main_parser = ArgumentParser(
     formatter_class=RawDescriptionHelpFormatter,
 )
 
-subparsers = main_parser.add_subparsers(
-    dest="action", description="supported actions"
-)
+subparsers = main_parser.add_subparsers(dest="action", description="supported actions")
 
 # control_thermostat parser
 control_thermostat_parser = subparsers.add_parser(
@@ -181,10 +181,21 @@ delete_schedule_parser.add_argument(
 )
 
 # get_schedules parser
-subparsers.add_parser("get_schedules", help="retrieve a device schedules", parents=[shared_parser])
+subparsers.add_parser(
+    "get_schedules", help="retrieve a device schedules", parents=[shared_parser]
+)
 
 # get_state parser
-subparsers.add_parser("get_state", help="get the current state of a device", parents=[shared_parser])
+subparsers.add_parser(
+    "get_state", help="get the current state of a device", parents=[shared_parser]
+)
+
+# get_thermostat_state parser
+subparsers.add_parser(
+    "get_thermostat_state",
+    help="get the current state a thermostat (breeze) device",
+    parents=[shared_parser],
+)
 
 # set_auto_shutdown parser
 set_auto_shutdown_parser = subparsers.add_parser(
@@ -209,7 +220,9 @@ set_auto_shutdown_parser.add_argument(
 )
 
 # set_name parser
-set_name_parser = subparsers.add_parser("set_name", help="set the name of the device", parents=[shared_parser])
+set_name_parser = subparsers.add_parser(
+    "set_name", help="set the name of the device", parents=[shared_parser]
+)
 set_name_parser.add_argument(
     "-n",
     "--name",
@@ -233,13 +246,19 @@ set_shutter_position_parser.add_argument(
 )
 
 # stop shutter parser
-stop_shutter_parser = subparsers.add_parser("stop_shutter", help="stop shutter", parents=[shared_parser])
+stop_shutter_parser = subparsers.add_parser(
+    "stop_shutter", help="stop shutter", parents=[shared_parser]
+)
 
 # turn_off parser
-turn_on_parser = subparsers.add_parser("turn_off", help="turn off the device", parents=[shared_parser])
+turn_on_parser = subparsers.add_parser(
+    "turn_off", help="turn off the device", parents=[shared_parser]
+)
 
 # turn_on parser
-turn_on_parser = subparsers.add_parser("turn_on", help="turn on the device", parents=[shared_parser])
+turn_on_parser = subparsers.add_parser(
+    "turn_on", help="turn on the device", parents=[shared_parser]
+)
 turn_on_parser.add_argument(
     "-t",
     "--timer",
@@ -249,6 +268,7 @@ turn_on_parser.add_argument(
     help="set minutes timer for turn on operation",
 )
 
+
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
     """Use as custom implementation of the asdict utility method."""
     return {
@@ -256,6 +276,12 @@ def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
         for k, v in dc.__dict__.items()
         if not (not verbose and k == "unparsed_response")
     }
+
+
+async def get_thermostat_state(device_id: str, device_ip: str, verbose: bool) -> None:
+    """Use to launch a get_breeze_state request."""
+    async with SwitcherType2Api(device_ip, device_id) as api:
+        printer.pprint(asdict(await api.get_breeze_state(), verbose))
 
 
 async def get_state(device_id: str, device_ip: str, verbose: bool) -> None:
@@ -469,6 +495,10 @@ if __name__ == "__main__":
                     args.swing,
                     args.verbose,
                 )
+            )
+        elif args.action == "get_thermostat_state":
+            get_event_loop().run_until_complete(
+                get_thermostat_state(args.device_id, args.ip_address, args.verbose)
             )
 
     except KeyboardInterrupt:
