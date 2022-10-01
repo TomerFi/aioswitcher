@@ -139,9 +139,9 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
 
 ## Command Line Helper Scripts
 
-- [discover_devices.py](scripts/discover_devices.py) can discover devices and their
+- [discover_devices.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/discover_devices.py) can discover devices and their
   states.
-- [control_device.py](scripts/control_device.py) can control a device.
+- [control_device.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/control_device.py) can control a device.
 
 ## Disclaimer
 
