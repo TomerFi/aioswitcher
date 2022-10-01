@@ -237,8 +237,8 @@ class SwitcherPowerBase(ABC):
     """Abstraction for all switcher devices reporting power data.
 
     Args:
-        power_consumption: the current power consumpstion in watts.
-        electric_current: the current power consumpstion in amps.
+        power_consumption: the current power consumption in watts.
+        electric_current: the current power consumption in amps.
 
     """
 
@@ -337,7 +337,7 @@ class SwitcherThermostat(SwitcherThermostatBase, SwitcherBase):
     """Implementation of the Switcher Thermostat device."""
 
     def __post_init__(self) -> None:
-        """Post initialization validate device type category as THRMOSTAT."""
+        """Post initialization validate device type category as THERMOSTAT."""
         if self.device_type.category != DeviceCategory.THERMOSTAT:
             raise ValueError("only thermostats are allowed")
         self.remote = None

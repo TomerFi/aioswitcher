@@ -36,7 +36,7 @@ class StateMessageParser:
 
     response: InitVar[bytes]
 
-    def __post_init__(self, response) -> None:
+    def __post_init__(self, response: bytes) -> None:
         """Post initialization of the parser."""
         self._hex_response = hexlify(response)
 
@@ -130,7 +130,7 @@ class StateMessageParser:
         remote_hex = unhexlify(self._hex_response)
         return remote_hex[84:92].decode().rstrip("\x00")
 
-    def get_shutter_poisition(self) -> int:
+    def get_shutter_position(self) -> int:
         """Return the current shutter position."""
         hex_pos = self._hex_response[152:154].decode()
         return int(hex_pos, 16)
@@ -261,4 +261,4 @@ class SwitcherShutterStateResponse(SwitcherBaseResponse):
         parser = StateMessageParser(self.unparsed_response)
 
         self.direction = parser.get_shutter_direction()
-        self.position = parser.get_shutter_poisition()
+        self.position = parser.get_shutter_position()

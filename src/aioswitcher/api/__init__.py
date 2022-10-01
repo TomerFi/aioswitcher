@@ -22,7 +22,7 @@ from enum import Enum, unique
 from logging import getLogger
 from socket import AF_INET
 from types import TracebackType
-from typing import Optional, Set, Tuple, Type, final
+from typing import Optional, Set, Tuple, Type, Union, final
 
 from ..device import (
     DeviceCategory,
@@ -142,7 +142,7 @@ class SwitcherApi(ABC):
         self._connected = False
 
     async def _login(
-        self, device_type: DeviceType = None
+        self, device_type: Union[DeviceType, None] = None
     ) -> Tuple[str, SwitcherLoginResponse]:
         """Use for sending the login packet to the device.
 
@@ -235,11 +235,11 @@ class SwitcherApi(ABC):
     async def control_breeze_device(
         self,
         remote: SwitcherBreezeRemote,
-        state: DeviceState = None,
-        mode: ThermostatMode = None,
+        state: Union[DeviceState, None] = None,
+        mode: Union[ThermostatMode, None] = None,
         target_temp: int = 0,
-        fan_level: ThermostatFanLevel = None,
-        swing: ThermostatSwing = None,
+        fan_level: Union[ThermostatFanLevel, None] = None,
+        swing: Union[ThermostatSwing, None] = None,
     ) -> SwitcherBaseResponse:
         """Use for sending the control packet to the Breeze device.
 
@@ -554,11 +554,11 @@ class SwitcherType2Api(SwitcherApi):
     async def control_breeze_device(
         self,
         remote: SwitcherBreezeRemote,
-        state: DeviceState = None,
-        mode: ThermostatMode = None,
+        state: Union[DeviceState, None] = None,
+        mode: Union[ThermostatMode, None] = None,
         target_temp: int = 0,
-        fan_level: ThermostatFanLevel = None,
-        swing: ThermostatSwing = None,
+        fan_level: Union[ThermostatFanLevel, None] = None,
+        swing: Union[ThermostatSwing, None] = None,
     ) -> SwitcherBaseResponse:
         """Use for sending the control packet to the Breeze device.
 
@@ -583,7 +583,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        cmd_response = None  # type: SwitcherBaseResponse | None
+        cmd_response: Union[SwitcherBaseResponse, None] = None
         if (
             state
             or mode

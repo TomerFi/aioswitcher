@@ -20,7 +20,7 @@ from json import load
 from logging import getLogger
 from os import path
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, final
+from typing import Any, Dict, List, Union, final
 
 from ..device import DeviceState, ThermostatFanLevel, ThermostatMode, ThermostatSwing
 
@@ -79,7 +79,7 @@ class SwitcherBreezeCommand:
 
     """
 
-    def __init__(self, command: str):
+    def __init__(self, command: str) -> None:
         """Initialize the Breeze command."""
         self.command = command
         self.length = self._get_command_length()
@@ -109,12 +109,12 @@ class SwitcherBreezeRemote:
         self._min_temp = 100  # ridiculously high number
         self._max_temp = -100  # ridiculously low number
         self._on_off_type = False
-        self._remote_id = ir_set["IRSetID"]
+        self._remote_id: str = ir_set["IRSetID"]
         # _ir_wave_map hosts a shrunk version of the ir_set file which ignores
         # unused data and map key to dict{"HexCode": str, "Para": str}
         # this is being built by the _resolve_capabilities method
-        self._ir_wave_map = {}  # type: Dict[str, Dict[str, str]]
-        self._modes_features = {}  # type: Dict[ThermostatMode, Dict[str, Any]]
+        self._ir_wave_map: Dict[str, Dict[str, str]] = {}
+        self._modes_features: Dict[ThermostatMode, Dict[str, Any]] = {}
         """
         self._modes_features basically explains the available features
             (Swing/Fan levels/ temp control of each mode)
@@ -172,9 +172,9 @@ class SwitcherBreezeRemote:
         return self._modes_features
 
     @property
-    def supported_modes(self) -> Iterable:
+    def supported_modes(self) -> List[ThermostatMode]:
         """Getter for supported modes."""
-        return self.modes_features.keys()
+        return list(self.modes_features.keys())
 
     @property
     def max_temperature(self) -> int:
@@ -196,8 +196,11 @@ class SwitcherBreezeRemote:
         """Getter for which indicates if the AC has a separated swing command."""
         return self._separated_swing_command
 
-    def _lookup_key_in_irset(self, key: List[Any]) -> None:
+    def _lookup_key_in_irset(self, key: List[str]) -> None:
         """Use this to look for a key in the IRSet file.
+
+        Args:
+            key: a reference to List of strings representing parts of the command.
 
         Note:
             This is a private function used by other functions, do not call this
@@ -258,7 +261,7 @@ class SwitcherBreezeRemote:
         target_temp: int,
         fan_level: ThermostatFanLevel,
         swing: ThermostatSwing,
-        current_state: DeviceState = None,
+        current_state: Union[DeviceState, None] = None,
     ) -> SwitcherBreezeCommand:
         """Build command that controls the Breeze device.
 
@@ -275,7 +278,7 @@ class SwitcherBreezeRemote:
             An instance of ``SwitcherBreezeCommand``
 
         """
-        key = []
+        key: List[str] = []
         command = ""
         # verify the target temp and set maximum if we provided with higher number
         if target_temp > self._max_temp:
@@ -406,7 +409,7 @@ class SwitcherBreezeRemoteManager:
 
     """
 
-    def __init__(self, remotes_db_path: str = BREEZE_REMOTE_DB_FPATH):
+    def __init__(self, remotes_db_path: str = BREEZE_REMOTE_DB_FPATH) -> None:
         """Initialize the Remote manager."""
         self._remotes_db: Dict[str, SwitcherBreezeRemote] = {}
         self._remotes_db_fpath = remotes_db_path

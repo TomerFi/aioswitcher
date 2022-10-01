@@ -20,14 +20,14 @@ from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from asyncio import get_event_loop, sleep
 from dataclasses import asdict
 from pprint import PrettyPrinter
+from typing import List
 
 from aioswitcher.bridge import (
     SWITCHER_UDP_PORT_TYPE1,
     SWITCHER_UDP_PORT_TYPE2,
-    DeviceType,
     SwitcherBridge,
 )
-from aioswitcher.device import SwitcherBase
+from aioswitcher.device import DeviceType, SwitcherBase
 
 printer = PrettyPrinter(indent=4)
 
@@ -99,7 +99,7 @@ parser.add_argument(
 )
 
 
-async def print_devices(delay: int, ports: list[int]) -> None:
+async def print_devices(delay: int, ports: List[int]) -> None:
     """Run the Switcher bridge and register callback for discovered devices."""
 
     def on_device_found_callback(device: SwitcherBase) -> None:

@@ -22,7 +22,7 @@ from logging import getLogger
 from socket import AF_INET, inet_ntoa
 from struct import pack
 from types import TracebackType
-from typing import Any, Callable, Dict, Optional, Tuple, Type, final
+from typing import Any, Callable, Dict, List, Optional, Tuple, Type, final
 from warnings import warn
 
 from .device import (
@@ -173,13 +173,13 @@ class SwitcherBridge:
     def __init__(
         self,
         on_device: Callable[[SwitcherBase], Any],
-        broadcast_ports: list[int] = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2],
+        broadcast_ports: List[int] = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2],
     ) -> None:
         """Initialize the switcher bridge."""
         self._on_device = on_device
         self._broadcast_ports = broadcast_ports
         self._is_running = False
-        self._transports = {}  # type: Dict[int, Optional[BaseTransport]]
+        self._transports: Dict[int, Optional[BaseTransport]] = {}
 
     async def __aenter__(self) -> "SwitcherBridge":
         """Enter SwitcherBridge asynchronous context manager."""
@@ -237,14 +237,14 @@ class UdpClientProtocol(DatagramProtocol):
 
     def __init__(self, on_datagram: Callable[[bytes], None]) -> None:
         """Initialize the protocol."""
-        self.transport = None  # type: Optional[BaseTransport]
+        self.transport: Optional[BaseTransport] = None
         self._on_datagram = on_datagram
 
     def connection_made(self, transport: BaseTransport) -> None:
         """Call on connection established."""
         self.transport = transport
 
-    def datagram_received(self, data: bytes, addr: Tuple) -> None:
+    def datagram_received(self, data: bytes, addr: Tuple[Any, Any]) -> None:
         """Call on datagram received."""
         self._on_datagram(data)
 
