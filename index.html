@@ -489,52 +489,85 @@ The following code will print all discovered devices for 60 seconds.</p>
 <p>You can find the supported device types stated in <a href="codedocs/#src.aioswitcher.device.DeviceType">this enum</a> members.</p>
 </div>
 <h1 id="command-line-scripts">Command line scripts<a class="headerlink" href="#command-line-scripts" title="Permanent link">⚓︎</a></h1>
-<h2 id="discover-devices">Discover Devices<a class="headerlink" href="#discover-devices" title="Permanent link">⚓︎</a></h2>
-<h3 id="scriptsdiscover_devicespy">scripts/discover_devices.py<a class="headerlink" href="#scriptsdiscover_devicespy" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage: discover_devices.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>delay<span class="o">]</span>
+<h2 id="scriptsdiscover_devicespy">scripts/discover_devices.py<a class="headerlink" href="#scriptsdiscover_devicespy" title="Permanent link">⚓︎</a></h2>
+<div class="highlight"><pre><span></span><code>usage: discover_devices.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-t <span class="o">{</span><span class="m">1</span>,2,all<span class="o">}]</span> <span class="o">[</span>delay<span class="o">]</span>
 
 Discover and print info of Switcher devices
 
 positional arguments:
-  delay       number of seconds to run, defaults to <span class="m">60</span>
+  delay                 number of seconds to run, defaults to <span class="m">60</span>
 
 options:
-  -h, --help  show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -t <span class="o">{</span><span class="m">1</span>,2,all<span class="o">}</span>, --type <span class="o">{</span><span class="m">1</span>,2,all<span class="o">}</span>
+                        <span class="nb">set</span> protocol type: <span class="o">[</span><span class="s1">&#39;1&#39;</span>, <span class="s1">&#39;2&#39;</span>, <span class="s1">&#39;all&#39;</span><span class="o">]</span>
+
+Executing this script will print a serialized version of the discovered Switcher
+devices broadcasting on the <span class="nb">local</span> network <span class="k">for</span> <span class="m">60</span> seconds.
+You can change the delay by passing an int argument: discover_devices.py <span class="m">30</span>
+
+Switcher devices uses two protocol types:
+    Protocol <span class="nb">type</span> <span class="m">1</span> <span class="o">(</span>UDP port <span class="m">20002</span><span class="o">)</span>, used by: Switcher Mini, Switcher Power Plug, Switcher Touch, Switcher V2 <span class="o">(</span>esp<span class="o">)</span>, Switcher V2 <span class="o">(</span>qualcomm<span class="o">)</span>, Switcher V4
+    Protocol <span class="nb">type</span> <span class="m">2</span> <span class="o">(</span>UDP port <span class="m">20003</span><span class="o">)</span>, used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini
+You can change the scanned protocol <span class="nb">type</span> by passing an int argument: discover_devices.py -t <span class="m">1</span>
+
+Note:
+    WILL PRINT PRIVATE INFO SUCH AS DEVICE ID AND MAC.
+
+Example output:
+    Switcher devices broadcast a status message every approximately <span class="m">4</span> seconds. This
+    script listens <span class="k">for</span> these messages and prints a serialized version of the to the
+    standard output, <span class="k">for</span> example <span class="o">(</span>note the <span class="sb">``</span>device_id<span class="sb">``</span> and <span class="sb">``</span>mac_address<span class="sb">``</span> properties<span class="o">)</span>::
+    <span class="sb">```</span>
+        <span class="o">{</span>   <span class="s1">&#39;auto_shutdown&#39;</span>: <span class="s1">&#39;03:00:00&#39;</span>,
+            <span class="s1">&#39;device_id&#39;</span>: <span class="s1">&#39;aaaaaa&#39;</span>,
+            <span class="s1">&#39;device_state&#39;</span>: &lt;DeviceState.OFF: <span class="o">(</span><span class="s1">&#39;0000&#39;</span>, <span class="s1">&#39;off&#39;</span><span class="o">)</span>&gt;,
+            <span class="s1">&#39;device_type&#39;</span>: &lt;DeviceType.V2_ESP: <span class="o">(</span><span class="s1">&#39;Switcher V2 (esp)&#39;</span>, <span class="s1">&#39;a7&#39;</span>, &lt;DeviceCategory.WATER_HEATER: <span class="m">1</span>&gt;<span class="o">)</span>&gt;,
+            <span class="s1">&#39;electric_current&#39;</span>: <span class="m">0</span>.0,
+            <span class="s1">&#39;ip_address&#39;</span>: <span class="s1">&#39;192.168.1.33&#39;</span>,
+            <span class="s1">&#39;last_data_update&#39;</span>: datetime.datetime<span class="o">(</span><span class="m">2021</span>, <span class="m">6</span>, <span class="m">13</span>, <span class="m">11</span>, <span class="m">11</span>, <span class="m">44</span>, <span class="m">883003</span><span class="o">)</span>,
+            <span class="s1">&#39;mac_address&#39;</span>: <span class="s1">&#39;12:A1:A2:1A:BC:1A&#39;</span>,
+            <span class="s1">&#39;name&#39;</span>: <span class="s1">&#39;My Switcher Boiler&#39;</span>,
+            <span class="s1">&#39;power_consumption&#39;</span>: <span class="m">0</span>,
+            <span class="s1">&#39;remaining_time&#39;</span>: <span class="s1">&#39;00:00:00&#39;</span><span class="o">}</span>
+    <span class="sb">```</span>
+Print all protocol types devices <span class="k">for</span> <span class="m">30</span> seconds:
+    python discover_devices.py <span class="m">30</span> -t all
+
+Print only protocol <span class="nb">type</span> <span class="m">1</span> devices:
+    python discover_devices.py -t <span class="m">1</span>
+
+Print only protocol <span class="nb">type</span> <span class="m">2</span> devices:
+    python discover_devices.py -t <span class="m">2</span>
 </code></pre></div>
-<h3 id="scriptcontrol_devicepy">script/control_device.py<a class="headerlink" href="#scriptcontrol_devicepy" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage: control_device.py <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
-                         <span class="o">{</span>get_state,turn_on,turn_off,set_name,set_auto_shutdown,get_schedules,delete_schedule,
-                          create_schedule,stop_shutter,set_shutter_position,control_thermostat<span class="o">}</span>
+<h2 id="scriptcontrol_devicepy">script/control_device.py<a class="headerlink" href="#scriptcontrol_devicepy" title="Permanent link">⚓︎</a></h2>
+<div class="highlight"><pre><span></span><code>usage: control_device.py <span class="o">[</span>-h<span class="o">]</span>
+                         <span class="o">{</span>control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,get_thermostat_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on<span class="o">}</span>
                          ...
 
 Control your Switcher device
 
 options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -v, --verbose         include the raw message
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
 
 subcommands:
   supported actions
 
-  <span class="o">{</span>get_state,turn_on,turn_off,set_name,set_auto_shutdown,get_schedules,delete_schedule,create_schedule,stop_shutter,
-    set_shutter_position,control_thermostat<span class="o">}</span>
-
-    get_state           get the current state of a device
-    turn_on             turn on the device
-    turn_off            turn off the device
-    set_name            <span class="nb">set</span> the name of the device
-    set_auto_shutdown   <span class="nb">set</span> the auto shutdown property <span class="o">(</span>1h-24h<span class="o">)</span>
-    get_schedules       retrive a device schedules
-    delete_schedule     delete a device schedule
+  <span class="o">{</span>control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,get_thermostat_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on<span class="o">}</span>
+    control_thermostat  control a breeze device
     create_schedule     create a new schedule
-    stop_shutter        stop shutter
+    delete_schedule     delete a device schedule
+    get_schedules       retrieve a device schedules
+    get_state           get the current state of a device
+    get_thermostat_state
+                        get the current state a thermostat <span class="o">(</span>breeze<span class="o">)</span> device
+    set_auto_shutdown   <span class="nb">set</span> the auto shutdown property <span class="o">(</span>1h-24h<span class="o">)</span>
+    set_name            <span class="nb">set</span> the name of the device
     set_shutter_position
                         <span class="nb">set</span> shutter position
-    control_thermostat  create a new schedule
+    stop_shutter        stop shutter
+    turn_off            turn off the device
+    turn_on             turn on the device
 
 example usage:
 
@@ -561,98 +594,32 @@ python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;
 python control_device.py -d f2239a -i <span class="s2">&quot;192.168.50.98&quot;</span> stop_shutter
 
 python control_device.py -d f2239a -i <span class="s2">&quot;192.168.50.98&quot;</span> set_shutter_position -p <span class="m">50</span>
-python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -m dry
 
-python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -s off
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-create_schedule">script/control_device.py create_schedule<a class="headerlink" href="#scriptcontrol_devicepy-create_schedule" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py create_schedule <span class="o">[</span>-h<span class="o">]</span> -n START_TIME -f END_TIME <span class="o">[</span>-w <span class="o">[{</span>Monday,Tuesday,Wednesday,Thursday,Friday,
-                                                                              Saturday,Sunday<span class="o">}</span> ...<span class="o">]]</span>
+python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> get_thermostat_state
 
-options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -n START_TIME, --start-time START_TIME
-                        the on <span class="nb">time</span> <span class="k">for</span> the schedule, e.g. <span class="m">13</span>:00
-  -f END_TIME, --end-time END_TIME
-                        the off <span class="nb">time</span> <span class="k">for</span> the schedule, e.g. <span class="m">13</span>:30
-  -w <span class="o">[{</span>Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday<span class="o">}</span> ...<span class="o">]</span>, --weekdays <span class="o">[{</span>Monday,Tuesday,Wednesday,Thursday,
-                                                                                    Friday,Saturday,Sunday<span class="o">}</span> ...<span class="o">]</span>
-                        days <span class="k">for</span> recurring schedules, possible values: <span class="o">[</span><span class="s1">&#39;Monday&#39;</span>, <span class="s1">&#39;Tuesday&#39;</span>, <span class="s1">&#39;Wednesday&#39;</span>, <span class="s1">&#39;Thursday&#39;</span>,
-                                                                        <span class="s1">&#39;Friday&#39;</span>, <span class="s1">&#39;Saturday&#39;</span>, <span class="s1">&#39;Sunday&#39;</span><span class="o">]</span>
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-delete_schedule">script/control_device.py delete_schedule<a class="headerlink" href="#scriptcontrol_devicepy-delete_schedule" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py delete_schedule <span class="o">[</span>-h<span class="o">]</span> -s SCHEDULE_ID
+python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -s on
 
-options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -s SCHEDULE_ID, --schedule-id SCHEDULE_ID
-                        the id of the schedule <span class="k">for</span> deletion
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-get_schedules">script/control_device.py get_schedules<a class="headerlink" href="#scriptcontrol_devicepy-get_schedules" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py get_schedules <span class="o">[</span>-h<span class="o">]</span>
+python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -m cool -f high -t <span class="m">24</span>
 
-options:
-  -h, --help  show this <span class="nb">help</span> message and <span class="nb">exit</span>
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-get_state">script/control_device.py get_state<a class="headerlink" href="#scriptcontrol_devicepy-get_state" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py get_state <span class="o">[</span>-h<span class="o">]</span>
+python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -m dry
 
-options:
-  -h, --help  show this <span class="nb">help</span> message and <span class="nb">exit</span>
+python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -s off
 </code></pre></div>
-<h2 id="scriptcontrol_devicepy-set_auto_shutdown">script/control_device.py set_auto_shutdown<a class="headerlink" href="#scriptcontrol_devicepy-set_auto_shutdown" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py set_auto_shutdown <span class="o">[</span>-h<span class="o">]</span> -r HOURS <span class="o">[</span>-m <span class="o">[</span>MINUTES<span class="o">]]</span>
-
-options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -r HOURS, --hours HOURS
-                        number hours <span class="k">for</span> the auto shutdown
-  -m <span class="o">[</span>MINUTES<span class="o">]</span>, --minutes <span class="o">[</span>MINUTES<span class="o">]</span>
-                        number hours <span class="k">for</span> the auto shutdown
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-set_name">script/control_device.py set_name<a class="headerlink" href="#scriptcontrol_devicepy-set_name" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py set_name <span class="o">[</span>-h<span class="o">]</span> -n NAME
-
-options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -n NAME, --name NAME  new name <span class="k">for</span> the device
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-turn_off">script/control_device.py turn_off<a class="headerlink" href="#scriptcontrol_devicepy-turn_off" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py turn_off <span class="o">[</span>-h<span class="o">]</span>
-
-options:
-  -h, --help  show this <span class="nb">help</span> message and <span class="nb">exit</span>
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-turn_on">script/control_device.py turn_on<a class="headerlink" href="#scriptcontrol_devicepy-turn_on" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py turn_on <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-t <span class="o">[</span>TIMER<span class="o">]]</span>
-
-options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -t <span class="o">[</span>TIMER<span class="o">]</span>, --timer <span class="o">[</span>TIMER<span class="o">]</span>
-                        <span class="nb">set</span> minutes timer <span class="k">for</span> turn on operation
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-set_shutter_position">script/control_device.py set_shutter_position<a class="headerlink" href="#scriptcontrol_devicepy-set_shutter_position" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py set_shutter_position <span class="o">[</span>-h<span class="o">]</span> -p POSITION
-
-options:
-  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
-  -p POSITION, --position POSITION
-                        Shutter position percentage
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-stop_shutter">script/control_device.py stop_shutter<a class="headerlink" href="#scriptcontrol_devicepy-stop_shutter" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py stop_shutter <span class="o">[</span>-h<span class="o">]</span>
-
-options:
-  -h, --help  show this <span class="nb">help</span> message and <span class="nb">exit</span>
-</code></pre></div>
-<h2 id="scriptcontrol_devicepy-control_thermostat">script/control_device.py control_thermostat<a class="headerlink" href="#scriptcontrol_devicepy-control_thermostat" title="Permanent link">⚓︎</a></h2>
-<div class="highlight"><pre><span></span><code>usage: control_device.py control_thermostat <span class="o">[</span>-h<span class="o">]</span> -r REMOTE_ID <span class="o">[</span>-s <span class="o">{</span>on,off<span class="o">}]</span>
+<h3 id="scriptcontrol_devicepy-control_thermostat">script/control_device.py control_thermostat<a class="headerlink" href="#scriptcontrol_devicepy-control_thermostat" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py control_thermostat <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i
+                                            IP_ADDRESS -r REMOTE_ID
+                                            <span class="o">[</span>-s <span class="o">{</span>on,off<span class="o">}]</span>
                                             <span class="o">[</span>-m <span class="o">{</span>auto,dry,fan,cool,heat<span class="o">}]</span>
                                             <span class="o">[</span>-f <span class="o">{</span>low,medium,high,auto<span class="o">}]</span>
                                             <span class="o">[</span>-w <span class="o">{</span>off,on<span class="o">}]</span> <span class="o">[</span>-t TEMPERATURE<span class="o">]</span>
 
 options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
   -r REMOTE_ID, --remote-id REMOTE_ID
                         remote id of your device
   -s <span class="o">{</span>on,off<span class="o">}</span>, --state <span class="o">{</span>on,off<span class="o">}</span>
@@ -665,6 +632,151 @@ options:
                         thermostat swing
   -t TEMPERATURE, --temperature TEMPERATURE
                         thermostat temperature, a positive integer
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-create_schedule">script/control_device.py create_schedule<a class="headerlink" href="#scriptcontrol_devicepy-create_schedule" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py create_schedule <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
+                                         -n START_TIME -f END_TIME
+                                         <span class="o">[</span>-w <span class="o">[{</span>Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday<span class="o">}</span> ...<span class="o">]]</span>
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -n START_TIME, --start-time START_TIME
+                        the on <span class="nb">time</span> <span class="k">for</span> the schedule, e.g. <span class="m">13</span>:00
+  -f END_TIME, --end-time END_TIME
+                        the off <span class="nb">time</span> <span class="k">for</span> the schedule, e.g. <span class="m">13</span>:30
+  -w <span class="o">[{</span>Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday<span class="o">}</span> ...<span class="o">]</span>, --weekdays <span class="o">[{</span>Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday<span class="o">}</span> ...<span class="o">]</span>
+                        days <span class="k">for</span> recurring schedules
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-delete_schedule">script/control_device.py delete_schedule<a class="headerlink" href="#scriptcontrol_devicepy-delete_schedule" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py delete_schedule <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
+                                         -s SCHEDULE_ID
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -s SCHEDULE_ID, --schedule-id SCHEDULE_ID
+                        the id of the schedule <span class="k">for</span> deletion
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-get_schedules">script/control_device.py get_schedules<a class="headerlink" href="#scriptcontrol_devicepy-get_schedules" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py get_schedules <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-get_state">script/control_device.py get_state<a class="headerlink" href="#scriptcontrol_devicepy-get_state" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py get_state <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-get_thermostat_state">script/control_device.py get_thermostat_state<a class="headerlink" href="#scriptcontrol_devicepy-get_thermostat_state" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py get_thermostat_state <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i
+                                              IP_ADDRESS
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-set_auto_shutdown">script/control_device.py set_auto_shutdown<a class="headerlink" href="#scriptcontrol_devicepy-set_auto_shutdown" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py set_auto_shutdown <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i
+                                           IP_ADDRESS -r HOURS <span class="o">[</span>-m <span class="o">[</span>MINUTES<span class="o">]]</span>
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -r HOURS, --hours HOURS
+                        number hours <span class="k">for</span> the auto shutdown
+  -m <span class="o">[</span>MINUTES<span class="o">]</span>, --minutes <span class="o">[</span>MINUTES<span class="o">]</span>
+                        number hours <span class="k">for</span> the auto shutdown
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-set_name">script/control_device.py set_name<a class="headerlink" href="#scriptcontrol_devicepy-set_name" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py set_name <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS -n NAME
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -n NAME, --name NAME  new name <span class="k">for</span> the device
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-set_shutter_position">script/control_device.py set_shutter_position<a class="headerlink" href="#scriptcontrol_devicepy-set_shutter_position" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py set_shutter_position <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i
+                                              IP_ADDRESS -p POSITION
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -p POSITION, --position POSITION
+                        Shutter position percentage
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-stop_shutter">script/control_device.py stop_shutter<a class="headerlink" href="#scriptcontrol_devicepy-stop_shutter" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py stop_shutter <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-turn_off">script/control_device.py turn_off<a class="headerlink" href="#scriptcontrol_devicepy-turn_off" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py turn_off <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+</code></pre></div>
+<h3 id="scriptcontrol_devicepy-turn_on">script/control_device.py turn_on<a class="headerlink" href="#scriptcontrol_devicepy-turn_on" title="Permanent link">⚓︎</a></h3>
+<div class="highlight"><pre><span></span><code>usage: control_device.py turn_on <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
+                                 <span class="o">[</span>-t <span class="o">[</span>TIMER<span class="o">]]</span>
+
+options:
+  -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
+  -v, --verbose         include the raw message
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -t <span class="o">[</span>TIMER<span class="o">]</span>, --timer <span class="o">[</span>TIMER<span class="o">]</span>
+                        <span class="nb">set</span> minutes timer <span class="k">for</span> turn on operation
 </code></pre></div>
 <h1 id="code-documentation">Code documentation<a class="headerlink" href="#code-documentation" title="Permanent link">⚓︎</a></h1>
 
@@ -1157,7 +1269,7 @@ options:
         <span class="bp">self</span><span class="o">.</span><span class="n">_connected</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_login</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">device_type</span><span class="p">:</span> <span class="n">DeviceType</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">device_type</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceType</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SwitcherLoginResponse</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Use for sending the login packet to the device.</span>
 
@@ -1250,11 +1362,11 @@ options:
     <span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">remote</span><span class="p">:</span> <span class="n">SwitcherBreezeRemote</span><span class="p">,</span>
-        <span class="n">state</span><span class="p">:</span> <span class="n">DeviceState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="n">ThermostatMode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">fan_level</span><span class="p">:</span> <span class="n">ThermostatFanLevel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -1623,7 +1735,7 @@ options:
         <tr>
           <td><code>state</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.DeviceState" href="codedocs/#src.aioswitcher.device.DeviceState">DeviceState</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.DeviceState" href="codedocs/#src.aioswitcher.device.DeviceState">DeviceState</a>, None]</code>
           </td>
           <td><p>the desired state of the device</p></td>
           <td>
@@ -1633,7 +1745,7 @@ options:
         <tr>
           <td><code>mode</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatMode" href="codedocs/#src.aioswitcher.device.ThermostatMode">ThermostatMode</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatMode" href="codedocs/#src.aioswitcher.device.ThermostatMode">ThermostatMode</a>, None]</code>
           </td>
           <td><p>the desired mode of the device</p></td>
           <td>
@@ -1653,7 +1765,7 @@ options:
         <tr>
           <td><code>fan_level</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatFanLevel" href="codedocs/#src.aioswitcher.device.ThermostatFanLevel">ThermostatFanLevel</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatFanLevel" href="codedocs/#src.aioswitcher.device.ThermostatFanLevel">ThermostatFanLevel</a>, None]</code>
           </td>
           <td><p>the desired fan level</p></td>
           <td>
@@ -1663,7 +1775,7 @@ options:
         <tr>
           <td><code>swing</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatSwing" href="codedocs/#src.aioswitcher.device.ThermostatSwing">ThermostatSwing</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatSwing" href="codedocs/#src.aioswitcher.device.ThermostatSwing">ThermostatSwing</a>, None]</code>
           </td>
           <td><p>the desired swing state</p></td>
           <td>
@@ -1719,11 +1831,11 @@ options:
 <span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">remote</span><span class="p">:</span> <span class="n">SwitcherBreezeRemote</span><span class="p">,</span>
-    <span class="n">state</span><span class="p">:</span> <span class="n">DeviceState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="n">ThermostatMode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">fan_level</span><span class="p">:</span> <span class="n">ThermostatFanLevel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -4268,7 +4380,10 @@ auto-shutdown.</p></td>
 <span class="normal">767</span>
 <span class="normal">768</span>
 <span class="normal">769</span>
-<span class="normal">770</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">SwitcherType2Api</span><span class="p">(</span><span class="n">SwitcherApi</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Switcher Type2 devices (Breeze, Runners) TCP based API.</span>
 
@@ -4284,11 +4399,11 @@ auto-shutdown.</p></td>
     <span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">remote</span><span class="p">:</span> <span class="n">SwitcherBreezeRemote</span><span class="p">,</span>
-        <span class="n">state</span><span class="p">:</span> <span class="n">DeviceState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="n">ThermostatMode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">fan_level</span><span class="p">:</span> <span class="n">ThermostatFanLevel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -4313,6 +4428,7 @@ auto-shutdown.</p></td>
             <span class="s2">&quot;logged in session_id=</span><span class="si">%s</span><span class="s2">, timestamp=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">timestamp</span>
         <span class="p">)</span>
 
+        <span class="n">cmd_response</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SwitcherBaseResponse</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="n">state</span>
             <span class="ow">or</span> <span class="n">mode</span>
@@ -4362,11 +4478,13 @@ auto-shutdown.</p></td>
 
         <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span> <span class="ow">and</span> <span class="n">swing</span><span class="p">:</span>
             <span class="c1"># if device is SPECIAL SWING device and user requested a swing change</span>
-            <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_breeze_swing_device</span><span class="p">(</span>
+            <span class="n">cmd_response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_breeze_swing_device</span><span class="p">(</span>
                 <span class="n">timestamp</span><span class="p">,</span> <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">swing</span>
             <span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">cmd_response</span>
+        <span class="k">if</span> <span class="n">cmd_response</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">cmd_response</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;control breeze device failed&quot;</span><span class="p">)</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">_control_breeze_swing_device</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -4582,7 +4700,7 @@ auto-shutdown.</p></td>
         <tr>
           <td><code>state</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.DeviceState" href="codedocs/#src.aioswitcher.device.DeviceState">DeviceState</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.DeviceState" href="codedocs/#src.aioswitcher.device.DeviceState">DeviceState</a>, None]</code>
           </td>
           <td><p>optionally the desired state of the device</p></td>
           <td>
@@ -4592,7 +4710,7 @@ auto-shutdown.</p></td>
         <tr>
           <td><code>mode</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatMode" href="codedocs/#src.aioswitcher.device.ThermostatMode">ThermostatMode</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatMode" href="codedocs/#src.aioswitcher.device.ThermostatMode">ThermostatMode</a>, None]</code>
           </td>
           <td><p>optionally the desired mode of the device</p></td>
           <td>
@@ -4612,7 +4730,7 @@ auto-shutdown.</p></td>
         <tr>
           <td><code>fan_level</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatFanLevel" href="codedocs/#src.aioswitcher.device.ThermostatFanLevel">ThermostatFanLevel</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatFanLevel" href="codedocs/#src.aioswitcher.device.ThermostatFanLevel">ThermostatFanLevel</a>, None]</code>
           </td>
           <td><p>optionally the desired fan level</p></td>
           <td>
@@ -4622,7 +4740,7 @@ auto-shutdown.</p></td>
         <tr>
           <td><code>swing</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatSwing" href="codedocs/#src.aioswitcher.device.ThermostatSwing">ThermostatSwing</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.ThermostatSwing" href="codedocs/#src.aioswitcher.device.ThermostatSwing">ThermostatSwing</a>, None]</code>
           </td>
           <td><p>optionally the desired swing state</p></td>
           <td>
@@ -4737,14 +4855,17 @@ auto-shutdown.</p></td>
 <span class="normal">636</span>
 <span class="normal">637</span>
 <span class="normal">638</span>
-<span class="normal">639</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
+<span class="normal">639</span>
+<span class="normal">640</span>
+<span class="normal">641</span>
+<span class="normal">642</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">remote</span><span class="p">:</span> <span class="n">SwitcherBreezeRemote</span><span class="p">,</span>
-    <span class="n">state</span><span class="p">:</span> <span class="n">DeviceState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">mode</span><span class="p">:</span> <span class="n">ThermostatMode</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-    <span class="n">fan_level</span><span class="p">:</span> <span class="n">ThermostatFanLevel</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -4769,6 +4890,7 @@ auto-shutdown.</p></td>
         <span class="s2">&quot;logged in session_id=</span><span class="si">%s</span><span class="s2">, timestamp=</span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">timestamp</span>
     <span class="p">)</span>
 
+    <span class="n">cmd_response</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SwitcherBaseResponse</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="p">(</span>
         <span class="n">state</span>
         <span class="ow">or</span> <span class="n">mode</span>
@@ -4818,11 +4940,13 @@ auto-shutdown.</p></td>
 
     <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span> <span class="ow">and</span> <span class="n">swing</span><span class="p">:</span>
         <span class="c1"># if device is SPECIAL SWING device and user requested a swing change</span>
-        <span class="k">return</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_breeze_swing_device</span><span class="p">(</span>
+        <span class="n">cmd_response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_breeze_swing_device</span><span class="p">(</span>
             <span class="n">timestamp</span><span class="p">,</span> <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">swing</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">cmd_response</span>
+    <span class="k">if</span> <span class="n">cmd_response</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">cmd_response</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;control breeze device failed&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -4867,17 +4991,17 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">714</span>
-<span class="normal">715</span>
-<span class="normal">716</span>
-<span class="normal">717</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">717</span>
 <span class="normal">718</span>
 <span class="normal">719</span>
 <span class="normal">720</span>
 <span class="normal">721</span>
 <span class="normal">722</span>
 <span class="normal">723</span>
-<span class="normal">724</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_breeze_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherThermostatStateResponse</span><span class="p">:</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_breeze_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherThermostatStateResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the get state packet to the Breeze device.</span>
 
 <span class="sd">    Returns:</span>
@@ -4932,10 +5056,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">744</span>
-<span class="normal">745</span>
-<span class="normal">746</span>
-<span class="normal">747</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">747</span>
 <span class="normal">748</span>
 <span class="normal">749</span>
 <span class="normal">750</span>
@@ -4958,7 +5079,10 @@ auto-shutdown.</p></td>
 <span class="normal">767</span>
 <span class="normal">768</span>
 <span class="normal">769</span>
-<span class="normal">770</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_shutter_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherShutterStateResponse</span><span class="p">:</span>
+<span class="normal">770</span>
+<span class="normal">771</span>
+<span class="normal">772</span>
+<span class="normal">773</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_shutter_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherShutterStateResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the get state packet to the Runner device.</span>
 
 <span class="sd">    Returns:</span>
@@ -5053,10 +5177,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">679</span>
-<span class="normal">680</span>
-<span class="normal">681</span>
-<span class="normal">682</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">682</span>
 <span class="normal">683</span>
 <span class="normal">684</span>
 <span class="normal">685</span>
@@ -5086,7 +5207,10 @@ auto-shutdown.</p></td>
 <span class="normal">709</span>
 <span class="normal">710</span>
 <span class="normal">711</span>
-<span class="normal">712</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">712</span>
+<span class="normal">713</span>
+<span class="normal">714</span>
+<span class="normal">715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for setting the shutter position of the Runner and Runner Mini devices.</span>
 
 <span class="sd">    Args:</span>
@@ -5302,7 +5426,7 @@ auto-shutdown.</p></td>
 
     <span class="n">response</span><span class="p">:</span> <span class="n">InitVar</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Post initialization of the parser.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_hex_response</span> <span class="o">=</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 
@@ -5396,7 +5520,7 @@ auto-shutdown.</p></td>
         <span class="n">remote_hex</span> <span class="o">=</span> <span class="n">unhexlify</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_hex_response</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">remote_hex</span><span class="p">[</span><span class="mi">84</span><span class="p">:</span><span class="mi">92</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_shutter_poisition</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_shutter_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Return the current shutter position.&quot;&quot;&quot;</span>
         <span class="n">hex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hex_response</span><span class="p">[</span><span class="mi">152</span><span class="p">:</span><span class="mi">154</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">hex_pos</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -5439,7 +5563,7 @@ auto-shutdown.</p></td>
         <summary>Source code in <code>src/aioswitcher/api/messages.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
 <span class="normal">40</span>
-<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">41</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Post initialization of the parser.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_hex_response</span> <span class="o">=</span> <span class="n">hexlify</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -5555,10 +5679,10 @@ auto-shutdown.</p></td>
 
 
 
-<h3 id="src.aioswitcher.api.messages.StateMessageParser.get_shutter_poisition" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">get_shutter_poisition</span><span class="p">()</span></code>
+<h3 id="src.aioswitcher.api.messages.StateMessageParser.get_shutter_position" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_shutter_position</span><span class="p">()</span></code>
 
-<a href="#src.aioswitcher.api.messages.StateMessageParser.get_shutter_poisition" class="headerlink" title="Permanent link">⚓︎</a></h3>
+<a href="#src.aioswitcher.api.messages.StateMessageParser.get_shutter_position" class="headerlink" title="Permanent link">⚓︎</a></h3>
 
 
   <div class="doc doc-contents ">
@@ -5570,7 +5694,7 @@ auto-shutdown.</p></td>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">133</span>
 <span class="normal">134</span>
 <span class="normal">135</span>
-<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shutter_poisition</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="normal">136</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_shutter_position</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the current shutter position.&quot;&quot;&quot;</span>
     <span class="n">hex_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_hex_response</span><span class="p">[</span><span class="mi">152</span><span class="p">:</span><span class="mi">154</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">hex_pos</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
@@ -6374,7 +6498,7 @@ SwitcherGetScheduleResponse.</p>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">StateMessageParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unparsed_response</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_shutter_direction</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_shutter_poisition</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_shutter_position</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
         </details>
 
@@ -6416,7 +6540,7 @@ SwitcherGetScheduleResponse.</p>
     <span class="n">parser</span> <span class="o">=</span> <span class="n">StateMessageParser</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">unparsed_response</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">direction</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_shutter_direction</span><span class="p">()</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_shutter_poisition</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get_shutter_position</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -6803,7 +6927,7 @@ SwitcherGetScheduleResponse.</p>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Initialize the Breeze command.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_command_length</span><span class="p">()</span>
@@ -6851,7 +6975,7 @@ SwitcherGetScheduleResponse.</p>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
-<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the Breeze command.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">command</span> <span class="o">=</span> <span class="n">command</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_command_length</span><span class="p">()</span>
@@ -7212,7 +7336,10 @@ SwitcherGetScheduleResponse.</p>
 <span class="normal">395</span>
 <span class="normal">396</span>
 <span class="normal">397</span>
-<span class="normal">398</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
+<span class="normal">398</span>
+<span class="normal">399</span>
+<span class="normal">400</span>
+<span class="normal">401</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">SwitcherBreezeRemote</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class that represent a remote for a Breeze device/s.</span>
 
@@ -7226,12 +7353,12 @@ SwitcherGetScheduleResponse.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">_min_temp</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># ridiculously high number</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_temp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>  <span class="c1"># ridiculously low number</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_on_off_type</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_remote_id</span> <span class="o">=</span> <span class="n">ir_set</span><span class="p">[</span><span class="s2">&quot;IRSetID&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_remote_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ir_set</span><span class="p">[</span><span class="s2">&quot;IRSetID&quot;</span><span class="p">]</span>
         <span class="c1"># _ir_wave_map hosts a shrunk version of the ir_set file which ignores</span>
         <span class="c1"># unused data and map key to dict{&quot;HexCode&quot;: str, &quot;Para&quot;: str}</span>
         <span class="c1"># this is being built by the _resolve_capabilities method</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_ir_wave_map</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[str, Dict[str, str]]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_modes_features</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[ThermostatMode, Dict[str, Any]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ir_wave_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modes_features</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        self._modes_features basically explains the available features</span>
 <span class="sd">            (Swing/Fan levels/ temp control of each mode)</span>
@@ -7289,9 +7416,9 @@ SwitcherGetScheduleResponse.</p>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modes_features</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">supported_modes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">supported_modes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">]:</span>
         <span class="sd">&quot;&quot;&quot;Getter for supported modes.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modes_features</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modes_features</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">max_temperature</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -7313,8 +7440,11 @@ SwitcherGetScheduleResponse.</p>
         <span class="sd">&quot;&quot;&quot;Getter for which indicates if the AC has a separated swing command.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separated_swing_command</span>
 
-    <span class="k">def</span> <span class="nf">_lookup_key_in_irset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_lookup_key_in_irset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use this to look for a key in the IRSet file.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key: a reference to List of strings representing parts of the command.</span>
 
 <span class="sd">        Note:</span>
 <span class="sd">            This is a private function used by other functions, do not call this</span>
@@ -7375,7 +7505,7 @@ SwitcherGetScheduleResponse.</p>
         <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">fan_level</span><span class="p">:</span> <span class="n">ThermostatFanLevel</span><span class="p">,</span>
         <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span><span class="p">,</span>
-        <span class="n">current_state</span><span class="p">:</span> <span class="n">DeviceState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">current_state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeCommand</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Build command that controls the Breeze device.</span>
 
@@ -7392,7 +7522,7 @@ SwitcherGetScheduleResponse.</p>
 <span class="sd">            An instance of ``SwitcherBreezeCommand``</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="c1"># verify the target temp and set maximum if we provided with higher number</span>
         <span class="k">if</span> <span class="n">target_temp</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_temp</span><span class="p">:</span>
@@ -7607,12 +7737,12 @@ SwitcherGetScheduleResponse.</p>
     <span class="bp">self</span><span class="o">.</span><span class="n">_min_temp</span> <span class="o">=</span> <span class="mi">100</span>  <span class="c1"># ridiculously high number</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_max_temp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">100</span>  <span class="c1"># ridiculously low number</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_on_off_type</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_remote_id</span> <span class="o">=</span> <span class="n">ir_set</span><span class="p">[</span><span class="s2">&quot;IRSetID&quot;</span><span class="p">]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_remote_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">ir_set</span><span class="p">[</span><span class="s2">&quot;IRSetID&quot;</span><span class="p">]</span>
     <span class="c1"># _ir_wave_map hosts a shrunk version of the ir_set file which ignores</span>
     <span class="c1"># unused data and map key to dict{&quot;HexCode&quot;: str, &quot;Para&quot;: str}</span>
     <span class="c1"># this is being built by the _resolve_capabilities method</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_ir_wave_map</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[str, Dict[str, str]]</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_modes_features</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[ThermostatMode, Dict[str, Any]]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_ir_wave_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_modes_features</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    self._modes_features basically explains the available features</span>
 <span class="sd">        (Swing/Fan levels/ temp control of each mode)</span>
@@ -7745,7 +7875,7 @@ SwitcherGetScheduleResponse.</p>
         <tr>
           <td><code>current_state</code></td>
           <td>
-                <code><a class="autorefs autorefs-internal" title="src.aioswitcher.device.DeviceState" href="codedocs/#src.aioswitcher.device.DeviceState">DeviceState</a></code>
+                <code><span title="typing.Union">Union</span>[<a class="autorefs autorefs-internal" title="src.aioswitcher.device.DeviceState" href="codedocs/#src.aioswitcher.device.DeviceState">DeviceState</a>, None]</code>
           </td>
           <td><p>optionally, for toggle device, pass previous state to avoid
 redundant requests</p></td>
@@ -7776,10 +7906,7 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">254</span>
-<span class="normal">255</span>
-<span class="normal">256</span>
-<span class="normal">257</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
 <span class="normal">258</span>
 <span class="normal">259</span>
 <span class="normal">260</span>
@@ -7865,14 +7992,17 @@ redundant requests</p></td>
 <span class="normal">340</span>
 <span class="normal">341</span>
 <span class="normal">342</span>
-<span class="normal">343</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_command</span><span class="p">(</span>
+<span class="normal">343</span>
+<span class="normal">344</span>
+<span class="normal">345</span>
+<span class="normal">346</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_command</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">DeviceState</span><span class="p">,</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">ThermostatMode</span><span class="p">,</span>
     <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
     <span class="n">fan_level</span><span class="p">:</span> <span class="n">ThermostatFanLevel</span><span class="p">,</span>
     <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span><span class="p">,</span>
-    <span class="n">current_state</span><span class="p">:</span> <span class="n">DeviceState</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">current_state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeCommand</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Build command that controls the Breeze device.</span>
 
@@ -7889,7 +8019,7 @@ redundant requests</p></td>
 <span class="sd">        An instance of ``SwitcherBreezeCommand``</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">command</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="c1"># verify the target temp and set maximum if we provided with higher number</span>
     <span class="k">if</span> <span class="n">target_temp</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_temp</span><span class="p">:</span>
@@ -8019,10 +8149,7 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">223</span>
-<span class="normal">224</span>
-<span class="normal">225</span>
-<span class="normal">226</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
 <span class="normal">227</span>
 <span class="normal">228</span>
 <span class="normal">229</span>
@@ -8048,7 +8175,10 @@ redundant requests</p></td>
 <span class="normal">249</span>
 <span class="normal">250</span>
 <span class="normal">251</span>
-<span class="normal">252</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_swing_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeCommand</span><span class="p">:</span>
+<span class="normal">252</span>
+<span class="normal">253</span>
+<span class="normal">254</span>
+<span class="normal">255</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_swing_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeCommand</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Build a special command to control swing on special remotes.</span>
 
 <span class="sd">    Args:</span>
@@ -8277,9 +8407,9 @@ redundant requests</p></td>
 <span class="normal">175</span>
 <span class="normal">176</span>
 <span class="normal">177</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
-<span class="k">def</span> <span class="nf">supported_modes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">supported_modes</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Getter for supported modes.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modes_features</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modes_features</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -8337,10 +8467,7 @@ redundant requests</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">401</span>
-<span class="normal">402</span>
-<span class="normal">403</span>
-<span class="normal">404</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">404</span>
 <span class="normal">405</span>
 <span class="normal">406</span>
 <span class="normal">407</span>
@@ -8373,7 +8500,10 @@ redundant requests</p></td>
 <span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
-<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SwitcherBreezeRemoteManager</span><span class="p">:</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SwitcherBreezeRemoteManager</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class for managing Breeze remotes.</span>
 
 <span class="sd">    Args:</span>
@@ -8381,7 +8511,7 @@ redundant requests</p></td>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotes_db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">BREEZE_REMOTE_DB_FPATH</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotes_db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">BREEZE_REMOTE_DB_FPATH</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Initialize the Remote manager.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_remotes_db</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SwitcherBreezeRemote</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_remotes_db_fpath</span> <span class="o">=</span> <span class="n">remotes_db_path</span>
@@ -8441,15 +8571,15 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">409</span>
-<span class="normal">410</span>
-<span class="normal">411</span>
-<span class="normal">412</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">412</span>
 <span class="normal">413</span>
 <span class="normal">414</span>
 <span class="normal">415</span>
 <span class="normal">416</span>
-<span class="normal">417</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotes_db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">BREEZE_REMOTE_DB_FPATH</span><span class="p">):</span>
+<span class="normal">417</span>
+<span class="normal">418</span>
+<span class="normal">419</span>
+<span class="normal">420</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotes_db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">BREEZE_REMOTE_DB_FPATH</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the Remote manager.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_remotes_db</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SwitcherBreezeRemote</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_remotes_db_fpath</span> <span class="o">=</span> <span class="n">remotes_db_path</span>
@@ -8522,10 +8652,7 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">419</span>
-<span class="normal">420</span>
-<span class="normal">421</span>
-<span class="normal">422</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">422</span>
 <span class="normal">423</span>
 <span class="normal">424</span>
 <span class="normal">425</span>
@@ -8540,7 +8667,10 @@ redundant requests</p></td>
 <span class="normal">434</span>
 <span class="normal">435</span>
 <span class="normal">436</span>
-<span class="normal">437</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeRemote</span><span class="p">:</span>
+<span class="normal">437</span>
+<span class="normal">438</span>
+<span class="normal">439</span>
+<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeRemote</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get Breeze remote by the remote id.</span>
 
 <span class="sd">    Args:</span>
@@ -9650,7 +9780,7 @@ redundant requests</p></td>
         <tr>
           <td><code>broadcast_ports</code></td>
           <td>
-                <code>list[int]</code>
+                <code><span title="typing.List">List</span>[int]</code>
           </td>
           <td><p>broadcast ports list, default for type 1 devices is 20002,
 default for type 2 devices is 20003</p></td>
@@ -9747,13 +9877,13 @@ default for type 2 devices is 20003</p></td>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">on_device</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">SwitcherBase</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">broadcast_ports</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">SWITCHER_UDP_PORT_TYPE1</span><span class="p">,</span> <span class="n">SWITCHER_UDP_PORT_TYPE2</span><span class="p">],</span>
+        <span class="n">broadcast_ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">SWITCHER_UDP_PORT_TYPE1</span><span class="p">,</span> <span class="n">SWITCHER_UDP_PORT_TYPE2</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Initialize the switcher bridge.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_on_device</span> <span class="o">=</span> <span class="n">on_device</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_broadcast_ports</span> <span class="o">=</span> <span class="n">broadcast_ports</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_transports</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, Optional[BaseTransport]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_transports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseTransport</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="fm">__aenter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwitcherBridge&quot;</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Enter SwitcherBridge asynchronous context manager.&quot;&quot;&quot;</span>
@@ -9920,13 +10050,13 @@ default for type 2 devices is 20003</p></td>
 <span class="normal">182</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">on_device</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">SwitcherBase</span><span class="p">],</span> <span class="n">Any</span><span class="p">],</span>
-    <span class="n">broadcast_ports</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">SWITCHER_UDP_PORT_TYPE1</span><span class="p">,</span> <span class="n">SWITCHER_UDP_PORT_TYPE2</span><span class="p">],</span>
+    <span class="n">broadcast_ports</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">SWITCHER_UDP_PORT_TYPE1</span><span class="p">,</span> <span class="n">SWITCHER_UDP_PORT_TYPE2</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the switcher bridge.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_on_device</span> <span class="o">=</span> <span class="n">on_device</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_broadcast_ports</span> <span class="o">=</span> <span class="n">broadcast_ports</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_is_running</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_transports</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># type: Dict[int, Optional[BaseTransport]]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_transports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseTransport</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -10136,14 +10266,14 @@ default for type 2 devices is 20003</p></td>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_datagram</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">bytes</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Initialize the protocol.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[BaseTransport]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseTransport</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_on_datagram</span> <span class="o">=</span> <span class="n">on_datagram</span>
 
     <span class="k">def</span> <span class="nf">connection_made</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transport</span><span class="p">:</span> <span class="n">BaseTransport</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Call on connection established.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="n">transport</span>
 
-    <span class="k">def</span> <span class="nf">datagram_received</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">datagram_received</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Call on datagram received.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_on_datagram</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 
@@ -10196,7 +10326,7 @@ default for type 2 devices is 20003</p></td>
 <span class="normal">240</span>
 <span class="normal">241</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">on_datagram</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">bytes</span><span class="p">],</span> <span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the protocol.&quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">transport</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># type: Optional[BaseTransport]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">transport</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BaseTransport</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_on_datagram</span> <span class="o">=</span> <span class="n">on_datagram</span>
 </code></pre></div></td></tr></table></div>
       </details>
@@ -10282,7 +10412,7 @@ default for type 2 devices is 20003</p></td>
         <summary>Source code in <code>src/aioswitcher/bridge.py</code></summary>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">247</span>
 <span class="normal">248</span>
-<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">datagram_received</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">249</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">datagram_received</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Call on datagram received.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_on_datagram</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -11337,7 +11467,7 @@ default for type 2 devices is 20003</p></td>
           <td>
                 <code>int</code>
           </td>
-          <td><p>the current power consumpstion in watts.</p></td>
+          <td><p>the current power consumption in watts.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -11347,7 +11477,7 @@ default for type 2 devices is 20003</p></td>
           <td>
                 <code>float</code>
           </td>
-          <td><p>the current power consumpstion in amps.</p></td>
+          <td><p>the current power consumption in amps.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -11374,8 +11504,8 @@ default for type 2 devices is 20003</p></td>
     <span class="sd">&quot;&quot;&quot;Abstraction for all switcher devices reporting power data.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        power_consumption: the current power consumpstion in watts.</span>
-<span class="sd">        electric_current: the current power consumpstion in amps.</span>
+<span class="sd">        power_consumption: the current power consumption in watts.</span>
+<span class="sd">        electric_current: the current power consumption in amps.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -11754,7 +11884,7 @@ instantiation parameters and the super call.</p>
     <span class="sd">&quot;&quot;&quot;Implementation of the Switcher Thermostat device.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot;Post initialization validate device type category as THRMOSTAT.&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Post initialization validate device type category as THERMOSTAT.&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_type</span><span class="o">.</span><span class="n">category</span> <span class="o">!=</span> <span class="n">DeviceCategory</span><span class="o">.</span><span class="n">THERMOSTAT</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only thermostats are allowed&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">remote</span> <span class="o">=</span> <span class="kc">None</span>
@@ -11786,7 +11916,7 @@ instantiation parameters and the super call.</p>
 
   <div class="doc doc-contents ">
   
-      <p>Post initialization validate device type category as THRMOSTAT.</p>
+      <p>Post initialization validate device type category as THERMOSTAT.</p>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/device/__init__.py</code></summary>
@@ -11796,7 +11926,7 @@ instantiation parameters and the super call.</p>
 <span class="normal">342</span>
 <span class="normal">343</span>
 <span class="normal">344</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Post initialization validate device type category as THRMOSTAT.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Post initialization validate device type category as THERMOSTAT.&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">device_type</span><span class="o">.</span><span class="n">category</span> <span class="o">!=</span> <span class="n">DeviceCategory</span><span class="o">.</span><span class="n">THERMOSTAT</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;only thermostats are allowed&quot;</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">remote</span> <span class="o">=</span> <span class="kc">None</span>
@@ -13044,7 +13174,7 @@ e.g. "02:24:37".</p>
         <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">132</span>
 <span class="normal">133</span>
 <span class="normal">134</span>
-<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_message_length</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">135</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">set_message_length</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Set the message length.&quot;&quot;&quot;</span>
     <span class="n">length</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{:x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">message</span> <span class="o">+</span> <span class="s2">&quot;00000000&quot;</span><span class="p">)))</span><span class="o">.</span><span class="n">ljust</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="s2">&quot;fef0&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">length</span><span class="p">)</span> <span class="o">+</span> <span class="n">message</span><span class="p">[</span><span class="mi">8</span><span class="p">:]</span>
@@ -14420,7 +14550,7 @@ e.g. "02:24:37".</p>
 
 <details class="return">
   <summary>Return</summary>
-  <p>Set of Weekday memebers decoded from the summary value.</p>
+  <p>Set of Weekday members decoded from the summary value.</p>
 </details>
 <details class="todo">
   <summary>Todo</summary>
@@ -14457,7 +14587,7 @@ E.g. 3 will result in a set of MONDAY and the remainder will be 1.</p>
 <span class="sd">        sum_weekdays_bit: the sum of all weekdays</span>
 
 <span class="sd">    Return:</span>
-<span class="sd">        Set of Weekday memebers decoded from the summary value.</span>
+<span class="sd">        Set of Weekday members decoded from the summary value.</span>
 
 <span class="sd">    Todo:</span>
 <span class="sd">        Should an existing remainder in the sum value throw an error?</span>
@@ -14920,7 +15050,7 @@ E.g. 3 will result in a set of MONDAY and the remainder will be 1.</p>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">days</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">days</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Days</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">Days</span><span class="p">,</span> <span class="n">days</span><span class="p">)</span><span class="o">.</span><span class="n">bit_rep</span><span class="p">)</span>
+            <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">days</span><span class="o">.</span><span class="n">bit_rep</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">days</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">set</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">days</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">days</span><span class="p">)):</span>  <span class="c1"># type: ignore</span>
             <span class="n">map_to_bits</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">w</span><span class="o">.</span><span class="n">bit_rep</span><span class="p">,</span> <span class="n">days</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
             <span class="k">return</span> <span class="s2">&quot;</span><span class="si">{:02x}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">map_to_bits</span><span class="p">)))</span>
@@ -14944,7 +15074,7 @@ E.g. 3 will result in a set of MONDAY and the remainder will be 1.</p>
   <small>
     
       Last update:
-      2022-09-23
+      2022-10-01
     
   </small>
 </div>
