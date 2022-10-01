@@ -17,21 +17,11 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed"
 ]
-include = [ ]
-exclude = [
-  ".*",
-  "dist",
-  "docs",
-  "site",
-  "htmlcov",
-  "scripts",
-  "tests",
-  "*__pycache__*",
-  "*.pyc"
-]
+include = ["py.typed"]
+exclude = []
 
-  [tool.poetry.dependencies]
-  python = "^3.9.0"
+[tool.poetry.dependencies]
+python = "^3.9.0"
 
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
@@ -71,7 +61,7 @@ black_fix = "poetry run black src/ docs/ scripts/"
 flake8 = "poetry run flake8 src/ tests/ docs/ scripts/"
 isort = "poetry run isort --check-only src/ tests/ docs/ scripts/"
 isort_fix = "poetry run isort src/ tests/ docs/ scripts/"
-mypy = "poetry run mypy src/ tests/ scripts/"
+mypy = "poetry run mypy src/ scripts/"
 yamllint = "poetry run yamllint --format colored --strict ."
 docs_clean = "mkdocs build --clean"
 docs_build = "mkdocs build"
@@ -80,7 +70,22 @@ docs_build = "mkdocs build"
 asyncio_mode = "strict"
 
 [tool.mypy]
+check_untyped_defs = true
 ignore_missing_imports = true
+disallow_untyped_calls = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+disallow_untyped_decorators = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_no_return = true
+warn_return_any = true
+warn_unreachable = true
+show_none_errors = true
+strict_concatenate = true
+strict_equality = true
+strict = true
 
 [tool.isort]
 profile = "black"

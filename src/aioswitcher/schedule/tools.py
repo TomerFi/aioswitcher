@@ -18,7 +18,7 @@ import time
 from binascii import hexlify
 from datetime import datetime
 from struct import pack
-from typing import Set, Union, cast
+from typing import Set, Union
 
 from . import Days
 
@@ -85,7 +85,7 @@ def bit_summary_to_days(sum_weekdays_bit: int) -> Set[Days]:
         sum_weekdays_bit: the sum of all weekdays
 
     Return:
-        Set of Weekday memebers decoded from the summary value.
+        Set of Weekday members decoded from the summary value.
 
     Todo:
         Should an existing remainder in the sum value throw an error?
@@ -134,7 +134,7 @@ def weekdays_to_hexadecimal(days: Union[Days, Set[Days]]) -> str:
     """
     if days:
         if type(days) is Days:
-            return "{:02x}".format(cast(Days, days).bit_rep)
+            return "{:02x}".format(days.bit_rep)
         elif type(days) is set or len(days) == len(set(days)):  # type: ignore
             map_to_bits = map(lambda w: w.bit_rep, days)  # type: ignore
             return "{:02x}".format(int(sum(map_to_bits)))

@@ -129,7 +129,7 @@ def watts_to_amps(watts: int) -> float:
     return round((watts / float(220)), 1)
 
 
-def set_message_length(message: str):
+def set_message_length(message: str) -> str:
     """Set the message length."""
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]

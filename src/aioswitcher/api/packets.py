@@ -62,12 +62,12 @@ DELETE_SCHEDULE_PACKET = (
 )
 # format values are local session id, timestamp, device id,
 # schedule data =
-#                   (on_off + week + timstate + start_time + end_time)
+#                   (on_off + week + timestamp + start_time + end_time)
 CREATE_SCHEDULE_PACKET = (
     "fef0630002320102" + REQUEST_FORMAT_TYPE1 + "{}" + PAD_72_ZEROS + "00030c00ff{}"
 )
 # format values are local session id, timestamp, device id, phone id, device-
-# passwored, command length, command
+# password, command length, command
 BREEZE_COMMAND_PACKET = (
     "fef0000003050102" + REQUEST_FORMAT_BREEZE + "{}" + PAD_72_ZEROS + "3701" + "{}{}"
 )
