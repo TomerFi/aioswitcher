@@ -16,8 +16,8 @@
 
 """Python script for discovering Switcher devices."""
 
+import asyncio
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
-from asyncio import get_event_loop, sleep
 from dataclasses import asdict
 from pprint import PrettyPrinter
 from typing import List
@@ -108,7 +108,7 @@ async def print_devices(delay: int, ports: List[int]) -> None:
         print()
 
     async with SwitcherBridge(on_device_found_callback, broadcast_ports=ports):
-        await sleep(delay)
+        await asyncio.sleep(delay)
 
 
 if __name__ == "__main__":
@@ -122,6 +122,6 @@ if __name__ == "__main__":
         ports = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2]
 
     try:
-        get_event_loop().run_until_complete(print_devices(args.delay, ports))
+        asyncio.run(print_devices(args.delay, ports))
     except KeyboardInterrupt:
         exit()
