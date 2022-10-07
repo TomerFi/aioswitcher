@@ -20,8 +20,8 @@ classifiers = [
 include = [ "py.typed" ]
 exclude = [ ]
 
-  [tool.poetry.dependencies]
-  python = "^3.9.0"
+[tool.poetry.dependencies]
+python = "^3.9.0"
 
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
@@ -106,5 +106,5 @@ precision = 2
 skip_covered = true
 
 [build-system]
-requires = [ "poetry-core>=1.0.0" ]
+requires = [ "poetry-core>=1.2.0" ]
 build-backend = "poetry.core.masonry.api"
