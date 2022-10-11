@@ -48,9 +48,9 @@ jobs:
 
       - name: Lint the project
         run: |
-          poetry install --no-interaction
-          poetry run poe lint
-          poetry run poe lic_check
+          make install-all-deps
+          make lint
+          make verify-license-headers
 
   test:
     runs-on: ubuntu-latest
@@ -95,12 +95,13 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
 
       - name: Install project build dependencies
-        run: poetry install --no-interaction
+        run: make install-all-deps
 
       - name: Test the project
         run: >
-          if [ ${{ matrix.python }} == ${{ env.MAIN_PY_VER }} ]; then poetry run poe test_rep;
-          else poetry run poe test; fi
+          if [ ${{ matrix.python }} == ${{ env.MAIN_PY_VER }} ];
+          then make test-with-coverage-reports;
+          else make test; fi
 
       - name: Report test summary
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -151,5 +152,5 @@ jobs:
 
       - name: Build documentation site
         run: |
-          poetry install --no-interaction
-          poetry run poe docs_build
+          make install-all-deps
+          make docs-build

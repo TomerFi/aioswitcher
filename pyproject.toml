@@ -51,6 +51,7 @@ mkdocstrings-python = "^0.7.1"
 poethepoet = "^0.16.1"
 
 [tool.poe.tasks]
+install = "poetry install --no-interaction"
 test = "poetry run pytest -v"
 test_cov = "poetry run pytest -v --cov --cov-report=term"
 test_rep = "poetry run pytest -v --cov --cov-report=xml:coverage.xml --junit-xml junit.xml"

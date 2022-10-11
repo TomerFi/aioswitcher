@@ -41,8 +41,8 @@ jobs:
 
       - name: Build documentation site
         run: |
-          poetry install --no-interaction --without dev
-          poetry run poe docs_build
+          make install-docs-only-deps
+          make docs-build
 
       - name: Deploy to GH-Pages
         uses: peaceiris/actions-gh-pages@v3.8.0

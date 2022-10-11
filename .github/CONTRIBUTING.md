@@ -1,4 +1,4 @@
-# Contributing to `aioswitcher`</br>[![conventional-commits]][0]
+# Contributing to `aioswitcher`</br>[![conventional-commits-badge]][conventional-commits-site]
 
 :clap: First off, thank you for taking the time to contribute. :clap:
 
@@ -23,8 +23,7 @@ pip install git+https://github.com/TomerFi/aioswitcher#dev
 
 ## Prepare the environment
 
-With [Python >= 3.10](https://www.python.org/) use [pip](https://pypi.org/project/pip/) to install
-[poetry](https://poetry.eustace.io/) and the used extensions (mainly [poethepoet](https://github.com/nat-n/poethepoet)):
+With [Python >= 3.10][python-site] use [pip][pip-docs] to install [poetry][poetry-site]:
 
 ```shell
   pip install -r requirements.txt
@@ -32,42 +31,46 @@ With [Python >= 3.10](https://www.python.org/) use [pip](https://pypi.org/projec
 
 ## Get started
 
-Install the project in a virtual environment:
+### Get started using make
+
+If you prefer using _GNU_'s [make][make-manual], here are some targets to get you started:
 
 ```shell
-poetry install
+make install # install all dependencies and the current project
+make test # will run all unit-tests
+make lint # will lint the project using black, flake8, isort, mypy, and yamllint
+make docs-serve # will build and serve a local version of the documentation site
 ```
 
-Scroll around [pyproject.toml](../pyproject.toml) and get familiarize with the project,
-pay attention to the following section, as most of the developing steps will use these scripts:
+### Get started using poethepoet
 
-```toml
-[tool.poe.tasks]
+If you prefer using _Python_'s [poethepoet][poethepoet-site], here are some scripts to get you started:
+
+```shell
+poetry run poe install # install all dependencies and the current project
+poetry run poe test # will run all unit-tests
+poetry run poe lint # will lint the project using black, flake8, isort, mypy, and yamllint
+poetry run poe docs_serve # will build and serve a local version of the documentation site
 ```
-
-To get you going, here are some poe scripts I use constantly while working on *aioswitcher*:
-
-- `poetry run poe lint`
-- `poetry run poe test`
-- `poetry run poe test_cov --cov-report html`
-- `poetry run poe lic_check` (requires *deno*)
-- `poetry run poe black_fix`
-- `poetry run poe isort_fix`
-- `poetry run poe docs_build`
 
 ## Commit messages
 
 Commit messages must:
 
-- adhere the [Conventional Commits Specification][0]
-- be signed-off based on the [Developer Certificate of Origin][1]
+- adhere the [Conventional Commits Specifications][conventional-commits-site]
+- be signed-off based on the [Developer Certificate of Origin][developer-certificate-origin]
 
 ## Code of Conduct
 
-Please check the [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+Please check the [CODE_OF_CONDUCT.md][code-of-conduct-github].
 
-<!-- Real Links -->
-[0]: https://conventionalcommits.org
-[1]: https://developercertificate.org
-<!-- Badges Links -->
-[conventional-commits]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
+<!-- Links -->
+[code-of-conduct-github]: https://github.com/TomerFi/.github/blob/main/.github/CODE_OF_CONDUCT.md
+[conventional-commits-badge]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
+[conventional-commits-site]: https://conventionalcommits.org
+[developer-certificate-origin]: https://developercertificate.org
+[make-manual]: https://www.gnu.org/software/make/manual/make.html
+[pip-docs]: https://pypi.org/project/pip/
+[poethepoet-site]: https://github.com/nat-n/poethepoet
+[poetry-site]: https://poetry.eustace.io/
+[python-site]: https://www.python.org/
