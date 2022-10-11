@@ -64,8 +64,8 @@ isort = "poetry run isort --check-only src/ tests/ docs/ scripts/"
 isort_fix = "poetry run isort src/ tests/ docs/ scripts/"
 mypy = "poetry run mypy src/ scripts/"
 yamllint = "poetry run yamllint --format colored --strict ."
-docs_clean = "mkdocs build --clean"
-docs_build = "mkdocs build"
+docs_build = "poetry run mkdocs build"
+docs_serve = "poetry run mkdocs serve"
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
