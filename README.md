@@ -32,7 +32,7 @@ async def print_devices(delay):
         await asyncio.sleep(delay)
 
 # run the bridge for 60 seconds
-asyncio.get_event_loop().run_until_complete(print_devices(60))
+asyncio.run(print_devices(60))
 ```
 
 </details>
@@ -53,7 +53,7 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
           # set the device name to 'my new name'
           await api.set_device_name("my new name")
 
-  asyncio.get_event_loop().run_until_complete(control_power_plug("111.222.11.22", "ab1c2d"))
+  asyncio.run(control_power_plug("111.222.11.22", "ab1c2d"))
   ```
 
 </details>
@@ -83,7 +83,7 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
           # executing on sunday and friday
           await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
-  asyncio.get_event_loop().run_until_complete(control_water_heater("111.222.11.22", "ab1c2d"))
+  asyncio.run(control_water_heater("111.222.11.22", "ab1c2d"))
   ```
 
 </details>
@@ -102,7 +102,7 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
           # stop the shutter if currently rolling
           await api.stop()
 
-  asyncio.get_event_loop().run_until_complete(control_runner("111.222.11.22", "ab1c2d"))
+  asyncio.run(control_runner("111.222.11.22", "ab1c2d"))
   ```
 
 </details>
@@ -132,7 +132,7 @@ asyncio.get_event_loop().run_until_complete(print_devices(60))
 
   # create the remote manager outside the context for re-using
   remote_manager = SwitcherBreezeRemoteManager()
-  asyncio.get_event_loop().run_until_complete(control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863"))
+  asyncio.run(control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863"))
   ```
 
 </details>
