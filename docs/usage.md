@@ -14,7 +14,7 @@ async def print_devices(delay):
     async with SwitcherBridge(on_device_found_callback):
         await asyncio.sleep(delay)
 
-asyncio.get_event_loop().run_until_complete(print_devices(60))
+asyncio.run(print_devices(60))
 ```
 
 1. the callback device will be an implementation of [SwitcherBase](./codedocs.md#src.aioswitcher.device.SwitcherBase),
@@ -61,7 +61,7 @@ async def control_device(device_ip, device_id) :
         # executing on sunday and friday (8)
         await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
-asyncio.get_event_loop().run_until_complete(
+asyncio.run(
     control_device("111.222.11.22", "ab1c2d")
 )
 ```
@@ -94,7 +94,7 @@ async def control_runner(device_ip, device_id) :
         # stop the shutter if currently rolling (3)
         await api.stop()
 
-asyncio.get_event_loop().run_until_complete(
+asyncio.run(
     control_runner("111.222.11.22", "ab1c2d")
 )
 ```
@@ -125,7 +125,7 @@ async def control_breeze(device_ip, device_id, remote_manager, remote_id) :
 
 # create the remote manager outside the context for re-using (4)
 remote_manager = SwitcherBreezeRemoteManager()
-asyncio.get_event_loop().run_until_complete(
+asyncio.run(
     control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863")
 )
 ```
