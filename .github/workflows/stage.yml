@@ -49,9 +49,9 @@ jobs:
 
       - name: Install, test with coverage report, and build
         run: |
-          poetry install --no-interaction
-          poetry run poe test_rep
-          poetry build
+          make install-all-deps
+          make test-with-coverage-reports
+          make build
 
       - name: Push to CodeCov
         uses: codecov/codecov-action@v3
