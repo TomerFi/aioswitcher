@@ -1,4 +1,4 @@
-# Contributing to `aioswitcher`</br>[![conventional-commits-badge]][conventional-commits-site]
+# Contributing to *aioswitcher*
 
 :clap: First off, thank you for taking the time to contribute. :clap:
 
@@ -31,20 +31,11 @@ With [Python >= 3.10][python-site] use [pip][pip-docs] to install [poetry][poetr
 
 ## Get started
 
-### Get started using make
-
-If you prefer using _GNU_'s [make][make-manual], here are some targets to get you started:
-
-```shell
-make install # install all dependencies and the current project
-make test # will run all unit-tests
-make lint # will lint the project using black, flake8, isort, mypy, and yamllint
-make docs-serve # will build and serve a local version of the documentation site
-```
+Note the [code documentation][aioswitcher-code-docs], hosted in this project's [documentation site][aioswitcher-docs-site].<br/>
 
 ### Get started using poethepoet
 
-If you prefer using _Python_'s [poethepoet][poethepoet-site], here are some scripts to get you started:
+If you prefer using *Python*'s [poethepoet][poethepoet-site], here are some scripts to get you started:
 
 ```shell
 poetry run poe install # install all dependencies and the current project
@@ -53,22 +44,20 @@ poetry run poe lint # will lint the project using black, flake8, isort, mypy, an
 poetry run poe docs_serve # will build and serve a local version of the documentation site
 ```
 
-## Commit messages
+### Get started using make
 
-Commit messages must:
+If you prefer using *GNU*'s [make][make-manual], here are some targets to get you started:
 
-- adhere the [Conventional Commits Specifications][conventional-commits-site]
-- be signed-off based on the [Developer Certificate of Origin][developer-certificate-origin]
-
-## Code of Conduct
-
-Please check the [CODE_OF_CONDUCT.md][code-of-conduct-github].
+```shell
+make install # install all dependencies and the current project
+make test # will run all unit-tests
+make lint # will lint the project using black, flake8, isort, mypy, and yamllint
+make docs-serve # will build and serve a local version of the documentation site
+```
 
 <!-- Links -->
-[code-of-conduct-github]: https://github.com/TomerFi/.github/blob/main/.github/CODE_OF_CONDUCT.md
-[conventional-commits-badge]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
-[conventional-commits-site]: https://conventionalcommits.org
-[developer-certificate-origin]: https://developercertificate.org
+[aioswitcher-code-docs]: https://aioswitcher.tomfi.info/codedocs/
+[aioswitcher-docs-site]: https://aioswitcher.tomfi.info/
 [make-manual]: https://www.gnu.org/software/make/manual/make.html
 [pip-docs]: https://pypi.org/project/pip/
 [poethepoet-site]: https://github.com/nat-n/poethepoet
