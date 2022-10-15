@@ -1,0 +1,14 @@
+# https://github.com/apps/auto-me-bot
+---
+pr:
+  conventionalTitle:
+  tasksList:
+  lifecycleLabels:
+    ignoreDrafts: true
+    labels:
+      reviewRequired: "status: needs review"
+      changesRequested: "status: changes requested"
+      moreReviewsRequired: "status: needs more reviews"
+      reviewStarted: "status: review started"
+      approved: "status: approved"
+      merged: "status: merged"
