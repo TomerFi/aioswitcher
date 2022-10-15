@@ -13,8 +13,7 @@ pip install aioswitcher
 <table>
   <td><a href="https://aioswitcher.tomfi.info/">Documentation</a></td>
   <td><a href="https://github.com/TomerFi/aioswitcher/wiki">Wiki</a></td>
-  <td><a href="https://github.com/TomerFi/aioswitcher/blob/dev/.github/CONTRIBUTING.md">Contributing</a></td>
-  <td><a href="https://github.com/TomerFi/.github/blob/main/.github/CODE_OF_CONDUCT.md">Code of Conduct</a></td>
+  <td><a href="https://github.com/TomerFi/aioswitcher/blob/dev/CONTRIBUTING.md">Contributing</a></td>
 </table>
 
 ## Example Usage
