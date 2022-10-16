@@ -16,8 +16,8 @@
 
 """Python script for controlling Switcher devices."""
 
+import asyncio
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
-from asyncio import get_event_loop
 from datetime import timedelta
 from pprint import PrettyPrinter
 from typing import Any, Dict, List, Union
@@ -426,23 +426,19 @@ if __name__ == "__main__":
         args = main_parser.parse_args()
 
         if args.action == "get_state":
-            get_event_loop().run_until_complete(
-                get_state(args.device_id, args.ip_address, args.verbose)
-            )
+            asyncio.run(get_state(args.device_id, args.ip_address, args.verbose))
         elif args.action == "turn_on":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 turn_on(args.device_id, args.ip_address, args.timer, args.verbose)
             )
         elif args.action == "turn_off":
-            get_event_loop().run_until_complete(
-                turn_off(args.device_id, args.ip_address, args.verbose)
-            )
+            asyncio.run(turn_off(args.device_id, args.ip_address, args.verbose))
         elif args.action == "set_name":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 set_name(args.device_id, args.ip_address, args.name, args.verbose)
             )
         elif args.action == "set_auto_shutdown":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 set_auto_shutdown(
                     args.device_id,
                     args.ip_address,
@@ -452,17 +448,15 @@ if __name__ == "__main__":
                 )
             )
         elif args.action == "get_schedules":
-            get_event_loop().run_until_complete(
-                get_schedules(args.device_id, args.ip_address, args.verbose)
-            )
+            asyncio.run(get_schedules(args.device_id, args.ip_address, args.verbose))
         elif args.action == "delete_schedule":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 delete_schedule(
                     args.device_id, args.ip_address, args.schedule_id, args.verbose
                 )
             )
         elif args.action == "create_schedule":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 create_schedule(
                     args.device_id,
                     args.ip_address,
@@ -474,7 +468,7 @@ if __name__ == "__main__":
             )
 
         elif args.action == "stop_shutter":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 stop_shutter(
                     args.device_id,
                     args.ip_address,
@@ -483,7 +477,7 @@ if __name__ == "__main__":
             )
 
         elif args.action == "set_shutter_position":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 set_shutter_position(
                     args.device_id,
                     args.ip_address,
@@ -493,7 +487,7 @@ if __name__ == "__main__":
             )
 
         elif args.action == "control_thermostat":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 control_thermostat(
                     args.device_id,
                     args.ip_address,
@@ -508,7 +502,7 @@ if __name__ == "__main__":
                 )
             )
         elif args.action == "get_thermostat_state":
-            get_event_loop().run_until_complete(
+            asyncio.run(
                 get_thermostat_state(args.device_id, args.ip_address, args.verbose)
             )
 
