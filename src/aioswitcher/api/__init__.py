@@ -240,6 +240,7 @@ class SwitcherApi(ABC):
         target_temp: int = 0,
         fan_level: Union[ThermostatFanLevel, None] = None,
         swing: Union[ThermostatSwing, None] = None,
+        update_state: bool = False,
     ) -> SwitcherBaseResponse:
         """Use for sending the control packet to the Breeze device.
 
@@ -250,6 +251,7 @@ class SwitcherApi(ABC):
             target_temp: the target temperature
             fan_level: the desired fan level
             swing: the desired swing state
+            update_state: update the device state without controlling the device
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -559,6 +561,7 @@ class SwitcherType2Api(SwitcherApi):
         target_temp: int = 0,
         fan_level: Union[ThermostatFanLevel, None] = None,
         swing: Union[ThermostatSwing, None] = None,
+        update_state: bool = False,
     ) -> SwitcherBaseResponse:
         """Use for sending the control packet to the Breeze device.
 
@@ -569,6 +572,7 @@ class SwitcherType2Api(SwitcherApi):
             target_temp: optionally the target temperature
             fan_level: optionally the desired fan level
             swing: optionally the desired swing state
+            update_state: update the device state without controlling the device
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -597,32 +601,42 @@ class SwitcherType2Api(SwitcherApi):
 
             logger.debug("got current breeze device state")
 
+            state = state or current_state.state
+            mode = mode or current_state.mode
+            target_temp = target_temp or current_state.target_temperature
+            fan_level = fan_level or current_state.fan_level
+            set_swing = swing or current_state.swing
             if remote._separated_swing_command:
                 set_swing = ThermostatSwing.OFF
+            if update_state:
+                packet = packets.BREEZE_UPDATE_STATUS_PACKET.format(
+                    login_resp.session_id,
+                    timestamp,
+                    self._device_id,
+                    state.value,
+                    mode.value,
+                    target_temp,
+                    fan_level.value,
+                    set_swing.value,
+                )
+                logger.debug("sending a set status packet")
             else:
-                set_swing = swing or current_state.swing
 
-            command = remote.build_command(
-                state or current_state.state,
-                mode or current_state.mode,
-                target_temp or current_state.target_temperature,
-                fan_level or current_state.fan_level,
-                set_swing,
-                current_state.state,
-            )
+                command = remote.build_command(
+                    state, mode, target_temp, fan_level, set_swing, current_state.state
+                )
 
-            packet = packets.BREEZE_COMMAND_PACKET.format(
-                login_resp.session_id,
-                timestamp,
-                self._device_id,
-                command.length,
-                command.command,
-            )
+                packet = packets.BREEZE_COMMAND_PACKET.format(
+                    login_resp.session_id,
+                    timestamp,
+                    self._device_id,
+                    command.length,
+                    command.command,
+                )
+                logger.debug("sending a control packet")
 
             packet = set_message_length(packet)
             signed_packet = sign_packet_with_crc_key(packet)
-
-            logger.debug("sending a control packet")
 
             self._writer.write(unhexlify(signed_packet))
             response = await self._reader.read(1024)
@@ -631,7 +645,7 @@ class SwitcherType2Api(SwitcherApi):
             if not cmd_response.successful:
                 raise RuntimeError("set state request was not successful")
 
-        if remote._separated_swing_command and swing:
+        if remote._separated_swing_command and swing and not update_state:
             # if device is SPECIAL SWING device and user requested a swing change
             cmd_response = await self._control_breeze_swing_device(
                 timestamp, login_resp.session_id, remote, swing
