@@ -131,6 +131,7 @@ usage: control_device.py control_thermostat [-h] [-v] -d DEVICE_ID -i
                                             [-m {auto,dry,fan,cool,heat}]
                                             [-f {low,medium,high,auto}]
                                             [-w {off,on}] [-t TEMPERATURE]
+                                            [-u]
 
 options:
   -h, --help            show this help message and exit
@@ -151,6 +152,7 @@ options:
                         thermostat swing
   -t TEMPERATURE, --temperature TEMPERATURE
                         thermostat temperature, a positive integer
+  -u, --update          update state without control
 ```
 
 ### script/control_device.py create_schedule
