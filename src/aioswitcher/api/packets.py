@@ -71,6 +71,16 @@ CREATE_SCHEDULE_PACKET = (
 BREEZE_COMMAND_PACKET = (
     "fef0000003050102" + REQUEST_FORMAT_BREEZE + "{}" + PAD_72_ZEROS + "3701" + "{}{}"
 )
+# format values are local session id, timestamp, device id, phone id, device-
+# password, state, mode, target temp, fan level, swing
+BREEZE_UPDATE_STATUS_PACKET = (
+    "fef000000305010e"
+    + REQUEST_FORMAT_BREEZE
+    + "{}"
+    + PAD_72_ZEROS
+    + "370100030b0400"
+    + "{}{}{:02x}{}{}"
+)
 
 # format values are local session id, timestamp, device id
 RUNNER_STOP_COMMAND = (

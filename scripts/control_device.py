@@ -54,6 +54,7 @@ python control_device.py -d 3a20b7 -i "192.168.50.77" get_thermostat_state\n
 
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s on\n
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m cool -f high -t 24\n
+python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m cool -f high -t 24 -u\n
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m dry\n
 python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s off\n
 """  # noqa E501
@@ -133,6 +134,13 @@ control_thermostat_parser.add_argument(
     "--temperature",
     type=int,
     help="thermostat temperature, a positive integer",
+)
+control_thermostat_parser.add_argument(
+    "-u",
+    "--update",
+    default=False,
+    action="store_true",
+    help="update state without control",
 )
 
 # create_schedule parser
@@ -299,6 +307,7 @@ async def control_thermostat(
     target_temp: int = 0,
     fan_level: Union[str, None] = None,
     swing: Union[str, None] = None,
+    update_state: bool = False,
     verbose: bool = False,
 ) -> None:
     """Control Breeze device."""
@@ -312,6 +321,7 @@ async def control_thermostat(
                     target_temp,
                     possible_fan_level[fan_level] if fan_level else None,
                     possible_swing[swing] if swing else None,
+                    update_state,
                 ),
                 verbose,
             )
@@ -493,6 +503,7 @@ if __name__ == "__main__":
                     args.temperature,
                     args.fan_level,
                     args.swing,
+                    args.update,
                     args.verbose,
                 )
             )

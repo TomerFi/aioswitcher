@@ -218,6 +218,16 @@ async def test_control_breeze_device_function_with_valid_packets(reader_mock, wr
     assert_that(response.unparsed_response).is_equal_to(four_packets[-1])
 
 
+async def test_control_breeze_device_update_state_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login2_response", "get_breeze_state", "control_breeze_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        remote = SwitcherBreezeRemoteManager().get_remote("ELEC7022")
+        response = await connected_api_type2.control_breeze_device(remote, DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.ON, True)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
 async def test_breeze_remote_min_max_temp():
     remote = SwitcherBreezeRemoteManager().get_remote('ELEC7001')
     max_temp = remote.max_temperature
