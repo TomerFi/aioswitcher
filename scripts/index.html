@@ -676,39 +676,41 @@ subcommands:
 
 example usage:
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> get_state
+python control_device.py get_state -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> turn_on
+python control_device.py turn_on -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> turn_on -t <span class="m">15</span>
+python control_device.py turn_on -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> -t <span class="m">15</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> turn_off
+python control_device.py turn_off -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> set_name -n <span class="s2">&quot;My Boiler&quot;</span>
+python control_device.py set_name -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> -n <span class="s2">&quot;My Boiler&quot;</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> set_auto_shutdown -r <span class="m">2</span> -m <span class="m">30</span>
+python control_device.py set_auto_shutdown -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> -r <span class="m">2</span> -m <span class="m">30</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> get_schedules
+python control_device.py get_schedules -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> delete_schedule -s <span class="m">3</span>
+python control_device.py delete_schedule -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> -s <span class="m">3</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> create_schedule -n <span class="s2">&quot;14:00&quot;</span> -f <span class="s2">&quot;14:30&quot;</span>
+python control_device.py create_schedule -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> -n <span class="s2">&quot;14:00&quot;</span> -f <span class="s2">&quot;14:30&quot;</span>
 
-python control_device.py -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> create_schedule -n <span class="s2">&quot;17:30&quot;</span> -f <span class="s2">&quot;18:30&quot;</span> -w Sunday Monday Friday
+python control_device.py create_schedule -d ab1c2d -i <span class="s2">&quot;111.222.11.22&quot;</span> -n <span class="s2">&quot;17:30&quot;</span> -f <span class="s2">&quot;18:30&quot;</span> -w Sunday Monday Friday
 
-python control_device.py -d f2239a -i <span class="s2">&quot;192.168.50.98&quot;</span> stop_shutter
+python control_device.py stop_shutter -d f2239a -i <span class="s2">&quot;192.168.50.98&quot;</span>
 
-python control_device.py -d f2239a -i <span class="s2">&quot;192.168.50.98&quot;</span> set_shutter_position -p <span class="m">50</span>
+python control_device.py set_shutter_position -d f2239a -i <span class="s2">&quot;192.168.50.98&quot;</span>-p <span class="m">50</span>
 
-python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> get_thermostat_state
+python control_device.py get_thermostat_state -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span>
 
-python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -s on
+python control_device.py control_thermostat -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> -r ELEC7001 -s on
 
-python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -m cool -f high -t <span class="m">24</span>
+python control_device.py control_thermostat -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> -r ELEC7001 -m cool -f high -t <span class="m">24</span>
 
-python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -m dry
+python control_device.py control_thermostat -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> -r ELEC7001 -m cool -f high -t <span class="m">24</span> -u
 
-python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> control_thermostat -r ELEC7001 -s off
+python control_device.py control_thermostat -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> -r ELEC7001 -m dry
+
+python control_device.py control_thermostat -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;</span> -r ELEC7001 -s off
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-control_thermostat">script/control_device.py control_thermostat<a class="headerlink" href="#scriptcontrol_devicepy-control_thermostat" title="Permanent link">⚓︎</a></h3>
 <div class="highlight"><pre><span></span><code>usage: control_device.py control_thermostat <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i
@@ -717,6 +719,7 @@ python control_device.py -d 3a20b7 -i <span class="s2">&quot;192.168.50.77&quot;
                                             <span class="o">[</span>-m <span class="o">{</span>auto,dry,fan,cool,heat<span class="o">}]</span>
                                             <span class="o">[</span>-f <span class="o">{</span>low,medium,high,auto<span class="o">}]</span>
                                             <span class="o">[</span>-w <span class="o">{</span>off,on<span class="o">}]</span> <span class="o">[</span>-t TEMPERATURE<span class="o">]</span>
+                                            <span class="o">[</span>-u<span class="o">]</span>
 
 options:
   -h, --help            show this <span class="nb">help</span> message and <span class="nb">exit</span>
@@ -737,6 +740,7 @@ options:
                         thermostat swing
   -t TEMPERATURE, --temperature TEMPERATURE
                         thermostat temperature, a positive integer
+  -u, --update          update state without control
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-create_schedule">script/control_device.py create_schedule<a class="headerlink" href="#scriptcontrol_devicepy-create_schedule" title="Permanent link">⚓︎</a></h3>
 <div class="highlight"><pre><span></span><code>usage: control_device.py create_schedule <span class="o">[</span>-h<span class="o">]</span> <span class="o">[</span>-v<span class="o">]</span> -d DEVICE_ID -i IP_ADDRESS
@@ -889,7 +893,7 @@ options:
   <small>
     
       Last update:
-      2022-10-01
+      2022-10-18
     
   </small>
 </div>

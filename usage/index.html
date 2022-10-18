@@ -464,7 +464,7 @@ The following code will print all discovered devices for 60 seconds.</p>
     <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherBridge</span><span class="p">(</span><span class="n">on_device_found_callback</span><span class="p">):</span>
         <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">delay</span><span class="p">)</span>
 
-<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span><span class="n">print_devices</span><span class="p">(</span><span class="mi">60</span><span class="p">))</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">print_devices</span><span class="p">(</span><span class="mi">60</span><span class="p">))</span>
 </code></pre></div>
 <ol>
 <li>the callback device will be an implementation of <a href="../codedocs/#src.aioswitcher.device.SwitcherBase">SwitcherBase</a>,
@@ -509,7 +509,7 @@ The following code will print all discovered devices for 60 seconds.</p>
         <span class="c1"># executing on sunday and friday (8)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">create_schedule</span><span class="p">(</span><span class="s2">&quot;13:00&quot;</span><span class="p">,</span> <span class="s2">&quot;14:30&quot;</span><span class="p">,</span> <span class="p">{</span><span class="n">Days</span><span class="o">.</span><span class="n">SUNDAY</span><span class="p">,</span> <span class="n">Days</span><span class="o">.</span><span class="n">FRIDAY</span><span class="p">})</span>
 
-<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
     <span class="n">control_device</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -540,7 +540,7 @@ The following code will print all discovered devices for 60 seconds.</p>
         <span class="c1"># stop the shutter if currently rolling (3)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
-<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
     <span class="n">control_runner</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -570,7 +570,7 @@ The following code will print all discovered devices for 60 seconds.</p>
 
 <span class="c1"># create the remote manager outside the context for re-using (4)</span>
 <span class="n">remote_manager</span> <span class="o">=</span> <span class="n">SwitcherBreezeRemoteManager</span><span class="p">()</span>
-<span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span><span class="o">.</span><span class="n">run_until_complete</span><span class="p">(</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
     <span class="n">control_breeze</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="s2">&quot;DLK65863&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
@@ -590,7 +590,7 @@ The following code will print all discovered devices for 60 seconds.</p>
   <small>
     
       Last update:
-      2022-10-01
+      2022-10-18
     
   </small>
 </div>

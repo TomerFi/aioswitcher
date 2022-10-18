@@ -3940,7 +3940,9 @@
 <span class="normal">331</span>
 <span class="normal">332</span>
 <span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SwitcherApi</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SwitcherApi</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Switcher TCP based API.</span>
 
 <span class="sd">    Args:</span>
@@ -4104,6 +4106,7 @@
         <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">update_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -4114,6 +4117,7 @@
 <span class="sd">            target_temp: the target temperature</span>
 <span class="sd">            fan_level: the desired fan level</span>
 <span class="sd">            swing: the desired swing state</span>
+<span class="sd">            update_state: update the device state without controlling the device</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            An instance of ``SwitcherBaseResponse``.</span>
@@ -4435,7 +4439,7 @@
 
 
 <h3 id="src.aioswitcher.api.SwitcherApi.control_breeze_device" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">control_breeze_device</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_temp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fan_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">swing</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">control_breeze_device</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_temp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fan_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">swing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update_state</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
@@ -4519,6 +4523,16 @@
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>update_state</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>update the device state without controlling the device</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -4565,7 +4579,9 @@
 <span class="normal">255</span>
 <span class="normal">256</span>
 <span class="normal">257</span>
-<span class="normal">258</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">remote</span><span class="p">:</span> <span class="n">SwitcherBreezeRemote</span><span class="p">,</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -4573,6 +4589,7 @@
     <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">update_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -4583,6 +4600,7 @@
 <span class="sd">        target_temp: the target temperature</span>
 <span class="sd">        fan_level: the desired fan level</span>
 <span class="sd">        swing: the desired swing state</span>
+<span class="sd">        update_state: update the device state without controlling the device</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        An instance of ``SwitcherBaseResponse``.</span>
@@ -4782,9 +4800,7 @@
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">320</span>
-<span class="normal">321</span>
-<span class="normal">322</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">322</span>
 <span class="normal">323</span>
 <span class="normal">324</span>
 <span class="normal">325</span>
@@ -4796,7 +4812,9 @@
 <span class="normal">331</span>
 <span class="normal">332</span>
 <span class="normal">333</span>
-<span class="normal">334</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">create_schedule</span><span class="p">(</span>
+<span class="normal">334</span>
+<span class="normal">335</span>
+<span class="normal">336</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">create_schedule</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Days</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for creating a new schedule in the next empty schedule slot.</span>
@@ -4880,9 +4898,7 @@
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">306</span>
-<span class="normal">307</span>
-<span class="normal">308</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">308</span>
 <span class="normal">309</span>
 <span class="normal">310</span>
 <span class="normal">311</span>
@@ -4892,7 +4908,9 @@
 <span class="normal">315</span>
 <span class="normal">316</span>
 <span class="normal">317</span>
-<span class="normal">318</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">318</span>
+<span class="normal">319</span>
+<span class="normal">320</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for deleting a schedule from the device.</span>
 
 <span class="sd">    Use ``get_schedules`` to retrieve the schedule instance.</span>
@@ -5051,14 +5069,14 @@
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">297</span>
-<span class="normal">298</span>
-<span class="normal">299</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">299</span>
 <span class="normal">300</span>
 <span class="normal">301</span>
 <span class="normal">302</span>
 <span class="normal">303</span>
-<span class="normal">304</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_schedules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherGetSchedulesResponse</span><span class="p">:</span>
+<span class="normal">304</span>
+<span class="normal">305</span>
+<span class="normal">306</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_schedules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherGetSchedulesResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for retrieval of the schedules from the device.</span>
 
 <span class="sd">    Returns:</span>
@@ -5192,9 +5210,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">284</span>
-<span class="normal">285</span>
-<span class="normal">286</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">286</span>
 <span class="normal">287</span>
 <span class="normal">288</span>
 <span class="normal">289</span>
@@ -5203,7 +5219,9 @@ auto-shutdown.</p></td>
 <span class="normal">292</span>
 <span class="normal">293</span>
 <span class="normal">294</span>
-<span class="normal">295</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_auto_shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_time</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">295</span>
+<span class="normal">296</span>
+<span class="normal">297</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_auto_shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_time</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the set auto-off packet to the device.</span>
 
 <span class="sd">    Args:</span>
@@ -5283,9 +5301,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">272</span>
-<span class="normal">273</span>
-<span class="normal">274</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">274</span>
 <span class="normal">275</span>
 <span class="normal">276</span>
 <span class="normal">277</span>
@@ -5293,7 +5309,9 @@ auto-shutdown.</p></td>
 <span class="normal">279</span>
 <span class="normal">280</span>
 <span class="normal">281</span>
-<span class="normal">282</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">282</span>
+<span class="normal">283</span>
+<span class="normal">284</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the set name packet to the device.</span>
 
 <span class="sd">    Args:</span>
@@ -5372,9 +5390,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
@@ -5382,7 +5398,9 @@ auto-shutdown.</p></td>
 <span class="normal">267</span>
 <span class="normal">268</span>
 <span class="normal">269</span>
-<span class="normal">270</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">270</span>
+<span class="normal">271</span>
+<span class="normal">272</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for setting the shutter position of the Runner and Runner Mini devices.</span>
 
 <span class="sd">    Args:</span>
@@ -5561,9 +5579,7 @@ auto-shutdown.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">337</span>
-<span class="normal">338</span>
-<span class="normal">339</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">339</span>
 <span class="normal">340</span>
 <span class="normal">341</span>
 <span class="normal">342</span>
@@ -5762,7 +5778,9 @@ auto-shutdown.</p></td>
 <span class="normal">535</span>
 <span class="normal">536</span>
 <span class="normal">537</span>
-<span class="normal">538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">SwitcherType1Api</span><span class="p">(</span><span class="n">SwitcherApi</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.</span>
 
@@ -5995,9 +6013,9 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">346</span>
-<span class="normal">347</span>
-<span class="normal">348</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the Switcher TCP connection API.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ip_address</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">SWITCHER_TCP_PORT_TYPE1</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -6078,9 +6096,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">374</span>
-<span class="normal">375</span>
-<span class="normal">376</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">376</span>
 <span class="normal">377</span>
 <span class="normal">378</span>
 <span class="normal">379</span>
@@ -6109,7 +6125,9 @@ auto-shutdown.</p></td>
 <span class="normal">402</span>
 <span class="normal">403</span>
 <span class="normal">404</span>
-<span class="normal">405</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_device</span><span class="p">(</span>
+<span class="normal">405</span>
+<span class="normal">406</span>
+<span class="normal">407</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_device</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">command</span><span class="p">:</span> <span class="n">Command</span><span class="p">,</span> <span class="n">minutes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the device.</span>
@@ -6229,9 +6247,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">501</span>
-<span class="normal">502</span>
-<span class="normal">503</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">503</span>
 <span class="normal">504</span>
 <span class="normal">505</span>
 <span class="normal">506</span>
@@ -6266,7 +6282,9 @@ auto-shutdown.</p></td>
 <span class="normal">535</span>
 <span class="normal">536</span>
 <span class="normal">537</span>
-<span class="normal">538</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">create_schedule</span><span class="p">(</span>
+<span class="normal">538</span>
+<span class="normal">539</span>
+<span class="normal">540</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">create_schedule</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span> <span class="n">start_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">end_time</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">days</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">Days</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for creating a new schedule in the next empty schedule slot.</span>
@@ -6373,9 +6391,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">478</span>
-<span class="normal">479</span>
-<span class="normal">480</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">480</span>
 <span class="normal">481</span>
 <span class="normal">482</span>
 <span class="normal">483</span>
@@ -6394,7 +6410,9 @@ auto-shutdown.</p></td>
 <span class="normal">496</span>
 <span class="normal">497</span>
 <span class="normal">498</span>
-<span class="normal">499</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">499</span>
+<span class="normal">500</span>
+<span class="normal">501</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">delete_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for deleting a schedule from the device.</span>
 
 <span class="sd">    Use ``get_schedules`` to retrieve the schedule instance.</span>
@@ -6460,9 +6478,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">458</span>
-<span class="normal">459</span>
-<span class="normal">460</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">460</span>
 <span class="normal">461</span>
 <span class="normal">462</span>
 <span class="normal">463</span>
@@ -6478,7 +6494,9 @@ auto-shutdown.</p></td>
 <span class="normal">473</span>
 <span class="normal">474</span>
 <span class="normal">475</span>
-<span class="normal">476</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_schedules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherGetSchedulesResponse</span><span class="p">:</span>
+<span class="normal">476</span>
+<span class="normal">477</span>
+<span class="normal">478</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_schedules</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherGetSchedulesResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for retrieval of the schedules from the device.</span>
 
 <span class="sd">    Returns:</span>
@@ -6541,9 +6559,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">350</span>
-<span class="normal">351</span>
-<span class="normal">352</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">352</span>
 <span class="normal">353</span>
 <span class="normal">354</span>
 <span class="normal">355</span>
@@ -6563,7 +6579,9 @@ auto-shutdown.</p></td>
 <span class="normal">369</span>
 <span class="normal">370</span>
 <span class="normal">371</span>
-<span class="normal">372</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherStateResponse</span><span class="p">:</span>
+<span class="normal">372</span>
+<span class="normal">373</span>
+<span class="normal">374</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherStateResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the get state packet to the device.</span>
 
 <span class="sd">    Returns:</span>
@@ -6655,9 +6673,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">409</span>
 <span class="normal">410</span>
 <span class="normal">411</span>
 <span class="normal">412</span>
@@ -6679,7 +6695,9 @@ auto-shutdown.</p></td>
 <span class="normal">428</span>
 <span class="normal">429</span>
 <span class="normal">430</span>
-<span class="normal">431</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_auto_shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_time</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">431</span>
+<span class="normal">432</span>
+<span class="normal">433</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_auto_shutdown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">full_time</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the set auto-off packet to the device.</span>
 
 <span class="sd">    Args:</span>
@@ -6772,9 +6790,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">433</span>
-<span class="normal">434</span>
-<span class="normal">435</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">435</span>
 <span class="normal">436</span>
 <span class="normal">437</span>
 <span class="normal">438</span>
@@ -6795,7 +6811,9 @@ auto-shutdown.</p></td>
 <span class="normal">453</span>
 <span class="normal">454</span>
 <span class="normal">455</span>
-<span class="normal">456</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">456</span>
+<span class="normal">457</span>
+<span class="normal">458</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_device_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the set name packet to the device.</span>
 
 <span class="sd">    Args:</span>
@@ -6888,9 +6906,7 @@ auto-shutdown.</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">541</span>
-<span class="normal">542</span>
-<span class="normal">543</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">543</span>
 <span class="normal">544</span>
 <span class="normal">545</span>
 <span class="normal">546</span>
@@ -7120,7 +7136,21 @@ auto-shutdown.</p></td>
 <span class="normal">770</span>
 <span class="normal">771</span>
 <span class="normal">772</span>
-<span class="normal">773</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">SwitcherType2Api</span><span class="p">(</span><span class="n">SwitcherApi</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Switcher Type2 devices (Breeze, Runners) TCP based API.</span>
 
@@ -7141,6 +7171,7 @@ auto-shutdown.</p></td>
         <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">update_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -7151,6 +7182,7 @@ auto-shutdown.</p></td>
 <span class="sd">            target_temp: optionally the target temperature</span>
 <span class="sd">            fan_level: optionally the desired fan level</span>
 <span class="sd">            swing: optionally the desired swing state</span>
+<span class="sd">            update_state: update the device state without controlling the device</span>
 
 <span class="sd">        Returns:</span>
 <span class="sd">            An instance of ``SwitcherBaseResponse``.</span>
@@ -7179,32 +7211,42 @@ auto-shutdown.</p></td>
 
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;got current breeze device state&quot;</span><span class="p">)</span>
 
+            <span class="n">state</span> <span class="o">=</span> <span class="n">state</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">state</span>
+            <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">mode</span>
+            <span class="n">target_temp</span> <span class="o">=</span> <span class="n">target_temp</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">target_temperature</span>
+            <span class="n">fan_level</span> <span class="o">=</span> <span class="n">fan_level</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">fan_level</span>
+            <span class="n">set_swing</span> <span class="o">=</span> <span class="n">swing</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">swing</span>
             <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span><span class="p">:</span>
                 <span class="n">set_swing</span> <span class="o">=</span> <span class="n">ThermostatSwing</span><span class="o">.</span><span class="n">OFF</span>
+            <span class="k">if</span> <span class="n">update_state</span><span class="p">:</span>
+                <span class="n">packet</span> <span class="o">=</span> <span class="n">packets</span><span class="o">.</span><span class="n">BREEZE_UPDATE_STATUS_PACKET</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
+                    <span class="n">timestamp</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                    <span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">mode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">target_temp</span><span class="p">,</span>
+                    <span class="n">fan_level</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                    <span class="n">set_swing</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sending a set status packet&quot;</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">set_swing</span> <span class="o">=</span> <span class="n">swing</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">swing</span>
 
-            <span class="n">command</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">build_command</span><span class="p">(</span>
-                <span class="n">state</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
-                <span class="n">mode</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
-                <span class="n">target_temp</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">target_temperature</span><span class="p">,</span>
-                <span class="n">fan_level</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">fan_level</span><span class="p">,</span>
-                <span class="n">set_swing</span><span class="p">,</span>
-                <span class="n">current_state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
-            <span class="p">)</span>
+                <span class="n">command</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">build_command</span><span class="p">(</span>
+                    <span class="n">state</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">target_temp</span><span class="p">,</span> <span class="n">fan_level</span><span class="p">,</span> <span class="n">set_swing</span><span class="p">,</span> <span class="n">current_state</span><span class="o">.</span><span class="n">state</span>
+                <span class="p">)</span>
 
-            <span class="n">packet</span> <span class="o">=</span> <span class="n">packets</span><span class="o">.</span><span class="n">BREEZE_COMMAND_PACKET</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-                <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
-                <span class="n">timestamp</span><span class="p">,</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
-                <span class="n">command</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
-                <span class="n">command</span><span class="o">.</span><span class="n">command</span><span class="p">,</span>
-            <span class="p">)</span>
+                <span class="n">packet</span> <span class="o">=</span> <span class="n">packets</span><span class="o">.</span><span class="n">BREEZE_COMMAND_PACKET</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
+                    <span class="n">timestamp</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                    <span class="n">command</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+                    <span class="n">command</span><span class="o">.</span><span class="n">command</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sending a control packet&quot;</span><span class="p">)</span>
 
             <span class="n">packet</span> <span class="o">=</span> <span class="n">set_message_length</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
             <span class="n">signed_packet</span> <span class="o">=</span> <span class="n">sign_packet_with_crc_key</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
-
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sending a control packet&quot;</span><span class="p">)</span>
 
             <span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">signed_packet</span><span class="p">))</span>
             <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
@@ -7213,7 +7255,7 @@ auto-shutdown.</p></td>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd_response</span><span class="o">.</span><span class="n">successful</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;set state request was not successful&quot;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span> <span class="ow">and</span> <span class="n">swing</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span> <span class="ow">and</span> <span class="n">swing</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">update_state</span><span class="p">:</span>
             <span class="c1"># if device is SPECIAL SWING device and user requested a swing change</span>
             <span class="n">cmd_response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_breeze_swing_device</span><span class="p">(</span>
                 <span class="n">timestamp</span><span class="p">,</span> <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">swing</span>
@@ -7384,9 +7426,9 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">550</span>
-<span class="normal">551</span>
-<span class="normal">552</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">552</span>
+<span class="normal">553</span>
+<span class="normal">554</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ip_address</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">device_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the Switcher TCP connection API.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">ip_address</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">SWITCHER_TCP_PORT_TYPE2</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
@@ -7400,7 +7442,7 @@ auto-shutdown.</p></td>
 
 
 <h3 id="src.aioswitcher.api.SwitcherType2Api.control_breeze_device" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">control_breeze_device</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_temp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fan_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">swing</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">control_breeze_device</span><span class="p">(</span><span class="n">remote</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_temp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">fan_level</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">swing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">update_state</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></code>
   
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
@@ -7484,6 +7526,16 @@ auto-shutdown.</p></td>
                 <code>None</code>
           </td>
         </tr>
+        <tr>
+          <td><code>update_state</code></td>
+          <td>
+                <code>bool</code>
+          </td>
+          <td><p>update the device state without controlling the device</p></td>
+          <td>
+                <code>False</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
@@ -7507,9 +7559,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">554</span>
-<span class="normal">555</span>
-<span class="normal">556</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">556</span>
 <span class="normal">557</span>
 <span class="normal">558</span>
 <span class="normal">559</span>
@@ -7595,7 +7645,21 @@ auto-shutdown.</p></td>
 <span class="normal">639</span>
 <span class="normal">640</span>
 <span class="normal">641</span>
-<span class="normal">642</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
+<span class="normal">642</span>
+<span class="normal">643</span>
+<span class="normal">644</span>
+<span class="normal">645</span>
+<span class="normal">646</span>
+<span class="normal">647</span>
+<span class="normal">648</span>
+<span class="normal">649</span>
+<span class="normal">650</span>
+<span class="normal">651</span>
+<span class="normal">652</span>
+<span class="normal">653</span>
+<span class="normal">654</span>
+<span class="normal">655</span>
+<span class="normal">656</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze_device</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">remote</span><span class="p">:</span> <span class="n">SwitcherBreezeRemote</span><span class="p">,</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">DeviceState</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -7603,6 +7667,7 @@ auto-shutdown.</p></td>
     <span class="n">target_temp</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="n">fan_level</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatFanLevel</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">swing</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ThermostatSwing</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">update_state</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the control packet to the Breeze device.</span>
 
@@ -7613,6 +7678,7 @@ auto-shutdown.</p></td>
 <span class="sd">        target_temp: optionally the target temperature</span>
 <span class="sd">        fan_level: optionally the desired fan level</span>
 <span class="sd">        swing: optionally the desired swing state</span>
+<span class="sd">        update_state: update the device state without controlling the device</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        An instance of ``SwitcherBaseResponse``.</span>
@@ -7641,32 +7707,42 @@ auto-shutdown.</p></td>
 
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;got current breeze device state&quot;</span><span class="p">)</span>
 
+        <span class="n">state</span> <span class="o">=</span> <span class="n">state</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">state</span>
+        <span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">mode</span>
+        <span class="n">target_temp</span> <span class="o">=</span> <span class="n">target_temp</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">target_temperature</span>
+        <span class="n">fan_level</span> <span class="o">=</span> <span class="n">fan_level</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">fan_level</span>
+        <span class="n">set_swing</span> <span class="o">=</span> <span class="n">swing</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">swing</span>
         <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span><span class="p">:</span>
             <span class="n">set_swing</span> <span class="o">=</span> <span class="n">ThermostatSwing</span><span class="o">.</span><span class="n">OFF</span>
+        <span class="k">if</span> <span class="n">update_state</span><span class="p">:</span>
+            <span class="n">packet</span> <span class="o">=</span> <span class="n">packets</span><span class="o">.</span><span class="n">BREEZE_UPDATE_STATUS_PACKET</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
+                <span class="n">timestamp</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                <span class="n">state</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">mode</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">target_temp</span><span class="p">,</span>
+                <span class="n">fan_level</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                <span class="n">set_swing</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sending a set status packet&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">set_swing</span> <span class="o">=</span> <span class="n">swing</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">swing</span>
 
-        <span class="n">command</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">build_command</span><span class="p">(</span>
-            <span class="n">state</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
-            <span class="n">mode</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
-            <span class="n">target_temp</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">target_temperature</span><span class="p">,</span>
-            <span class="n">fan_level</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">fan_level</span><span class="p">,</span>
-            <span class="n">set_swing</span><span class="p">,</span>
-            <span class="n">current_state</span><span class="o">.</span><span class="n">state</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">remote</span><span class="o">.</span><span class="n">build_command</span><span class="p">(</span>
+                <span class="n">state</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">target_temp</span><span class="p">,</span> <span class="n">fan_level</span><span class="p">,</span> <span class="n">set_swing</span><span class="p">,</span> <span class="n">current_state</span><span class="o">.</span><span class="n">state</span>
+            <span class="p">)</span>
 
-        <span class="n">packet</span> <span class="o">=</span> <span class="n">packets</span><span class="o">.</span><span class="n">BREEZE_COMMAND_PACKET</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-            <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
-            <span class="n">timestamp</span><span class="p">,</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
-            <span class="n">command</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
-            <span class="n">command</span><span class="o">.</span><span class="n">command</span><span class="p">,</span>
-        <span class="p">)</span>
+            <span class="n">packet</span> <span class="o">=</span> <span class="n">packets</span><span class="o">.</span><span class="n">BREEZE_COMMAND_PACKET</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span>
+                <span class="n">timestamp</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_device_id</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">.</span><span class="n">length</span><span class="p">,</span>
+                <span class="n">command</span><span class="o">.</span><span class="n">command</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sending a control packet&quot;</span><span class="p">)</span>
 
         <span class="n">packet</span> <span class="o">=</span> <span class="n">set_message_length</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
         <span class="n">signed_packet</span> <span class="o">=</span> <span class="n">sign_packet_with_crc_key</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
-
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;sending a control packet&quot;</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">unhexlify</span><span class="p">(</span><span class="n">signed_packet</span><span class="p">))</span>
         <span class="n">response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
@@ -7675,7 +7751,7 @@ auto-shutdown.</p></td>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">cmd_response</span><span class="o">.</span><span class="n">successful</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;set state request was not successful&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span> <span class="ow">and</span> <span class="n">swing</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">remote</span><span class="o">.</span><span class="n">_separated_swing_command</span> <span class="ow">and</span> <span class="n">swing</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">update_state</span><span class="p">:</span>
         <span class="c1"># if device is SPECIAL SWING device and user requested a swing change</span>
         <span class="n">cmd_response</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_control_breeze_swing_device</span><span class="p">(</span>
             <span class="n">timestamp</span><span class="p">,</span> <span class="n">login_resp</span><span class="o">.</span><span class="n">session_id</span><span class="p">,</span> <span class="n">remote</span><span class="p">,</span> <span class="n">swing</span>
@@ -7728,17 +7804,17 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">717</span>
-<span class="normal">718</span>
-<span class="normal">719</span>
-<span class="normal">720</span>
-<span class="normal">721</span>
-<span class="normal">722</span>
-<span class="normal">723</span>
-<span class="normal">724</span>
-<span class="normal">725</span>
-<span class="normal">726</span>
-<span class="normal">727</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_breeze_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherThermostatStateResponse</span><span class="p">:</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">731</span>
+<span class="normal">732</span>
+<span class="normal">733</span>
+<span class="normal">734</span>
+<span class="normal">735</span>
+<span class="normal">736</span>
+<span class="normal">737</span>
+<span class="normal">738</span>
+<span class="normal">739</span>
+<span class="normal">740</span>
+<span class="normal">741</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_breeze_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherThermostatStateResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the get state packet to the Breeze device.</span>
 
 <span class="sd">    Returns:</span>
@@ -7793,21 +7869,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">747</span>
-<span class="normal">748</span>
-<span class="normal">749</span>
-<span class="normal">750</span>
-<span class="normal">751</span>
-<span class="normal">752</span>
-<span class="normal">753</span>
-<span class="normal">754</span>
-<span class="normal">755</span>
-<span class="normal">756</span>
-<span class="normal">757</span>
-<span class="normal">758</span>
-<span class="normal">759</span>
-<span class="normal">760</span>
-<span class="normal">761</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">761</span>
 <span class="normal">762</span>
 <span class="normal">763</span>
 <span class="normal">764</span>
@@ -7819,7 +7881,21 @@ auto-shutdown.</p></td>
 <span class="normal">770</span>
 <span class="normal">771</span>
 <span class="normal">772</span>
-<span class="normal">773</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_shutter_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherShutterStateResponse</span><span class="p">:</span>
+<span class="normal">773</span>
+<span class="normal">774</span>
+<span class="normal">775</span>
+<span class="normal">776</span>
+<span class="normal">777</span>
+<span class="normal">778</span>
+<span class="normal">779</span>
+<span class="normal">780</span>
+<span class="normal">781</span>
+<span class="normal">782</span>
+<span class="normal">783</span>
+<span class="normal">784</span>
+<span class="normal">785</span>
+<span class="normal">786</span>
+<span class="normal">787</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">get_shutter_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherShutterStateResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for sending the get state packet to the Runner device.</span>
 
 <span class="sd">    Returns:</span>
@@ -7914,21 +7990,7 @@ auto-shutdown.</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/__init__.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">682</span>
-<span class="normal">683</span>
-<span class="normal">684</span>
-<span class="normal">685</span>
-<span class="normal">686</span>
-<span class="normal">687</span>
-<span class="normal">688</span>
-<span class="normal">689</span>
-<span class="normal">690</span>
-<span class="normal">691</span>
-<span class="normal">692</span>
-<span class="normal">693</span>
-<span class="normal">694</span>
-<span class="normal">695</span>
-<span class="normal">696</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">696</span>
 <span class="normal">697</span>
 <span class="normal">698</span>
 <span class="normal">699</span>
@@ -7947,7 +8009,21 @@ auto-shutdown.</p></td>
 <span class="normal">712</span>
 <span class="normal">713</span>
 <span class="normal">714</span>
-<span class="normal">715</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
+<span class="normal">715</span>
+<span class="normal">716</span>
+<span class="normal">717</span>
+<span class="normal">718</span>
+<span class="normal">719</span>
+<span class="normal">720</span>
+<span class="normal">721</span>
+<span class="normal">722</span>
+<span class="normal">723</span>
+<span class="normal">724</span>
+<span class="normal">725</span>
+<span class="normal">726</span>
+<span class="normal">727</span>
+<span class="normal">728</span>
+<span class="normal">729</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">set_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBaseResponse</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Use for setting the shutter position of the Runner and Runner Mini devices.</span>
 
 <span class="sd">    Args:</span>
@@ -17811,7 +17887,7 @@ E.g. 3 will result in a set of MONDAY and the remainder will be 1.</p>
   <small>
     
       Last update:
-      2022-10-01
+      2022-10-18
     
   </small>
 </div>
