@@ -15,10 +15,20 @@ Contributions are welcome in all shapes or forms.
 If you're a user, you can play around with the current version in development and report back if you bump into anything
 suspicious.
 
-Install development version using `pip`:
+Install remote development version using `pip`:
 
 ```shell
 pip install git+https://github.com/TomerFi/aioswitcher#dev
+```
+
+## Install local development version
+
+In order to test your changes you can install the current development version from your active working branch.
+
+Install local development version using `pip`:
+
+```shell
+pip install --upgrade .
 ```
 
 ## Prepare the environment
