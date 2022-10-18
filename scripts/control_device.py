@@ -36,27 +36,27 @@ printer = PrettyPrinter(indent=4)
 
 _examples = """example usage:
 
-python control_device.py -d ab1c2d -i "111.222.11.22" get_state\n
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_on\n
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_on -t 15\n
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_off\n
-python control_device.py -d ab1c2d -i "111.222.11.22" set_name -n "My Boiler"\n
-python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30\n
-python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules\n
-python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3\n
-python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"\n
-python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday\n
+python control_device.py get_state -d ab1c2d -i "111.222.11.22"\n
+python control_device.py turn_on -d ab1c2d -i "111.222.11.22"\n
+python control_device.py turn_on -d ab1c2d -i "111.222.11.22" -t 15\n
+python control_device.py turn_off -d ab1c2d -i "111.222.11.22"\n
+python control_device.py set_name -d ab1c2d -i "111.222.11.22" -n "My Boiler"\n
+python control_device.py set_auto_shutdown -d ab1c2d -i "111.222.11.22" -r 2 -m 30\n
+python control_device.py get_schedules -d ab1c2d -i "111.222.11.22"\n
+python control_device.py delete_schedule -d ab1c2d -i "111.222.11.22" -s 3\n
+python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"\n
+python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
 
-python control_device.py -d f2239a -i "192.168.50.98" stop_shutter\n
-python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50\n
+python control_device.py stop_shutter -d f2239a -i "192.168.50.98"\n
+python control_device.py set_shutter_position -d f2239a -i "192.168.50.98"-p 50\n
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" get_thermostat_state\n
+python control_device.py get_thermostat_state -d 3a20b7 -i "192.168.50.77"\n
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s on\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m cool -f high -t 24\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m cool -f high -t 24 -u\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m dry\n
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s off\n
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on\n
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24\n
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u\n
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry\n
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off\n
 """  # noqa E501
 
 # shared parse

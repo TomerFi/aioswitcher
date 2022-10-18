@@ -87,39 +87,41 @@ subcommands:
 
 example usage:
 
-python control_device.py -d ab1c2d -i "111.222.11.22" get_state
+python control_device.py get_state -d ab1c2d -i "111.222.11.22"
 
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_on
+python control_device.py turn_on -d ab1c2d -i "111.222.11.22"
 
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_on -t 15
+python control_device.py turn_on -d ab1c2d -i "111.222.11.22" -t 15
 
-python control_device.py -d ab1c2d -i "111.222.11.22" turn_off
+python control_device.py turn_off -d ab1c2d -i "111.222.11.22"
 
-python control_device.py -d ab1c2d -i "111.222.11.22" set_name -n "My Boiler"
+python control_device.py set_name -d ab1c2d -i "111.222.11.22" -n "My Boiler"
 
-python control_device.py -d ab1c2d -i "111.222.11.22" set_auto_shutdown -r 2 -m 30
+python control_device.py set_auto_shutdown -d ab1c2d -i "111.222.11.22" -r 2 -m 30
 
-python control_device.py -d ab1c2d -i "111.222.11.22" get_schedules
+python control_device.py get_schedules -d ab1c2d -i "111.222.11.22"
 
-python control_device.py -d ab1c2d -i "111.222.11.22" delete_schedule -s 3
+python control_device.py delete_schedule -d ab1c2d -i "111.222.11.22" -s 3
 
-python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "14:00" -f "14:30"
+python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"
 
-python control_device.py -d ab1c2d -i "111.222.11.22" create_schedule -n "17:30" -f "18:30" -w Sunday Monday Friday
+python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday
 
-python control_device.py -d f2239a -i "192.168.50.98" stop_shutter
+python control_device.py stop_shutter -d f2239a -i "192.168.50.98"
 
-python control_device.py -d f2239a -i "192.168.50.98" set_shutter_position -p 50
+python control_device.py set_shutter_position -d f2239a -i "192.168.50.98"-p 50
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" get_thermostat_state
+python control_device.py get_thermostat_state -d 3a20b7 -i "192.168.50.77"
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s on
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m cool -f high -t 24
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -m dry
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u
 
-python control_device.py -d 3a20b7 -i "192.168.50.77" control_thermostat -r ELEC7001 -s off
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry
+
+python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off
 ```
 
 ### script/control_device.py control_thermostat
