@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioswitcher"
-version = "3.0.4.dev"
+version = "3.1.0"
 description = "Switcher Python Integration."
 license = "Apache-2.0"
 authors = [ "Tomer Figenblat <tomer.figenblat@gmail.com>" ]
@@ -20,8 +20,8 @@ classifiers = [
 include = [ "py.typed" ]
 exclude = [ ]
 
-[tool.poetry.dependencies]
-python = "^3.9.0"
+  [tool.poetry.dependencies]
+  python = "^3.9.0"
 
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
