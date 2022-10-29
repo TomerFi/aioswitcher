@@ -196,6 +196,11 @@ class SwitcherBreezeRemote:
         """Getter for which indicates if the AC has a separated swing command."""
         return self._separated_swing_command
 
+    @property
+    def on_off_type(self) -> bool:
+        """Getter for which indicates if the AC if on/off (toggle) type."""
+        return self._on_off_type
+
     def _lookup_key_in_irset(self, key: List[str]) -> None:
         """Use this to look for a key in the IRSet file.
 
