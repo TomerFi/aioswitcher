@@ -936,6 +936,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#src.aioswitcher.api.remotes.SwitcherBreezeRemote.on_off_type" class="md-nav__link">
+    on_off_type()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#src.aioswitcher.api.remotes.SwitcherBreezeRemote.remote_id" class="md-nav__link">
     remote_id()
   </a>
@@ -2530,6 +2537,13 @@
           <li class="md-nav__item">
   <a href="#src.aioswitcher.api.remotes.SwitcherBreezeRemote.modes_features" class="md-nav__link">
     modes_features()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#src.aioswitcher.api.remotes.SwitcherBreezeRemote.on_off_type" class="md-nav__link">
+    on_off_type()
   </a>
   
 </li>
@@ -10152,7 +10166,12 @@ SwitcherGetScheduleResponse.</p>
 <span class="normal">398</span>
 <span class="normal">399</span>
 <span class="normal">400</span>
-<span class="normal">401</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
+<span class="normal">401</span>
+<span class="normal">402</span>
+<span class="normal">403</span>
+<span class="normal">404</span>
+<span class="normal">405</span>
+<span class="normal">406</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@final</span>
 <span class="k">class</span> <span class="nc">SwitcherBreezeRemote</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class that represent a remote for a Breeze device/s.</span>
 
@@ -10252,6 +10271,11 @@ SwitcherGetScheduleResponse.</p>
     <span class="k">def</span> <span class="nf">separated_swing_command</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Getter for which indicates if the AC has a separated swing command.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_separated_swing_command</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">on_off_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Getter for which indicates if the AC if on/off (toggle) type.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_off_type</span>
 
     <span class="k">def</span> <span class="nf">_lookup_key_in_irset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Use this to look for a key in the IRSet file.</span>
@@ -10719,12 +10743,7 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">257</span>
-<span class="normal">258</span>
-<span class="normal">259</span>
-<span class="normal">260</span>
-<span class="normal">261</span>
-<span class="normal">262</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">262</span>
 <span class="normal">263</span>
 <span class="normal">264</span>
 <span class="normal">265</span>
@@ -10808,7 +10827,12 @@ redundant requests</p></td>
 <span class="normal">343</span>
 <span class="normal">344</span>
 <span class="normal">345</span>
-<span class="normal">346</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_command</span><span class="p">(</span>
+<span class="normal">346</span>
+<span class="normal">347</span>
+<span class="normal">348</span>
+<span class="normal">349</span>
+<span class="normal">350</span>
+<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_command</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">state</span><span class="p">:</span> <span class="n">DeviceState</span><span class="p">,</span>
     <span class="n">mode</span><span class="p">:</span> <span class="n">ThermostatMode</span><span class="p">,</span>
@@ -10962,12 +10986,7 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">226</span>
-<span class="normal">227</span>
-<span class="normal">228</span>
-<span class="normal">229</span>
-<span class="normal">230</span>
-<span class="normal">231</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">231</span>
 <span class="normal">232</span>
 <span class="normal">233</span>
 <span class="normal">234</span>
@@ -10991,7 +11010,12 @@ redundant requests</p></td>
 <span class="normal">252</span>
 <span class="normal">253</span>
 <span class="normal">254</span>
-<span class="normal">255</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_swing_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeCommand</span><span class="p">:</span>
+<span class="normal">255</span>
+<span class="normal">256</span>
+<span class="normal">257</span>
+<span class="normal">258</span>
+<span class="normal">259</span>
+<span class="normal">260</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">build_swing_command</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">swing</span><span class="p">:</span> <span class="n">ThermostatSwing</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeCommand</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Build a special command to control swing on special remotes.</span>
 
 <span class="sd">    Args:</span>
@@ -11124,6 +11148,39 @@ redundant requests</p></td>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">ThermostatMode</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="sd">&quot;&quot;&quot;Getter for supported feature per mode.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modes_features</span>
+</code></pre></div></td></tr></table></div>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h3 id="src.aioswitcher.api.remotes.SwitcherBreezeRemote.on_off_type" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">on_off_type</span><span class="p">()</span></code>
+  
+  <span class="doc doc-labels">
+      <small class="doc doc-label doc-label-property"><code>property</code></small>
+  </span>
+
+<a href="#src.aioswitcher.api.remotes.SwitcherBreezeRemote.on_off_type" class="headerlink" title="Permanent link">⚓︎</a></h3>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Getter for which indicates if the AC if on/off (toggle) type.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">on_off_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Getter for which indicates if the AC if on/off (toggle) type.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_off_type</span>
 </code></pre></div></td></tr></table></div>
       </details>
   </div>
@@ -11280,12 +11337,7 @@ redundant requests</p></td>
 
         <details class="quote">
           <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">404</span>
-<span class="normal">405</span>
-<span class="normal">406</span>
-<span class="normal">407</span>
-<span class="normal">408</span>
-<span class="normal">409</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">409</span>
 <span class="normal">410</span>
 <span class="normal">411</span>
 <span class="normal">412</span>
@@ -11316,7 +11368,12 @@ redundant requests</p></td>
 <span class="normal">437</span>
 <span class="normal">438</span>
 <span class="normal">439</span>
-<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SwitcherBreezeRemoteManager</span><span class="p">:</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SwitcherBreezeRemoteManager</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class for managing Breeze remotes.</span>
 
 <span class="sd">    Args:</span>
@@ -11384,15 +11441,15 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">412</span>
-<span class="normal">413</span>
-<span class="normal">414</span>
-<span class="normal">415</span>
-<span class="normal">416</span>
-<span class="normal">417</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">417</span>
 <span class="normal">418</span>
 <span class="normal">419</span>
-<span class="normal">420</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotes_db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">BREEZE_REMOTE_DB_FPATH</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="normal">420</span>
+<span class="normal">421</span>
+<span class="normal">422</span>
+<span class="normal">423</span>
+<span class="normal">424</span>
+<span class="normal">425</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remotes_db_path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">BREEZE_REMOTE_DB_FPATH</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Initialize the Remote manager.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_remotes_db</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SwitcherBreezeRemote</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_remotes_db_fpath</span> <span class="o">=</span> <span class="n">remotes_db_path</span>
@@ -11465,12 +11522,7 @@ redundant requests</p></td>
 
       <details class="quote">
         <summary>Source code in <code>src/aioswitcher/api/remotes.py</code></summary>
-        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">422</span>
-<span class="normal">423</span>
-<span class="normal">424</span>
-<span class="normal">425</span>
-<span class="normal">426</span>
-<span class="normal">427</span>
+        <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">427</span>
 <span class="normal">428</span>
 <span class="normal">429</span>
 <span class="normal">430</span>
@@ -11483,7 +11535,12 @@ redundant requests</p></td>
 <span class="normal">437</span>
 <span class="normal">438</span>
 <span class="normal">439</span>
-<span class="normal">440</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeRemote</span><span class="p">:</span>
+<span class="normal">440</span>
+<span class="normal">441</span>
+<span class="normal">442</span>
+<span class="normal">443</span>
+<span class="normal">444</span>
+<span class="normal">445</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_remote</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SwitcherBreezeRemote</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Get Breeze remote by the remote id.</span>
 
 <span class="sd">    Args:</span>
@@ -17887,7 +17944,7 @@ E.g. 3 will result in a set of MONDAY and the remainder will be 1.</p>
   <small>
     
       Last update:
-      2022-10-18
+      2022-10-29
     
   </small>
 </div>
