@@ -18,7 +18,6 @@ import re
 from binascii import hexlify
 from json import load
 from logging import getLogger
-from os import path
 from pathlib import Path
 from typing import Any, Dict, List, Union, final
 
@@ -418,11 +417,6 @@ class SwitcherBreezeRemoteManager:
         """Initialize the Remote manager."""
         self._remotes_db: Dict[str, SwitcherBreezeRemote] = {}
         self._remotes_db_fpath = remotes_db_path
-        # verify the file exists
-        if not path.isfile(self._remotes_db_fpath):
-            raise OSError(
-                f"The specified remote db path {self._remotes_db_fpath} does not exist"
-            )
 
     def get_remote(self, remote_id: str) -> SwitcherBreezeRemote:
         """Get Breeze remote by the remote id.
