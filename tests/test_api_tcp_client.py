@@ -307,12 +307,6 @@ async def test_breeze_get_command_function_should_raise_command_does_not_eixst(r
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
 
 
-async def test_breeze_remote_manager_with_none_existing_remotes_db():
-    local_remotes_db = "/wrong/directory/remotes_db.json"
-    with raises(OSError, match=f"The specified remote db path {local_remotes_db} does not exist"):
-        SwitcherBreezeRemoteManager(local_remotes_db)
-
-
 async def test_breeze_remote_manager_get_from_local_database():
     remote_manager = SwitcherBreezeRemoteManager()
     remote_7022 = remote_manager.get_remote("ELEC7022")
