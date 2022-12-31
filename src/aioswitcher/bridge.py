@@ -32,6 +32,7 @@ from .device import (
     ShutterDirection,
     SwitcherBase,
     SwitcherPowerPlug,
+    SwitcherS12,
     SwitcherShutter,
     SwitcherThermostat,
     SwitcherWaterHeater,
@@ -119,6 +120,23 @@ def _parse_device_from_datagram(
                     parser.get_name(),
                     power_consumption,
                     electric_current,
+                )
+            )
+
+        elif device_type and device_type.category == DeviceCategory.S12:
+            logger.debug("discovered an S12 switcher device")
+            device_callback(
+                SwitcherS12(
+                    device_type,
+                    parser.get_s12_device_state(),
+                    parser.get_device_id(),
+                    parser.get_ip_type2(),
+                    parser.get_mac(),
+                    parser.get_name(),
+                    parser.get_s12_position_one(),
+                    parser.get_s12_direction_one(),
+                    parser.get_s12_position_two(),
+                    parser.get_s12_direction_two(),
                 )
             )
 
@@ -276,6 +294,7 @@ class DatagramParser:
             len(self.message) == 165
             or len(self.message) == 168  # Switcher Breeze
             or len(self.message) == 159  # Switcher Runner and RunnerMini
+            or len(self.message) == 203  # Switcher Runner S12
         )
 
     def get_ip_type1(self) -> str:
@@ -369,6 +388,39 @@ class DatagramParser:
     def get_shutter_direction(self) -> ShutterDirection:
         """Return the current direction of the shutter (UP/DOWN/STOP)."""
         hex_direction = hexlify(self.message[137:139]).decode()
+        directions = dict(map(lambda d: (d.value, d), ShutterDirection))
+        return directions[hex_direction]
+
+    # Switcher S12 methods
+
+    def get_s12_device_state(self) -> DeviceState:
+        """Extract the device state from the broadcast message."""
+        hex_device_state = hexlify(self.message)[270:272].decode()
+        return (
+            DeviceState.ON
+            if hex_device_state == DeviceState.ON.value
+            else DeviceState.OFF
+        )
+
+    def get_s12_position_one(self) -> int:
+        """Return the current position of the shutter 0 <= pos <= 100."""
+        hex_pos = hexlify(self.message[167:169]).decode()
+        return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
+
+    def get_s12_direction_one(self) -> ShutterDirection:
+        """Return the current direction of the shutter (UP/DOWN/STOP)."""
+        hex_direction = hexlify(self.message[169:171]).decode()
+        directions = dict(map(lambda d: (d.value, d), ShutterDirection))
+        return directions[hex_direction]
+
+    def get_s12_position_two(self) -> int:
+        """Return the current position of the shutter 0 <= pos <= 100."""
+        hex_pos = hexlify(self.message[151:153]).decode()
+        return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
+
+    def get_s12_direction_two(self) -> ShutterDirection:
+        """Return the current direction of the shutter (UP/DOWN/STOP)."""
+        hex_direction = hexlify(self.message[153:155]).decode()
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
         return directions[hex_direction]
 
