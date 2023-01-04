@@ -29,6 +29,7 @@ class DeviceCategory(Enum):
     POWER_PLUG = auto()
     THERMOSTAT = auto()
     SHUTTER = auto()
+    S12 = auto()
 
 
 @unique
@@ -44,6 +45,7 @@ class DeviceType(Enum):
     BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT
     RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER
     RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER
+    RUNNER_S12 = "Switcher Runner S12", "0f02", 2, DeviceCategory.S12
 
     def __new__(
         cls, value: str, hex_rep: str, protocol_type: int, category: DeviceCategory
@@ -299,6 +301,23 @@ class SwitcherShutterBase(ABC):
     direction: ShutterDirection
 
 
+@dataclass
+class SwitcherS12Base(ABC):
+    """Abstraction for all switcher devices controlling shutter.
+
+    Args:
+        position_one: the current position of the 1st shutter (integer percentage).
+        direction_one: the current direction of the 1st shutter.
+        position_two: the current position of the 2nd shutter (integer percentage).
+        direction_two: the current direction of the 2nd shutter.
+    """
+
+    position_one: int
+    direction_one: ShutterDirection
+    position_two: int
+    direction_two: ShutterDirection
+
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -352,5 +371,17 @@ class SwitcherShutter(SwitcherShutterBase, SwitcherBase):
     def __post_init__(self) -> None:
         """Post initialization validate device type category as SHUTTER."""
         if self.device_type.category != DeviceCategory.SHUTTER:
+            raise ValueError("only shutters are allowed")
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherS12(SwitcherS12Base, SwitcherBase):
+    """Implementation of the Switcher Shutter S12 device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as SHUTTER."""
+        if self.device_type.category != DeviceCategory.S12:
             raise ValueError("only shutters are allowed")
         return super().__post_init__()
