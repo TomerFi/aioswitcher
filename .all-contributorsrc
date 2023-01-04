@@ -105,6 +105,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "admons",
+      "name": "Admon Sasson",
+      "avatar_url": "https://avatars.githubusercontent.com/u/15211590?v=4",
+      "profile": "https://github.com/admons",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "angular"
