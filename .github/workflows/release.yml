@@ -3,11 +3,6 @@ name: Release
 
 on:
   workflow_dispatch:
-    inputs:
-      tweet:
-        description: "Tweet new release?"
-        required: false
-        default: "no"
 
 jobs:
   secrets_keys:
@@ -15,10 +10,6 @@ jobs:
     name: Determine secrets keys
     outputs:
       pypi_token: ${{ steps.output_keys.outputs.pypi_token }}
-      twitter_api_key: ${{ steps.output_keys.outputs.twitter_api_key }}
-      twitter_api_secret_key: ${{ steps.output_keys.outputs.twitter_api_secret_key }}
-      twitter_access_token: ${{ steps.output_keys.outputs.twitter_access_token }}
-      twitter_access_token_secret: ${{ steps.output_keys.outputs.twitter_access_token_secret }}
       release_pat: ${{ steps.output_keys.outputs.release_pat }}
     steps:
       - name: Save keys as output
@@ -26,10 +17,6 @@ jobs:
         run: |
           actor=$( echo ${{ github.actor }} | tr [:lower:] [:upper:])
           echo "::set-output name=pypi_token::$actor"_PYPI_TOKEN
-          echo "::set-output name=twitter_api_key::$actor"_TWITTER_API_KEY
-          echo "::set-output name=twitter_api_secret_key::$actor"_TWITTER_API_SECRET_KEY
-          echo "::set-output name=twitter_access_token::$actor"_TWITTER_ACCESS_TOKEN
-          echo "::set-output name=twitter_access_token_secret::$actor"_TWITTER_ACCESS_TOKEN_SECRET
           echo "::set-output name=release_pat::$actor"_RELEASE_PAT
 
   release:
@@ -130,17 +117,3 @@ jobs:
               generate_release_notes: true
             })
             core.setOutput('html_url', response.data.html_url)
-
-      - name: Tweet new release
-        if: ${{ github.event.inputs.tweet == 'yes' }}
-        uses: lazy-actions/tweet-action@1.0.1
-        with:
-          oauth_consumer_key: ${{ secrets[needs.secrets_keys.outputs.twitter_api_key] }}
-          oauth_consumer_secret: ${{ secrets[needs.secrets_keys.outputs.twitter_api_secret_key] }}
-          oauth_token: ${{ secrets[needs.secrets_keys.outputs.twitter_access_token] }}
-          oauth_token_secret: ${{ secrets[needs.secrets_keys.outputs.twitter_access_token_secret] }}
-          message: |
-            🚀🎉 Aioswitcher ${{ steps.bumper.outputs.new_version }} has been released! 🎉🚀
-            ${{ steps.gh_release.outputs.html_url }}
-
-            #aioswitcher #smarthome #python
