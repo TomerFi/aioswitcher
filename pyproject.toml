@@ -27,7 +27,7 @@ exclude = [ ]
 assertpy = "^1.1"
 black = "^22.8"
 codecov = "^2.1.12"
-flake8 = "^5.0.4"
+flake8 = ">=5.0.4,<7.0.0"
 flake8-docstrings = "^1.6.0"
 Flake8-pyproject = "^1.1.0.post0"
 isort = "^5.10.1"
