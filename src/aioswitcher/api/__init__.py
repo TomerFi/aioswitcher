@@ -621,7 +621,6 @@ class SwitcherType2Api(SwitcherApi):
                 )
                 logger.debug("sending a set status packet")
             else:
-
                 command = remote.build_command(
                     state, mode, target_temp, fan_level, set_swing, current_state.state
                 )
@@ -767,7 +766,6 @@ class SwitcherType2Api(SwitcherApi):
         """
         timestamp, login_resp = await self._login(DeviceType.RUNNER)
         if login_resp.successful:
-
             packet = packets.GET_STATE_PACKET2_TYPE2.format(
                 login_resp.session_id, timestamp, self._device_id
             )
