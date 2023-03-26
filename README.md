@@ -1,4 +1,15 @@
-<!-- markdownlint-disable MD033 -->
+# Help Wanted
+
+<p align="left">
+<strong>
+The Aioswitcher project is looking for maintainers and contributors!<br/>
+For various reasons, I can keep maintaining this project as far as dependency bumps and publishing.<br/>
+But new features and the occasion bug support, will require other maintainers/contributors.<br/>
+<br/>
+If that's you - please feel free to ping me and I will do all I can to make the onboarding process easy.
+</strong>
+</p>
+
 # Switcher Python Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
 
 [![gh-build-status]][7] [![gh-pages-status]][8] [![codecov]][3]
