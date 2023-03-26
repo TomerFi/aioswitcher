@@ -2,9 +2,9 @@
 
 <p align="left">
 <strong>
-The Aioswitcher project is looking for maintainers and contributors!<br/>
-For various reasons, I can keep maintaining this project as far as dependency bumps and publishing.<br/>
-But new features and the occasion bug support, will require other maintainers/contributors.<br/>
+Aioswitcher project is looking for maintainers and contributors!<br/>
+For various reasons, I can only keep maintaining this project as far as dependency bumps and publishing.<br/>
+As for new features and the occasional bug support, these will require other maintainers/contributors.<br/>
 <br/>
 If that's you - please feel free to ping me and I will do all I can to make the onboarding process easy.
 </strong>
