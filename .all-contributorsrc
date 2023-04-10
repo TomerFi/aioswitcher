@@ -105,6 +105,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "liadav",
+      "name": "Liad Avraham",
+      "avatar_url": "https://avatars.githubusercontent.com/u/7263223?v=4",
+      "profile": "http://liad.avrah.am",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "angular"
