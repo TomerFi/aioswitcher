@@ -38,7 +38,7 @@ devices broadcasting on the local network for 60 seconds.
 You can change the delay by passing an int argument: discover_devices.py 30
 
 Switcher devices uses two protocol types:
-    Protocol type 1 (UDP port 20002), used by: """
+    Protocol type 1 (UDP port 20002 or 10002), used by: """
     + ", ".join(d.value for d in DeviceType if d.protocol_type == 1)
     + """
     Protocol type 2 (UDP port 20003), used by: """
