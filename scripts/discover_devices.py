@@ -24,6 +24,7 @@ from typing import List
 
 from aioswitcher.bridge import (
     SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
     SWITCHER_UDP_PORT_TYPE2,
     SwitcherBridge,
 )
@@ -115,11 +116,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.type == "1":
-        ports = [SWITCHER_UDP_PORT_TYPE1]
+        ports = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE1_NEW_VERSION]
     elif args.type == "2":
         ports = [SWITCHER_UDP_PORT_TYPE2]
     else:
-        ports = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2]
+        ports = [
+            SWITCHER_UDP_PORT_TYPE1,
+            SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+            SWITCHER_UDP_PORT_TYPE2,
+        ]
 
     try:
         asyncio.run(print_devices(args.delay, ports))
