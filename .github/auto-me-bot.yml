@@ -1,6 +1,8 @@
 # https://github.com/apps/auto-me-bot
 ---
 pr:
+  autoApprove:
+    users: ['dependabot', 'allcontributors']
   conventionalTitle:
   tasksList:
   lifecycleLabels:
