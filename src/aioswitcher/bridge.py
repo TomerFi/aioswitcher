@@ -50,6 +50,7 @@ SWITCHER_UDP_PORT_TYPE1 = 20002
 SWITCHER_UDP_PORT_TYPE1_NEW_VERSION = 10002
 # Protocol type 2 devices: Breeze, Runner, Runner Mini
 SWITCHER_UDP_PORT_TYPE2 = 20003
+SWITCHER_UDP_PORT_TYPE2_NEW_VERSION = 10003
 
 SWITCHER_DEVICE_TO_UDP_PORT = {
     DeviceCategory.WATER_HEATER: SWITCHER_UDP_PORT_TYPE1,
@@ -169,6 +170,7 @@ class SwitcherBridge:
         broadcast_ports: broadcast ports list, default for type 1 devices is 20002,
             default for type 2 devices is 20003.
             On newer type1 devices, the port is 10002.
+            On newer type2 devices, the port is 10003.
 
     """
 
@@ -179,6 +181,7 @@ class SwitcherBridge:
             SWITCHER_UDP_PORT_TYPE1,
             SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
             SWITCHER_UDP_PORT_TYPE2,
+            SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
         ],
     ) -> None:
         """Initialize the switcher bridge."""
