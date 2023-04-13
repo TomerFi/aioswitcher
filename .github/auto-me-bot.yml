@@ -1,8 +1,6 @@
 # https://github.com/apps/auto-me-bot
 ---
 pr:
-  conventionalTitle:
-  tasksList:
   lifecycleLabels:
     ignoreDrafts: true
     labels:
@@ -12,3 +10,7 @@ pr:
       reviewStarted: "status: review started"
       approved: "status: approved"
       merged: "status: merged"
+  conventionalTitle:
+  tasksList:
+  autoApprove:
+    users: ['dependabot', 'allcontributors']

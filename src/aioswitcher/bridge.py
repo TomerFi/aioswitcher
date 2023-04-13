@@ -47,6 +47,7 @@ logger = getLogger(__name__)
 
 # Protocol type 1 devices: V2, Touch, V4, Mini, Power Plug
 SWITCHER_UDP_PORT_TYPE1 = 20002
+SWITCHER_UDP_PORT_TYPE1_NEW_VERSION = 10002
 # Protocol type 2 devices: Breeze, Runner, Runner Mini
 SWITCHER_UDP_PORT_TYPE2 = 20003
 
@@ -166,14 +167,19 @@ class SwitcherBridge:
     Args:
         on_device: a callable to which every new SwitcherBase device found will be send.
         broadcast_ports: broadcast ports list, default for type 1 devices is 20002,
-            default for type 2 devices is 20003
+            default for type 2 devices is 20003.
+            On newer type1 devices, the port is 10002.
 
     """
 
     def __init__(
         self,
         on_device: Callable[[SwitcherBase], Any],
-        broadcast_ports: List[int] = [SWITCHER_UDP_PORT_TYPE1, SWITCHER_UDP_PORT_TYPE2],
+        broadcast_ports: List[int] = [
+            SWITCHER_UDP_PORT_TYPE1,
+            SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+            SWITCHER_UDP_PORT_TYPE2,
+        ],
     ) -> None:
         """Initialize the switcher bridge."""
         self._on_device = on_device
