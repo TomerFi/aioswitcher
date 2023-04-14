@@ -26,6 +26,7 @@ from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
 from aioswitcher.api.remotes import SwitcherBreezeRemoteManager
 from aioswitcher.device import (
     DeviceState,
+    LightState,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,

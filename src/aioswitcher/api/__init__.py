@@ -28,6 +28,7 @@ from ..device import (
     DeviceCategory,
     DeviceState,
     DeviceType,
+    LightState,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
@@ -52,6 +53,7 @@ from .messages import (
     SwitcherThermostatStateResponse,
 )
 from .remotes import SwitcherBreezeRemote
+from . import tok
 
 logger = getLogger(__name__)
 
@@ -63,6 +65,7 @@ SWITCHER_TCP_PORT_TYPE2 = 10000
 SWITCHER_DEVICE_TO_TCP_PORT = {
     DeviceCategory.THERMOSTAT: SWITCHER_TCP_PORT_TYPE2,
     DeviceCategory.SHUTTER: SWITCHER_TCP_PORT_TYPE2,
+    DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL: SWITCHER_TCP_PORT_TYPE2,
     DeviceCategory.WATER_HEATER: SWITCHER_TCP_PORT_TYPE1,
     DeviceCategory.POWER_PLUG: SWITCHER_TCP_PORT_TYPE1,
 }
