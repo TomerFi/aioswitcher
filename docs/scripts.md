@@ -21,7 +21,7 @@ You can change the delay by passing an int argument: discover_devices.py 30
 
 Switcher devices uses two protocol types:
     Protocol type 1 (UDP port 20002 or port 10002), used by: Switcher Mini, Switcher Power Plug, Switcher Touch, Switcher V2 (esp), Switcher V2 (qualcomm), Switcher V4
-    Protocol type 2 (UDP port 20003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini
+    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini
 You can change the scanned protocol type by passing an int argument: discover_devices.py -t 1
 
 Note:
