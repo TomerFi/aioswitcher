@@ -13,7 +13,6 @@ updates:
       include: "scope"
     assignees:
       - "tomerfi"
-      - "thecode"
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -26,4 +25,3 @@ updates:
       include: "scope"
     assignees:
       - "tomerfi"
-      - "thecode"
