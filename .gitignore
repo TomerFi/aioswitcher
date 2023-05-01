@@ -128,3 +128,5 @@ release-context.json
 
 # OSX stuff
 .DS_Store
+
+.idea
