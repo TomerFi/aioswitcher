@@ -44,7 +44,7 @@ jobs:
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
 
       - name: Install deno runtime
-        uses: denoland/setup-deno@v1.1.1
+        uses: denoland/setup-deno@v1.1.2
 
       - name: Lint the project
         run: |
