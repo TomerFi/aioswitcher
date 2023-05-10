@@ -70,6 +70,13 @@ shared_parser.add_argument(
     help="include the raw message",
 )
 shared_parser.add_argument(
+    "-k",
+    "--token",
+    default="",
+    type=str,
+    help="the token for communicating with the new switcher devices",
+)
+shared_parser.add_argument(
     "-d",
     "--device-id",
     type=str,
@@ -398,9 +405,9 @@ async def create_schedule(
         )
 
 
-async def stop_shutter(device_id: str, device_ip: str, verbose: bool) -> None:
+async def stop_shutter(device_id: str, device_ip: str, verbose: bool, token: str) -> None:
     """Stop shutter."""
-    async with SwitcherType2Api(device_ip, device_id) as api:
+    async with SwitcherType2Api(device_ip, device_id, token) as api:
         printer.pprint(
             asdict(
                 await api.stop(),
@@ -410,10 +417,10 @@ async def stop_shutter(device_id: str, device_ip: str, verbose: bool) -> None:
 
 
 async def set_shutter_position(
-    device_id: str, device_ip: str, position: int, verbose: bool
+    device_id: str, device_ip: str, position: int, verbose: bool, token: str
 ) -> None:
     """Use to set the shutter position."""
-    async with SwitcherType2Api(device_ip, device_id) as api:
+    async with SwitcherType2Api(device_ip, device_id, token) as api:
         printer.pprint(
             asdict(
                 await api.set_position(position),
@@ -474,6 +481,7 @@ if __name__ == "__main__":
                     args.device_id,
                     args.ip_address,
                     args.verbose,
+                    args.token,
                 )
             )
 
@@ -484,6 +492,7 @@ if __name__ == "__main__":
                     args.ip_address,
                     args.position,
                     args.verbose,
+                    args.token,
                 )
             )
 

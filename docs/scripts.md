@@ -276,12 +276,14 @@ options:
 ### script/control_device.py set_shutter_position
 
 ```shell
-usage: control_device.py set_shutter_position [-h] [-v] -d DEVICE_ID -i
+usage: control_device.py set_shutter_position [-h] [-v] [-k TOKEN] -d DEVICE_ID -i
                                               IP_ADDRESS -p POSITION
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -293,11 +295,13 @@ options:
 ### script/control_device.py stop_shutter
 
 ```shell
-usage: control_device.py stop_shutter [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py stop_shutter [-h] [-v] [-k TOKEN] -d DEVICE_ID -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS

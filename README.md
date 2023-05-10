@@ -27,6 +27,12 @@ pip install aioswitcher
   <td><a href="https://github.com/TomerFi/aioswitcher/blob/dev/CONTRIBUTING.md">Contributing</a></td>
 </table>
 
+<strong>
+NOTE: For newer Switcher devices such as: Runner S11, Runner S12 and Lights you need to have a Token for communicating with devices. 
+
+You can get it here: https://switcher.co.il/GetKey
+</strong>
+
 ## Example Usage
 
 <details>
@@ -102,9 +108,9 @@ asyncio.run(print_devices(60))
   <summary>Runner API</summary>
 
   ```python
-  async def control_runner(device_ip, device_id) :
+  async def control_runner(device_ip, device_id, token) :
       # for connecting to a device we need its id and ip address
-      async with SwitcherType2Api(device_ip, device_id) as api:
+      async with SwitcherType2Api(device_ip, device_id, token) as api:
           # get the device current state
           await api.get_shutter_state()
           # open the shutter to 30%

@@ -84,9 +84,9 @@ We can use the Type2 API to gain the following capabilities on Switcher Breeze a
 - Control Breeze (State, Mode, Fan Level, Target Temperature, Vertical Swing)
 
 ```python
-async def control_runner(device_ip, device_id) :
+async def control_runner(device_ip, device_id, token) :
     # for connecting to a device we need its id and ip address
-    async with SwitcherType2Api(device_ip, device_id) as api:
+    async with SwitcherType2Api(device_ip, device_id, token) as api:
         # get the device current state (1)
         await api.get_shutter_state()
         # open the shutter to 30% (2)

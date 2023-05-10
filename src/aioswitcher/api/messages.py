@@ -130,17 +130,22 @@ class StateMessageParser:
         remote_hex = unhexlify(self._hex_response)
         return remote_hex[84:92].decode().rstrip("\x00")
 
-    def get_shutter_position(self) -> int:
-        """Return the current shutter position."""
-        hex_pos = self._hex_response[152:154].decode()
-        return int(hex_pos, 16)
+    def get_shutter_position(self, index) -> int:
+        """Return the current position of the shutter 0 <= pos <= 100."""
+        index -= 1
+        start_index = 152 if index == 0 else 152 + (index * 16)
+        end_index = start_index + 2
+        hex_pos = self._hex_response[start_index:end_index].decode()
+        return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
 
-    def get_shutter_direction(self) -> ShutterDirection:
-        """Return the current shutter direction."""
-        hex_dir = self._hex_response[156:160].decode()
-        directions = dict(map(lambda s: (s.value, s), ShutterDirection))
-        return directions[hex_dir]
-
+    def get_shutter_direction(self, index) -> ShutterDirection:
+        """Return the current direction of the shutter (UP/DOWN/STOP)."""
+        index -= 1
+        start_index = 156 if index == 0 else 156 + (index * 16)
+        end_index = start_index + 4
+        hex_direction = self._hex_response[start_index:end_index].decode()
+        directions = dict(map(lambda d: (d.value, d), ShutterDirection))
+        return directions[hex_direction]
 
 @dataclass
 class SwitcherBaseResponse:
@@ -260,5 +265,5 @@ class SwitcherShutterStateResponse(SwitcherBaseResponse):
         """Post initialization of the message."""
         parser = StateMessageParser(self.unparsed_response)
 
-        self.direction = parser.get_shutter_direction()
-        self.position = parser.get_shutter_position()
+        self.direction = parser.get_shutter_direction(3) # for now test - "self" need to know the type of this device - Runner/Runner S11/Runner S12
+        self.position = parser.get_shutter_position(3) # for now test - "self" need to know the type of this device - Runner/Runner S11/Runner S12
