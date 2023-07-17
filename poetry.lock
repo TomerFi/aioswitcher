@@ -585,20 +585,17 @@ gitdb = ">=4.0.1,<5"
 
 [[package]]
 name = "griffe"
-version = "0.27.1"
+version = "0.32.2"
 description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "griffe-0.27.1-py3-none-any.whl", hash = "sha256:867008786a17532ec529cbf58cee7c4f131b85d61f38691c2046b1883f7be253"},
-    {file = "griffe-0.27.1.tar.gz", hash = "sha256:f213e87f99bf3b76d2d4da999d5a38c2ec01b9a6ce3660c5ab52b663d785edba"},
+    {file = "griffe-0.32.2-py3-none-any.whl", hash = "sha256:9e5303c5c6f662a58d867681f416a87c4fc957e71e771860d9dbe3d84fef6c13"},
+    {file = "griffe-0.32.2.tar.gz", hash = "sha256:25a029aecf4263a0a8f09bc397ce65c75d38f02cb4e1f1b85822840de9bbede4"},
 ]
 
 [package.dependencies]
 colorama = ">=0.4"
-
-[package.extras]
-async = ["aiofiles (>=0.7,<1.0)"]
 
 [[package]]
 name = "idna"
@@ -892,17 +889,17 @@ python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
 
 [[package]]
 name = "mkdocstrings-python"
-version = "1.1.2"
+version = "1.2.0"
 description = "A Python handler for mkdocstrings."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "mkdocstrings_python-1.1.2-py3-none-any.whl", hash = "sha256:c2b652a850fec8e85034a9cdb3b45f8ad1a558686edc20ed1f40b4e17e62070f"},
-    {file = "mkdocstrings_python-1.1.2.tar.gz", hash = "sha256:f28bdcacb9bcdb44b6942a5642c1ea8b36870614d33e29e3c923e204a8d8ed61"},
+    {file = "mkdocstrings_python-1.2.0-py3-none-any.whl", hash = "sha256:2924c9c4286fd236bdae64402b5cc5010dee13779b3edf1a65d97bc02303657b"},
+    {file = "mkdocstrings_python-1.2.0.tar.gz", hash = "sha256:e16bedc236a3a6aa04c916ae6b9d37d2299c80c6e7169fc481a30ed9f8f362a4"},
 ]
 
 [package.dependencies]
-griffe = ">=0.24"
+griffe = ">=0.30"
 mkdocstrings = ">=0.20"
 
 [[package]]
@@ -1773,4 +1770,4 @@ testing = ["big-O", "flake8 (<5)", "jaraco.functools", "jaraco.itertools", "more
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9.0"
-content-hash = "ba13e7aba4f96ccb74567e54f6ae5adb6e8dceb99237c1cb40fb9998141ea23c"
+content-hash = "8e8acda0eef2a4406513812b365c43b41d0990a96a4226a9b0636f04d2a94a49"
