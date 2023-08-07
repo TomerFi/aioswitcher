@@ -158,7 +158,7 @@ asyncio.run(print_devices(60))
 This is **NOT** an official module and it is **NOT** officially supported by the vendor.</br>
 That said, thanks are in order to all the people at [Switcher][12] for their cooperation and general support.
 
-## Contributors
+## Contributors [![all-contributors]][2]
 
 Thanks goes to these wonderful people ([emoji key][1]):
 
@@ -194,6 +194,7 @@ Thanks goes to these wonderful people ([emoji key][1]):
 <!-- Real Links -->
 [0]: https://github.com/TomerFi/aioswitcher/wiki
 [1]: https://allcontributors.org/docs/en/emoji-key
+[2]: https://allcontributors.org
 [3]: https://codecov.io/gh/TomerFi/aioswitcher
 [4]: https://github.com/TomerFi/aioswitcher
 [7]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml
@@ -201,6 +202,7 @@ Thanks goes to these wonderful people ([emoji key][1]):
 [11]: https://pypi.org/project/aioswitcher
 [12]: https://www.switcher.co.il/
 <!-- Badges Links -->
+[all-contributors]: https://img.shields.io/github/all-contributors/tomerfi/aioswitcher?color=ee8449&style=flat-square
 [codecov]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml/badge.svg
 [gh-pages-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pages.yml/badge.svg
