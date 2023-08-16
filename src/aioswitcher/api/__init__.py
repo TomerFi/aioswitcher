@@ -357,6 +357,18 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
+    async def set_light(self, command: Command, index: int) -> SwitcherBaseResponse:
+        """Use for turn on/off light.
+
+        Args:
+            command: use the ``aioswitcher.api.Command`` enum.
+            index: which light to turn on/off
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        raise NotImplementedError
 
 @final
 class SwitcherType1Api(SwitcherApi):
@@ -737,7 +749,6 @@ class SwitcherType2Api(SwitcherApi):
         )
 
         if self._token: # should also check wheather its Runner/Runner S11/RunnerS12
-            test = get_command_length(hex_pos + "00000000")
             packet = packets.RUNNER_SET_POSITION2.format(
                 login_resp.session_id, timestamp, self._device_id, self._token, self._device_pass, test, hex_pos
             )
@@ -811,3 +822,43 @@ class SwitcherType2Api(SwitcherApi):
                     "get shutter state request was not successful"
                 ) from ve
         raise RuntimeError("login request was not successful")
+
+    async def set_light(self, command: Command, index: int) -> SwitcherBaseResponse:
+        """Use for turn on/off light.
+
+        Args:
+            command: use the ``aioswitcher.api.Command`` enum.
+            index: which light to turn on/off
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+
+        command = '0' + command.value
+        command = f"0{index}{command}" if index else command
+        precommand = "370a"
+
+        logger.debug("about to send set light command")
+        timestamp, login_resp = await self._login(DeviceType.RUNNER_S11) # for now test - "self" need to know the type of this device - Runner/Runner S11/Runner S12
+        if not login_resp.successful:
+            logger.error("Failed to log into device with id %s", self._device_id)
+            raise RuntimeError("login request was not successful")
+
+        logger.debug(
+            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
+        )
+
+        if self._token: # should also check wheather its Runner/Runner S11/RunnerS12
+            packet = packets.GENERAL_COMMAND_TOKEN.format(
+                timestamp, self._device_id, self._token, self._device_pass, precommand, command
+            )
+
+        packet = set_message_length(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        logger.debug("sending a control packet")
+
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)

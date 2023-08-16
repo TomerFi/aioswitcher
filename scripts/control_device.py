@@ -428,6 +428,15 @@ async def set_shutter_position(
             )
         )
 
+async def turn_on_light(device_id: str, device_ip: str, index: int, verbose: bool, token: str) -> None:
+    """Use for turn on light."""
+    async with SwitcherType2Api(device_ip, device_id, token) as api:
+        printer.pprint(asdict(await api.set_light(Command.ON, index), verbose))
+
+async def turn_off_light(device_id: str, device_ip: str, index: int, verbose: bool, token: str) -> None:
+    """Use for turn off light."""
+    async with SwitcherType2Api(device_ip, device_id, token) as api:
+        printer.pprint(asdict(await api.set_light(Command.OFF, index), verbose))
 
 if __name__ == "__main__":
     try:
@@ -514,6 +523,28 @@ if __name__ == "__main__":
         elif args.action == "get_thermostat_state":
             asyncio.run(
                 get_thermostat_state(args.device_id, args.ip_address, args.verbose)
+            )
+
+        elif args.action == "turn_on_light":
+            asyncio.run(
+                turn_on_light(
+                    args.device_id,
+                    args.ip_address,
+                    args.index,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "turn_off_light":
+            asyncio.run(
+                turn_off_light(
+                    args.device_id,
+                    args.ip_address,
+                    args.index,
+                    args.verbose,
+                    args.token,
+                )
             )
 
     except KeyboardInterrupt:
