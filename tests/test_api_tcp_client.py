@@ -42,11 +42,14 @@ from aioswitcher.api.remotes import (
 )
 from aioswitcher.device import (
     DeviceState,
+    DeviceType,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
 )
 
+device_type_api1 = DeviceType.TOUCH
+device_type_api2 = DeviceType.RUNNER
 device_id = "aaaaaa"
 device_ip = "1.2.3.4"
 token = "hfui289yfh231h="
@@ -77,7 +80,7 @@ def writer_mock(writer_write):
 @pytest_asyncio.fixture
 async def connected_api_type1(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherType1Api(device_ip, device_id)
+        api = SwitcherType1Api(device_type_api1, device_ip, device_id)
         await api.connect()
         yield api
         await api.disconnect()
@@ -86,7 +89,7 @@ async def connected_api_type1(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherType2Api(device_ip, device_id, token)
+        api = SwitcherType2Api(device_type_api2, device_ip, device_id, token)
         await api.connect()
         yield api
         await api.disconnect()
