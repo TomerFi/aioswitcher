@@ -133,8 +133,3 @@ def set_message_length(message: str) -> str:
     """Set the message length."""
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]
-
-def get_command_length(command: str) -> str:
-    """Get the command length."""
-    length = "{:x}".format(len(unhexlify(command))).ljust(4, "0")
-    return str(length)

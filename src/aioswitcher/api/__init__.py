@@ -35,7 +35,6 @@ from ..device import (
 )
 from ..device.tools import (
     current_timestamp_to_hexadecimal,
-    get_command_length,
     minutes_to_hexadecimal_seconds,
     set_message_length,
     sign_packet_with_crc_key,
