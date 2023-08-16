@@ -99,6 +99,8 @@ class SwitcherApi(ABC):
         self._connected = False
         if token:
             self._token = tok.he(token)
+        else:
+            self._token = ""
         self._phone_id = "0000"
         self._device_pass = "00000000"
 
@@ -106,6 +108,11 @@ class SwitcherApi(ABC):
     def connected(self) -> bool:
         """Return true if api is connected."""
         return self._connected
+
+    @property
+    def is_using_token(self) -> bool:
+        """Return true if token is used."""
+        return self._token != ""
 
     async def __aenter__(self) -> "SwitcherApi":
         """Enter SwitcherApi asynchronous context manager.
@@ -165,6 +172,7 @@ class SwitcherApi(ABC):
         if (
             device_type
             and device_type == DeviceType.RUNNER_S11
+            and self.is_using_token
         ):
             packet = packets.LOGIN3_PACKET_TYPE2.format(self._token, timestamp, self._device_id)
         elif (
@@ -748,7 +756,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._token: # should also check wheather its Runner/Runner S11/RunnerS12
+        if self.is_using_token: # should also check wheather its Runner/Runner S11/RunnerS12
             packet = packets.RUNNER_SET_POSITION2.format(
                 login_resp.session_id, timestamp, self._device_id, self._token, self._device_pass, test, hex_pos
             )
@@ -849,7 +857,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._token: # should also check wheather its Runner/Runner S11/RunnerS12
+        if self.is_using_token: # should also check wheather its Runner/Runner S11/RunnerS12
             packet = packets.GENERAL_COMMAND_TOKEN.format(
                 timestamp, self._device_id, self._token, self._device_pass, precommand, command
             )

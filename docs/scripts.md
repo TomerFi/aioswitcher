@@ -84,6 +84,8 @@ subcommands:
     stop_shutter        stop shutter
     turn_off            turn off the device
     turn_on             turn on the device
+    turn_off_light      turn off light
+    turn_on_light       turn on light
 
 example usage:
 
@@ -337,4 +339,36 @@ options:
                         the ip address assigned to the device
   -t [TIMER], --timer [TIMER]
                         set minutes timer for turn on operation
+```
+
+### script/control_device.py turn_off_light
+
+```shell
+usage: control_device.py turn_off_light [-h] [-v] [-k TOKEN] -d DEVICE_ID -i IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+```
+
+### script/control_device.py turn_on_light
+
+```shell
+usage: control_device.py turn_on_light [-h] [-v] [-k TOKEN] -d DEVICE_ID -i IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
 ```

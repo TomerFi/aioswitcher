@@ -51,6 +51,9 @@ python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "17:30"
 python control_device.py stop_shutter -d f2239a -i "192.168.50.98"\n
 python control_device.py set_shutter_position -d f2239a -i "192.168.50.98"-p 50\n
 
+python control_device.py turn_on_light -d ab1c2d -i "111.222.11.22" -x 2\n
+python control_device.py turn_off_light -d ab1c2d -i "111.222.11.22" -x 2\n
+
 python control_device.py get_thermostat_state -d 3a20b7 -i "192.168.50.77"\n
 
 python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on\n
@@ -284,6 +287,31 @@ turn_on_parser.add_argument(
     help="set minutes timer for turn on operation",
 )
 
+# turn_off_light parser
+turn_on_light_parser = subparsers.add_parser(
+    "turn_off_light", help="turn off light", parents=[shared_parser]
+)
+turn_on_light_parser.add_argument(
+    "-x",
+    "--index",
+    required=True,
+    type=int,
+    default=0,
+    help="select light id to turn off",
+)
+
+# turn_on_light parser
+turn_on_light_parser = subparsers.add_parser(
+    "turn_on_light", help="turn on light", parents=[shared_parser]
+)
+turn_on_light_parser.add_argument(
+    "-x",
+    "--index",
+    required=True,
+    type=int,
+    default=0,
+    help="select light id to turn on",
+)
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
     """Use as custom implementation of the asdict utility method."""
