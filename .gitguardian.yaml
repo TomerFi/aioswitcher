@@ -1,0 +1,5 @@
+secret:
+  ignored-matches:
+  - match: 9451825fd59c0626b28abff6cf0fc1db4abc86d9ae431bf5829aa5a823f097e0
+    name: Generic High Entropy Secret - tests\test_api_tcp_client.py
+version: 2
