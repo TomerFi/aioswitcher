@@ -136,7 +136,7 @@ class StateMessageParser:
         start_index = 152 if index == 0 else 152 + (index * 16)
         end_index = start_index + 2
         hex_pos = self._hex_response[start_index:end_index].decode()
-        return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
+        return int(hex_pos, 16)
 
     def get_shutter_direction(self, index) -> ShutterDirection:
         """Return the current direction of the shutter (UP/DOWN/STOP)."""
