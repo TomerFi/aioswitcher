@@ -40,6 +40,7 @@ pytest-mockservers = "^0.6.0"
 pytest-sugar = "^0.9.4"
 time-machine = "^2.7.0"
 yamllint = "^1.26.3"
+pycryptodome = ">=3.18.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.3.0"

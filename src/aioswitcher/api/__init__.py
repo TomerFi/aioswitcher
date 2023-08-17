@@ -202,49 +202,6 @@ class SwitcherApi(ABC):
             response = await self._reader.read(1024)
         return timestamp, SwitcherLoginResponse(response)
 
-    async def stop(self, index: int = 0) -> SwitcherBaseResponse:
-        """Use for stopping the shutter.
-
-        Args:
-            index: which runner to stop position
-
-        Returns:
-            An instance of ``SwitcherBaseResponse``.
-        """
-        logger.debug("about to send stop shutter command")
-        timestamp, login_resp = await self._login()
-        if not login_resp.successful:
-            logger.error("Failed to log into device with id %s", self._device_id)
-            raise RuntimeError("login request was not successful")
-
-        logger.debug(
-            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
-        )
-
-        if (
-            self.is_using_token
-            and (self._device_type == DeviceType.RUNNER_S11 or self._device_type == DeviceType.RUNNER_S12)
-        ):
-            command = '0000'
-            command = f"0{index}{command}" if index else command
-            precommand = "3702"
-            packet = packets.GENERAL_COMMAND_TOKEN.format(
-                timestamp, self._device_id, self._token, self._device_pass, precommand, command
-            )
-        else:
-            packet = packets.RUNNER_STOP_COMMAND.format(
-                login_resp.session_id, timestamp, self._device_id
-            )
-
-        packet = set_message_length(packet)
-        signed_packet = sign_packet_with_crc_key(packet)
-
-        logger.debug("sending a stop control packet")
-
-        self._writer.write(unhexlify(signed_packet))
-        response = await self._reader.read(1024)
-        return SwitcherBaseResponse(response)
-
     async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
 
@@ -304,7 +261,7 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
-    async def stop(self, index: int = 0) -> SwitcherBaseResponse:
+    async def stop_shutter(self, index: int = 0) -> SwitcherBaseResponse:
         """Use for stopping the shutter.
 
         Args:
@@ -756,6 +713,49 @@ class SwitcherType2Api(SwitcherApi):
         signed_packet = sign_packet_with_crc_key(packet)
 
         logger.debug("sending a control packet")
+
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def stop_shutter(self, index: int = 0) -> SwitcherBaseResponse:
+        """Use for stopping the shutter.
+
+        Args:
+            index: which runner to stop position
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+        """
+        logger.debug("about to send stop shutter command")
+        timestamp, login_resp = await self._login()
+        if not login_resp.successful:
+            logger.error("Failed to log into device with id %s", self._device_id)
+            raise RuntimeError("login request was not successful")
+
+        logger.debug(
+            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
+        )
+
+        if (
+            self.is_using_token
+            and (self._device_type == DeviceType.RUNNER_S11 or self._device_type == DeviceType.RUNNER_S12)
+        ):
+            command = '0000'
+            command = f"0{index}{command}" if index else command
+            precommand = "3702"
+            packet = packets.GENERAL_COMMAND_TOKEN.format(
+                timestamp, self._device_id, self._token, self._device_pass, precommand, command
+            )
+        else:
+            packet = packets.RUNNER_STOP_COMMAND.format(
+                login_resp.session_id, timestamp, self._device_id
+            )
+
+        packet = set_message_length(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        logger.debug("sending a stop control packet")
 
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)

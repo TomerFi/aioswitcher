@@ -450,7 +450,7 @@ async def stop_shutter(device_type: DeviceType, device_id: str, device_ip: str, 
     async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
         printer.pprint(
             asdict(
-                await api.stop(index),
+                await api.stop_shutter(index),
                 verbose,
             )
         )

@@ -30,6 +30,7 @@ class DeviceCategory(Enum):
     THERMOSTAT = auto()
     SHUTTER = auto()
     SHUTTER_SINGLE_LIGHT_DUAL = auto()
+    SHUTTER_DUAL_LIGHT_SINGLE = auto()
 
 
 @unique
@@ -46,6 +47,7 @@ class DeviceType(Enum):
     RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER
     RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER
     RUNNER_S11 = "Switcher Runner S11", "0f01", 2, DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL
+    RUNNER_S12 = "Switcher Runner S12", "0f02", 2, DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE
 
     def __new__(
         cls, value: str, hex_rep: str, protocol_type: int, category: DeviceCategory
