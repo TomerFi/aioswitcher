@@ -333,13 +333,13 @@ class SwitcherShutterSingleLightDualBase(ABC):
     Args:
         position: the current position of the shutter (integer percentage).
         direction: the current direction of the shutter.
-        light1: the current light1 state.
-        light2: the current light2 state.
+        light: the current light state.
+        light2: the current second light state.
     """
 
     position: int
     direction: ShutterDirection
-    light1: LightState
+    light: LightState
     light2: LightState
 
 @dataclass
@@ -347,15 +347,15 @@ class SwitcherShutterDualLightSingleBase(ABC):
     """Abstraction for all switcher devices controlling dual shutter with single light.
 
     Args:
-        position1: the current position of the shutter (integer percentage).
-        direction1: the current direction of the shutter.
-        position2: the current position of the shutter (integer percentage).
-        direction2: the current direction of the shutter.
-        light: the current light1 state.
+        position: the current position of the shutter (integer percentage).
+        direction: the current direction of the shutter.
+        position2: the current position of the second shutter (integer percentage).
+        direction2: the current direction of the second shutter.
+        light: the current light state.
     """
 
-    position1: int
-    direction1: ShutterDirection
+    position: int
+    direction: ShutterDirection
     position2: int
     direction2: ShutterDirection
     light: LightState
