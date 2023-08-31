@@ -342,6 +342,24 @@ class SwitcherShutterSingleLightDualBase(ABC):
     light1: LightState
     light2: LightState
 
+@dataclass
+class SwitcherShutterDualLightSingleBase(ABC):
+    """Abstraction for all switcher devices controlling dual shutter with single light.
+
+    Args:
+        position1: the current position of the shutter (integer percentage).
+        direction1: the current direction of the shutter.
+        position2: the current position of the shutter (integer percentage).
+        direction2: the current direction of the shutter.
+        light: the current light1 state.
+    """
+
+    position1: int
+    direction1: ShutterDirection
+    position2: int
+    direction2: ShutterDirection
+    light: LightState
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -407,4 +425,15 @@ class SwitcherShutterSingleLightDual(SwitcherShutterSingleLightDualBase, Switche
         """Post initialization validate device type category as SHUTTER_SINGLE_LIGHT_DUAL."""
         if self.device_type.category != DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL:
             raise ValueError("only shutters with dual lights are allowed")
+        return super().__post_init__()
+
+@final
+@dataclass
+class SwitcherShutterDualLightSingle(SwitcherShutterDualLightSingleBase, SwitcherBase):
+    """Implementation of the Switcher dual Shutter with single light device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as SHUTTER_DUAL_LIGHT_SINGLE."""
+        if self.device_type.category != DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE:
+            raise ValueError("only dual shutters with single lights are allowed")
         return super().__post_init__()

@@ -35,6 +35,7 @@ from .device import (
     SwitcherPowerPlug,
     SwitcherShutter,
     SwitcherShutterSingleLightDual,
+    SwitcherShutterDualLightSingle,
     SwitcherThermostat,
     SwitcherWaterHeater,
     ThermostatFanLevel,
@@ -156,6 +157,24 @@ def _parse_device_from_datagram(
                     parser.get_shutter_direction(3),
                     parser.get_light_state(1),
                     parser.get_light_state(2)
+                )
+            )
+
+        elif device_type and device_type.category == DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE:
+            logger.debug("discovered a Runner S12 switcher device")
+            device_callback(
+                SwitcherShutterDualLightSingle(
+                    device_type,
+                    DeviceState.ON,
+                    parser.get_device_id(),
+                    parser.get_ip_type2(),
+                    parser.get_mac(),
+                    parser.get_name(),
+                    parser.get_shutter_position(2),
+                    parser.get_shutter_direction(2),
+                    parser.get_shutter_position(3),
+                    parser.get_shutter_direction(3),
+                    parser.get_light_state(1)
                 )
             )
 
