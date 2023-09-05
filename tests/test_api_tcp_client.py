@@ -53,7 +53,7 @@ device_type_api2 = DeviceType.RUNNER
 device_index = 2
 device_id = "aaaaaa"
 device_ip = "1.2.3.4"
-token = "" # Example of token: "zvVvd7JxtN7CgvkD1Psujw=="
+token = ""
 pytestmark = mark.asyncio
 faulty_dummy_response = skipUnless(
     os.environ.get('CI'),
