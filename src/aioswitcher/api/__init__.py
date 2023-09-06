@@ -265,23 +265,23 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
-    async def stop_shutter(self, index: int = 0) -> SwitcherBaseResponse:
+    async def stop_shutter(self, index: int = 1) -> SwitcherBaseResponse:
         """Use for stopping the shutter.
 
         Args:
-            index: which runner to stop position
+            index: which runner to stop position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
         """
         raise NotImplementedError
 
-    async def set_position(self, position: int = 0, index: int = 0) -> SwitcherBaseResponse:
+    async def set_position(self, position: int = 0, index: int = 1) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
         Args:
             position: the position to set the device to, default to 0.
-            index: which runner to set position
+            index: which runner to set position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -353,12 +353,12 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
-    async def set_light(self, command: LightState, index: int) -> SwitcherBaseResponse:
+    async def set_light(self, command: LightState, index: int = 1) -> SwitcherBaseResponse:
         """Use for turn on/off light.
 
         Args:
             command: use the ``aioswitcher.api.LightState`` enum.
-            index: which light to turn on/off
+            index: which light to turn on/off, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -724,11 +724,11 @@ class SwitcherType2Api(SwitcherApi):
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def stop_shutter(self, index: int = 0) -> SwitcherBaseResponse:
+    async def stop_shutter(self, index: int = 1) -> SwitcherBaseResponse:
         """Use for stopping the shutter.
 
         Args:
-            index: which runner to stop position
+            index: which runner to stop position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -768,12 +768,12 @@ class SwitcherType2Api(SwitcherApi):
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def set_position(self, position: int = 0, index: int = 0) -> SwitcherBaseResponse:
+    async def set_position(self, position: int = 0, index: int = 1) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
         Args:
             position: the position to set the device to, default to 0.
-            index: which runner to set position
+            index: which runner to set position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -845,8 +845,11 @@ class SwitcherType2Api(SwitcherApi):
         except (KeyError, ValueError) as ve:
             raise RuntimeError("get breeze state request was not successful") from ve
 
-    async def get_shutter_state(self, index: int = 0) -> SwitcherShutterStateResponse:
+    async def get_shutter_state(self, index: int = 1) -> SwitcherShutterStateResponse:
         """Use for sending the get state packet to the Runner device.
+
+        Args:
+            index: which runner to set get state, default to 1.
 
         Returns:
             An instance of ``SwitcherShutterStateResponse``.
@@ -877,7 +880,7 @@ class SwitcherType2Api(SwitcherApi):
 
         Args:
             command: use the ``aioswitcher.api.LightState`` enum.
-            index: which light to turn on/off
+            index: which light to turn on/off, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
