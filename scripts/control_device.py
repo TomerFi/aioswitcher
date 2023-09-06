@@ -33,6 +33,7 @@ from aioswitcher.device import (
     ThermostatSwing,
 )
 from aioswitcher.schedule import Days
+from aioswitcher.device.tools import convert_str_to_devicetype
 
 printer = PrettyPrinter(indent=4)
 
@@ -509,6 +510,8 @@ if __name__ == "__main__":
     try:
         args = main_parser.parse_args()
 
+        if "device_type" in args and type(args.device_type) is not DeviceType:
+            args.device_type = convert_str_to_devicetype(args.device_type)
         if args.action == "get_state":
             asyncio.run(get_state(args.device_type, args.device_id, args.ip_address, args.verbose))
         elif args.action == "turn_on":
@@ -592,11 +595,12 @@ if __name__ == "__main__":
                     args.swing,
                     args.update,
                     args.verbose,
+                    args.token,
                 )
             )
         elif args.action == "get_thermostat_state":
             asyncio.run(
-                get_thermostat_state(args.device_type, args.device_id, args.ip_address, args.verbose)
+                get_thermostat_state(args.device_type, args.device_id, args.ip_address, args.verbose, args.token)
             )
 
         elif args.action == "turn_on_light":
