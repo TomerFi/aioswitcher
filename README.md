@@ -57,9 +57,9 @@ asyncio.run(print_devices(60))
   <summary>Power Plug API</summary>
 
   ```python
-  async def control_power_plug(device_ip, device_id) :
-      # for connecting to a device we need its id and ip address
-      async with SwitcherType1Api(device_ip, device_id) as api:
+  async def control_power_plug(device_type, device_ip, device_id) :
+      # for connecting to a device we need its type, id and ip address
+      async with SwitcherType1Api(device_type, device_ip, device_id) as api:
           # get the device current state
           await api.get_state()
           # turn the device on
@@ -78,9 +78,9 @@ asyncio.run(print_devices(60))
   <summary>Water Heater API</summary>
 
   ```python
-  async def control_water_heater(device_ip, device_id) :
-      # for connecting to a device we need its id and ip address
-      async with SwitcherType1Api(device_ip, device_id) as api:
+  async def control_water_heater(device_type, device_ip, device_id) :
+      # for connecting to a device we need its type, id and ip address
+      async with SwitcherType1Api(device_type, device_ip, device_id) as api:
           # get the device current state
           await api.get_state()
           # turn the device on for 15 minutes
@@ -109,14 +109,14 @@ asyncio.run(print_devices(60))
 
   ```python
   async def control_runner(device_type, device_ip, device_id, token) :
-      # for connecting to a device we need its id and ip address
+      # for connecting to a device we need its type, id and ip address
       async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
           # get the device current state
           await api.get_shutter_state()
-          # open the shutter to 30%, shutter id is 3
-          await api.set_position(30, 3)
-          # stop the shutter if currently rolling, shutter id is 3
-          await api.stop_shutter(3)
+          # open the shutter to 30%, shutter number id is 1
+          await api.set_position(30, 1)
+          # stop the shutter if currently rolling, shutter number id is 1
+          await api.stop_shutter(1)
 
   asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", ""))
   ```
@@ -127,9 +127,9 @@ asyncio.run(print_devices(60))
   <summary>Breeze API</summary>
 
   ```python
-  async def control_breeze(device_ip, device_id, remote_manager, remote_id) :
-      # for connecting to a device we need its id and ip address
-      async with SwitcherType2Api(device_ip, device_id) as api:
+  async def control_breeze(device_type, device_ip, device_id, remote_manager, remote_id) :
+      # for connecting to a device we need its type, id and ip address
+      async with SwitcherType2Api(device_type, device_ip, device_id) as api:
           # get the device current state
           await api.get_breeze_state()
           # initialize the Breeze RemoteManager and get the remote

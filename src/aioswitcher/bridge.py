@@ -42,7 +42,7 @@ from .device import (
     ThermostatMode,
     ThermostatSwing,
 )
-from .device.tools import seconds_to_iso_time, watts_to_amps
+from .device.tools import seconds_to_iso_time, watts_to_amps, get_shutter_index, get_light_index
 
 __all__ = ["SwitcherBridge"]
 logger = getLogger(__name__)
@@ -139,8 +139,8 @@ def _parse_device_from_datagram(
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
-                    parser.get_shutter_position(1),
-                    parser.get_shutter_direction(1),
+                    parser.get_shutter_position(get_shutter_index(device_type, 1)),
+                    parser.get_shutter_direction(get_shutter_index(device_type, 1)),
                 )
             )
 
@@ -154,10 +154,10 @@ def _parse_device_from_datagram(
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
-                    parser.get_shutter_position(3),
-                    parser.get_shutter_direction(3),
-                    parser.get_light_state(1),
-                    parser.get_light_state(2)
+                    parser.get_shutter_position(get_shutter_index(device_type, 1)),
+                    parser.get_shutter_direction(get_shutter_index(device_type, 2)),
+                    parser.get_light_state(get_light_index(device_type, 1)),
+                    parser.get_light_state(get_light_index(device_type, 2))
                 )
             )
 
@@ -171,11 +171,11 @@ def _parse_device_from_datagram(
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
-                    parser.get_shutter_position(2),
-                    parser.get_shutter_direction(2),
-                    parser.get_shutter_position(3),
-                    parser.get_shutter_direction(3),
-                    parser.get_light_state(1)
+                    parser.get_shutter_position(get_shutter_index(device_type, 1)),
+                    parser.get_shutter_direction(get_shutter_index(device_type, 1)),
+                    parser.get_shutter_position(get_shutter_index(device_type, 2)),
+                    parser.get_shutter_direction(get_shutter_index(device_type, 2)),
+                    parser.get_light_state(get_light_index(device_type, 1))
                 )
             )
 

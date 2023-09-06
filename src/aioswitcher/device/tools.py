@@ -18,6 +18,7 @@ import datetime
 import time
 from binascii import crc_hqx, hexlify, unhexlify
 from struct import pack
+from ..device import DeviceType
 
 
 def seconds_to_iso_time(all_seconds: int) -> str:
@@ -133,3 +134,23 @@ def set_message_length(message: str) -> str:
     """Set the message length."""
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]
+
+def get_shutter_index(device_type: DeviceType, device_num: int) -> int:
+    """This function return the currect shutter index (based of device type)."""
+    if device_type == DeviceType.RUNNER_S11:
+        return 3
+    elif device_type == DeviceType.RUNNER_S12:
+        if device_num == 1:
+            return 2
+        else:
+            return 3
+    return 1
+
+def get_light_index(device_type: DeviceType, device_num: int) -> int:
+    """This function return the currect light index (based of device type)."""
+    if device_type == DeviceType.RUNNER_S11:
+        if device_num == 1:
+            return 1
+        else:
+            return 2
+    return 1

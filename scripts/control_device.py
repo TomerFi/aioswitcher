@@ -50,10 +50,20 @@ python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.2
 python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
 
 python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
+python control_device.py stop_shutter -c "Switcher Runner S11" -d f2239a -i "192.168.50.98"\n
+python control_device.py stop_shutter -c "Switcher Runner S12" -d f2239a -i "192.168.50.98" -x 1\n
+python control_device.py stop_shutter -c "Switcher Runner S12" -d f2239a -i "192.168.50.98" -x 2\n
 python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50\n
+python control_device.py set_shutter_position -c "Switcher Runner S11" -d f2239a -i "192.168.50.98" -p 50\n
+python control_device.py set_shutter_position -c "Switcher Runner S12" -d f2239a -i "192.168.50.98" -x 1 -p 50\n
+python control_device.py set_shutter_position -c "Switcher Runner S12" -d f2239a -i "192.168.50.98" -x 2 -p 50\n
 
+python control_device.py turn_on_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 1\n
 python control_device.py turn_on_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 2\n
+python control_device.py turn_on_light -c "Switcher Runner S12" -d ab1c2d -i "111.222.11.22"\n
+python control_device.py turn_off_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 1\n
 python control_device.py turn_off_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 2\n
+python control_device.py turn_off_light -c "Switcher Runner S12" -d ab1c2d -i "111.222.11.22"\n
 
 python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"\n
 
@@ -273,10 +283,26 @@ set_shutter_position_parser.add_argument(
     type=int,
     help="Shutter position percentage",
 )
+set_shutter_position_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=1,
+    help="select shutter number id to operate",
+)
 
 # stop shutter parser
 stop_shutter_parser = subparsers.add_parser(
     "stop_shutter", help="stop shutter", parents=[shared_parser]
+)
+stop_shutter_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=1,
+    help="select shutter number id to operate",
 )
 
 # turn_off parser
@@ -304,10 +330,10 @@ turn_on_light_parser = subparsers.add_parser(
 turn_on_light_parser.add_argument(
     "-x",
     "--index",
-    required=True,
+    required=False,
     type=int,
-    default=0,
-    help="select light id to turn off",
+    default=1,
+    help="select light number id to turn off",
 )
 
 # turn_on_light parser
@@ -317,10 +343,10 @@ turn_on_light_parser = subparsers.add_parser(
 turn_on_light_parser.add_argument(
     "-x",
     "--index",
-    required=True,
+    required=False,
     type=int,
-    default=0,
-    help="select light id to turn on",
+    default=1,
+    help="select light number id to turn on",
 )
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
@@ -332,9 +358,9 @@ def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
     }
 
 
-async def get_thermostat_state(device_type: DeviceType, device_id: str, device_ip: str, verbose: bool) -> None:
+async def get_thermostat_state(device_type: DeviceType, device_id: str, device_ip: str, verbose: bool, token: str) -> None:
     """Use to launch a get_breeze_state request."""
-    async with SwitcherType2Api(device_type, device_ip, device_id) as api:
+    async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
         printer.pprint(asdict(await api.get_breeze_state(), verbose))
 
 
@@ -356,9 +382,10 @@ async def control_thermostat(
     swing: Union[str, None] = None,
     update_state: bool = False,
     verbose: bool = False,
+    token: str = ""
 ) -> None:
     """Control Breeze device."""
-    async with SwitcherType2Api(device_type, device_ip, device_id) as api:
+    async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
         printer.pprint(
             asdict(
                 await api.control_breeze_device(

@@ -40,6 +40,8 @@ from ..device.tools import (
     sign_packet_with_crc_key,
     string_to_hexadecimale_device_name,
     timedelta_to_hexadecimal_seconds,
+    get_shutter_index,
+    get_light_index,
 )
 from ..schedule import Days
 from ..schedule.tools import time_to_hexadecimal_timestamp, weekdays_to_hexadecimal
@@ -84,6 +86,7 @@ class SwitcherApi(ABC):
     """Switcher TCP based API.
 
     Args:
+        device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
         port: the port of the device, default is 9957.
@@ -368,6 +371,7 @@ class SwitcherType1Api(SwitcherApi):
     """Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.
 
     Args:
+        device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
     """
@@ -572,6 +576,7 @@ class SwitcherType2Api(SwitcherApi):
     """Switcher Type2 devices (Breeze, Runners) TCP based API.
 
     Args:
+        device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
     """
@@ -728,6 +733,7 @@ class SwitcherType2Api(SwitcherApi):
         Returns:
             An instance of ``SwitcherBaseResponse``.
         """
+        index = get_shutter_index(self._device_type, index)
         logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login()
         if not login_resp.successful:
@@ -773,6 +779,7 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
+        index = get_shutter_index(self._device_type, index)
         hex_pos = "{0:0{1}x}".format(position, 2)
 
         logger.debug("about to send set position command")
@@ -876,7 +883,7 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-
+        index = get_light_index(self._device_type, index)
         command = f"0{index}{command.value}" if index else command.value
         precommand = "370a"
 
