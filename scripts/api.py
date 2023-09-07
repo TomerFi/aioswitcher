@@ -22,7 +22,9 @@ from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
 from aioswitcher.device import DeviceType, LightState
 
 
-async def control_power_plug(device_type, device_ip, device_id):
+async def control_power_plug(
+    device_type: DeviceType, device_ip: str, device_id: str
+) -> None:
     """Control Power Plug."""
     # for connecting to a device we need its id and ip address
     async with SwitcherType1Api(device_type, device_ip, device_id) as api:
@@ -36,7 +38,9 @@ async def control_power_plug(device_type, device_ip, device_id):
         await api.set_device_name("my new name")
 
 
-async def control_runner(device_type, device_ip, device_id, token):
+async def control_runner(
+    device_type: DeviceType, device_ip: str, device_id: str, token: str
+) -> None:
     """Control Runner."""
     # for connecting to a device we need its id and ip address
     async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
@@ -48,7 +52,9 @@ async def control_runner(device_type, device_ip, device_id, token):
         await api.stop_shutter(1)
 
 
-async def control_runner_s11(device_type, device_ip, device_id, token):
+async def control_runner_s11(
+    device_type: DeviceType, device_ip: str, device_id: str, token: str
+) -> None:
     """Control Runner S11."""
     # for connecting to a device we need its id and ip address
     async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
@@ -68,7 +74,9 @@ async def control_runner_s11(device_type, device_ip, device_id, token):
         await api.stop_shutter(1)
 
 
-async def control_runner_s12(device_type, device_ip, device_id, token):
+async def control_runner_s12(
+    device_type: DeviceType, device_ip: str, device_id: str, token: str
+) -> None:
     """Control Runner S12."""
     # for connecting to a device we need its id and ip address
     async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:

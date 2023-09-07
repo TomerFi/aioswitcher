@@ -107,7 +107,7 @@ class SwitcherApi(ABC):
         self._port = port
         self._connected = False
         if token:
-            self._token = tok.he(token)
+            self._token = tok.he(token)  # type: ignore
         else:
             self._token = ""
         self._phone_id = "0000"
@@ -121,7 +121,7 @@ class SwitcherApi(ABC):
     @property
     def is_using_token(self) -> bool:
         """Return true if token is used."""
-        return self._token != ""
+        return str(self._token) != ""
 
     async def __aenter__(self) -> "SwitcherApi":
         """Enter SwitcherApi asynchronous context manager.
@@ -300,6 +300,18 @@ class SwitcherApi(ABC):
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
+
+        """
+        raise NotImplementedError
+
+    async def get_shutter_state(self, index: int = 1) -> SwitcherBaseResponse:
+        """Use for sending the get state packet to the Runner device.
+
+        Args:
+            index: which runner to set get state, default to 1.
+
+        Returns:
+            An instance of ``SwitcherShutterStateResponse``.
 
         """
         raise NotImplementedError
@@ -921,7 +933,9 @@ class SwitcherType2Api(SwitcherApi):
                 ) from ve
         raise RuntimeError("login request was not successful")
 
-    async def set_light(self, command: LightState, index: int) -> SwitcherBaseResponse:
+    async def set_light(
+        self, command: LightState, index: int = 1
+    ) -> SwitcherBaseResponse:
         """Use for turn on/off light.
 
         Args:
@@ -933,7 +947,7 @@ class SwitcherType2Api(SwitcherApi):
 
         """
         index = get_light_index(self._device_type, index)
-        command = f"0{index}{command.value}" if index else command.value
+        hex_pos = f"0{index}{command.value}" if index else command.value
         precommand = "370a"
 
         logger.debug("about to send set light command")
@@ -952,7 +966,7 @@ class SwitcherType2Api(SwitcherApi):
             self._token,
             self._device_pass,
             precommand,
-            command,
+            hex_pos,
         )
 
         packet = set_message_length(packet)
