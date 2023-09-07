@@ -34,8 +34,8 @@ from .device import (
     SwitcherBase,
     SwitcherPowerPlug,
     SwitcherShutter,
-    SwitcherShutterSingleLightDual,
     SwitcherShutterDualLightSingle,
+    SwitcherShutterSingleLightDual,
     SwitcherThermostat,
     SwitcherWaterHeater,
     ThermostatFanLevel,
@@ -43,10 +43,10 @@ from .device import (
     ThermostatSwing,
 )
 from .device.tools import (
+    get_light_index,
+    get_shutter_index,
     seconds_to_iso_time,
     watts_to_amps,
-    get_shutter_index,
-    get_light_index,
 )
 
 __all__ = ["SwitcherBridge"]

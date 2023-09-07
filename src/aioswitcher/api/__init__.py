@@ -35,17 +35,17 @@ from ..device import (
 )
 from ..device.tools import (
     current_timestamp_to_hexadecimal,
+    get_light_index,
+    get_shutter_index,
     minutes_to_hexadecimal_seconds,
     set_message_length,
     sign_packet_with_crc_key,
     string_to_hexadecimale_device_name,
     timedelta_to_hexadecimal_seconds,
-    get_shutter_index,
-    get_light_index,
 )
 from ..schedule import Days
 from ..schedule.tools import time_to_hexadecimal_timestamp, weekdays_to_hexadecimal
-from . import packets
+from . import packets, tok
 from .messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
@@ -55,7 +55,6 @@ from .messages import (
     SwitcherThermostatStateResponse,
 )
 from .remotes import SwitcherBreezeRemote
-from . import tok
 
 logger = getLogger(__name__)
 

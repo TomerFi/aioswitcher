@@ -18,6 +18,7 @@ import datetime
 import time
 from binascii import crc_hqx, hexlify, unhexlify
 from struct import pack
+
 from ..device import DeviceType
 
 

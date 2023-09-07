@@ -32,8 +32,8 @@ from aioswitcher.device import (
     ThermostatMode,
     ThermostatSwing,
 )
-from aioswitcher.schedule import Days
 from aioswitcher.device.tools import convert_str_to_devicetype
+from aioswitcher.schedule import Days
 
 printer = PrettyPrinter(indent=4)
 

@@ -26,7 +26,7 @@ from ..device import (
     ThermostatMode,
     ThermostatSwing,
 )
-from ..device.tools import seconds_to_iso_time, watts_to_amps, get_shutter_index
+from ..device.tools import get_shutter_index, seconds_to_iso_time, watts_to_amps
 from ..schedule.parser import SwitcherSchedule, get_schedules
 
 
