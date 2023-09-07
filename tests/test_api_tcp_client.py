@@ -43,6 +43,7 @@ from aioswitcher.api.remotes import (
 from aioswitcher.device import (
     DeviceState,
     DeviceType,
+    LightState,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
@@ -409,6 +410,15 @@ async def test_set_shutter_position_device_function_with_valid_packets(reader_mo
     two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_shutter_position_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type2.set_position(50, device_index)
+    assert_that(writer_write.call_count).is_equal_to(2)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+
+
+async def test_set_light_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_light_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
+        response = await connected_api_type2.set_light(LightState.ON, device_index)
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
