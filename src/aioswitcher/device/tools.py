@@ -138,7 +138,7 @@ def set_message_length(message: str) -> str:
 
 
 def convert_str_to_devicetype(device_type: str) -> DeviceType:
-    """This function return DeviceType based on its string name"""
+    """Convert string name to DeviceType."""
     if device_type == "Switcher Mini":
         return DeviceType.MINI
     elif device_type == "Switcher Power Plug":
@@ -165,7 +165,7 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
 
 
 def get_shutter_index(device_type: DeviceType, device_num: int) -> int:
-    """This function return the currect shutter index (based of device type)."""
+    """Return the currect shutter index (based of device type)."""
     if device_type == DeviceType.RUNNER_S11:
         return 3
     elif device_type == DeviceType.RUNNER_S12:
@@ -177,7 +177,7 @@ def get_shutter_index(device_type: DeviceType, device_num: int) -> int:
 
 
 def get_light_index(device_type: DeviceType, device_num: int) -> int:
-    """This function return the currect light index (based of device type)."""
+    """Return the currect light index (based of device type)."""
     if device_type == DeviceType.RUNNER_S11:
         if device_num == 1:
             return 1
