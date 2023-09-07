@@ -176,8 +176,9 @@ class SwitcherApi(ABC):
         timestamp = current_timestamp_to_hexadecimal()
         if (
             self._device_type
-            and self._device_type == DeviceType.RUNNER_S11
             and self.is_using_token
+            and self._device_type == DeviceType.RUNNER_S11
+            or self._device_type == DeviceType.RUNNER_S12
         ):
             packet = packets.LOGIN3_PACKET_TYPE2.format(self._token, timestamp, self._device_id)
         elif (
@@ -198,6 +199,7 @@ class SwitcherApi(ABC):
         if (
             self._device_type
             and self._device_type == DeviceType.RUNNER_S11
+            or self._device_type == DeviceType.RUNNER_S12
         ):
             packet = packets.LOGIN3_PACKET2_TYPE2.format(self._device_id, timestamp, self._token)
             signed_packet = sign_packet_with_crc_key(packet)
@@ -900,7 +902,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self.is_using_token: # should also check wheather its Runner/Runner S11/RunnerS12
+        if self.is_using_token: # should also check wheather its Runner/Runner S11/Runner S12
             packet = packets.GENERAL_COMMAND_TOKEN.format(
                 timestamp, self._device_id, self._token, self._device_pass, precommand, command
             )
