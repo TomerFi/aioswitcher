@@ -91,46 +91,20 @@ async def control_runner_s12(device_type, device_ip, device_id, token):
 
 
 # Examples
-asyncio.run(
-    control_power_plug(
-        DeviceType.POWER_PLUG,
-        "111.222.11.22",
-        "ab1c2d"
-    )
-)
+asyncio.run(control_power_plug(DeviceType.POWER_PLUG, "111.222.11.22", "ab1c2d"))
 
-asyncio.run(
-    control_runner(
-        DeviceType.RUNNER,
-        "111.222.11.22",
-        "ab1c2d",
-        ""
-    )
-)
+asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", ""))
 
-asyncio.run(
-    control_runner(
-        DeviceType.RUNNER_MINI,
-        "111.222.11.22",
-        "ab1c2d",
-        ""
-    )
-)
+asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", ""))
 
 asyncio.run(
     control_runner_s11(
-        DeviceType.RUNNER_S11,
-        "111.222.11.22",
-        "ab1c2d",
-        "zvVvd7JxtN7CgvkD1Psujw=="
+        DeviceType.RUNNER_S11, "111.222.11.22", "ab1c2d", "zvVvd7JxtN7CgvkD1Psujw=="
     )
 )
 
 asyncio.run(
     control_runner_s12(
-        DeviceType.RUNNER_S12,
-        "111.222.11.22",
-        "ab1c2d",
-        "zvVvd7JxtN7CgvkD1Psujw=="
+        DeviceType.RUNNER_S12, "111.222.11.22", "ab1c2d", "zvVvd7JxtN7CgvkD1Psujw=="
     )
 )
