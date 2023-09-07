@@ -155,13 +155,13 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
         return DeviceType.BREEZE
     elif device_type == "Switcher Runner":
         return DeviceType.RUNNER
-    elif device_type == "Switcher Mini":
-        return DeviceType.MINI
+    elif device_type == "Switcher Runner Mini":
+        return DeviceType.RUNNER_MINI
     elif device_type == "Switcher Runner S11":
         return DeviceType.RUNNER_S11
     elif device_type == "Switcher Runner S12":
         return DeviceType.RUNNER_S12
-    return None
+    return DeviceType.MINI
 
 
 def get_shutter_index(device_type: DeviceType, device_num: int) -> int:
