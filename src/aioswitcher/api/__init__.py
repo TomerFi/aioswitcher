@@ -94,7 +94,12 @@ class SwitcherApi(ABC):
     """
 
     def __init__(
-        self, device_type: DeviceType, ip_address: str, device_id: str, port: int = SWITCHER_TCP_PORT_TYPE1, token: str = ""
+        self,
+        device_type: DeviceType,
+        ip_address: str,
+        device_id: str,
+        port: int = SWITCHER_TCP_PORT_TYPE1,
+        token: str = "",
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         self._device_type = device_type
@@ -160,9 +165,7 @@ class SwitcherApi(ABC):
             logger.info("switcher device not connected")
         self._connected = False
 
-    async def _login(
-        self
-    ) -> Tuple[str, SwitcherLoginResponse]:
+    async def _login(self) -> Tuple[str, SwitcherLoginResponse]:
         """Use for sending the login packet to the device.
 
         Returns:
@@ -177,10 +180,14 @@ class SwitcherApi(ABC):
         if (
             self._device_type
             and self.is_using_token
-            and self._device_type == DeviceType.RUNNER_S11
-            or self._device_type == DeviceType.RUNNER_S12
+            and (
+                self._device_type == DeviceType.RUNNER_S11
+                or self._device_type == DeviceType.RUNNER_S12
+            )
         ):
-            packet = packets.LOGIN3_PACKET_TYPE2.format(self._token, timestamp, self._device_id)
+            packet = packets.LOGIN3_PACKET_TYPE2.format(
+                self._token, timestamp, self._device_id
+            )
         elif (
             self._device_type
             and self._device_type == DeviceType.BREEZE
@@ -198,10 +205,15 @@ class SwitcherApi(ABC):
 
         if (
             self._device_type
-            and self._device_type == DeviceType.RUNNER_S11
-            or self._device_type == DeviceType.RUNNER_S12
+            and self.is_using_token
+            and (
+                self._device_type == DeviceType.RUNNER_S11
+                or self._device_type == DeviceType.RUNNER_S12
+            )
         ):
-            packet = packets.LOGIN3_PACKET2_TYPE2.format(self._device_id, timestamp, self._token)
+            packet = packets.LOGIN3_PACKET2_TYPE2.format(
+                self._device_id, timestamp, self._token
+            )
             signed_packet = sign_packet_with_crc_key(packet)
             logger.debug("sending a login2 packet")
             self._writer.write(unhexlify(signed_packet))
@@ -278,7 +290,9 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
-    async def set_position(self, position: int = 0, index: int = 1) -> SwitcherBaseResponse:
+    async def set_position(
+        self, position: int = 0, index: int = 1
+    ) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
         Args:
@@ -355,7 +369,9 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
-    async def set_light(self, command: LightState, index: int = 1) -> SwitcherBaseResponse:
+    async def set_light(
+        self, command: LightState, index: int = 1
+    ) -> SwitcherBaseResponse:
         """Use for turn on/off light.
 
         Args:
@@ -368,6 +384,7 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
+
 @final
 class SwitcherType1Api(SwitcherApi):
     """Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.
@@ -378,7 +395,9 @@ class SwitcherType1Api(SwitcherApi):
         device_id: the id of the desired device.
     """
 
-    def __init__(self, device_type: DeviceType,ip_address: str, device_id: str) -> None:
+    def __init__(
+        self, device_type: DeviceType, ip_address: str, device_id: str
+    ) -> None:
         """Initialize the Switcher TCP connection API."""
         super().__init__(device_type, ip_address, device_id, SWITCHER_TCP_PORT_TYPE1)
 
@@ -583,9 +602,13 @@ class SwitcherType2Api(SwitcherApi):
         device_id: the id of the desired device.
     """
 
-    def __init__(self, device_type: DeviceType, ip_address: str, device_id: str, token: str) -> None:
+    def __init__(
+        self, device_type: DeviceType, ip_address: str, device_id: str, token: str
+    ) -> None:
         """Initialize the Switcher TCP connection API."""
-        super().__init__(device_type, ip_address, device_id, SWITCHER_TCP_PORT_TYPE2, token)
+        super().__init__(
+            device_type, ip_address, device_id, SWITCHER_TCP_PORT_TYPE2, token
+        )
 
     async def control_breeze_device(
         self,
@@ -747,14 +770,23 @@ class SwitcherType2Api(SwitcherApi):
         )
 
         if (
-            self.is_using_token
-            and (self._device_type == DeviceType.RUNNER_S11 or self._device_type == DeviceType.RUNNER_S12)
+            self._device_type
+            and self.is_using_token
+            and (
+                self._device_type == DeviceType.RUNNER_S11
+                or self._device_type == DeviceType.RUNNER_S12
+            )
         ):
-            command = '0000'
+            command = "0000"
             command = f"0{index}{command}" if index else command
             precommand = "3702"
             packet = packets.GENERAL_COMMAND_TOKEN.format(
-                timestamp, self._device_id, self._token, self._device_pass, precommand, command
+                timestamp,
+                self._device_id,
+                self._token,
+                self._device_pass,
+                precommand,
+                command,
             )
         else:
             packet = packets.RUNNER_STOP_COMMAND.format(
@@ -770,7 +802,9 @@ class SwitcherType2Api(SwitcherApi):
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def set_position(self, position: int = 0, index: int = 1) -> SwitcherBaseResponse:
+    async def set_position(
+        self, position: int = 0, index: int = 1
+    ) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
         Args:
@@ -795,13 +829,22 @@ class SwitcherType2Api(SwitcherApi):
         )
 
         if (
-            self.is_using_token
-            and (self._device_type == DeviceType.RUNNER_S11 or self._device_type == DeviceType.RUNNER_S12)
+            self._device_type
+            and self.is_using_token
+            and (
+                self._device_type == DeviceType.RUNNER_S11
+                or self._device_type == DeviceType.RUNNER_S12
+            )
         ):
             hex_pos = f"0{index}{hex_pos}" if index else hex_pos
             precommand = "3701"
             packet = packets.GENERAL_COMMAND_TOKEN.format(
-                timestamp, self._device_id, self._token, self._device_pass, precommand, hex_pos
+                timestamp,
+                self._device_id,
+                self._token,
+                self._device_pass,
+                precommand,
+                hex_pos,
             )
         else:
             packet = packets.RUNNER_SET_POSITION.format(
@@ -869,7 +912,9 @@ class SwitcherType2Api(SwitcherApi):
             self._writer.write(unhexlify(signed_packet))
             state_resp = await self._reader.read(1024)
             try:
-                response = SwitcherShutterStateResponse(state_resp, self._device_type, index)
+                response = SwitcherShutterStateResponse(
+                    state_resp, self._device_type, index
+                )
                 return response
             except (KeyError, ValueError) as ve:
                 raise RuntimeError(
@@ -902,10 +947,14 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self.is_using_token: # should also check wheather its Runner/Runner S11/Runner S12
-            packet = packets.GENERAL_COMMAND_TOKEN.format(
-                timestamp, self._device_id, self._token, self._device_pass, precommand, command
-            )
+        packet = packets.GENERAL_COMMAND_TOKEN.format(
+            timestamp,
+            self._device_id,
+            self._token,
+            self._device_pass,
+            precommand,
+            command,
+        )
 
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)

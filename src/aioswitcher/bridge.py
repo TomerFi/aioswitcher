@@ -42,7 +42,12 @@ from .device import (
     ThermostatMode,
     ThermostatSwing,
 )
-from .device.tools import seconds_to_iso_time, watts_to_amps, get_shutter_index, get_light_index
+from .device.tools import (
+    seconds_to_iso_time,
+    watts_to_amps,
+    get_shutter_index,
+    get_light_index,
+)
 
 __all__ = ["SwitcherBridge"]
 logger = getLogger(__name__)
@@ -61,7 +66,7 @@ SWITCHER_DEVICE_TO_UDP_PORT = {
     DeviceCategory.THERMOSTAT: SWITCHER_UDP_PORT_TYPE2,
     DeviceCategory.SHUTTER: SWITCHER_UDP_PORT_TYPE2,
     DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
-    DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION
+    DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
 }
 
 
@@ -144,7 +149,10 @@ def _parse_device_from_datagram(
                 )
             )
 
-        elif device_type and device_type.category == DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL:
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL
+        ):
             logger.debug("discovered a Runner S11 switcher device")
             device_callback(
                 SwitcherShutterSingleLightDual(
@@ -157,11 +165,14 @@ def _parse_device_from_datagram(
                     parser.get_shutter_position(get_shutter_index(device_type, 1)),
                     parser.get_shutter_direction(get_shutter_index(device_type, 2)),
                     parser.get_light_state(get_light_index(device_type, 1)),
-                    parser.get_light_state(get_light_index(device_type, 2))
+                    parser.get_light_state(get_light_index(device_type, 2)),
                 )
             )
 
-        elif device_type and device_type.category == DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE:
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE
+        ):
             logger.debug("discovered a Runner S12 switcher device")
             device_callback(
                 SwitcherShutterDualLightSingle(
@@ -175,7 +186,7 @@ def _parse_device_from_datagram(
                     parser.get_shutter_direction(get_shutter_index(device_type, 1)),
                     parser.get_shutter_position(get_shutter_index(device_type, 2)),
                     parser.get_shutter_direction(get_shutter_index(device_type, 2)),
-                    parser.get_light_state(get_light_index(device_type, 1))
+                    parser.get_light_state(get_light_index(device_type, 1)),
                 )
             )
 
@@ -436,9 +447,7 @@ class DatagramParser:
         hex_pos = hexlify(self.message[start_index:end_index]).decode()
         hex_device_state = hex_pos[0:2]
         return (
-            LightState.ON
-            if hex_device_state == LightState.ON.value
-            else LightState.OFF
+            LightState.ON if hex_device_state == LightState.ON.value else LightState.OFF
         )
 
     # Switcher Breeze methods

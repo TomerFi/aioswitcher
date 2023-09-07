@@ -46,8 +46,18 @@ class DeviceType(Enum):
     BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT
     RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER
     RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER
-    RUNNER_S11 = "Switcher Runner S11", "0f01", 2, DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL
-    RUNNER_S12 = "Switcher Runner S12", "0f02", 2, DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE
+    RUNNER_S11 = (
+        "Switcher Runner S11",
+        "0f01",
+        2,
+        DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL,
+    )
+    RUNNER_S12 = (
+        "Switcher Runner S12",
+        "0f02",
+        2,
+        DeviceCategory.SHUTTER_DUAL_LIGHT_SINGLE,
+    )
 
     def __new__(
         cls, value: str, hex_rep: str, protocol_type: int, category: DeviceCategory
@@ -105,6 +115,7 @@ class DeviceState(Enum):
         """Return the value of the state."""
         return self._value  # type: ignore
 
+
 @final
 class LightState(Enum):
     """Enum class representing the light's state."""
@@ -128,6 +139,7 @@ class LightState(Enum):
     def value(self) -> str:
         """Return the value of the state."""
         return self._value  # type: ignore
+
 
 class ThermostatMode(Enum):
     """Enum class representing the thermostat device's position."""
@@ -342,6 +354,7 @@ class SwitcherShutterSingleLightDualBase(ABC):
     light: LightState
     light2: LightState
 
+
 @dataclass
 class SwitcherShutterDualLightSingleBase(ABC):
     """Abstraction for all switcher devices controlling dual shutter with single light.
@@ -359,6 +372,7 @@ class SwitcherShutterDualLightSingleBase(ABC):
     position2: int
     direction2: ShutterDirection
     light: LightState
+
 
 @final
 @dataclass
@@ -416,6 +430,7 @@ class SwitcherShutter(SwitcherShutterBase, SwitcherBase):
             raise ValueError("only shutters are allowed")
         return super().__post_init__()
 
+
 @final
 @dataclass
 class SwitcherShutterSingleLightDual(SwitcherShutterSingleLightDualBase, SwitcherBase):
@@ -426,6 +441,7 @@ class SwitcherShutterSingleLightDual(SwitcherShutterSingleLightDualBase, Switche
         if self.device_type.category != DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL:
             raise ValueError("only shutters with dual lights are allowed")
         return super().__post_init__()
+
 
 @final
 @dataclass

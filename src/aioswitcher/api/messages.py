@@ -148,6 +148,7 @@ class StateMessageParser:
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
         return directions[hex_direction]
 
+
 @dataclass
 class SwitcherBaseResponse:
     """Representation of the switcher base response message.
@@ -267,6 +268,7 @@ class SwitcherShutterStateResponse(SwitcherBaseResponse):
     def __post_init__(self) -> None:
         """Post initialization of the message."""
         parser = StateMessageParser(self.unparsed_response)
+        index = get_shutter_index(self.device_type, self.index)
 
-        self.direction = parser.get_shutter_direction(get_shutter_index(self.device_type, self.index))
-        self.position = parser.get_shutter_position(get_shutter_index(self.device_type, self.index))
+        self.direction = parser.get_shutter_direction(index)
+        self.position = parser.get_shutter_position(index)
