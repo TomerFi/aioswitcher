@@ -136,6 +136,7 @@ def set_message_length(message: str) -> str:
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]
 
+
 def convert_str_to_devicetype(device_type: str) -> DeviceType:
     """Convert string name to DeviceType."""
     if device_type == "Switcher Mini":

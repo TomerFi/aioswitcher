@@ -88,7 +88,11 @@ class SwitcherApi(ABC):
     """
 
     def __init__(
-        self, device_type: DeviceType, ip_address: str, device_id: str, port: int = SWITCHER_TCP_PORT_TYPE1
+        self,
+        device_type: DeviceType,
+        ip_address: str,
+        device_id: str,
+        port: int = SWITCHER_TCP_PORT_TYPE1,
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         self._device_type = device_type
@@ -333,7 +337,9 @@ class SwitcherType1Api(SwitcherApi):
         device_id: the id of the desired device.
     """
 
-    def __init__(self, device_type: DeviceType, ip_address: str, device_id: str) -> None:
+    def __init__(
+        self, device_type: DeviceType, ip_address: str, device_id: str
+    ) -> None:
         """Initialize the Switcher TCP connection API."""
         super().__init__(device_type, ip_address, device_id, SWITCHER_TCP_PORT_TYPE1)
 
@@ -538,7 +544,9 @@ class SwitcherType2Api(SwitcherApi):
         device_id: the id of the desired device.
     """
 
-    def __init__(self, device_type: DeviceType, ip_address: str, device_id: str) -> None:
+    def __init__(
+        self, device_type: DeviceType, ip_address: str, device_id: str
+    ) -> None:
         """Initialize the Switcher TCP connection API."""
         super().__init__(device_type, ip_address, device_id, SWITCHER_TCP_PORT_TYPE2)
 
