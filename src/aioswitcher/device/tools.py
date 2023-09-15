@@ -137,24 +137,24 @@ def set_message_length(message: str) -> str:
     return "fef0" + str(length) + message[8:]
 
 
-def convert_str_to_devicetype(device_type: str) -> DeviceType:
+def convert_str_to_devicetype(device_type: str) -> DeviceType | None:
     """Convert string name to DeviceType."""
-    if device_type == "Switcher Mini":
+    if device_type == DeviceType.MINI.value:
         return DeviceType.MINI
-    elif device_type == "Switcher Power Plug":
+    elif device_type == DeviceType.POWER_PLUG.value:
         return DeviceType.POWER_PLUG
-    elif device_type == "Switcher Touch":
+    elif device_type == DeviceType.TOUCH.value:
         return DeviceType.TOUCH
-    elif device_type == "Switcher V2 (esp)":
+    elif device_type == DeviceType.V2_ESP.value:
         return DeviceType.V2_ESP
-    elif device_type == "Switcher V2 (qualcomm)":
+    elif device_type == DeviceType.V2_QCA.value:
         return DeviceType.V2_QCA
-    elif device_type == "Switcher V4":
+    elif device_type == DeviceType.V4.value:
         return DeviceType.V4
-    elif device_type == "Switcher Breeze":
+    elif device_type == DeviceType.BREEZE.value:
         return DeviceType.BREEZE
-    elif device_type == "Switcher Runner":
+    elif device_type == DeviceType.RUNNER.value:
         return DeviceType.RUNNER
-    elif device_type == "Switcher Runner Mini":
+    elif device_type == DeviceType.RUNNER_MINI.value:
         return DeviceType.RUNNER_MINI
-    return DeviceType.MINI
+    return None

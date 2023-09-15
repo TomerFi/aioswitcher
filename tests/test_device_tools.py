@@ -109,3 +109,10 @@ def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(wat
     ])
 def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
+
+
+@mark.parametrize("str, type", [
+    ("Switcher new device does not define", None)
+    ])
+def test_convert_str_to_devicetype_should_return_none(str, type):
+    assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
