@@ -20,6 +20,7 @@ from typing import Set, final
 
 from ..device import (
     DeviceState,
+    DeviceType,
     ShutterDirection,
     ThermostatFanLevel,
     ThermostatMode,

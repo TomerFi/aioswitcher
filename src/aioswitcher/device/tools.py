@@ -19,6 +19,8 @@ import time
 from binascii import crc_hqx, hexlify, unhexlify
 from struct import pack
 
+from ..device import DeviceType
+
 
 def seconds_to_iso_time(all_seconds: int) -> str:
     """Convert seconds to iso time.
@@ -133,3 +135,25 @@ def set_message_length(message: str) -> str:
     """Set the message length."""
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]
+
+def convert_str_to_devicetype(device_type: str) -> DeviceType:
+    """Convert string name to DeviceType."""
+    if device_type == "Switcher Mini":
+        return DeviceType.MINI
+    elif device_type == "Switcher Power Plug":
+        return DeviceType.POWER_PLUG
+    elif device_type == "Switcher Touch":
+        return DeviceType.TOUCH
+    elif device_type == "Switcher V2 (esp)":
+        return DeviceType.V2_ESP
+    elif device_type == "Switcher V2 (qualcomm)":
+        return DeviceType.V2_QCA
+    elif device_type == "Switcher V4":
+        return DeviceType.V4
+    elif device_type == "Switcher Breeze":
+        return DeviceType.BREEZE
+    elif device_type == "Switcher Runner":
+        return DeviceType.RUNNER
+    elif device_type == "Switcher Runner Mini":
+        return DeviceType.RUNNER_MINI
+    return DeviceType.MINI
