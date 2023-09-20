@@ -112,7 +112,7 @@ def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
 
 
 @mark.parametrize("str, type", [
-    ("Switcher new device does not define", None)
+    ("Switcher new device does not define", DeviceType.MINI)
     ])
-def test_convert_str_to_devicetype_should_return_none(str, type):
+def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)

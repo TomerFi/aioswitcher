@@ -137,7 +137,7 @@ def set_message_length(message: str) -> str:
     return "fef0" + str(length) + message[8:]
 
 
-def convert_str_to_devicetype(device_type: str) -> DeviceType | None:
+def convert_str_to_devicetype(device_type: str) -> DeviceType:
     """Convert string name to DeviceType."""
     if device_type == DeviceType.MINI.value:
         return DeviceType.MINI
@@ -157,4 +157,4 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType | None:
         return DeviceType.RUNNER
     elif device_type == DeviceType.RUNNER_MINI.value:
         return DeviceType.RUNNER_MINI
-    return None
+    return DeviceType.MINI
