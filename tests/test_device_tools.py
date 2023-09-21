@@ -22,7 +22,7 @@ from unittest.mock import patch
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher.device import tools
+from aioswitcher.device import DeviceType, tools
 
 
 def test_seconds_to_iso_time_with_a_valid_seconds_value_should_return_a_time_string():
@@ -94,3 +94,25 @@ def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_an_e
 @mark.parametrize("watts, amps", [(1608, 7.3), (2600, 11.8), (3489, 15.9)])
 def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(watts, amps):
     assert_that(tools.watts_to_amps(watts)).is_equal_to(amps)
+
+
+@mark.parametrize("str, type", [
+    ("Switcher Mini", DeviceType.MINI),
+    ("Switcher Power Plug", DeviceType.POWER_PLUG),
+    ("Switcher Touch", DeviceType.TOUCH),
+    ("Switcher V2 (esp)", DeviceType.V2_ESP),
+    ("Switcher V2 (qualcomm)", DeviceType.V2_QCA),
+    ("Switcher V4", DeviceType.V4),
+    ("Switcher Breeze", DeviceType.BREEZE),
+    ("Switcher Runner", DeviceType.RUNNER),
+    ("Switcher Runner Mini", DeviceType.RUNNER_MINI)
+    ])
+def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
+    assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
+
+
+@mark.parametrize("str, type", [
+    ("Switcher new device does not define", DeviceType.MINI)
+    ])
+def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, type):
+    assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)

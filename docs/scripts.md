@@ -87,47 +87,47 @@ subcommands:
 
 example usage:
 
-python control_device.py get_state -d ab1c2d -i "111.222.11.22"
+python control_device.py get_state -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
 
-python control_device.py turn_on -d ab1c2d -i "111.222.11.22"
+python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
 
-python control_device.py turn_on -d ab1c2d -i "111.222.11.22" -t 15
+python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -t 15
 
-python control_device.py turn_off -d ab1c2d -i "111.222.11.22"
+python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
 
-python control_device.py set_name -d ab1c2d -i "111.222.11.22" -n "My Boiler"
+python control_device.py set_name -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "My Boiler"
 
-python control_device.py set_auto_shutdown -d ab1c2d -i "111.222.11.22" -r 2 -m 30
+python control_device.py set_auto_shutdown -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -r 2 -m 30
 
-python control_device.py get_schedules -d ab1c2d -i "111.222.11.22"
+python control_device.py get_schedules -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
 
-python control_device.py delete_schedule -d ab1c2d -i "111.222.11.22" -s 3
+python control_device.py delete_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -s 3
 
-python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"
+python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"
 
-python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday
+python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday
 
-python control_device.py stop_shutter -d f2239a -i "192.168.50.98"
+python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"
 
-python control_device.py set_shutter_position -d f2239a -i "192.168.50.98"-p 50
+python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98"-p 50
 
-python control_device.py get_thermostat_state -d 3a20b7 -i "192.168.50.77"
+python control_device.py get_thermostat_state -c "Switcher Runner" -d 3a20b7 -i "192.168.50.77"
 
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on
 
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24
 
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u
 
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry
 
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off
 ```
 
 ### script/control_device.py control_thermostat
 
 ```shell
-usage: control_device.py control_thermostat [-h] [-v] -d DEVICE_ID -i
+usage: control_device.py control_thermostat [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i
                                             IP_ADDRESS -r REMOTE_ID
                                             [-s {on,off}]
                                             [-m {auto,dry,fan,cool,heat}]
@@ -138,6 +138,8 @@ usage: control_device.py control_thermostat [-h] [-v] -d DEVICE_ID -i
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -160,13 +162,15 @@ options:
 ### script/control_device.py create_schedule
 
 ```shell
-usage: control_device.py create_schedule [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py create_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS
                                          -n START_TIME -f END_TIME
                                          [-w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]]
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -182,12 +186,14 @@ options:
 ### script/control_device.py delete_schedule
 
 ```shell
-usage: control_device.py delete_schedule [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py delete_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS
                                          -s SCHEDULE_ID
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -199,11 +205,13 @@ options:
 ### script/control_device.py get_schedules
 
 ```shell
-usage: control_device.py get_schedules [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py get_schedules [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -213,11 +221,13 @@ options:
 ### script/control_device.py get_state
 
 ```shell
-usage: control_device.py get_state [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py get_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -227,12 +237,14 @@ options:
 ### script/control_device.py get_thermostat_state
 
 ```shell
-usage: control_device.py get_thermostat_state [-h] [-v] -d DEVICE_ID -i
+usage: control_device.py get_thermostat_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i
                                               IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -242,12 +254,14 @@ options:
 ### script/control_device.py set_auto_shutdown
 
 ```shell
-usage: control_device.py set_auto_shutdown [-h] [-v] -d DEVICE_ID -i
+usage: control_device.py set_auto_shutdown [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i
                                            IP_ADDRESS -r HOURS [-m [MINUTES]]
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -261,11 +275,13 @@ options:
 ### script/control_device.py set_name
 
 ```shell
-usage: control_device.py set_name [-h] [-v] -d DEVICE_ID -i IP_ADDRESS -n NAME
+usage: control_device.py set_name [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS -n NAME
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -276,12 +292,14 @@ options:
 ### script/control_device.py set_shutter_position
 
 ```shell
-usage: control_device.py set_shutter_position [-h] [-v] -d DEVICE_ID -i
+usage: control_device.py set_shutter_position [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i
                                               IP_ADDRESS -p POSITION
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -293,11 +311,13 @@ options:
 ### script/control_device.py stop_shutter
 
 ```shell
-usage: control_device.py stop_shutter [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py stop_shutter [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -307,11 +327,13 @@ options:
 ### script/control_device.py turn_off
 
 ```shell
-usage: control_device.py turn_off [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
@@ -321,12 +343,14 @@ options:
 ### script/control_device.py turn_on
 
 ```shell
-usage: control_device.py turn_on [-h] [-v] -d DEVICE_ID -i IP_ADDRESS
+usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -i IP_ADDRESS
                                  [-t [TIMER]]
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
