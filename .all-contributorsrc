@@ -120,9 +120,12 @@
       "avatar_url": "https://avatars.githubusercontent.com/u/22839127?v=4",
       "profile": "https://github.com/YogevBokobza",
       "contributions": [
-        "code"
+        "code",
+        "test",
+        "maintenance"
       ]
     }
   ],
-  "commitConvention": "angular"
+  "commitConvention": "angular",
+  "commitType": "docs"
 }
