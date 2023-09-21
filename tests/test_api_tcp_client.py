@@ -18,7 +18,6 @@ import os
 from asyncio.streams import StreamReader, StreamWriter
 from binascii import hexlify, unhexlify
 from datetime import timedelta
-from json import loads
 from unittest import skipUnless
 from unittest.mock import AsyncMock, Mock, patch
 
@@ -89,32 +88,6 @@ async def connected_api_type2(reader_mock, writer_mock):
         await api.connect()
         yield api
         await api.disconnect()
-
-
-class MockResponse:
-    """Mock response for the aiohttp response object."""
-
-    def __init__(self, text, status):
-        """Initialize the aiohttp response object."""
-        self._text = text
-        self.status = status
-        self.content_length = len(self._text)
-
-    async def text(self):
-        """Text data of the response class mock."""
-        return self._text
-
-    async def json(self, content_type=None):
-        """Json method of the response class mock."""
-        return loads(self._text)
-
-    async def __aexit__(self, exc_type, exc, tb):
-        """Magic method when starting an async block."""
-        pass
-
-    async def __aenter__(self):
-        """Magic method when leaving an async block."""
-        return self
 
 
 @patch("logging.Logger.info")
@@ -245,6 +218,13 @@ async def test_breeze_get_remote_id():
     assert_that(remote_id).is_instance_of(str)
 
 
+async def test_breeze_get_on_off_type():
+    remote = SwitcherBreezeRemoteManager().get_remote('ELEC7001')
+    on_off_type = remote.on_off_type
+    assert_that(on_off_type).is_equal_to(True)
+    assert_that(on_off_type).is_instance_of(bool)
+
+
 async def test_control_breeze_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2):
     with raises(RuntimeError, match="login request was not successful"):
         remote = SwitcherBreezeRemoteManager().get_remote('ELEC7022')
@@ -298,7 +278,7 @@ async def test_breeze_get_command_function_toggle_type(resource_path_root):
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
 
 
-async def test_breeze_get_command_function_should_raise_command_does_not_eixst(resource_path_root):
+async def test_breeze_get_command_function_should_raise_command_does_not_exist(resource_path_root):
     elec7001_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7001_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
 
     remote = SwitcherBreezeRemoteManager().get_remote('ELEC7001')
@@ -326,6 +306,13 @@ async def test_breeze_build_command_function_invalid_mode(resource_path_root):
     remote = brm.get_remote('ELEC7022')
     with raises(RuntimeError, match="Invalid mode \"cool\", available modes for this device are: auto, dry, fan"):
         remote.build_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.AUTO, ThermostatSwing.ON, DeviceState.OFF)
+
+
+async def test_breeze_build_command_function_specific_case():
+    remote_manager = SwitcherBreezeRemoteManager()
+    remote_7001 = remote_manager.get_remote("ELEC7001")
+    command = remote_7001.build_command(DeviceState.OFF, ThermostatMode.COOL, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
+    assert_that(command.command).is_equal_to("00000000524337327c32317c33327c32367c34437c39387c537c32327c30337c373237325b32325d7c39383841303030303830")
 
 
 async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, writer_write, resource_path_root, connected_api_type1):
