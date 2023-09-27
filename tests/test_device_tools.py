@@ -116,3 +116,17 @@ def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
     ])
 def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
+
+
+@mark.parametrize("username, password, token", [
+    ("yogev@test.com", "11223344", "zvVvd7JxtN7CgvkD1Psujw==")
+    ])
+def test_get_token_should_return_empty_token(username, password, token):
+    assert_that(tools.get_token(username, password)).is_equal_to(token)
+
+
+@mark.parametrize("username, password, token", [
+    ("username", "password", "")
+    ])
+def test_get_token_with_error_should_return_empty_token(username, password, token):
+    assert_that(tools.get_token(username, password)).is_equal_to(token)

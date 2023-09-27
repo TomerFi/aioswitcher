@@ -168,14 +168,11 @@ def get_token(username: str, password: str) -> str:
     url = "https://switcher.co.il/GetKey/GetTok/t.php"
     data = {"username": username, "password": password}
 
-    # Make the POST request
     response = requests.post(url, data=data)
 
-    # Check the response
     if response.status_code == 200:
         print("Request successful")
         try:
-            # Try to parse the JSON response
             json_response = response.json()
             print("JSON Response:", json_response)
             token = json_response.get("token", "")
