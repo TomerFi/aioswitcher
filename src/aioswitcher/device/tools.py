@@ -19,6 +19,8 @@ import time
 from binascii import crc_hqx, hexlify, unhexlify
 from struct import pack
 
+import requests
+
 from ..device import DeviceType
 
 
@@ -158,3 +160,28 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     elif device_type == DeviceType.RUNNER_MINI.value:
         return DeviceType.RUNNER_MINI
     return DeviceType.MINI
+
+
+def get_token(username: str, password: str) -> str:
+    """Make API call to get a Token by username and password."""
+    token = ""
+    url = "https://switcher.co.il/GetKey/GetTok/t.php"
+    data = {"username": username, "password": password}
+
+    # Make the POST request
+    response = requests.post(url, data=data)
+
+    # Check the response
+    if response.status_code == 200:
+        print("Request successful")
+        try:
+            # Try to parse the JSON response
+            json_response = response.json()
+            print("JSON Response:", json_response)
+            token = json_response.get("token", "")
+
+        except ValueError:
+            print("Response content is not valid JSON")
+    else:
+        print("Request failed with status code:", response.status_code)
+    return token
