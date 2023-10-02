@@ -21,7 +21,7 @@ from struct import pack
 
 import requests
 
-from ..device import DeviceType
+from ..device import DeviceToken, DeviceType
 
 
 def seconds_to_iso_time(all_seconds: int) -> str:
@@ -162,9 +162,9 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     return DeviceType.MINI
 
 
-def get_token(username: str, password: str) -> str:
+def get_token(username: str, password: str) -> DeviceToken:
     """Make API call to get a Token by username and password."""
-    token = ""
+    token = DeviceToken("")
     url = "https://switcher.co.il/GetKey/GetTok/t.php"
     data = {"username": username, "password": password}
 
@@ -173,9 +173,7 @@ def get_token(username: str, password: str) -> str:
     if response.status_code == 200:
         print("Request successful")
         try:
-            json_response = response.json()
-            print("JSON Response:", json_response)
-            token = json_response.get("token", "")
+            token = DeviceToken(response.json())
 
         except ValueError:
             print("Response content is not valid JSON")

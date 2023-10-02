@@ -54,7 +54,7 @@ if __name__ == "__main__":
     try:
         args = parser.parse_args()
 
-        token = get_token(args.username, args.password)
+        token = get_token(args.username, args.password).to_json()
         print("Your Token is: " + token)
 
     except KeyboardInterrupt:

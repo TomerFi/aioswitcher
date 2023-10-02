@@ -119,14 +119,14 @@ def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, t
 
 
 @mark.parametrize("username, password, token", [
-    ("test@switcher.com", "11223344", "zvVvd7JxtN7CgvkD1Psujw==")
+    ("test@switcher.com", "11223344", '{"token": "zvVvd7JxtN7CgvkD1Psujw=="}')
     ])
 def test_get_token_should_return_valid_token(username, password, token):
-    assert_that(tools.get_token(username, password)).is_equal_to(token)
+    assert_that(tools.get_token(username, password).to_json()).is_equal_to(token)
 
 
 @mark.parametrize("username, password, token", [
-    ("username", "password", "")
+    ("username", "password", '{"error": "Invalid credentials"}')
     ])
 def test_get_token_with_error_should_return_empty_token(username, password, token):
-    assert_that(tools.get_token(username, password)).is_equal_to(token)
+    assert_that(tools.get_token(username, password).to_json()).is_equal_to(token)
