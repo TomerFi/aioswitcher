@@ -168,16 +168,17 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
 def get_token(username: str, password: str) -> DeviceToken:
     """Make API call to get a Token by username and password."""
     token = DeviceToken("")
-    url = "https://switcher.co.il/GetKey/GetTok/t.php"
-    data = {"username": username, "password": password}
+    request_url = "https://switcher.co.il/GetKey/GetTok/t.php"
+    request_data = {"username": username, "password": password}
 
     logger.debug("calling API call for Switcher to get the token")
-    response = requests.post(url, data=data)
+    response = requests.post(request_url, data=request_data)
 
     if response.status_code == 200:
         logger.debug("request successful")
+        response_data = response.json()
         try:
-            token = DeviceToken(response.json())
+            token = DeviceToken(response_data)
 
         except ValueError:
             logger.debug("response content is not valid JSON")

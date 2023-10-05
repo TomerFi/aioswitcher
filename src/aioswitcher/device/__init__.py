@@ -219,6 +219,11 @@ class DeviceToken(str):
         """Convert str response to json."""
         return json.dumps(self.response)
 
+    @property
+    def value(self) -> str:
+        """Return the value of the token."""
+        return self.response.get("token", "")  # type: ignore
+
 
 @dataclass
 class SwitcherBase(ABC):
