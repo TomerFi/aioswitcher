@@ -17,11 +17,14 @@
 import datetime
 import time
 from binascii import crc_hqx, hexlify, unhexlify
+from logging import getLogger
 from struct import pack
 
 import requests
 
 from ..device import DeviceToken, DeviceType
+
+logger = getLogger(__name__)
 
 
 def seconds_to_iso_time(all_seconds: int) -> str:
@@ -168,15 +171,16 @@ def get_token(username: str, password: str) -> DeviceToken:
     url = "https://switcher.co.il/GetKey/GetTok/t.php"
     data = {"username": username, "password": password}
 
+    logger.debug("calling API call for Switcher to get the token")
     response = requests.post(url, data=data)
 
     if response.status_code == 200:
-        print("Request successful")
+        logger.debug("request successful")
         try:
             token = DeviceToken(response.json())
 
         except ValueError:
-            print("Response content is not valid JSON")
+            logger.debug("response content is not valid JSON")
     else:
-        print("Request failed with status code:", response.status_code)
+        logger.debug("request failed with status code: %s", response.status_code)
     return token
