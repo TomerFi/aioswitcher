@@ -30,6 +30,7 @@ class DeviceCategory(Enum):
     POWER_PLUG = auto()
     THERMOSTAT = auto()
     SHUTTER = auto()
+    SHUTTER_SINGLE_LIGHT_DUAL = auto()
 
 
 @unique
@@ -45,6 +46,12 @@ class DeviceType(Enum):
     BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT
     RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER
     RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER
+    RUNNER_S11 = (
+        "Switcher Runner S11",
+        "0f01",
+        2,
+        DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL,
+    )
 
     def __new__(
         cls, value: str, hex_rep: str, protocol_type: int, category: DeviceCategory
@@ -86,6 +93,31 @@ class DeviceState(Enum):
     OFF = "00", "off"
 
     def __new__(cls, value: str, display: str) -> "DeviceState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the state."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the state."""
+        return self._value  # type: ignore
+
+
+@final
+class LightState(Enum):
+    """Enum class representing the light's state."""
+
+    ON = "01", "on"
+    OFF = "00", "off"
+
+    def __new__(cls, value: str, display: str) -> "LightState":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
         new_enum._value = value  # type: ignore
@@ -319,6 +351,23 @@ class SwitcherShutterBase(ABC):
     direction: ShutterDirection
 
 
+@dataclass
+class SwitcherShutterSingleLightDualBase(ABC):
+    """Abstraction for all switcher devices controlling shutter with dual light.
+
+    Args:
+        position: the current position of the shutter (integer percentage).
+        direction: the current direction of the shutter.
+        light: the current light state.
+        light2: the current second light state.
+    """
+
+    position: int
+    direction: ShutterDirection
+    light: LightState
+    light2: LightState
+
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -373,4 +422,16 @@ class SwitcherShutter(SwitcherShutterBase, SwitcherBase):
         """Post initialization validate device type category as SHUTTER."""
         if self.device_type.category != DeviceCategory.SHUTTER:
             raise ValueError("only shutters are allowed")
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherShutterSingleLightDual(SwitcherShutterSingleLightDualBase, SwitcherBase):
+    """Implementation of the Switcher Shutter with dual light device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as SHUTTER_SINGLE_LIGHT_DUAL."""  # noqa: E501
+        if self.device_type.category != DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL:
+            raise ValueError("only shutters with dual lights are allowed")
         return super().__post_init__()

@@ -42,6 +42,7 @@ from aioswitcher.api.remotes import (
 from aioswitcher.device import (
     DeviceState,
     DeviceType,
+    LightState,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
@@ -52,6 +53,7 @@ device_type_api2 = DeviceType.RUNNER
 device_index = 2
 device_id = "aaaaaa"
 device_ip = "1.2.3.4"
+token = ""
 pytestmark = mark.asyncio
 faulty_dummy_response = skipUnless(
     os.environ.get('CI'),
@@ -88,7 +90,7 @@ async def connected_api_type1(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherType2Api(device_type_api2, device_ip, device_id)
+        api = SwitcherType2Api(device_type_api2, device_ip, device_id, token)
         await api.connect()
         yield api
         await api.disconnect()
@@ -385,7 +387,7 @@ async def test_create_schedule_function_with_valid_packets(reader_mock, writer_w
 async def test_stop_shutter_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
     two_packets = _get_dummy_packets(resource_path_root, "login_response", "stop_shutter_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        response = await connected_api_type2.stop_shutter()
+        response = await connected_api_type2.stop_shutter(device_index)
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
@@ -394,7 +396,16 @@ async def test_stop_shutter_device_function_with_valid_packets(reader_mock, writ
 async def test_set_shutter_position_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
     two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_shutter_position_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        response = await connected_api_type2.set_position(50)
+        response = await connected_api_type2.set_position(50, device_index)
+    assert_that(writer_write.call_count).is_equal_to(2)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+
+
+async def test_set_light_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_light_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
+        response = await connected_api_type2.set_light(LightState.ON, device_index)
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
@@ -435,7 +446,7 @@ async def test_set_position_function_with_a_faulty_get_state_response_should_rai
 async def test_stop_position_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2):
     with raises(RuntimeError, match="login request was not successful"):
         with patch.object(reader_mock, "read", return_value=b''):
-            await connected_api_type2.stop_shutter()
+            await connected_api_type2.stop_shutter(device_index)
     writer_write.assert_called_once()
 
 

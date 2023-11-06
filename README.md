@@ -27,6 +27,12 @@ pip install aioswitcher
   <td><a href="https://github.com/TomerFi/aioswitcher/blob/dev/CONTRIBUTING.md">Contributing</a></td>
 </table>
 
+<strong>
+NOTE: For newer Switcher devices such as: Runner S11, Runner S12 and Lights you need to have a Token for communicating with devices.
+
+You can get it here: https://switcher.co.il/GetKey or by using scripts/get_token.py script
+</strong>
+
 ## Example Usage
 
 <details>
@@ -106,18 +112,18 @@ asyncio.run(print_devices(60))
   <summary>Runner API</summary>
 
   ```python
-  async def control_runner(device_type, device_ip, device_id) :
+  async def control_runner(device_type, device_ip, device_id, token) :
       # for connecting to a device we need its type, id and ip address
-      async with SwitcherType2Api(device_type, device_ip, device_id) as api:
+      async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
           # get the device current state
           await api.get_shutter_state()
-          # open the shutter to 30%
-          await api.set_position(30)
-          # stop the shutter if currently rolling
-          await api.stop_shutter()
+          # open the shutter to 30%, shutter number id is 1
+          await api.set_position(30, 1)
+          # stop the shutter if currently rolling, shutter number id is 1
+          await api.stop_shutter(1)
 
-  asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d"))
-  asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d"))
+  asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", ""))
+  asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", ""))
   ```
 
 </details>
@@ -184,7 +190,7 @@ Thanks goes to these wonderful people ([emoji key][1]):
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://exploit.co.il"><img src="https://avatars.githubusercontent.com/u/1768915?v=4?s=100" width="100px;" alt="Shai rod"/><br /><sub><b>Shai rod</b></sub></a><br /><a href="#data-nightrang3r" title="Data">🔣</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/thecode"><img src="https://avatars.githubusercontent.com/u/1858925?v=4?s=100" width="100px;" alt="Shay Levy"/><br /><sub><b>Shay Levy</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=thecode" title="Code">💻</a> <a href="#ideas-thecode" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/YogevBokobza"><img src="https://avatars.githubusercontent.com/u/22839127?v=4?s=100" width="100px;" alt="YogevBokobza"/><br /><sub><b>YogevBokobza</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=YogevBokobza" title="Code">💻</a> <a href="https://github.com/TomerFi/aioswitcher/commits?author=YogevBokobza" title="Tests">⚠️</a> <a href="#maintenance-YogevBokobza" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/YogevBokobza"><img src="https://avatars.githubusercontent.com/u/22839127?v=4?s=100" width="100px;" alt="YogevBokobza"/><br /><sub><b>YogevBokobza</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=YogevBokobza" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/dmatik"><img src="https://avatars.githubusercontent.com/u/5577386?v=4?s=100" width="100px;" alt="dmatik"/><br /><sub><b>dmatik</b></sub></a><br /><a href="#blog-dmatik" title="Blogposts">📝</a> <a href="#ideas-dmatik" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-dmatik" title="User Testing">📓</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jafar-atili"><img src="https://avatars.githubusercontent.com/u/19508787?v=4?s=100" width="100px;" alt="jafar-atili"/><br /><sub><b>jafar-atili</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=jafar-atili" title="Code">💻</a> <a href="https://github.com/TomerFi/aioswitcher/commits?author=jafar-atili" title="Documentation">📖</a></td>
     </tr>

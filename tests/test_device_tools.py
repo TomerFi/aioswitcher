@@ -105,7 +105,8 @@ def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(wat
     ("Switcher V4", DeviceType.V4),
     ("Switcher Breeze", DeviceType.BREEZE),
     ("Switcher Runner", DeviceType.RUNNER),
-    ("Switcher Runner Mini", DeviceType.RUNNER_MINI)
+    ("Switcher Runner Mini", DeviceType.RUNNER_MINI),
+    ("Switcher Runner S11", DeviceType.RUNNER_S11)
     ])
 def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
@@ -160,3 +161,20 @@ def test_get_token_with_bad_credentials_should_empty_token(mock_post, username, 
     mock_response.status_code = 200
     mock_response.json.return_value = {'error': 'Invalid credentials'}
     assert_that(tools.get_token(username, password).value).is_equal_to(response)
+
+
+@mark.parametrize("type, index, num", [
+    (DeviceType.RUNNER, 1, 1),
+    (DeviceType.RUNNER_S11, 1, 3),
+    ])
+def test_get_shutter_index_should_return_expected_index(type, index, num):
+    assert_that(tools.get_shutter_index(type, index)).is_equal_to(num)
+
+
+@mark.parametrize("type, index, num", [
+    (DeviceType.RUNNER, 1, 1),
+    (DeviceType.RUNNER_S11, 1, 1),
+    (DeviceType.RUNNER_S11, 2, 2),
+    ])
+def test_get_light_index_should_return_expected_index(type, index, num):
+    assert_that(tools.get_light_index(type, index)).is_equal_to(num)
