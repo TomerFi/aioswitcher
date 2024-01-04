@@ -87,11 +87,16 @@ class SwitcherApi(ABC):
     """
 
     def __init__(
-        self, ip_address: str, device_id: str, port: int = SWITCHER_TCP_PORT_TYPE1
+        self,
+        ip_address: str,
+        device_id: str,
+        device_key: str,
+        port: int = SWITCHER_TCP_PORT_TYPE1,
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         self._ip_address = ip_address
         self._device_id = device_id
+        self._device_key = device_key
         self._port = port
         self._connected = False
 
@@ -163,7 +168,7 @@ class SwitcherApi(ABC):
         ):
             packet = packets.LOGIN2_PACKET_TYPE2.format(timestamp, self._device_id)
         else:
-            packet = packets.LOGIN_PACKET_TYPE1.format(timestamp)
+            packet = packets.LOGIN_PACKET_TYPE1.format(timestamp, self._device_key)
         signed_packet = sign_packet_with_crc_key(packet)
 
         logger.debug("sending a login packet")
@@ -345,9 +350,9 @@ class SwitcherType1Api(SwitcherApi):
         device_id: the id of the desired device.
     """
 
-    def __init__(self, ip_address: str, device_id: str) -> None:
+    def __init__(self, ip_address: str, device_id: str, device_key: str) -> None:
         """Initialize the Switcher TCP connection API."""
-        super().__init__(ip_address, device_id, SWITCHER_TCP_PORT_TYPE1)
+        super().__init__(ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE1)
 
     async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
@@ -549,9 +554,9 @@ class SwitcherType2Api(SwitcherApi):
         device_id: the id of the desired device.
     """
 
-    def __init__(self, ip_address: str, device_id: str) -> None:
+    def __init__(self, ip_address: str, device_id: str, device_key: str) -> None:
         """Initialize the Switcher TCP connection API."""
-        super().__init__(ip_address, device_id, SWITCHER_TCP_PORT_TYPE2)
+        super().__init__(ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2)
 
     async def control_breeze_device(
         self,
