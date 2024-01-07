@@ -80,7 +80,7 @@ shared_parser.add_argument(
     "--device-key",
     type=str,
     required=True,
-    help="the key of the device",
+    help="the login key of the device",
 )
 shared_parser.add_argument(
     "-i",

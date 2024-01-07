@@ -141,7 +141,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -r REMOTE_ID, --remote-id REMOTE_ID
@@ -172,7 +172,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -n START_TIME, --start-time START_TIME
@@ -195,7 +195,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -s SCHEDULE_ID, --schedule-id SCHEDULE_ID
@@ -213,7 +213,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
 ```
@@ -229,7 +229,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
 ```
@@ -246,7 +246,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
 ```
@@ -263,7 +263,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -r HOURS, --hours HOURS
@@ -283,7 +283,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -n NAME, --name NAME  new name for the device
@@ -301,7 +301,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -p POSITION, --position POSITION
@@ -319,7 +319,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
 ```
@@ -335,7 +335,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
 ```
@@ -352,7 +352,7 @@ options:
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -k DEVICE_KEY, --device-key DEVICE_KEY
-                        the key of the device
+                        the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -t [TIMER], --timer [TIMER]
