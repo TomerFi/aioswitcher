@@ -127,7 +127,7 @@ python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC
 ### script/control_device.py control_thermostat
 
 ```shell
-usage: control_device.py control_thermostat [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i
+usage: control_device.py control_thermostat [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i
                                             IP_ADDRESS -r REMOTE_ID
                                             [-s {on,off}]
                                             [-m {auto,dry,fan,cool,heat}]
@@ -140,7 +140,7 @@ options:
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -162,7 +162,7 @@ options:
 ### script/control_device.py create_schedule
 
 ```shell
-usage: control_device.py create_schedule [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py create_schedule [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
                                          -n START_TIME -f END_TIME
                                          [-w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]]
 
@@ -171,7 +171,7 @@ options:
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -186,7 +186,7 @@ options:
 ### script/control_device.py delete_schedule
 
 ```shell
-usage: control_device.py delete_schedule [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py delete_schedule [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
                                          -s SCHEDULE_ID
 
 options:
@@ -194,7 +194,7 @@ options:
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -205,14 +205,14 @@ options:
 ### script/control_device.py get_schedules
 
 ```shell
-usage: control_device.py get_schedules [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py get_schedules [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -221,14 +221,14 @@ options:
 ### script/control_device.py get_state
 
 ```shell
-usage: control_device.py get_state [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py get_state [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -237,7 +237,7 @@ options:
 ### script/control_device.py get_thermostat_state
 
 ```shell
-usage: control_device.py get_thermostat_state [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i
+usage: control_device.py get_thermostat_state [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i
                                               IP_ADDRESS
 
 options:
@@ -245,7 +245,7 @@ options:
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -254,7 +254,7 @@ options:
 ### script/control_device.py set_auto_shutdown
 
 ```shell
-usage: control_device.py set_auto_shutdown [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i
+usage: control_device.py set_auto_shutdown [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i
                                            IP_ADDRESS -r HOURS [-m [MINUTES]]
 
 options:
@@ -262,7 +262,7 @@ options:
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -275,14 +275,14 @@ options:
 ### script/control_device.py set_name
 
 ```shell
-usage: control_device.py set_name [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS -n NAME
+usage: control_device.py set_name [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS -n NAME
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -292,7 +292,7 @@ options:
 ### script/control_device.py set_shutter_position
 
 ```shell
-usage: control_device.py set_shutter_position [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i
+usage: control_device.py set_shutter_position [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i
                                               IP_ADDRESS -p POSITION
 
 options:
@@ -300,7 +300,7 @@ options:
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -311,14 +311,14 @@ options:
 ### script/control_device.py stop_shutter
 
 ```shell
-usage: control_device.py stop_shutter [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py stop_shutter [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -327,14 +327,14 @@ options:
 ### script/control_device.py turn_off
 
 ```shell
-usage: control_device.py turn_off [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py turn_off [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
@@ -343,7 +343,7 @@ options:
 ### script/control_device.py turn_on
 
 ```shell
-usage: control_device.py turn_on [-h] [-v] -d DEVICE_ID -d DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py turn_on [-h] [-v] -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
                                  [-t [TIMER]]
 
 options:
@@ -351,7 +351,7 @@ options:
   -v, --verbose         include the raw message
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
-  -k DEVICE_KEY, --device-key DEVICE_KEY
+  -l DEVICE_KEY, --device-key DEVICE_KEY
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
