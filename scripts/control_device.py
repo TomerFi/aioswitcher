@@ -49,7 +49,6 @@ python control_device.py delete_schedule -d ab1c2d -i "111.222.11.22" -s 3\n
 python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"\n
 python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
 
-
 python control_device.py stop_shutter -d f2239a -i "192.168.50.98"\n
 python control_device.py set_shutter_position -d f2239a -i "192.168.50.98"-p 50\n
 
