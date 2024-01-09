@@ -116,3 +116,47 @@ def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
     ])
 def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
+
+
+@patch('requests.post')
+@mark.parametrize("username, password, response", [
+    ("test@switcher.com", "11223344", '{"token": "zvVvd7JxtN7CgvkD1Psujw=="}')
+    ])
+def test_get_token_should_return_valid_response(mock_post, username, password, response):
+    mock_response = mock_post.return_value
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'token': 'zvVvd7JxtN7CgvkD1Psujw=='}
+    assert_that(tools.get_token(username, password).to_json()).is_equal_to(response)
+
+
+@patch('requests.post')
+@mark.parametrize("username, password, response", [
+    ("username", "password", '{"error": "Invalid credentials"}')
+    ])
+def test_get_token_with_bad_credentials_should_return_error_response(mock_post, username, password, response):
+    mock_response = mock_post.return_value
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'error': 'Invalid credentials'}
+    assert_that(tools.get_token(username, password).to_json()).is_equal_to(response)
+
+
+@patch('requests.post')
+@mark.parametrize("username, password, response", [
+    ("test@switcher.com", "11223344", 'zvVvd7JxtN7CgvkD1Psujw==')
+    ])
+def test_get_token_should_return_valid_token(mock_post, username, password, response):
+    mock_response = mock_post.return_value
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'token': 'zvVvd7JxtN7CgvkD1Psujw=='}
+    assert_that(tools.get_token(username, password).value).is_equal_to(response)
+
+
+@patch('requests.post')
+@mark.parametrize("username, password, response", [
+    ("username", "password", '')
+    ])
+def test_get_token_with_bad_credentials_should_empty_token(mock_post, username, password, response):
+    mock_response = mock_post.return_value
+    mock_response.status_code = 200
+    mock_response.json.return_value = {'error': 'Invalid credentials'}
+    assert_that(tools.get_token(username, password).value).is_equal_to(response)
