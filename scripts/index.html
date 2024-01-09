@@ -21,7 +21,7 @@
         <link rel="next" href="../codedocs/">
       
       <link rel="icon" href="../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.4.3, mkdocs-material-9.1.13">
+      <meta name="generator" content="mkdocs-1.5.2, mkdocs-material-9.1.21">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.85bb2934.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.eebd395e.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.a6bdf11c.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ecc896b0.min.css">
       
       
 
@@ -736,7 +736,7 @@ python<span class="w"> </span>control_device.py<span class="w"> </span>control_t
 python<span class="w"> </span>control_device.py<span class="w"> </span>control_thermostat<span class="w"> </span>-d<span class="w"> </span>3a20b7<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;192.168.50.77&quot;</span><span class="w"> </span>-r<span class="w"> </span>ELEC7001<span class="w"> </span>-s<span class="w"> </span>off
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-control_thermostat">script/control_device.py control_thermostat<a class="headerlink" href="#scriptcontrol_devicepy-control_thermostat" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>control_thermostat<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>control_thermostat<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i
 <span class="w">                                            </span>IP_ADDRESS<span class="w"> </span>-r<span class="w"> </span>REMOTE_ID
 <span class="w">                                            </span><span class="o">[</span>-s<span class="w"> </span><span class="o">{</span>on,off<span class="o">}]</span>
 <span class="w">                                            </span><span class="o">[</span>-m<span class="w"> </span><span class="o">{</span>auto,dry,fan,cool,heat<span class="o">}]</span>
@@ -749,6 +749,8 @@ options:
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-r<span class="w"> </span>REMOTE_ID,<span class="w"> </span>--remote-id<span class="w"> </span>REMOTE_ID
@@ -766,7 +768,7 @@ options:
 <span class="w">  </span>-u,<span class="w"> </span>--update<span class="w">          </span>update<span class="w"> </span>state<span class="w"> </span>without<span class="w"> </span>control
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-create_schedule">script/control_device.py create_schedule<a class="headerlink" href="#scriptcontrol_devicepy-create_schedule" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>create_schedule<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>create_schedule<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
 <span class="w">                                         </span>-n<span class="w"> </span>START_TIME<span class="w"> </span>-f<span class="w"> </span>END_TIME
 <span class="w">                                         </span><span class="o">[</span>-w<span class="w"> </span><span class="o">[{</span>Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday<span class="o">}</span><span class="w"> </span>...<span class="o">]]</span>
 
@@ -775,6 +777,8 @@ options:
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-n<span class="w"> </span>START_TIME,<span class="w"> </span>--start-time<span class="w"> </span>START_TIME
@@ -785,7 +789,7 @@ options:
 <span class="w">                        </span>days<span class="w"> </span><span class="k">for</span><span class="w"> </span>recurring<span class="w"> </span>schedules
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-delete_schedule">script/control_device.py delete_schedule<a class="headerlink" href="#scriptcontrol_devicepy-delete_schedule" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>delete_schedule<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>delete_schedule<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
 <span class="w">                                         </span>-s<span class="w"> </span>SCHEDULE_ID
 
 options:
@@ -793,35 +797,41 @@ options:
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-s<span class="w"> </span>SCHEDULE_ID,<span class="w"> </span>--schedule-id<span class="w"> </span>SCHEDULE_ID
 <span class="w">                        </span>the<span class="w"> </span>id<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>schedule<span class="w"> </span><span class="k">for</span><span class="w"> </span>deletion
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-get_schedules">script/control_device.py get_schedules<a class="headerlink" href="#scriptcontrol_devicepy-get_schedules" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>get_schedules<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>get_schedules<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
 
 options:
 <span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-get_state">script/control_device.py get_state<a class="headerlink" href="#scriptcontrol_devicepy-get_state" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>get_state<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>get_state<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
 
 options:
 <span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-get_thermostat_state">script/control_device.py get_thermostat_state<a class="headerlink" href="#scriptcontrol_devicepy-get_thermostat_state" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>get_thermostat_state<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>get_thermostat_state<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i
 <span class="w">                                              </span>IP_ADDRESS
 
 options:
@@ -829,11 +839,13 @@ options:
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-set_auto_shutdown">script/control_device.py set_auto_shutdown<a class="headerlink" href="#scriptcontrol_devicepy-set_auto_shutdown" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>set_auto_shutdown<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>set_auto_shutdown<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i
 <span class="w">                                           </span>IP_ADDRESS<span class="w"> </span>-r<span class="w"> </span>HOURS<span class="w"> </span><span class="o">[</span>-m<span class="w"> </span><span class="o">[</span>MINUTES<span class="o">]]</span>
 
 options:
@@ -841,6 +853,8 @@ options:
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-r<span class="w"> </span>HOURS,<span class="w"> </span>--hours<span class="w"> </span>HOURS
@@ -849,19 +863,21 @@ options:
 <span class="w">                        </span>number<span class="w"> </span>hours<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>auto<span class="w"> </span>shutdown
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-set_name">script/control_device.py set_name<a class="headerlink" href="#scriptcontrol_devicepy-set_name" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>set_name<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS<span class="w"> </span>-n<span class="w"> </span>NAME
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>set_name<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS<span class="w"> </span>-n<span class="w"> </span>NAME
 
 options:
 <span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-n<span class="w"> </span>NAME,<span class="w"> </span>--name<span class="w"> </span>NAME<span class="w">  </span>new<span class="w"> </span>name<span class="w"> </span><span class="k">for</span><span class="w"> </span>the<span class="w"> </span>device
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-set_shutter_position">script/control_device.py set_shutter_position<a class="headerlink" href="#scriptcontrol_devicepy-set_shutter_position" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>set_shutter_position<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>set_shutter_position<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i
 <span class="w">                                              </span>IP_ADDRESS<span class="w"> </span>-p<span class="w"> </span>POSITION
 
 options:
@@ -869,35 +885,41 @@ options:
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-p<span class="w"> </span>POSITION,<span class="w"> </span>--position<span class="w"> </span>POSITION
 <span class="w">                        </span>Shutter<span class="w"> </span>position<span class="w"> </span>percentage
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-stop_shutter">script/control_device.py stop_shutter<a class="headerlink" href="#scriptcontrol_devicepy-stop_shutter" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>stop_shutter<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>stop_shutter<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
 
 options:
 <span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-turn_off">script/control_device.py turn_off<a class="headerlink" href="#scriptcontrol_devicepy-turn_off" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>turn_off<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>turn_off<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
 
 options:
 <span class="w">  </span>-h,<span class="w"> </span>--help<span class="w">            </span>show<span class="w"> </span>this<span class="w"> </span><span class="nb">help</span><span class="w"> </span>message<span class="w"> </span>and<span class="w"> </span><span class="nb">exit</span>
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 </code></pre></div>
 <h3 id="scriptcontrol_devicepy-turn_on">script/control_device.py turn_on<a class="headerlink" href="#scriptcontrol_devicepy-turn_on" title="Permanent link">⚓︎</a></h3>
-<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>turn_on<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
+<div class="highlight"><pre><span></span><code>usage:<span class="w"> </span>control_device.py<span class="w"> </span>turn_on<span class="w"> </span><span class="o">[</span>-h<span class="o">]</span><span class="w"> </span><span class="o">[</span>-v<span class="o">]</span><span class="w"> </span>-d<span class="w"> </span>DEVICE_ID<span class="w"> </span>-l<span class="w"> </span>DEVICE_KEY<span class="w"> </span>-i<span class="w"> </span>IP_ADDRESS
 <span class="w">                                 </span><span class="o">[</span>-t<span class="w"> </span><span class="o">[</span>TIMER<span class="o">]]</span>
 
 options:
@@ -905,6 +927,8 @@ options:
 <span class="w">  </span>-v,<span class="w"> </span>--verbose<span class="w">         </span>include<span class="w"> </span>the<span class="w"> </span>raw<span class="w"> </span>message
 <span class="w">  </span>-d<span class="w"> </span>DEVICE_ID,<span class="w"> </span>--device-id<span class="w"> </span>DEVICE_ID
 <span class="w">                        </span>the<span class="w"> </span>identification<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
+<span class="w">  </span>-l<span class="w"> </span>DEVICE_KEY,<span class="w"> </span>--device-key<span class="w"> </span>DEVICE_KEY
+<span class="w">                        </span>the<span class="w"> </span>login<span class="w"> </span>key<span class="w"> </span>of<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-i<span class="w"> </span>IP_ADDRESS,<span class="w"> </span>--ip-address<span class="w"> </span>IP_ADDRESS
 <span class="w">                        </span>the<span class="w"> </span>ip<span class="w"> </span>address<span class="w"> </span>assigned<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>device
 <span class="w">  </span>-t<span class="w"> </span><span class="o">[</span>TIMER<span class="o">]</span>,<span class="w"> </span>--timer<span class="w"> </span><span class="o">[</span>TIMER<span class="o">]</span>
@@ -916,7 +940,7 @@ options:
   <small>
     
       Last update:
-      2023-05-17
+      2024-01-09
     
   </small>
 </div>
@@ -1003,10 +1027,10 @@ options:
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "header.autohide", "navigation.indexes", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.208ed371.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "header.autohide", "navigation.indexes", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.74e28a9f.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.b4d07000.min.js"></script>
+      <script src="../assets/javascripts/bundle.220ee61c.min.js"></script>
       
     
   </body>
