@@ -51,9 +51,9 @@ asyncio.run(print_devices(60))
   <summary>Power Plug API</summary>
 
   ```python
-  async def control_power_plug(device_ip, device_id) :
-      # for connecting to a device we need its id and ip address
-      async with SwitcherType1Api(device_ip, device_id) as api:
+  async def control_power_plug(device_ip, device_id, device_key) :
+      # for connecting to a device we need its id, login key and ip address
+      async with SwitcherType1Api(device_ip, device_id, device_key) as api:
           # get the device current state
           await api.get_state()
           # turn the device on
@@ -72,9 +72,9 @@ asyncio.run(print_devices(60))
   <summary>Water Heater API</summary>
 
   ```python
-  async def control_water_heater(device_ip, device_id) :
-      # for connecting to a device we need its id and ip address
-      async with SwitcherType1Api(device_ip, device_id) as api:
+  async def control_water_heater(device_ip, device_id, device_key) :
+      # for connecting to a device we need its id, login key and ip address
+      async with SwitcherType1Api(device_ip, device_id, device_key) as api:
           # get the device current state
           await api.get_state()
           # turn the device on for 15 minutes
@@ -102,9 +102,9 @@ asyncio.run(print_devices(60))
   <summary>Runner API</summary>
 
   ```python
-  async def control_runner(device_ip, device_id) :
-      # for connecting to a device we need its id and ip address
-      async with SwitcherType2Api(device_ip, device_id) as api:
+  async def control_runner(device_ip, device_id, device_key) :
+      # for connecting to a device we need its id, login key and ip address
+      async with SwitcherType2Api(device_ip, device_id, device_key) as api:
           # get the device current state
           await api.get_shutter_state()
           # open the shutter to 30%
@@ -121,9 +121,9 @@ asyncio.run(print_devices(60))
   <summary>Breeze API</summary>
 
   ```python
-  async def control_breeze(device_ip, device_id, remote_manager, remote_id) :
-      # for connecting to a device we need its id and ip address
-      async with SwitcherType2Api(device_ip, device_id) as api:
+  async def control_breeze(device_ip, device_id, device_key, remote_manager, remote_id) :
+      # for connecting to a device we need its id, login key and ip address
+      async with SwitcherType2Api(device_ip, device_id, device_key) as api:
           # get the device current state
           await api.get_breeze_state()
           # initialize the Breeze RemoteManager and get the remote
