@@ -47,6 +47,7 @@ from aioswitcher.device import (
 )
 
 device_id = "aaaaaa"
+device_key = "18"
 device_ip = "1.2.3.4"
 pytestmark = mark.asyncio
 faulty_dummy_response = skipUnless(
@@ -75,7 +76,7 @@ def writer_mock(writer_write):
 @pytest_asyncio.fixture
 async def connected_api_type1(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherType1Api(device_ip, device_id)
+        api = SwitcherType1Api(device_ip, device_id, device_key)
         await api.connect()
         yield api
         await api.disconnect()
@@ -84,7 +85,7 @@ async def connected_api_type1(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherType2Api(device_ip, device_id)
+        api = SwitcherType2Api(device_ip, device_id, device_key)
         await api.connect()
         yield api
         await api.disconnect()
@@ -92,7 +93,7 @@ async def connected_api_type2(reader_mock, writer_mock):
 
 @patch("logging.Logger.info")
 async def test_stopping_before_started_and_connected_should_write_to_the_info_output(mock_info):
-    api = SwitcherType1Api(device_ip, device_id)
+    api = SwitcherType1Api(device_ip, device_id, device_key)
     assert_that(api.connected).is_false()
     await api.disconnect()
     mock_info.assert_called_with("switcher device not connected")
@@ -100,7 +101,7 @@ async def test_stopping_before_started_and_connected_should_write_to_the_info_ou
 
 async def test_api_as_a_context_manager(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        async with SwitcherType1Api(device_ip, device_id) as api:
+        async with SwitcherType1Api(device_ip, device_id, device_key) as api:
             assert_that(api.connected).is_true()
 
 
