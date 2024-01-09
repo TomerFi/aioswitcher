@@ -14,6 +14,7 @@
 
 """Switcher integration device module."""
 
+import json
 from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -203,6 +204,25 @@ class ShutterDirection(Enum):
     def value(self) -> str:
         """Return the value of the direction."""
         return self._value  # type: ignore
+
+
+class DeviceToken(str):
+    """Class representing the Switcher Token response."""
+
+    response: str
+
+    def __init__(self, response: str) -> None:
+        """Initialize class."""
+        self.response = response
+
+    def to_json(self) -> str:
+        """Convert str response to json."""
+        return json.dumps(self.response)
+
+    @property
+    def value(self) -> str:
+        """Return the value of the token."""
+        return self.response.get("token", "")  # type: ignore
 
 
 @dataclass
