@@ -25,6 +25,7 @@ from aioswitcher.device.tools import sign_packet_with_crc_key
 SUT_TIMESTAMP = "ef8db35c"
 SUT_SESSION_ID = "01000000"
 SUT_DEVICE_ID = "a123bc"
+SUT_DEVICE_KEY = "18"
 
 
 def test_sign_packet_with_crc_key_for_a_random_string_throws_error():
@@ -36,8 +37,8 @@ def test_sign_packet_with_crc_key_for_a_random_string_throws_error():
 
 def test_sign_packet_with_crc_key_for_LOGIN_PACKET_TYPE1_returns_signed_packet():
     """Test the sign_packet_with_crc_key tool for the LOGIN_PACKET_TYPE1."""
-    packet = packets.LOGIN_PACKET_TYPE1.format(SUT_TIMESTAMP)
-    assert_that(sign_packet_with_crc_key(packet)).is_equal_to(packet + "627f33f1")
+    packet = packets.LOGIN_PACKET_TYPE1.format(SUT_TIMESTAMP, SUT_DEVICE_KEY)
+    assert_that(sign_packet_with_crc_key(packet)).is_equal_to(packet + "6ddd0cc0")
 
 
 def test_sign_packet_with_crc_key_for_GET_STATE_PACKET_TYPE1_returns_signed_packet():

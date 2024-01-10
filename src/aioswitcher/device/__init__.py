@@ -274,6 +274,7 @@ class SwitcherBase(ABC):
     device_type: DeviceType
     device_state: DeviceState
     device_id: str
+    device_key: str
     ip_address: str
     mac_address: str
     name: str

@@ -31,7 +31,7 @@ DEVICE_PASS = "00000000"
 
 # format value just timestamp (initial session id is "00000000")
 LOGIN_PACKET_TYPE1 = (
-    "fef052000232a10000000000" + REQUEST_FORMAT_TYPE1[2:] + "1c" + PAD_72_ZEROS + "00"
+    "fef052000232a10000000000" + REQUEST_FORMAT_TYPE1[2:] + "{}" + PAD_72_ZEROS + "00"
 )
 # Alternative
 # LOGIN_PACKET_TYPE1 = (

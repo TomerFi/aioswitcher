@@ -103,6 +103,7 @@ def _parse_device_from_datagram(
                     device_type,
                     device_state,
                     parser.get_device_id(),
+                    parser.get_device_key(),
                     parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
@@ -124,6 +125,7 @@ def _parse_device_from_datagram(
                     device_type,
                     device_state,
                     parser.get_device_id(),
+                    parser.get_device_key(),
                     parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
@@ -139,6 +141,7 @@ def _parse_device_from_datagram(
                     device_type,
                     DeviceState.ON,
                     parser.get_device_id(),
+                    parser.get_device_key(),
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
@@ -174,6 +177,7 @@ def _parse_device_from_datagram(
                     device_type,
                     device_state,
                     parser.get_device_id(),
+                    parser.get_device_key(),
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
@@ -352,6 +356,10 @@ class DatagramParser:
     def get_device_id(self) -> str:
         """Extract the device id from the broadcast message."""
         return hexlify(self.message)[36:42].decode()
+
+    def get_device_key(self) -> str:
+        """Extract the device id from the broadcast message."""
+        return hexlify(self.message)[80:82].decode()
 
     def get_device_state(self) -> DeviceState:
         """Extract the device state from the broadcast message."""
