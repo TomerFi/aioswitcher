@@ -213,6 +213,7 @@ class SwitcherBase(ABC):
         device_type: the DeviceType appropriate member.
         device_state: the DeviceState appropriate member.
         device_id: the id retrieved from the device.
+        device_key: the login key of the device.
         ip_address: the ip address assigned to the device.
         mac_address: the mac address assigned to the device.
         name: the name of the device.
