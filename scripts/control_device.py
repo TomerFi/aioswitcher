@@ -308,7 +308,11 @@ def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
 
 
 async def get_thermostat_state(
-    device_type: DeviceType, device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a get_breeze_state request."""
     async with SwitcherType2Api(device_type, device_ip, device_id, device_key) as api:
@@ -316,7 +320,11 @@ async def get_thermostat_state(
 
 
 async def get_state(
-    device_type: DeviceType, device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a get_state request."""
     async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
@@ -356,7 +364,12 @@ async def control_thermostat(
 
 
 async def turn_on(
-    device_type: DeviceType, device_id: str, device_key: str, device_ip: str, timer: int, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    timer: int,
+    verbose: bool,
 ) -> None:
     """Use to launch a turn_on request."""
     async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
@@ -364,7 +377,11 @@ async def turn_on(
 
 
 async def turn_off(
-    device_type: DeviceType, device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a turn_off request."""
     async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
@@ -372,7 +389,12 @@ async def turn_off(
 
 
 async def set_name(
-    device_type: DeviceType, device_id: str, device_key: str, device_ip: str, name: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    name: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a set_name request."""
     async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
@@ -395,7 +417,11 @@ async def set_auto_shutdown(
 
 
 async def get_schedules(
-    device_type: DeviceType, device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a get_schedules request."""
     async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
@@ -489,7 +515,11 @@ if __name__ == "__main__":
         if args.action == "get_state":
             asyncio.run(
                 get_state(
-                    args.device_type, args.device_id, args.device_key, args.ip_address, args.verbose
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
                 )
             )
         elif args.action == "turn_on":
@@ -506,7 +536,11 @@ if __name__ == "__main__":
         elif args.action == "turn_off":
             asyncio.run(
                 turn_off(
-                    args.device_type, args.device_id, args.device_key, args.ip_address, args.verbose
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
                 )
             )
         elif args.action == "set_name":
@@ -535,7 +569,11 @@ if __name__ == "__main__":
         elif args.action == "get_schedules":
             asyncio.run(
                 get_schedules(
-                    args.device_type, args.device_id, args.device_key, args.ip_address, args.verbose
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
                 )
             )
         elif args.action == "delete_schedule":
