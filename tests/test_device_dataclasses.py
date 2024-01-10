@@ -38,6 +38,7 @@ class FakeData:
     """Fake data for unit tests."""
 
     device_id: str = "aaaaaa"
+    device_key: str = "18"
     ip_address: str = "192.168.1.33"
     mac_address: str = "12:A1:A2:1A:BC:1A"
     name: str = "My Switcher Boiler"
@@ -66,6 +67,7 @@ def test_given_a_device_of_type_water_heater_when_instantiating_as_a_water_heate
         device_type,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
@@ -93,6 +95,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_power_plug_sh
         DeviceType.POWER_PLUG,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
@@ -115,6 +118,7 @@ def test_given_a_device_of_type_thermostat_when_instantiating_as_a_thermostat_sh
         DeviceType.BREEZE,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
@@ -145,6 +149,7 @@ def test_given_a_device_of_type_shutter_when_instantiating_as_a_shutter_should_b
         DeviceType.RUNNER,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
@@ -168,6 +173,7 @@ def test_given_a_device_of_type_water_heater_when_instantiating_as_a_power_plug_
         device_type,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
@@ -181,6 +187,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_water_heater_
         DeviceType.POWER_PLUG,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
@@ -196,6 +203,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_thermostatr_s
         DeviceType.POWER_PLUG,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
@@ -213,6 +221,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_shutter_shoul
         DeviceType.POWER_PLUG,
         DeviceState.ON,
         fake_data.device_id,
+        fake_data.device_key,
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
