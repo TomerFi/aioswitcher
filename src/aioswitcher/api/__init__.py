@@ -343,7 +343,9 @@ class SwitcherType1Api(SwitcherApi):
         self, device_type: DeviceType, ip_address: str, device_id: str, device_key: str
     ) -> None:
         """Initialize the Switcher TCP connection API."""
-        super().__init__(device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE1)
+        super().__init__(
+            device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE1
+        )
 
     async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
@@ -550,7 +552,9 @@ class SwitcherType2Api(SwitcherApi):
         self, device_type: DeviceType, ip_address: str, device_id: str, device_key: str
     ) -> None:
         """Initialize the Switcher TCP connection API."""
-        super().__init__(device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2)
+        super().__init__(
+            device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2
+        )
 
     async def control_breeze_device(
         self,
