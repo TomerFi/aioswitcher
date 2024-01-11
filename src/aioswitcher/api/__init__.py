@@ -83,6 +83,7 @@ class SwitcherApi(ABC):
         device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
+        device_key: the login key of the device.
         port: the port of the device, default is 9957.
 
     """
@@ -337,6 +338,7 @@ class SwitcherType1Api(SwitcherApi):
         device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
+        device_key: the login key of the device.
     """
 
     def __init__(
@@ -546,6 +548,7 @@ class SwitcherType2Api(SwitcherApi):
         device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
+        device_key: the login key of the device.
     """
 
     def __init__(

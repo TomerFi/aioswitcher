@@ -40,9 +40,9 @@ We can use the Type1 API to gain the following capabilities:
 - Create and Delete schedules
 
 ```python
-async def control_device(device_type, device_ip, device_id) :
-    # for connecting to a device we need its type, id and ip address
-    async with SwitcherType1Api(device_type, device_ip, device_id) as api:
+async def control_device(device_type, device_ip, device_id, device_key) :
+    # for connecting to a device we need its type, id, login key and ip address
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         # get the device current state (1)
         await api.get_state()
         # turn the device on for 15 minutes (2)
@@ -62,22 +62,22 @@ async def control_device(device_type, device_ip, device_id) :
         await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
 asyncio.run(
-    control_device(DeviceType.POWER_PLUG, "111.222.11.22", "ab1c2d")
+    control_device(DeviceType.POWER_PLUG, "111.222.11.22", "ab1c2d", "00")
 )
 asyncio.run(
-    control_device(DeviceType.MINI, "111.222.11.22", "ab1c2d")
+    control_device(DeviceType.MINI, "111.222.11.22", "ab1c2d", "00")
 )
 asyncio.run(
-    control_device(DeviceType.TOUCH, "111.222.11.22", "ab1c2d")
+    control_device(DeviceType.TOUCH, "111.222.11.22", "ab1c2d", "00")
 )
 asyncio.run(
-    control_device(DeviceType.V2_ESP, "111.222.11.22", "ab1c2d")
+    control_device(DeviceType.V2_ESP, "111.222.11.22", "ab1c2d", "00")
 )
 asyncio.run(
-    control_device(DeviceType.V2_QCA, "111.222.11.22", "ab1c2d")
+    control_device(DeviceType.V2_QCA, "111.222.11.22", "ab1c2d", "00")
 )
 asyncio.run(
-    control_device(DeviceType.V4, "111.222.11.22", "ab1c2d")
+    control_device(DeviceType.V4, "111.222.11.22", "ab1c2d", "00")
 )
 ```
 
@@ -99,9 +99,9 @@ We can use the Type2 API to gain the following capabilities on Switcher Breeze a
 - Control Breeze (State, Mode, Fan Level, Target Temperature, Vertical Swing)
 
 ```python
-async def control_runner(device_type, device_ip, device_id) :
-    # for connecting to a device we need its type, id and ip address
-    async with SwitcherType2Api(device_type, device_ip, device_id) as api:
+async def control_runner(device_type, device_ip, device_id, device_key) :
+    # for connecting to a device we need its type, id, login key and ip address
+    async with SwitcherType2Api(device_type, device_ip, device_id, device_key) as api:
         # get the device current state (1)
         await api.get_shutter_state()
         # open the shutter to 30% (2)
@@ -110,10 +110,10 @@ async def control_runner(device_type, device_ip, device_id) :
         await api.stop_shutter()
 
 asyncio.run(
-    control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "")
+    control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00")
 )
 asyncio.run(
-    control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "")
+    control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00")
 )
 ```
 
@@ -122,9 +122,9 @@ asyncio.run(
 3. [SwitcherShutterStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherShutterStateResponse)
 
 ```python
-async def control_breeze(device_type, device_ip, device_id, remote_manager, remote_id) :
-    # for connecting to a device we need its type, id and ip address
-    async with SwitcherType2Api(device_type, device_ip, device_id) as api:
+async def control_breeze(device_type, device_ip, device_id, device_key, remote_manager, remote_id) :
+    # for connecting to a device we need its type, id, login key and ip address
+    async with SwitcherType2Api(device_type, device_ip, device_id, device_key) as api:
         # get the device current state (1)
         await api.get_breeze_state()
         # initialize the Breeze RemoteManager and get the remote (2)
@@ -144,7 +144,7 @@ async def control_breeze(device_type, device_ip, device_id, remote_manager, remo
 # create the remote manager outside the context for re-using (4)
 remote_manager = SwitcherBreezeRemoteManager()
 asyncio.run(
-    control_breeze(DeviceType.BREEZE, "111.222.11.22", "ab1c2d", remote_manager, "DLK65863")
+    control_breeze(DeviceType.BREEZE, "111.222.11.22", "ab1c2d", "00", remote_manager, "DLK65863")
 )
 ```
 
