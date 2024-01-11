@@ -123,7 +123,7 @@ asyncio.run(
 
 ```python
 async def control_breeze(device_type, device_ip, device_id, device_key, remote_manager, remote_id) :
-    # for connecting to a device we need its id, login key and ip address
+    # for connecting to a device we need its type, id, login key and ip address
     async with SwitcherType2Api(device_type, device_ip, device_id, device_key) as api:
         # get the device current state (1)
         await api.get_breeze_state()
