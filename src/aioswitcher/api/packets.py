@@ -25,13 +25,57 @@ REQUEST_FORMAT2_TYPE2 = "{}390001000000000000000000{}00000000000000000000f0fe"
 
 REQUEST_FORMAT_BREEZE = "{}000001000000000000000000{}00000000000000000000f0fe"
 PAD_72_ZEROS = "0" * 72
+P_SESSION = "00000000"
+PHONE_ID = "0000"
+DEVICE_PASS = "00000000"
+
 # format value just timestamp (initial session id is "00000000")
 LOGIN_PACKET_TYPE1 = (
     "fef052000232a10000000000" + REQUEST_FORMAT_TYPE1[2:] + "{}" + PAD_72_ZEROS + "00"
 )
+# Alternative
+# LOGIN_PACKET_TYPE1 = (
+#     "fef052000232a100"
+#     + P_SESSION
+#     + REQUEST_FORMAT_TYPE1[2:]
+#     + "1c"
+#     + PAD_72_ZEROS
+#     + "00"
+# )
 
 LOGIN2_PACKET_TYPE2 = (
     "fef030000305a60000000000ff0301000000000000000000{}00000000000000000000f0fe{}00"
+)
+# Alternative
+# LOGIN2_PACKET_TYPE2 = (
+#     "fef030000305a600"
+#     + P_SESSION
+#     + "ff0301000000"
+#     + PHONE_ID
+#     + "00000000{}00000000000000000000f0fe{}00"
+# )
+
+LOGIN3_PACKET_TYPE2 = (
+    "fef030000305a600"
+    + P_SESSION
+    + "ff0301000000"
+    + "00"
+    + "{}"
+    + "00"
+    + "{}00000000000000000000f0fe{}00"
+)
+
+LOGIN3_PACKET2_TYPE2 = (
+    "fef053000305a100"
+    + P_SESSION
+    + "f50301000000"
+    + "{}"
+    + "000000"
+    + "{}"
+    + "00000000000000000000f0fe"
+    + "0000"
+    + "{}"
+    + "000000000000000000000000000000000000000000000000000000000000000001"
 )
 
 # format values are local session id, timestamp, device id
@@ -105,4 +149,22 @@ RUNNER_SET_POSITION = (
     + "3701"
     + "0100"
     + "{}"
+)
+
+GENERAL_COMMAND_TOKEN = (
+    "fef0000003050102"
+    + "00000000"
+    + "000000"
+    + "000000000000000000"
+    + "{}"
+    + "00000000000000000000f0fe"
+    + "{}"
+    + "00"
+    + "{}"
+    + DEVICE_PASS
+    + "000000000000000000000000000000000000000000000000000000"
+    + "{}"
+    + "0600"
+    + "{}"
+    + "00000000"
 )

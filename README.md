@@ -27,6 +27,12 @@ pip install aioswitcher
   <td><a href="https://github.com/TomerFi/aioswitcher/blob/dev/CONTRIBUTING.md">Contributing</a></td>
 </table>
 
+<strong>
+NOTE: For newer Switcher devices such as: Runner S11, Runner S12 and Lights you need to have a Token for communicating with devices.
+
+You can get it here: https://switcher.co.il/GetKey or by using scripts/get_token.py script
+</strong>
+
 ## Example Usage
 
 <details>
@@ -106,18 +112,18 @@ asyncio.run(print_devices(60))
   <summary>Runner API</summary>
 
   ```python
-  async def control_runner(device_type, device_ip, device_id, device_key) :
+  async def control_runner(device_type, device_ip, device_id, device_key, token) :
       # for connecting to a device we need its type, id, login key and ip address
-      async with SwitcherType2Api(device_type, device_ip, device_id, device_key) as api:
+      async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
           # get the device current state
           await api.get_shutter_state()
-          # open the shutter to 30%
-          await api.set_position(30)
-          # stop the shutter if currently rolling
-          await api.stop_shutter()
+          # open the shutter to 30%, shutter number id is 1
+          await api.set_position(30, 1)
+          # stop the shutter if currently rolling, shutter number id is 1
+          await api.stop_shutter(1)
 
-  asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d" , "00"))
-  asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d" , "00"))
+  asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d" , "00", ""))
+  asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d" , "00", ""))
   ```
 
 </details>

@@ -28,12 +28,15 @@ from ..device import (
     DeviceCategory,
     DeviceState,
     DeviceType,
+    LightState,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
 )
 from ..device.tools import (
     current_timestamp_to_hexadecimal,
+    get_light_index,
+    get_shutter_index,
     minutes_to_hexadecimal_seconds,
     set_message_length,
     sign_packet_with_crc_key,
@@ -42,7 +45,7 @@ from ..device.tools import (
 )
 from ..schedule import Days
 from ..schedule.tools import time_to_hexadecimal_timestamp, weekdays_to_hexadecimal
-from . import packets
+from . import packets, tok
 from .messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
@@ -63,6 +66,7 @@ SWITCHER_TCP_PORT_TYPE2 = 10000
 SWITCHER_DEVICE_TO_TCP_PORT = {
     DeviceCategory.THERMOSTAT: SWITCHER_TCP_PORT_TYPE2,
     DeviceCategory.SHUTTER: SWITCHER_TCP_PORT_TYPE2,
+    DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL: SWITCHER_TCP_PORT_TYPE2,
     DeviceCategory.WATER_HEATER: SWITCHER_TCP_PORT_TYPE1,
     DeviceCategory.POWER_PLUG: SWITCHER_TCP_PORT_TYPE1,
 }
@@ -95,6 +99,7 @@ class SwitcherApi(ABC):
         device_id: str,
         device_key: str,
         port: int = SWITCHER_TCP_PORT_TYPE1,
+        token: str = "",
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         self._device_type = device_type
@@ -103,11 +108,20 @@ class SwitcherApi(ABC):
         self._device_key = device_key
         self._port = port
         self._connected = False
+        if token:
+            self._token = tok.he(token)  # type: ignore
+        else:
+            self._token = ""
 
     @property
     def connected(self) -> bool:
         """Return true if api is connected."""
         return self._connected
+
+    @property
+    def is_using_token(self) -> bool:
+        """Return true if token is used."""
+        return str(self._token) != ""
 
     async def __aenter__(self) -> "SwitcherApi":
         """Enter SwitcherApi asynchronous context manager.
@@ -164,6 +178,14 @@ class SwitcherApi(ABC):
         timestamp = current_timestamp_to_hexadecimal()
         if (
             self._device_type
+            and self.is_using_token
+            and (self._device_type == DeviceType.RUNNER_S11)
+        ):
+            packet = packets.LOGIN3_PACKET_TYPE2.format(
+                self._token, timestamp, self._device_id
+            )
+        elif (
+            self._device_type
             and self._device_type == DeviceType.BREEZE
             or self._device_type == DeviceType.RUNNER
             or self._device_type == DeviceType.RUNNER_MINI
@@ -176,6 +198,19 @@ class SwitcherApi(ABC):
         logger.debug("sending a login packet")
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
+
+        if (
+            self._device_type
+            and self.is_using_token
+            and (self._device_type == DeviceType.RUNNER_S11)
+        ):
+            packet = packets.LOGIN3_PACKET2_TYPE2.format(
+                self._device_id, timestamp, self._token
+            )
+            signed_packet = sign_packet_with_crc_key(packet)
+            logger.debug("sending a login2 packet")
+            self._writer.write(unhexlify(signed_packet))
+            response = await self._reader.read(1024)
         return timestamp, SwitcherLoginResponse(response)
 
     async def get_state(self) -> SwitcherStateResponse:
@@ -237,19 +272,25 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
-    async def stop_shutter(self) -> SwitcherBaseResponse:
+    async def stop_shutter(self, index: int = 1) -> SwitcherBaseResponse:
         """Use for stopping the shutter.
+
+        Args:
+            index: which runner to stop position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
         """
         raise NotImplementedError
 
-    async def set_position(self, position: int = 0) -> SwitcherBaseResponse:
+    async def set_position(
+        self, position: int = 0, index: int = 1
+    ) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
         Args:
             position: the position to set the device to, default to 0.
+            index: which runner to set position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -257,11 +298,15 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
-    async def get_shutter_state(self) -> SwitcherBaseResponse:
+    async def get_shutter_state(self, index: int = 1) -> SwitcherBaseResponse:
         """Use for sending the get state packet to the Runner device.
+
+        Args:
+            index: which runner to set get state, default to 1.
 
         Returns:
             An instance of ``SwitcherShutterStateResponse``.
+
         """
         raise NotImplementedError
 
@@ -322,6 +367,21 @@ class SwitcherApi(ABC):
             start_time: a string start time in %H:%M format. e.g. 13:00.
             end_time: a string start time in %H:%M format. e.g. 13:00.
             days: for recurring schedules, add ``Days``.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        raise NotImplementedError
+
+    async def set_light(
+        self, command: LightState, index: int = 1
+    ) -> SwitcherBaseResponse:
+        """Use for turn on/off light.
+
+        Args:
+            command: use the ``aioswitcher.api.LightState`` enum.
+            index: which light to turn on/off, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
@@ -552,11 +612,11 @@ class SwitcherType2Api(SwitcherApi):
     """
 
     def __init__(
-        self, device_type: DeviceType, ip_address: str, device_id: str, device_key: str
+        self, device_type: DeviceType, ip_address: str, device_id: str, device_key: str, token: str
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         super().__init__(
-            device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2
+            device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2, token
         )
 
     async def control_breeze_device(
@@ -698,12 +758,16 @@ class SwitcherType2Api(SwitcherApi):
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def stop_shutter(self) -> SwitcherBaseResponse:
+    async def stop_shutter(self, index: int = 1) -> SwitcherBaseResponse:
         """Use for stopping the shutter.
+
+        Args:
+            index: which runner to stop position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
         """
+        index = get_shutter_index(self._device_type, index)
         logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login()
         if not login_resp.successful:
@@ -714,9 +778,25 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        packet = packets.RUNNER_STOP_COMMAND.format(
-            login_resp.session_id, timestamp, self._device_id
-        )
+        if (
+            self._device_type
+            and self.is_using_token
+            and (self._device_type == DeviceType.RUNNER_S11)
+        ):
+            command = "0000"
+            command = f"0{index}{command}" if index else command
+            precommand = "3702"
+            packet = packets.GENERAL_COMMAND_TOKEN.format(
+                timestamp,
+                self._device_id,
+                self._token,
+                precommand,
+                command,
+            )
+        else:
+            packet = packets.RUNNER_STOP_COMMAND.format(
+                login_resp.session_id, timestamp, self._device_id
+            )
 
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)
@@ -727,16 +807,20 @@ class SwitcherType2Api(SwitcherApi):
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
-    async def set_position(self, position: int = 0) -> SwitcherBaseResponse:
+    async def set_position(
+        self, position: int = 0, index: int = 1
+    ) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
         Args:
             position: the position to set the device to, default to 0.
+            index: which runner to set position, default to 1.
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
 
         """
+        index = get_shutter_index(self._device_type, index)
         hex_pos = "{0:0{1}x}".format(position, 2)
 
         logger.debug("about to send set position command")
@@ -749,9 +833,24 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        packet = packets.RUNNER_SET_POSITION.format(
-            login_resp.session_id, timestamp, self._device_id, hex_pos
-        )
+        if (
+            self._device_type
+            and self.is_using_token
+            and (self._device_type == DeviceType.RUNNER_S11)
+        ):
+            hex_pos = f"0{index}{hex_pos}" if index else hex_pos
+            precommand = "3701"
+            packet = packets.GENERAL_COMMAND_TOKEN.format(
+                timestamp,
+                self._device_id,
+                self._token,
+                precommand,
+                hex_pos,
+            )
+        else:
+            packet = packets.RUNNER_SET_POSITION.format(
+                login_resp.session_id, timestamp, self._device_id, hex_pos
+            )
 
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)
@@ -792,8 +891,11 @@ class SwitcherType2Api(SwitcherApi):
         except (KeyError, ValueError) as ve:
             raise RuntimeError("get breeze state request was not successful") from ve
 
-    async def get_shutter_state(self) -> SwitcherShutterStateResponse:
+    async def get_shutter_state(self, index: int = 1) -> SwitcherShutterStateResponse:
         """Use for sending the get state packet to the Runner device.
+
+        Args:
+            index: which runner to set get state, default to 1.
 
         Returns:
             An instance of ``SwitcherShutterStateResponse``.
@@ -811,10 +913,56 @@ class SwitcherType2Api(SwitcherApi):
             self._writer.write(unhexlify(signed_packet))
             state_resp = await self._reader.read(1024)
             try:
-                response = SwitcherShutterStateResponse(state_resp)
+                response = SwitcherShutterStateResponse(
+                    state_resp, self._device_type, index
+                )
                 return response
             except (KeyError, ValueError) as ve:
                 raise RuntimeError(
                     "get shutter state request was not successful"
                 ) from ve
         raise RuntimeError("login request was not successful")
+
+    async def set_light(
+        self, command: LightState, index: int = 1
+    ) -> SwitcherBaseResponse:
+        """Use for turn on/off light.
+
+        Args:
+            command: use the ``aioswitcher.api.LightState`` enum.
+            index: which light to turn on/off, default to 1.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        index = get_light_index(self._device_type, index)
+        hex_pos = f"0{index}{command.value}" if index else command.value
+        precommand = "370a"
+
+        logger.debug("about to send set light command")
+        timestamp, login_resp = await self._login()
+        if not login_resp.successful:
+            logger.error("Failed to log into device with id %s", self._device_id)
+            raise RuntimeError("login request was not successful")
+
+        logger.debug(
+            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
+        )
+
+        packet = packets.GENERAL_COMMAND_TOKEN.format(
+            timestamp,
+            self._device_id,
+            self._token,
+            precommand,
+            hex_pos,
+        )
+
+        packet = set_message_length(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        logger.debug("sending a control packet")
+
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
