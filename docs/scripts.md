@@ -91,9 +91,13 @@ python control_device.py get_state -c "Switcher Touch" -d ab1c2d -i "111.222.11.
 
 python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
 
+python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"
+
 python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -t 15
 
 python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"
 
 python control_device.py set_name -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "My Boiler"
 
