@@ -370,10 +370,12 @@ async def get_thermostat_state(
     device_key: str,
     device_ip: str,
     verbose: bool,
-    token: str
+    token: str,
 ) -> None:
     """Use to launch a get_breeze_state request."""
-    async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(asdict(await api.get_breeze_state(), verbose))
 
 
@@ -405,7 +407,9 @@ async def control_thermostat(
     token: str = "",
 ) -> None:
     """Control Breeze device."""
-    async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(
             asdict(
                 await api.control_breeze_device(
@@ -540,7 +544,9 @@ async def stop_shutter(
     token: str,
 ) -> None:
     """Stop shutter."""
-    async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(
             asdict(
                 await api.stop_shutter(index),
@@ -560,7 +566,9 @@ async def set_shutter_position(
     token: str,
 ) -> None:
     """Use to set the shutter position."""
-    async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(
             asdict(
                 await api.set_position(position, index),
@@ -572,26 +580,32 @@ async def set_shutter_position(
 async def turn_on_light(
     device_type: DeviceType,
     device_id: str,
+    device_key: str,
     device_ip: str,
     index: int,
     verbose: bool,
     token: str,
 ) -> None:
     """Use for turn on light."""
-    async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(asdict(await api.set_light(LightState.ON, index), verbose))
 
 
 async def turn_off_light(
     device_type: DeviceType,
     device_id: str,
+    device_key: str,
     device_ip: str,
     index: int,
     verbose: bool,
     token: str,
 ) -> None:
     """Use for turn off light."""
-    async with SwitcherType2Api(device_type, device_ip, device_id, token) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(asdict(await api.set_light(LightState.OFF, index), verbose))
 
 
@@ -753,6 +767,7 @@ if __name__ == "__main__":
                 turn_on_light(
                     args.device_type,
                     args.device_id,
+                    args.device_key,
                     args.ip_address,
                     args.index,
                     args.verbose,
@@ -765,6 +780,7 @@ if __name__ == "__main__":
                 turn_off_light(
                     args.device_type,
                     args.device_id,
+                    args.device_key,
                     args.ip_address,
                     args.index,
                     args.verbose,

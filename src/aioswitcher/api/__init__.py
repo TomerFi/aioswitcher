@@ -612,11 +612,21 @@ class SwitcherType2Api(SwitcherApi):
     """
 
     def __init__(
-        self, device_type: DeviceType, ip_address: str, device_id: str, device_key: str, token: str
+        self,
+        device_type: DeviceType,
+        ip_address: str,
+        device_id: str,
+        device_key: str,
+        token: str,
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         super().__init__(
-            device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2, token
+            device_type,
+            ip_address,
+            device_id,
+            device_key,
+            SWITCHER_TCP_PORT_TYPE2,
+            token,
         )
 
     async def control_breeze_device(
