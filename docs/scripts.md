@@ -91,9 +91,13 @@ python control_device.py get_state -d ab1c2d -i "111.222.11.22"
 
 python control_device.py turn_on -d ab1c2d -i "111.222.11.22"
 
+python control_device.py turn_on -d ab1c2d -l 18 -i "111.222.11.22"
+
 python control_device.py turn_on -d ab1c2d -i "111.222.11.22" -t 15
 
 python control_device.py turn_off -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off -d ab1c2d -l 18 -i "111.222.11.22"
 
 python control_device.py set_name -d ab1c2d -i "111.222.11.22" -n "My Boiler"
 

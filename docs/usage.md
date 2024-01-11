@@ -40,7 +40,7 @@ We can use the Type1 API to gain the following capabilities:
 - Create and Delete schedules
 
 ```python
-async def control_device(device_ip, device_id) :
+async def control_device(device_ip, device_id, device_key) :
     # for connecting to a device we need its id, login key and ip address
     async with SwitcherType1Api(device_ip, device_id, device_key) as api:
         # get the device current state (1)
@@ -95,7 +95,7 @@ async def control_runner(device_ip, device_id, device_key) :
         await api.stop()
 
 asyncio.run(
-    control_runner("111.222.11.22", "ab1c2d")
+    control_runner("111.222.11.22", "ab1c2d", "00")
 )
 ```
 
@@ -126,7 +126,7 @@ async def control_breeze(device_ip, device_id, device_key, remote_manager, remot
 # create the remote manager outside the context for re-using (4)
 remote_manager = SwitcherBreezeRemoteManager()
 asyncio.run(
-    control_breeze("111.222.11.22", "ab1c2d", remote_manager, "DLK65863")
+    control_breeze("111.222.11.22", "ab1c2d", "00", remote_manager, "DLK65863")
 )
 ```
 
