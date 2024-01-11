@@ -62,7 +62,7 @@ async def control_device(device_ip, device_id, device_key) :
         await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
 asyncio.run(
-    control_device("111.222.11.22", "ab1c2d")
+    control_device("111.222.11.22", "ab1c2d", "00")
 )
 ```
 
