@@ -511,9 +511,9 @@ The following code will print all discovered devices for 60 seconds.</p>
 <li>Retrieve the schedules</li>
 <li>Create and Delete schedules</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_device</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
-    <span class="c1"># for connecting to a device we need its id and ip address</span>
-    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType1Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_device</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its id, login key and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType1Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
         <span class="c1"># get the device current state (1)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_state</span><span class="p">()</span>
         <span class="c1"># turn the device on for 15 minutes (2)</span>
@@ -533,7 +533,7 @@ The following code will print all discovered devices for 60 seconds.</p>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">create_schedule</span><span class="p">(</span><span class="s2">&quot;13:00&quot;</span><span class="p">,</span> <span class="s2">&quot;14:30&quot;</span><span class="p">,</span> <span class="p">{</span><span class="n">Days</span><span class="o">.</span><span class="n">SUNDAY</span><span class="p">,</span> <span class="n">Days</span><span class="o">.</span><span class="n">FRIDAY</span><span class="p">})</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-    <span class="n">control_device</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">)</span>
+    <span class="n">control_device</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="s2">&quot;00&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
 <ol>
@@ -553,9 +553,9 @@ The following code will print all discovered devices for 60 seconds.</p>
 <li>Control Runner position</li>
 <li>Control Breeze (State, Mode, Fan Level, Target Temperature, Vertical Swing)</li>
 </ul>
-<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_runner</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="p">:</span>
-    <span class="c1"># for connecting to a device we need its id and ip address</span>
-    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_runner</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its id, login key and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
         <span class="c1"># get the device current state (1)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_shutter_state</span><span class="p">()</span>
         <span class="c1"># open the shutter to 30% (2)</span>
@@ -564,7 +564,7 @@ The following code will print all discovered devices for 60 seconds.</p>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-    <span class="n">control_runner</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">)</span>
+    <span class="n">control_runner</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="s2">&quot;00&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
 <ol>
@@ -572,9 +572,9 @@ The following code will print all discovered devices for 60 seconds.</p>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherShutterStateResponse">SwitcherShutterStateResponse</a></li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">)</span> <span class="p">:</span>
-    <span class="c1"># for connecting to a device we need its id and ip address</span>
-    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its id, login key and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
         <span class="c1"># get the device current state (1)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_breeze_state</span><span class="p">()</span>
         <span class="c1"># initialize the Breeze RemoteManager and get the remote (2)</span>
@@ -594,7 +594,7 @@ The following code will print all discovered devices for 60 seconds.</p>
 <span class="c1"># create the remote manager outside the context for re-using (4)</span>
 <span class="n">remote_manager</span> <span class="o">=</span> <span class="n">SwitcherBreezeRemoteManager</span><span class="p">()</span>
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-    <span class="n">control_breeze</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="s2">&quot;DLK65863&quot;</span><span class="p">)</span>
+    <span class="n">control_breeze</span><span class="p">(</span><span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="s2">&quot;00&quot;</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="s2">&quot;DLK65863&quot;</span><span class="p">)</span>
 <span class="p">)</span>
 </code></pre></div>
 <ol>
@@ -613,7 +613,7 @@ The following code will print all discovered devices for 60 seconds.</p>
   <small>
     
       Last update:
-      2024-01-09
+      2024-01-18
     
   </small>
 </div>
