@@ -791,6 +791,7 @@ class SwitcherType2Api(SwitcherApi):
         raise RuntimeError("login request was not successful")
 
 
+@final
 class SwitcherTouch(SwitcherType1Api):
     """Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.
 
