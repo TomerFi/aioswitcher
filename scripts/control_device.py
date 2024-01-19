@@ -20,9 +20,9 @@ import asyncio
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from datetime import timedelta
 from pprint import PrettyPrinter
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Type, Union
 
-from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
+from aioswitcher.api import Command, SwitcherTouch, SwitcherType1Api, SwitcherType2Api
 from aioswitcher.api.remotes import SwitcherBreezeRemoteManager
 from aioswitcher.device import (
     DeviceState,
@@ -305,10 +305,10 @@ async def get_thermostat_state(
 
 
 async def get_state(
-    device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_class_name: Type, device_id: str, device_key: str, device_ip: str, verbose: bool
 ) -> None:
     """Use to launch a get_state request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with device_class_name(device_ip, device_id, device_key) as api:
         printer.pprint(asdict(await api.get_state(), verbose))
 
 
@@ -459,7 +459,7 @@ if __name__ == "__main__":
         if args.action == "get_state":
             asyncio.run(
                 get_state(
-                    args.device_id, args.device_key, args.ip_address, args.verbose
+                    device_class_name, args.device_id, args.device_key, args.ip_address, args.verbose
                 )
             )
         elif args.action == "turn_on":

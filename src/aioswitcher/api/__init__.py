@@ -342,7 +342,6 @@ class SwitcherApi(ABC):
         raise NotImplementedError
 
 
-@final
 class SwitcherType1Api(SwitcherApi):
     """Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.
 
@@ -547,7 +546,6 @@ class SwitcherType1Api(SwitcherApi):
         return SwitcherBaseResponse(response)
 
 
-@final
 class SwitcherType2Api(SwitcherApi):
     """Switcher Type2 devices (Breeze, Runners) TCP based API.
 
@@ -791,3 +789,18 @@ class SwitcherType2Api(SwitcherApi):
                     "get shutter state request was not successful"
                 ) from ve
         raise RuntimeError("login request was not successful")
+
+
+class SwitcherTouch(SwitcherType1Api):
+    """Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.
+
+    Args:
+        ip_address: the ip address assigned to the device.
+        device_id: the id of the desired device.
+        device_key: the login key of the device.
+    """
+
+    def __init__(self, ip_address: str, device_id: str, device_key: str) -> None:
+        """Initialize the Switcher TCP connection API."""
+        super().__init__(ip_address, device_id, device_key)
+        self._device_type = "Switcher Touch"
