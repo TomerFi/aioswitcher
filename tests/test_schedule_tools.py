@@ -90,7 +90,7 @@ def test_calc_duration_with_valid_start_and_end_time_should_return_the_duration(
 
 
 def test_calc_duration_with_greater_start_time_than_end_time_should_assume_next_day():
-    assert_that(tools.calc_duration("14:00", "13:00")).is_equal_to("11:00:00")
+    assert_that(tools.calc_duration("14:00", "13:00")).is_equal_to("23:00:00")
 
 
 def test_hexadecimale_timestamp_to_localtime_with_the_current_timestamp_should_return_a_time_string():
