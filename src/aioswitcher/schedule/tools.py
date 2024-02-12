@@ -16,7 +16,7 @@
 
 import time
 from binascii import hexlify
-from datetime import datetime
+from datetime import datetime, timedelta
 from struct import pack
 from typing import Set, Union
 
@@ -73,9 +73,9 @@ def calc_duration(start_time: str, end_time: str) -> str:
     """Use to calculate the delta between two time values formated as %H:%M."""
     start_datetime = datetime.strptime(start_time, "%H:%M")
     end_datetime = datetime.strptime(end_time, "%H:%M")
-    if end_datetime > start_datetime:
-        return str(end_datetime - start_datetime)
-    raise ValueError("end_time should be greater the start_time")
+    if end_datetime < start_datetime:
+        end_datetime += timedelta(days=1)
+    return str(end_datetime - start_datetime)
 
 
 def bit_summary_to_days(sum_weekdays_bit: int) -> Set[Days]:
