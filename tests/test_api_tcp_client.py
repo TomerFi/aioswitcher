@@ -303,7 +303,7 @@ async def test_breeze_build_swing_command():
     remote_manager = SwitcherBreezeRemoteManager()
     remote_7022 = remote_manager.get_remote("ELEC7022")
     command = remote_7022.build_swing_command(swing=ThermostatSwing.ON)
-    assert_that(command.command).is_equal_to("000000004e4543587c32367c33327c31352c31357c31352c34307c31357c54303043387c33307c30317c414241425b33305d7c423234443642393445303146")
+    assert_that(command.command).is_equal_to("000000004e4543587c32367c33327c31352c31357c31352c34307c31357c54303042457c33307c30317c414241425b33305d7c423234443642393445303146")
 
 
 async def test_breeze_build_command_function_invalid_mode(resource_path_root):

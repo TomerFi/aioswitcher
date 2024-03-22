@@ -1,15 +1,3 @@
-# Help Wanted
-
-<p align="left">
-<strong>
-Aioswitcher project is looking for maintainers and contributors!<br/>
-For various reasons, I can only keep maintaining this project as far as dependency bumps and publishing.<br/>
-As for new features and the occasional bug support, these will require other maintainers/contributors.<br/>
-<br/>
-If that's you - please feel free to ping me and I will do all I can to make the onboarding process easy.
-</strong>
-</p>
-
 # Switcher Python Integration</br>[![pypi-version]][11] [![pypi-downloads]][11] [![license-badge]][4]
 
 [![gh-build-status]][7] [![gh-pages-status]][8] [![codecov]][3]
@@ -183,8 +171,9 @@ Thanks goes to these wonderful people ([emoji key][1]):
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="http://exploit.co.il"><img src="https://avatars.githubusercontent.com/u/1768915?v=4?s=100" width="100px;" alt="Shai rod"/><br /><sub><b>Shai rod</b></sub></a><br /><a href="#data-nightrang3r" title="Data">🔣</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/thecode"><img src="https://avatars.githubusercontent.com/u/1858925?v=4?s=100" width="100px;" alt="Shay Levy"/><br /><sub><b>Shay Levy</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=thecode" title="Code">💻</a> <a href="#ideas-thecode" title="Ideas, Planning, & Feedback">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/thecode"><img src="https://avatars.githubusercontent.com/u/1858925?v=4?s=100" width="100px;" alt="Shay Levy"/><br /><sub><b>Shay Levy</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=thecode" title="Code">💻</a> <a href="#ideas-thecode" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-thecode" title="Maintenance">🚧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/YogevBokobza"><img src="https://avatars.githubusercontent.com/u/22839127?v=4?s=100" width="100px;" alt="YogevBokobza"/><br /><sub><b>YogevBokobza</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=YogevBokobza" title="Code">💻</a> <a href="https://github.com/TomerFi/aioswitcher/commits?author=YogevBokobza" title="Tests">⚠️</a> <a href="#maintenance-YogevBokobza" title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/gmyuval"><img src="https://avatars.githubusercontent.com/u/28506179?v=4?s=100" width="100px;" alt="Yuval Moran"/><br /><sub><b>Yuval Moran</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=gmyuval" title="Code">💻</a> <a href="https://github.com/TomerFi/aioswitcher/commits?author=gmyuval" title="Tests">⚠️</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/dmatik"><img src="https://avatars.githubusercontent.com/u/5577386?v=4?s=100" width="100px;" alt="dmatik"/><br /><sub><b>dmatik</b></sub></a><br /><a href="#blog-dmatik" title="Blogposts">📝</a> <a href="#ideas-dmatik" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-dmatik" title="User Testing">📓</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jafar-atili"><img src="https://avatars.githubusercontent.com/u/19508787?v=4?s=100" width="100px;" alt="jafar-atili"/><br /><sub><b>jafar-atili</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=jafar-atili" title="Code">💻</a> <a href="https://github.com/TomerFi/aioswitcher/commits?author=jafar-atili" title="Documentation">📖</a></td>
     </tr>

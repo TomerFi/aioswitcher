@@ -18,7 +18,8 @@
       "profile": "https://github.com/thecode",
       "contributions": [
         "code",
-        "ideas"
+        "ideas",
+        "maintenance"
       ]
     },
     {
@@ -123,6 +124,16 @@
         "code",
         "test",
         "maintenance"
+      ]
+    },
+    {
+      "login": "gmyuval",
+      "name": "Yuval Moran",
+      "avatar_url": "https://avatars.githubusercontent.com/u/28506179?v=4",
+      "profile": "https://github.com/gmyuval",
+      "contributions": [
+        "code",
+        "test"
       ]
     }
   ],

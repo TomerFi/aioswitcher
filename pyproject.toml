@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioswitcher"
-version = "3.4.2.dev"
+version = "3.4.3.dev"
 description = "Switcher Python Integration."
 license = "Apache-2.0"
 authors = [ "Tomer Figenblat <tomer@tomfi.info>" ]
@@ -26,7 +26,7 @@ exclude = [ ]
 
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
-black = ">=22.8,<24.0"
+black = ">=22.8,<25.0"
 flake8 = ">=5.0.4,<7.0.0"
 flake8-docstrings = "^1.6.0"
 Flake8-pyproject = "^1.1.0.post0"
