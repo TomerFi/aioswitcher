@@ -80,6 +80,15 @@ shared_parser.add_argument(
     action="store_true",
     help="include the raw message",
 )
+possible_types = [t.value for t in DeviceType]
+shared_parser.add_argument(
+    "-c",
+    "--device-type",
+    type=str,
+    choices=possible_types,
+    required=True,
+    help="the type of the device",
+)
 shared_parser.add_argument(
     "-k",
     "--token",
