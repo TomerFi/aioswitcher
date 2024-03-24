@@ -42,6 +42,7 @@ class FakeData:
     ip_address: str = "192.168.1.33"
     mac_address: str = "12:A1:A2:1A:BC:1A"
     name: str = "My Switcher Boiler"
+    token_needed : bool = False
     power_consumption: int = 2600
     electric_current: float = 11.8
     remaining_time: str = "01:30:00"
@@ -71,6 +72,7 @@ def test_given_a_device_of_type_water_heater_when_instantiating_as_a_water_heate
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
         fake_data.remaining_time,
@@ -99,6 +101,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_power_plug_sh
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
     )
@@ -122,6 +125,7 @@ def test_given_a_device_of_type_thermostat_when_instantiating_as_a_thermostat_sh
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.mode,
         fake_data.temperature,
         fake_data.target_temperature,
@@ -153,6 +157,7 @@ def test_given_a_device_of_type_shutter_when_instantiating_as_a_shutter_should_b
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.position,
         fake_data.direction
     )
@@ -177,6 +182,7 @@ def test_given_a_device_of_type_water_heater_when_instantiating_as_a_power_plug_
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
     ).is_equal_to("only power plugs are allowed")
@@ -191,6 +197,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_water_heater_
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
         fake_data.remaining_time,
@@ -207,6 +214,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_thermostatr_s
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.mode,
         fake_data.temperature,
         fake_data.target_temperature,
@@ -225,6 +233,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_shutter_shoul
         fake_data.ip_address,
         fake_data.mac_address,
         fake_data.name,
+        fake_data.token_needed,
         fake_data.position,
         fake_data.direction
     ).is_equal_to("only shutters are allowed")
