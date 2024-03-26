@@ -53,14 +53,14 @@ python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.2
 python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
 
 python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
-python control_device.py stop_shutter -c "Switcher Runner S11" -d f2239a -i "192.168.50.98"\n
+python control_device.py stop_shutter -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
 python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50\n
-python control_device.py set_shutter_position -c "Switcher Runner S11" -d f2239a -i "192.168.50.98" -p 50\n
+python control_device.py set_shutter_position -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50\n
 
-python control_device.py turn_on_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_on_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 2\n
-python control_device.py turn_off_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_off_light -c "Switcher Runner S11" -d ab1c2d -i "111.222.11.22" -x 2\n
+python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
+python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
 
 python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"\n
 

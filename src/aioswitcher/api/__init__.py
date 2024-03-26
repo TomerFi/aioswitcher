@@ -286,7 +286,7 @@ class SwitcherApi(ABC):
     async def set_position(
         self, position: int = 0, index: int = 1
     ) -> SwitcherBaseResponse:
-        """Use for setting the shutter position of the Runner and Runner Mini devices.
+        """Use for setting the shutter position of the Runners devices.
 
         Args:
             position: the position to set the device to, default to 0.
@@ -299,7 +299,7 @@ class SwitcherApi(ABC):
         raise NotImplementedError
 
     async def get_shutter_state(self, index: int = 1) -> SwitcherBaseResponse:
-        """Use for sending the get state packet to the Runner device.
+        """Use for sending the get state packet to the Runners devices.
 
         Args:
             index: which runner to set get state, default to 1.
@@ -820,7 +820,7 @@ class SwitcherType2Api(SwitcherApi):
     async def set_position(
         self, position: int = 0, index: int = 1
     ) -> SwitcherBaseResponse:
-        """Use for setting the shutter position of the Runner and Runner Mini devices.
+        """Use for setting the shutter position of the Runners devices.
 
         Args:
             position: the position to set the device to, default to 0.
@@ -902,7 +902,7 @@ class SwitcherType2Api(SwitcherApi):
             raise RuntimeError("get breeze state request was not successful") from ve
 
     async def get_shutter_state(self, index: int = 1) -> SwitcherShutterStateResponse:
-        """Use for sending the get state packet to the Runner device.
+        """Use for sending the get state packet to the Runners devices.
 
         Args:
             index: which runner to set get state, default to 1.
