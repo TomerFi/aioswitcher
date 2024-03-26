@@ -115,7 +115,7 @@ python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168
 
 python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98"-p 50
 
-python control_device.py get_thermostat_state -c "Switcher Runner" -d 3a20b7 -i "192.168.50.77"
+python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"
 
 python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on
 
