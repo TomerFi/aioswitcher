@@ -96,15 +96,6 @@ shared_parser.add_argument(
     type=str,
     help="the token for communicating with the new switcher devices",
 )
-possible_types = [t.value for t in DeviceType]
-shared_parser.add_argument(
-    "-c",
-    "--device-type",
-    type=str,
-    choices=possible_types,
-    required=True,
-    help="the type of the device",
-)
 shared_parser.add_argument(
     "-d",
     "--device-id",
