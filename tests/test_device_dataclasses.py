@@ -42,7 +42,7 @@ class FakeData:
     ip_address: str = "192.168.1.33"
     mac_address: str = "12:A1:A2:1A:BC:1A"
     name: str = "My Switcher Boiler"
-    token_needed : bool = False
+    token_needed: bool = False
     power_consumption: int = 2600
     electric_current: float = 11.8
     remaining_time: str = "01:30:00"

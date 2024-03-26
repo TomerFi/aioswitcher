@@ -55,7 +55,12 @@ class DeviceType(Enum):
     )
 
     def __new__(
-        cls, value: str, hex_rep: str, protocol_type: int, category: DeviceCategory, token_needed: bool
+        cls,
+        value: str,
+        hex_rep: str,
+        protocol_type: int,
+        category: DeviceCategory,
+        token_needed: bool,
     ) -> "DeviceType":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
