@@ -114,9 +114,9 @@ asyncio.run(print_devices(60))
           # turn off the light, number id is 1 (Only for Runner S11 and Runner S12)
           await api.api.set_light(LightState.OFF, 1)
 
-  asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d" , "00", ""))
-  asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d" , "00", ""))
-  asyncio.run(control_runner(DeviceType.RUNNER_S11, "111.222.11.22", "ab1c2d" , "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00", ""))
+  asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00", ""))
+  asyncio.run(control_runner(DeviceType.RUNNER_S11, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   ```
 
 </details>
