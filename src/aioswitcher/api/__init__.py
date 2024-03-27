@@ -121,7 +121,7 @@ class SwitcherApi(ABC):
     @property
     def is_using_token(self) -> bool:
         """Return true if token is used."""
-        return str(self._token) != ""
+        return bool(self._device_type.token_needed) and str(self._token) != ""
 
     async def __aenter__(self) -> "SwitcherApi":
         """Enter SwitcherApi asynchronous context manager.
