@@ -17,7 +17,14 @@
 import datetime
 import time
 from binascii import crc_hqx, hexlify, unhexlify
+from logging import getLogger
 from struct import pack
+
+import requests
+
+from ..device import DeviceToken, DeviceType
+
+logger = getLogger(__name__)
 
 
 def seconds_to_iso_time(all_seconds: int) -> str:
@@ -133,3 +140,48 @@ def set_message_length(message: str) -> str:
     """Set the message length."""
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]
+
+
+def convert_str_to_devicetype(device_type: str) -> DeviceType:
+    """Convert string name to DeviceType."""
+    if device_type == DeviceType.MINI.value:
+        return DeviceType.MINI
+    elif device_type == DeviceType.POWER_PLUG.value:
+        return DeviceType.POWER_PLUG
+    elif device_type == DeviceType.TOUCH.value:
+        return DeviceType.TOUCH
+    elif device_type == DeviceType.V2_ESP.value:
+        return DeviceType.V2_ESP
+    elif device_type == DeviceType.V2_QCA.value:
+        return DeviceType.V2_QCA
+    elif device_type == DeviceType.V4.value:
+        return DeviceType.V4
+    elif device_type == DeviceType.BREEZE.value:
+        return DeviceType.BREEZE
+    elif device_type == DeviceType.RUNNER.value:
+        return DeviceType.RUNNER
+    elif device_type == DeviceType.RUNNER_MINI.value:
+        return DeviceType.RUNNER_MINI
+    return DeviceType.MINI
+
+
+def get_token(username: str, password: str) -> DeviceToken:
+    """Make API call to get a Token by username and password."""
+    token = DeviceToken("")
+    request_url = "https://switcher.co.il/GetKey/GetTok/t.php"
+    request_data = {"username": username, "password": password}
+
+    logger.debug("calling API call for Switcher to get the token")
+    response = requests.post(request_url, data=request_data)
+
+    if response.status_code == 200:
+        logger.debug("request successful")
+        response_data = response.json()
+        try:
+            token = DeviceToken(response_data)
+
+        except ValueError:
+            logger.debug("response content is not valid JSON")
+    else:
+        logger.debug("request failed with status code: %s", response.status_code)
+    return token

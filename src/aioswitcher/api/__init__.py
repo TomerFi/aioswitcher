@@ -80,6 +80,7 @@ class SwitcherApi(ABC):
     """Switcher TCP based API.
 
     Args:
+        device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
         device_key: the login key of the device.
@@ -89,12 +90,14 @@ class SwitcherApi(ABC):
 
     def __init__(
         self,
+        device_type: DeviceType,
         ip_address: str,
         device_id: str,
         device_key: str,
         port: int = SWITCHER_TCP_PORT_TYPE1,
     ) -> None:
         """Initialize the Switcher TCP connection API."""
+        self._device_type = device_type
         self._ip_address = ip_address
         self._device_id = device_id
         self._device_key = device_key
@@ -147,9 +150,7 @@ class SwitcherApi(ABC):
             logger.info("switcher device not connected")
         self._connected = False
 
-    async def _login(
-        self, device_type: Union[DeviceType, None] = None
-    ) -> Tuple[str, SwitcherLoginResponse]:
+    async def _login(self) -> Tuple[str, SwitcherLoginResponse]:
         """Use for sending the login packet to the device.
 
         Returns:
@@ -162,10 +163,10 @@ class SwitcherApi(ABC):
         """
         timestamp = current_timestamp_to_hexadecimal()
         if (
-            device_type
-            and device_type == DeviceType.BREEZE
-            or device_type == DeviceType.RUNNER
-            or device_type == DeviceType.RUNNER_MINI
+            self._device_type
+            and self._device_type == DeviceType.BREEZE
+            or self._device_type == DeviceType.RUNNER
+            or self._device_type == DeviceType.RUNNER_MINI
         ):
             packet = packets.LOGIN2_PACKET_TYPE2.format(timestamp, self._device_id)
         else:
@@ -176,35 +177,6 @@ class SwitcherApi(ABC):
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
         return timestamp, SwitcherLoginResponse(response)
-
-    async def stop(self) -> SwitcherBaseResponse:
-        """Use for stopping the shutter.
-
-        Returns:
-            An instance of ``SwitcherBaseResponse``.
-        """
-        logger.debug("about to send stop shutter command")
-        timestamp, login_resp = await self._login(DeviceType.RUNNER)
-        if not login_resp.successful:
-            logger.error("Failed to log into device with id %s", self._device_id)
-            raise RuntimeError("login request was not successful")
-
-        logger.debug(
-            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
-        )
-
-        packet = packets.RUNNER_STOP_COMMAND.format(
-            login_resp.session_id, timestamp, self._device_id
-        )
-
-        packet = set_message_length(packet)
-        signed_packet = sign_packet_with_crc_key(packet)
-
-        logger.debug("sending a stop control packet")
-
-        self._writer.write(unhexlify(signed_packet))
-        response = await self._reader.read(1024)
-        return SwitcherBaseResponse(response)
 
     async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
@@ -265,6 +237,14 @@ class SwitcherApi(ABC):
         """
         raise NotImplementedError
 
+    async def stop_shutter(self) -> SwitcherBaseResponse:
+        """Use for stopping the shutter.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+        """
+        raise NotImplementedError
+
     async def set_position(self, position: int = 0) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
@@ -274,6 +254,14 @@ class SwitcherApi(ABC):
         Returns:
             An instance of ``SwitcherBaseResponse``.
 
+        """
+        raise NotImplementedError
+
+    async def get_shutter_state(self) -> SwitcherBaseResponse:
+        """Use for sending the get state packet to the Runner device.
+
+        Returns:
+            An instance of ``SwitcherShutterStateResponse``.
         """
         raise NotImplementedError
 
@@ -347,14 +335,19 @@ class SwitcherType1Api(SwitcherApi):
     """Switcher Type1 devices (Plug, V2, Touch, V4) TCP based API.
 
     Args:
+        device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
         device_key: the login key of the device.
     """
 
-    def __init__(self, ip_address: str, device_id: str, device_key: str) -> None:
+    def __init__(
+        self, device_type: DeviceType, ip_address: str, device_id: str, device_key: str
+    ) -> None:
         """Initialize the Switcher TCP connection API."""
-        super().__init__(ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE1)
+        super().__init__(
+            device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE1
+        )
 
     async def get_state(self) -> SwitcherStateResponse:
         """Use for sending the get state packet to the device.
@@ -552,14 +545,19 @@ class SwitcherType2Api(SwitcherApi):
     """Switcher Type2 devices (Breeze, Runners) TCP based API.
 
     Args:
+        device_type: the type of the device.
         ip_address: the ip address assigned to the device.
         device_id: the id of the desired device.
         device_key: the login key of the device.
     """
 
-    def __init__(self, ip_address: str, device_id: str, device_key: str) -> None:
+    def __init__(
+        self, device_type: DeviceType, ip_address: str, device_id: str, device_key: str
+    ) -> None:
         """Initialize the Switcher TCP connection API."""
-        super().__init__(ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2)
+        super().__init__(
+            device_type, ip_address, device_id, device_key, SWITCHER_TCP_PORT_TYPE2
+        )
 
     async def control_breeze_device(
         self,
@@ -586,7 +584,7 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-        timestamp, login_resp = await self._login(DeviceType.BREEZE)
+        timestamp, login_resp = await self._login()
         if not login_resp.successful:
             logger.error("Failed to log into device id %s", self._device_id)
             raise RuntimeError("login request was not successful")
@@ -700,6 +698,35 @@ class SwitcherType2Api(SwitcherApi):
         response = await self._reader.read(1024)
         return SwitcherBaseResponse(response)
 
+    async def stop_shutter(self) -> SwitcherBaseResponse:
+        """Use for stopping the shutter.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+        """
+        logger.debug("about to send stop shutter command")
+        timestamp, login_resp = await self._login()
+        if not login_resp.successful:
+            logger.error("Failed to log into device with id %s", self._device_id)
+            raise RuntimeError("login request was not successful")
+
+        logger.debug(
+            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
+        )
+
+        packet = packets.RUNNER_STOP_COMMAND.format(
+            login_resp.session_id, timestamp, self._device_id
+        )
+
+        packet = set_message_length(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        logger.debug("sending a stop control packet")
+
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
     async def set_position(self, position: int = 0) -> SwitcherBaseResponse:
         """Use for setting the shutter position of the Runner and Runner Mini devices.
 
@@ -713,7 +740,7 @@ class SwitcherType2Api(SwitcherApi):
         hex_pos = "{0:0{1}x}".format(position, 2)
 
         logger.debug("about to send set position command")
-        timestamp, login_resp = await self._login(DeviceType.RUNNER)
+        timestamp, login_resp = await self._login()
         if not login_resp.successful:
             logger.error("Failed to log into device with id %s", self._device_id)
             raise RuntimeError("login request was not successful")
@@ -742,7 +769,7 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherThermostatStateResponse``.
 
         """
-        timestamp, login_resp = await self._login(DeviceType.BREEZE)
+        timestamp, login_resp = await self._login()
         if login_resp.successful:
             return await self._get_breeze_state(timestamp, login_resp)
         raise RuntimeError("login request was not successful")
@@ -772,7 +799,7 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherShutterStateResponse``.
 
         """
-        timestamp, login_resp = await self._login(DeviceType.RUNNER)
+        timestamp, login_resp = await self._login()
         if login_resp.successful:
             packet = packets.GET_STATE_PACKET2_TYPE2.format(
                 login_resp.session_id, timestamp, self._device_id
