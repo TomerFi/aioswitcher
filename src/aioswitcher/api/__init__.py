@@ -796,7 +796,7 @@ class SwitcherType2Api(SwitcherApi):
             command = "0000"
             command = f"0{index}{command}" if index else command
             precommand = "3702"
-            packet = packets.GENERAL_COMMAND_TOKEN.format(
+            packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
                 self._device_id,
                 self._token,
@@ -850,7 +850,7 @@ class SwitcherType2Api(SwitcherApi):
         ):
             hex_pos = f"0{index}{hex_pos}" if index else hex_pos
             precommand = "3701"
-            packet = packets.GENERAL_COMMAND_TOKEN.format(
+            packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
                 self._device_id,
                 self._token,
@@ -960,7 +960,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        packet = packets.GENERAL_COMMAND_TOKEN.format(
+        packet = packets.GENERAL_TOKEN_COMMAND.format(
             timestamp,
             self._device_id,
             self._token,
