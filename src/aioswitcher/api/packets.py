@@ -31,29 +31,21 @@ DEVICE_PASS = "00000000"
 
 # format value just timestamp (initial session id is "00000000")
 LOGIN_PACKET_TYPE1 = (
-    "fef052000232a10000000000" + REQUEST_FORMAT_TYPE1[2:] + "{}" + PAD_72_ZEROS + "00"
+    "fef052000232a100"
+    + P_SESSION
+    + REQUEST_FORMAT_TYPE1[2:]
+    + "{}"
+    + PAD_72_ZEROS
+    + "00"
 )
-# Alternative
-# LOGIN_PACKET_TYPE1 = (
-#     "fef052000232a100"
-#     + P_SESSION
-#     + REQUEST_FORMAT_TYPE1[2:]
-#     + "1c"
-#     + PAD_72_ZEROS
-#     + "00"
-# )
 
 LOGIN2_PACKET_TYPE2 = (
-    "fef030000305a60000000000ff0301000000000000000000{}00000000000000000000f0fe{}00"
+    "fef030000305a600"
+    + P_SESSION
+    + "ff0301000000"
+    + PHONE_ID
+    + "00000000{}00000000000000000000f0fe{}00"
 )
-# Alternative
-# LOGIN2_PACKET_TYPE2 = (
-#     "fef030000305a600"
-#     + P_SESSION
-#     + "ff0301000000"
-#     + PHONE_ID
-#     + "00000000{}00000000000000000000f0fe{}00"
-# )
 
 LOGIN3_PACKET_TYPE2 = (
     "fef030000305a600"
