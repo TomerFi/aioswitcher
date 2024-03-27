@@ -39,6 +39,7 @@ body:
         - Switcher Breeze
         - Switcher Runner
         - Switcher Runner Mini
+        - Switcher Runner S11
     validations:
       required: true
 
