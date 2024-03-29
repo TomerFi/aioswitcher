@@ -22,6 +22,7 @@ from unittest.mock import patch
 from assertpy import assert_that
 from pytest import mark
 
+from aioswitcher.api import tok
 from aioswitcher.device import DeviceType, tools
 
 
@@ -117,6 +118,19 @@ def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
     ])
 def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
+
+
+@mark.parametrize("str, token", [
+    ("eafc3e34", "zvVvd7JxtN7CgvkD1Psujw==")
+    ])
+def test_tok_with_not_empty_token_should_return_valid_token_packet(str, token):
+    assert_that(tok.he(token)).is_equal_to(str)
+
+
+def test_tok_with_empty_token_should_throw_an_error():
+    assert_that(tok.he).raises(
+        ValueError
+    ).when_called_with("").is_equal_to("Zero-length input cannot be unpadded")
 
 
 @patch('requests.post')

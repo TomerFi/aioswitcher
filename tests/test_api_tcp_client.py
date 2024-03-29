@@ -50,11 +50,13 @@ from aioswitcher.device import (
 
 device_type_api1 = DeviceType.TOUCH
 device_type_api2 = DeviceType.RUNNER
+device_type_token_api2 = DeviceType.RUNNER_S11
 device_index = 2
 device_id = "aaaaaa"
 device_key = "18"
 device_ip = "1.2.3.4"
-token = ""
+token_empty = ""
+token_not_empty = "zvVvd7JxtN7CgvkD1Psujw=="
 pytestmark = mark.asyncio
 faulty_dummy_response = skipUnless(
     os.environ.get('CI'),
@@ -91,7 +93,16 @@ async def connected_api_type1(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherType2Api(device_type_api2, device_ip, device_id, device_key, token)
+        api = SwitcherType2Api(device_type_api2, device_ip, device_id, device_key, token_empty)
+        await api.connect()
+        yield api
+        await api.disconnect()
+
+
+@pytest_asyncio.fixture
+async def connected_api_token_type2(reader_mock, writer_mock):
+    with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
+        api = SwitcherType2Api(device_type_token_api2, device_ip, device_id, device_key, token_not_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -125,6 +136,15 @@ async def test_login2_function(reader_mock, writer_write, connected_api_type2, r
     with patch.object(reader_mock, "read", return_value=response_packet):
         response = await connected_api_type2._login()
     writer_write.assert_called_once()
+    assert_that(response[1]).is_instance_of(SwitcherLoginResponse)
+    assert_that(response[1].unparsed_response).is_equal_to(response_packet)
+
+
+async def test_login_token_function(reader_mock, writer_write, connected_api_token_type2, resource_path_root):
+    response_packet = _load_dummy_packet(resource_path_root, "login_response")
+    with patch.object(reader_mock, "read", return_value=response_packet):
+        response = await connected_api_token_type2._login()
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response[1]).is_instance_of(SwitcherLoginResponse)
     assert_that(response[1].unparsed_response).is_equal_to(response_packet)
 

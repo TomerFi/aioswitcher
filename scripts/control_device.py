@@ -370,7 +370,7 @@ async def get_thermostat_state(
     device_key: str,
     device_ip: str,
     verbose: bool,
-    token: str,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to launch a get_breeze_state request."""
     async with SwitcherType2Api(
@@ -404,7 +404,7 @@ async def control_thermostat(
     swing: Union[str, None] = None,
     update_state: bool = False,
     verbose: bool = False,
-    token: str = "",
+    token: Union[str, None] = None,
 ) -> None:
     """Control Breeze device."""
     async with SwitcherType2Api(
@@ -541,7 +541,7 @@ async def stop_shutter(
     device_ip: str,
     index: int,
     verbose: bool,
-    token: str,
+    token: Union[str, None] = None,
 ) -> None:
     """Stop shutter."""
     async with SwitcherType2Api(
@@ -563,7 +563,7 @@ async def set_shutter_position(
     position: int,
     index: int,
     verbose: bool,
-    token: str,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to set the shutter position."""
     async with SwitcherType2Api(
@@ -584,7 +584,7 @@ async def turn_on_light(
     device_ip: str,
     index: int,
     verbose: bool,
-    token: str,
+    token: Union[str, None] = None,
 ) -> None:
     """Use for turn on light."""
     async with SwitcherType2Api(
@@ -600,7 +600,7 @@ async def turn_off_light(
     device_ip: str,
     index: int,
     verbose: bool,
-    token: str,
+    token: Union[str, None] = None,
 ) -> None:
     """Use for turn off light."""
     async with SwitcherType2Api(

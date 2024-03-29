@@ -99,7 +99,7 @@ class SwitcherApi(ABC):
         device_id: str,
         device_key: str,
         port: int = SWITCHER_TCP_PORT_TYPE1,
-        token: str = "",
+        token: Union[str, None] = None,
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         self._device_type = device_type
@@ -181,7 +181,7 @@ class SwitcherApi(ABC):
             and self.is_using_token
             and (self._device_type == DeviceType.RUNNER_S11)
         ):
-            packet = packets.LOGIN3_PACKET_TYPE2.format(
+            packet = packets.LOGIN_TOKEN_PACKET_TYPE2.format(
                 self._token, timestamp, self._device_id
             )
         elif (
@@ -190,7 +190,7 @@ class SwitcherApi(ABC):
             or self._device_type == DeviceType.RUNNER
             or self._device_type == DeviceType.RUNNER_MINI
         ):
-            packet = packets.LOGIN2_PACKET_TYPE2.format(timestamp, self._device_id)
+            packet = packets.LOGIN_PACKET_TYPE2.format(timestamp, self._device_id)
         else:
             packet = packets.LOGIN_PACKET_TYPE1.format(timestamp, self._device_key)
         signed_packet = sign_packet_with_crc_key(packet)
@@ -204,7 +204,7 @@ class SwitcherApi(ABC):
             and self.is_using_token
             and (self._device_type == DeviceType.RUNNER_S11)
         ):
-            packet = packets.LOGIN3_PACKET2_TYPE2.format(
+            packet = packets.LOGIN2_TOKEN_PACKET_TYPE2.format(
                 self._device_id, timestamp, self._token
             )
             signed_packet = sign_packet_with_crc_key(packet)
@@ -617,7 +617,7 @@ class SwitcherType2Api(SwitcherApi):
         ip_address: str,
         device_id: str,
         device_key: str,
-        token: str,
+        token: Union[str, None] = None,
     ) -> None:
         """Initialize the Switcher TCP connection API."""
         super().__init__(
@@ -794,14 +794,14 @@ class SwitcherType2Api(SwitcherApi):
             and (self._device_type == DeviceType.RUNNER_S11)
         ):
             command = "0000"
-            command = f"0{index}{command}" if index else command
-            precommand = "3702"
+            hex_pos = f"0{index}{command}" if index else command
+
             packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
                 self._device_id,
                 self._token,
-                precommand,
-                command,
+                packets.STOP_SHUTTER_PRECOMMAND,
+                hex_pos,
             )
         else:
             packet = packets.RUNNER_STOP_COMMAND.format(
@@ -849,12 +849,12 @@ class SwitcherType2Api(SwitcherApi):
             and (self._device_type == DeviceType.RUNNER_S11)
         ):
             hex_pos = f"0{index}{hex_pos}" if index else hex_pos
-            precommand = "3701"
+
             packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
                 self._device_id,
                 self._token,
-                precommand,
+                packets.SET_POSITION_PRECOMMAND,
                 hex_pos,
             )
         else:
@@ -948,7 +948,6 @@ class SwitcherType2Api(SwitcherApi):
         """
         index = get_light_index(self._device_type, index)
         hex_pos = f"0{index}{command.value}" if index else command.value
-        precommand = "370a"
 
         logger.debug("about to send set light command")
         timestamp, login_resp = await self._login()
@@ -964,7 +963,7 @@ class SwitcherType2Api(SwitcherApi):
             timestamp,
             self._device_id,
             self._token,
-            precommand,
+            packets.SET_LIGHT_PRECOMMAND,
             hex_pos,
         )
 

@@ -16,7 +16,7 @@ pip install aioswitcher
 </table>
 
 <strong>
-NOTE: For newer Switcher devices such as: Runner S11, Runner S12 and Lights you need to have a Token for communicating with devices.
+NOTE: For newer Switcher devices such as: Runner S11 you need to have a Token for communicating with devices.
 
 You can get it here: https://switcher.co.il/GetKey or by using scripts/get_token.py script
 </strong>

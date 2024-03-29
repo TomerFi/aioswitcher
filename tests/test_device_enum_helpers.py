@@ -29,7 +29,7 @@ from aioswitcher.device import (
 
 
 @mark.parametrize(
-    "sut_type, expected_value, expected_hex_rep, expected_protocol_type, expected_category",
+    "sut_type, expected_value, expected_hex_rep, expected_protocol_type, expected_category, expected_token_needed",
     [
         (DeviceType.MINI, "Switcher Mini", "030f", 1, DeviceCategory.WATER_HEATER, False),
         (
