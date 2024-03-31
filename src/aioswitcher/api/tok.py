@@ -13,7 +13,7 @@
 # limitations under the License.
 # flake8: noqa
 
-"""Switcher integration TCP token handle module."""
+"""Switcher convert token to valid packet string (Black Box). Input: Token (String), Output: Packet value (String)"""
 
 import base64
 import codecs

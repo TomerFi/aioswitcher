@@ -120,17 +120,49 @@ def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, t
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
 
 
-@mark.parametrize("str, token", [
-    ("eafc3e34", "zvVvd7JxtN7CgvkD1Psujw==")
+@mark.parametrize("token, token_packet", [
+    ("zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
     ])
-def test_tok_with_not_empty_token_should_return_valid_token_packet(str, token):
-    assert_that(tok.he(token)).is_equal_to(str)
+def test_tok_with_not_empty_token_should_return_valid_token_packet(token, token_packet):
+    assert_that(tok.he(token)).is_equal_to(token_packet)
 
 
 def test_tok_with_empty_token_should_throw_an_error():
     assert_that(tok.he).raises(
         ValueError
     ).when_called_with("").is_equal_to("Zero-length input cannot be unpadded")
+
+
+@mark.parametrize("type, token, token_packet", [
+    (DeviceType.RUNNER, "", ""),
+    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", ""),
+    (DeviceType.RUNNER, None, ""),
+    (DeviceType.RUNNER_S11, "zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
+    ])
+def test_convert_token_to_packet_should_return_expected_packet(type, token, token_packet):
+    assert_that(tools.convert_token_to_packet(type, token)).is_equal_to(token_packet)
+
+
+@mark.parametrize("type, token, error", [
+    (DeviceType.RUNNER_S11, "", "a token is needed but missing"),
+    (DeviceType.RUNNER_S11, None, "a token is needed but missing"),
+    (DeviceType.RUNNER_S11, "zvVvd7JxtN", "convert token to packet was not successful")
+    ])
+def test_convert_token_to_packet_should_raise_error(type, token, error):
+    assert_that(tools.convert_token_to_packet).raises(
+        RuntimeError
+    ).when_called_with(type, token).is_equal_to(error)
+
+
+@mark.parametrize("type, token, is_token_valid", [
+    (DeviceType.RUNNER, "", False),
+    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", False),
+    (DeviceType.RUNNER_S11, "", False),
+    (DeviceType.RUNNER_S11, None, False),
+    (DeviceType.RUNNER_S11, "zvVvd7JxtN7CgvkD1Psujw==", True)
+    ])
+def test_is_token_valid_should_return_expected_bool(type, token, is_token_valid):
+    assert_that(tools.is_token_valid(type, token)).is_equal_to(is_token_valid)
 
 
 @patch('requests.post')

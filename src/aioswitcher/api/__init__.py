@@ -34,9 +34,11 @@ from ..device import (
     ThermostatSwing,
 )
 from ..device.tools import (
+    convert_token_to_packet,
     current_timestamp_to_hexadecimal,
     get_light_index,
     get_shutter_index,
+    is_token_valid,
     minutes_to_hexadecimal_seconds,
     set_message_length,
     sign_packet_with_crc_key,
@@ -45,7 +47,7 @@ from ..device.tools import (
 )
 from ..schedule import Days
 from ..schedule.tools import time_to_hexadecimal_timestamp, weekdays_to_hexadecimal
-from . import packets, tok
+from . import packets
 from .messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
@@ -108,20 +110,12 @@ class SwitcherApi(ABC):
         self._device_key = device_key
         self._port = port
         self._connected = False
-        if token:
-            self._token = tok.he(token)  # type: ignore
-        else:
-            self._token = ""
+        self._token = convert_token_to_packet(device_type, token)
 
     @property
     def connected(self) -> bool:
         """Return true if api is connected."""
         return self._connected
-
-    @property
-    def is_using_token(self) -> bool:
-        """Return true if token is used."""
-        return bool(self._device_type.token_needed) and str(self._token) != ""
 
     async def __aenter__(self) -> "SwitcherApi":
         """Enter SwitcherApi asynchronous context manager.
@@ -176,11 +170,7 @@ class SwitcherApi(ABC):
 
         """
         timestamp = current_timestamp_to_hexadecimal()
-        if (
-            self._device_type
-            and self.is_using_token
-            and (self._device_type == DeviceType.RUNNER_S11)
-        ):
+        if self._device_type and is_token_valid(self._device_type, self._token):
             packet = packets.LOGIN_TOKEN_PACKET_TYPE2.format(
                 self._token, timestamp, self._device_id
             )
@@ -199,11 +189,7 @@ class SwitcherApi(ABC):
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
 
-        if (
-            self._device_type
-            and self.is_using_token
-            and (self._device_type == DeviceType.RUNNER_S11)
-        ):
+        if self._device_type and is_token_valid(self._device_type, self._token):
             packet = packets.LOGIN2_TOKEN_PACKET_TYPE2.format(
                 self._device_id, timestamp, self._token
             )
@@ -788,11 +774,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if (
-            self._device_type
-            and self.is_using_token
-            and (self._device_type == DeviceType.RUNNER_S11)
-        ):
+        if self._device_type and is_token_valid(self._device_type, self._token):
             command = "0000"
             hex_pos = f"0{index}{command}" if index else command
 
@@ -843,11 +825,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if (
-            self._device_type
-            and self.is_using_token
-            and (self._device_type == DeviceType.RUNNER_S11)
-        ):
+        if self._device_type and is_token_valid(self._device_type, self._token):
             hex_pos = f"0{index}{hex_pos}" if index else hex_pos
 
             packet = packets.GENERAL_TOKEN_COMMAND.format(
@@ -959,13 +937,17 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        packet = packets.GENERAL_TOKEN_COMMAND.format(
-            timestamp,
-            self._device_id,
-            self._token,
-            packets.SET_LIGHT_PRECOMMAND,
-            hex_pos,
-        )
+        if self._device_type and is_token_valid(self._device_type, self._token):
+            packet = packets.GENERAL_TOKEN_COMMAND.format(
+                timestamp,
+                self._device_id,
+                self._token,
+                packets.SET_LIGHT_PRECOMMAND,
+                hex_pos,
+            )
+        else:
+            logger.error("Failed to set light device with id %s", self._device_id)
+            raise RuntimeError("token was not valid")
 
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)
