@@ -156,6 +156,8 @@ asyncio.run(print_devices(60))
 - [discover_devices.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/discover_devices.py) can discover devices and their
   states.
 - [control_device.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/control_device.py) can control a device.
+- [get_device_login_key.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/get_device_login_key) can get a device login key.
+- [get_token.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/get_token.py) can get a device token which is a must for newer devices.
 
 ## Disclaimer
 
