@@ -29,6 +29,7 @@ logger = getLogger(__name__)
 
 TOKEN_SECRET = "646a4d7335ea63cf9795c22ace1d6f957916b8be"
 
+
 def seconds_to_iso_time(all_seconds: int) -> str:
     """Convert seconds to iso time.
 
@@ -193,8 +194,6 @@ def is_token_valid(device_type: DeviceType, token: str | None) -> bool:
         if is_token_not_empty:
             return True
     return False
-
-
 
 
 def get_token(username: str) -> DeviceToken:
