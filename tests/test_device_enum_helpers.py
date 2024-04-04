@@ -116,3 +116,25 @@ def test_the_given_shutter_direction_custom_properties_are_returning_the_expecte
 ):
     assert_that(sut_shutter_dir.value).is_equal_to(expected_value)
     assert_that(sut_shutter_dir.display).is_equal_to(expected_display)
+
+
+@mark.parametrize("str, type", [
+    ("Switcher Mini", DeviceType.MINI),
+    ("Switcher Power Plug", DeviceType.POWER_PLUG),
+    ("Switcher Touch", DeviceType.TOUCH),
+    ("Switcher V2 (esp)", DeviceType.V2_ESP),
+    ("Switcher V2 (qualcomm)", DeviceType.V2_QCA),
+    ("Switcher V4", DeviceType.V4),
+    ("Switcher Breeze", DeviceType.BREEZE),
+    ("Switcher Runner", DeviceType.RUNNER),
+    ("Switcher Runner Mini", DeviceType.RUNNER_MINI)
+    ])
+def test_to_devicetype_should_return_expected_devicetype(str, type):
+    assert_that(DeviceType.to_devicetype(str)).is_equal_to(type)
+
+
+@mark.parametrize("str, type", [
+    ("Switcher new device does not define", DeviceType.MINI)
+    ])
+def test_to_devicetype_with_unknown_device_should_return_mini(str, type):
+    assert_that(DeviceType.to_devicetype(str)).is_equal_to(type)

@@ -57,6 +57,29 @@ class DeviceType(Enum):
         new_enum._category = category  # type: ignore
         return new_enum
 
+    @staticmethod
+    def to_devicetype(value: str) -> "DeviceType":
+        """Convert string name to DeviceType."""
+        if value == DeviceType.MINI.value:
+            return DeviceType.MINI
+        elif value == DeviceType.POWER_PLUG.value:
+            return DeviceType.POWER_PLUG
+        elif value == DeviceType.TOUCH.value:
+            return DeviceType.TOUCH
+        elif value == DeviceType.V2_ESP.value:
+            return DeviceType.V2_ESP
+        elif value == DeviceType.V2_QCA.value:
+            return DeviceType.V2_QCA
+        elif value == DeviceType.V4.value:
+            return DeviceType.V4
+        elif value == DeviceType.BREEZE.value:
+            return DeviceType.BREEZE
+        elif value == DeviceType.RUNNER.value:
+            return DeviceType.RUNNER
+        elif value == DeviceType.RUNNER_MINI.value:
+            return DeviceType.RUNNER_MINI
+        return DeviceType.MINI
+
     @property
     def value(self) -> str:
         """Return the value of the state."""

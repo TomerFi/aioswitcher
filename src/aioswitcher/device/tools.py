@@ -22,7 +22,7 @@ from struct import pack
 
 import requests
 
-from ..device import DeviceToken, DeviceType
+from ..device import DeviceToken
 
 logger = getLogger(__name__)
 
@@ -140,29 +140,6 @@ def set_message_length(message: str) -> str:
     """Set the message length."""
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]
-
-
-def convert_str_to_devicetype(device_type: str) -> DeviceType:
-    """Convert string name to DeviceType."""
-    if device_type == DeviceType.MINI.value:
-        return DeviceType.MINI
-    elif device_type == DeviceType.POWER_PLUG.value:
-        return DeviceType.POWER_PLUG
-    elif device_type == DeviceType.TOUCH.value:
-        return DeviceType.TOUCH
-    elif device_type == DeviceType.V2_ESP.value:
-        return DeviceType.V2_ESP
-    elif device_type == DeviceType.V2_QCA.value:
-        return DeviceType.V2_QCA
-    elif device_type == DeviceType.V4.value:
-        return DeviceType.V4
-    elif device_type == DeviceType.BREEZE.value:
-        return DeviceType.BREEZE
-    elif device_type == DeviceType.RUNNER.value:
-        return DeviceType.RUNNER
-    elif device_type == DeviceType.RUNNER_MINI.value:
-        return DeviceType.RUNNER_MINI
-    return DeviceType.MINI
 
 
 def get_token(username: str, password: str) -> DeviceToken:

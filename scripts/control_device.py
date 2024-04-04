@@ -31,7 +31,6 @@ from aioswitcher.device import (
     ThermostatMode,
     ThermostatSwing,
 )
-from aioswitcher.device.tools import convert_str_to_devicetype
 from aioswitcher.schedule import Days
 
 printer = PrettyPrinter(indent=4)
@@ -511,7 +510,7 @@ if __name__ == "__main__":
         args = main_parser.parse_args()
 
         if "device_type" in args and type(args.device_type) is not DeviceType:
-            args.device_type = convert_str_to_devicetype(args.device_type)
+            args.device_type = DeviceType.to_devicetype(args.device_type)
         if args.action == "get_state":
             asyncio.run(
                 get_state(
