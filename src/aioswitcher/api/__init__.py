@@ -947,7 +947,7 @@ class SwitcherType2Api(SwitcherApi):
             )
         else:
             logger.error("Failed to set light device with id %s", self._device_id)
-            raise RuntimeError("token was not valid")
+            raise RuntimeError("a token is needed but missing or not valid")
 
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)
