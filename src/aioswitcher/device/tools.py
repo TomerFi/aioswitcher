@@ -26,6 +26,8 @@ from ..device import DeviceToken, DeviceType
 
 logger = getLogger(__name__)
 
+TOKEN_SECRET = "646a4d7335ea63cf9795c22ace1d6f957916b8be"
+
 
 def seconds_to_iso_time(all_seconds: int) -> str:
     """Convert seconds to iso time.
@@ -165,11 +167,11 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     return DeviceType.MINI
 
 
-def get_token(username: str, password: str) -> DeviceToken:
-    """Make API call to get a Token by username and password."""
+def get_token(username: str) -> DeviceToken:
+    """Make API call to get a Token by username."""
     token = DeviceToken("")
-    request_url = "https://switcher.co.il/GetKey/GetTok/t.php"
-    request_data = {"username": username, "password": password}
+    request_url = "https://switcher.co.il/GetToken/"
+    request_data = {"email": username, "secret": TOKEN_SECRET}
 
     logger.debug("calling API call for Switcher to get the token")
     response = requests.post(request_url, data=request_data)

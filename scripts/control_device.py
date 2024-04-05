@@ -512,6 +512,7 @@ if __name__ == "__main__":
 
         if "device_type" in args and type(args.device_type) is not DeviceType:
             args.device_type = convert_str_to_devicetype(args.device_type)
+
         if args.action == "get_state":
             asyncio.run(
                 get_state(

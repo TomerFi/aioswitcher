@@ -22,13 +22,13 @@ from aioswitcher.device.tools import get_token
 
 _examples = """example usage:
 
-python get_token.py -u "username" -p "password"\n
-python get_token.py --username "username" -p "password"\n
+python get_token.py -u "email"\n
+python get_token.py --username "email"\n
 
 """  # noqa E501
 
 parser = ArgumentParser(
-    description="Get user's Token from Switcher by username and password",
+    description="Get a Token from Switcher by username",
     epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
 )
@@ -37,15 +37,7 @@ parser.add_argument(
     "-u",
     "--username",
     required=True,
-    help="the username of the user",
-    type=str,
-)
-
-parser.add_argument(
-    "-p",
-    "--password",
-    required=True,
-    help="the password of the user",
+    help="the username of the user (Email address)",
     type=str,
 )
 
@@ -54,7 +46,7 @@ if __name__ == "__main__":
     try:
         args = parser.parse_args()
 
-        token = get_token(args.username, args.password).to_json()
+        token = get_token(args.username).to_json()
         print("Your Token is: " + token)
 
     except KeyboardInterrupt:

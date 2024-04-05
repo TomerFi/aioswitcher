@@ -183,6 +183,7 @@ class SwitcherApi(ABC):
 
         Returns:
             An instance of ``SwitcherStateResponse``.
+
         """
         raise NotImplementedError
 
@@ -242,6 +243,7 @@ class SwitcherApi(ABC):
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
+
         """
         raise NotImplementedError
 
@@ -262,6 +264,7 @@ class SwitcherApi(ABC):
 
         Returns:
             An instance of ``SwitcherShutterStateResponse``.
+
         """
         raise NotImplementedError
 
@@ -354,6 +357,7 @@ class SwitcherType1Api(SwitcherApi):
 
         Returns:
             An instance of ``SwitcherStateResponse``.
+
         """
         timestamp, login_resp = await self._login()
         if login_resp.successful:
@@ -703,6 +707,7 @@ class SwitcherType2Api(SwitcherApi):
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
+
         """
         logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login()
