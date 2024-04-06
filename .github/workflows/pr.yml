@@ -3,9 +3,6 @@ name: Pull request build
 
 on:
   pull_request:
-    branches:
-      - 'dev'
-      - 'release/*'
 
 env:
   MAIN_PY_VER: "3.10"
