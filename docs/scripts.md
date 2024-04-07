@@ -392,7 +392,7 @@ options:
 ```shell
 usage: get_device_login_key.py [-h] -p PORT -i IP_ADDRESS
 
-Get your login key of your Switcher devices
+Get the login key of your Switcher device
 
 options:
   -h, --help            show this help message and exit

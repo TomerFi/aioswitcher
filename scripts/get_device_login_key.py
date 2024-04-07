@@ -32,7 +32,7 @@ python get_device_login_key.py -i "111.222.11.22" -p 20003\n
 """  # noqa E501
 
 parser = ArgumentParser(
-    description="Get your login key of your Switcher devices",
+    description="Get the login key of your Switcher device",
     epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
 )
