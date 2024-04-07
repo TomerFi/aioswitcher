@@ -21,6 +21,13 @@ import time
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from pprint import PrettyPrinter
 
+from aioswitcher.bridge import (
+    SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+    SWITCHER_UDP_PORT_TYPE2,
+    SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+)
+
 printer = PrettyPrinter(indent=4)
 
 _examples = """example usage:
@@ -41,7 +48,12 @@ parser.add_argument(
     help="the ip address assigned to the device",
     type=str,
 )
-possible_ports = [10002, 20002, 10003, 20003]
+possible_ports = [
+    SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+    SWITCHER_UDP_PORT_TYPE2,
+    SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+]
 parser.add_argument(
     "-p",
     "--port",
