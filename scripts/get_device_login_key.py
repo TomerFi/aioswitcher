@@ -26,9 +26,7 @@ printer = PrettyPrinter(indent=4)
 _examples = """example usage:
 
 python get_device_login_key.py -i "111.222.11.22" -p 10002\n
-python get_device_login_key.py -i "111.222.11.22" -p 20002\n
-python get_device_login_key.py -i "111.222.11.22" -p 10003\n
-python get_device_login_key.py -i "111.222.11.22" -p 20003\n
+
 """  # noqa E501
 
 parser = ArgumentParser(
@@ -43,10 +41,12 @@ parser.add_argument(
     help="the ip address assigned to the device",
     type=str,
 )
+possible_ports = [10002, 20002, 10003, 20003]
 parser.add_argument(
     "-p",
     "--port",
     required=True,
+    choices=possible_ports,
     help="the UDP port of the device",
     type=int,
 )

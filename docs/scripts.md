@@ -390,7 +390,7 @@ options:
 ## script/get_device_login_key.py
 
 ```shell
-usage: get_device_login_key.py [-h] -p PORT -i IP_ADDRESS
+usage: get_device_login_key.py [-h] -i IP_ADDRESS -p {10002,20002,10003,20003}
 
 Get the login key of your Switcher device
 
@@ -398,17 +398,11 @@ options:
   -h, --help            show this help message and exit
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
-  -p PORT, --port PORT  the UDP port of the device
+  -p {10002,20002,10003,20003}, --port {10002,20002,10003,20003}
 
 example usage:
 
 python get_device_login_key.py -i "111.222.11.22" -p 10002
-
-python get_device_login_key.py -i "111.222.11.22" -p 20002
-
-python get_device_login_key.py -i "111.222.11.22" -p 10003
-
-python get_device_login_key.py -i "111.222.11.22" -p 20003
 ```
 
 ## script/get_token.py
