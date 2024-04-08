@@ -24,7 +24,6 @@ _examples = """example usage:
 
 python get_token.py -u "email"\n
 python get_token.py --username "email"\n
-
 """  # noqa E501
 
 parser = ArgumentParser(

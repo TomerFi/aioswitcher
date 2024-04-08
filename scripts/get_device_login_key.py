@@ -33,7 +33,6 @@ printer = PrettyPrinter(indent=4)
 _examples = """example usage:
 
 python get_device_login_key.py -i "111.222.11.22" -p 10002\n
-
 """  # noqa E501
 
 parser = ArgumentParser(
