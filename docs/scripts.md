@@ -405,21 +405,23 @@ example usage:
 python get_device_login_key.py -i "111.222.11.22" -p 10002
 ```
 
-## script/get_token.py
+## script/validate_token.py
 
 ```shell
-usage: get_token.py [-h] -u USERNAME
+usage: validate_token.py [-h] -u USERNAME -t TOKEN
 
-Get a Token from Switcher by username
+Validate a Token from Switcher by username and token
 
 options:
   -h, --help            show this help message and exit
   -u USERNAME, --username USERNAME
                         the username of the user (Email address)
+  -t TOKEN, --token TOKEN
+                        the token of the user sent by Email
 
 example usage:
 
-python get_token.py -u "email"
+python validate_token.py -u "email" -t "zvVvd7JxtN7CgvkD1Psujw=="
 
-python get_token.py --username "email"
+python validate_token.py --username "email" --token "zvVvd7JxtN7CgvkD1Psujw=="
 ```
