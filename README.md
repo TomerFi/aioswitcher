@@ -146,7 +146,7 @@ asyncio.run(print_devices(60))
   states.
 - [control_device.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/control_device.py) can control a device.
 - [get_device_login_key.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/get_device_login_key) can get a device login key.
-- [validate_token.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/validate_token.py) can get a device token which is a must for newer devices, used for communicating with devices.
+- [validate_token.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/validate_token.py) can validate a device token which is a must for newer devices, used for communicating with devices.
 
 ## Disclaimer
 
