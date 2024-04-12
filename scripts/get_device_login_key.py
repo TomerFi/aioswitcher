@@ -21,6 +21,13 @@ import time
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 from pprint import PrettyPrinter
 
+from aioswitcher.bridge import (
+    SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+    SWITCHER_UDP_PORT_TYPE2,
+    SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+)
+
 printer = PrettyPrinter(indent=4)
 
 _examples = """example usage:
@@ -29,23 +36,30 @@ python get_device_login_key.py -i "111.222.11.22" -p 10002\n
 """  # noqa E501
 
 parser = ArgumentParser(
-    description="Discover and print info of Switcher devices",
+    description="Get the login key of your Switcher device",
     epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
-)
-parser.add_argument(
-    "-p",
-    "--port",
-    required=True,
-    help="the UDP port of the device",
-    type=int,
 )
 parser.add_argument(
     "-i",
     "--ip-address",
     required=True,
-    help="the device IP",
+    help="the ip address assigned to the device",
     type=str,
+)
+possible_ports = [
+    SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+    SWITCHER_UDP_PORT_TYPE2,
+    SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+]
+parser.add_argument(
+    "-p",
+    "--port",
+    required=True,
+    choices=possible_ports,
+    help="the UDP port of the device",
+    type=int,
 )
 
 

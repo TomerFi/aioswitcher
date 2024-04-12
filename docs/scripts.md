@@ -386,3 +386,42 @@ options:
   -t [TIMER], --timer [TIMER]
                         set minutes timer for turn on operation
 ```
+
+## script/get_device_login_key.py
+
+```shell
+usage: get_device_login_key.py [-h] -i IP_ADDRESS -p {20002,10002,20003,10003}
+
+Get the login key of your Switcher device
+
+options:
+  -h, --help            show this help message and exit
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -p {20002,10002,20003,10003}, --port {20002,10002,20003,10003}
+
+example usage:
+
+python get_device_login_key.py -i "111.222.11.22" -p 10002
+```
+
+## script/validate_token.py
+
+```shell
+usage: validate_token.py [-h] -u USERNAME -t TOKEN
+
+Validate a Token from Switcher by username and token
+
+options:
+  -h, --help            show this help message and exit
+  -u USERNAME, --username USERNAME
+                        the username of the user (Email address)
+  -t TOKEN, --token TOKEN
+                        the token of the user sent by Email
+
+example usage:
+
+python validate_token.py -u "email" -t "zvVvd7JxtN7CgvkD1Psujw=="
+
+python validate_token.py --username "email" --token "zvVvd7JxtN7CgvkD1Psujw=="
+```

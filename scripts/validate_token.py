@@ -14,21 +14,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Python script for getting Token from Switcher."""
+"""Python script for validating a Token from Switcher."""
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
-from aioswitcher.device.tools import get_token
+from aioswitcher.device.tools import validate_token
 
 _examples = """example usage:
 
-python get_token.py -u "username" -p "password"\n
-python get_token.py --username "username" -p "password"\n
-
+python validate_token.py -u "email" -t "zvVvd7JxtN7CgvkD1Psujw=="\n
+python validate_token.py --username "email" --token "zvVvd7JxtN7CgvkD1Psujw=="\n
 """  # noqa E501
 
 parser = ArgumentParser(
-    description="Get user's Token from Switcher by username and password",
+    description="Validate a Token from Switcher by username and token",
     epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
 )
@@ -37,25 +36,27 @@ parser.add_argument(
     "-u",
     "--username",
     required=True,
-    help="the username of the user",
+    help="the username of the user (Email address)",
     type=str,
 )
 
 parser.add_argument(
-    "-p",
-    "--password",
+    "-t",
+    "--token",
     required=True,
-    help="the password of the user",
+    help="the token of the user sent by Email",
     type=str,
 )
-
 
 if __name__ == "__main__":
     try:
         args = parser.parse_args()
 
-        token = get_token(args.username, args.password).to_json()
-        print("Your Token is: " + token)
+        response = validate_token(args.username, args.token)
+        if response:
+            print("Your Personal Token is valid")
+        else:
+            print("Your Personal Token is invalid")
 
     except KeyboardInterrupt:
         exit()
