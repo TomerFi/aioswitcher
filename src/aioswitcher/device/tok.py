@@ -17,6 +17,7 @@
 
 from base64 import b64decode
 from binascii import hexlify
+from typing import Union
 
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
@@ -24,7 +25,7 @@ from Crypto.Util.Padding import unpad
 secret_key = b"jzNrAOjc%lpg3pVr5cF!5Le06ZgOdWuJ"
 
 
-def he(token: str | None) -> str:
+def he(token: Union[str, None] = None) -> str:
     if token is None:
         raise RuntimeError("received None token as input")
     encrypted_value = b64decode(bytes(token, "utf-8"))
