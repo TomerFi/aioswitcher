@@ -22,7 +22,7 @@ from struct import pack
 
 import requests
 
-from ..device import DeviceToken, DeviceType
+from ..device import DeviceType
 
 logger = getLogger(__name__)
 
@@ -165,23 +165,24 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     return DeviceType.MINI
 
 
-def get_token(username: str, password: str) -> DeviceToken:
-    """Make API call to get a Token by username and password."""
-    token = DeviceToken("")
-    request_url = "https://switcher.co.il/GetKey/GetTok/t.php"
-    request_data = {"username": username, "password": password}
+def validate_token(username: str, token: str) -> bool:
+    """Make API call to validate a Token by username and token."""
+    request_url = "https://switcher.co.il/ValidateToken/"
+    request_data = {"email": username, "token": token}
+    is_token_valid = False
 
-    logger.debug("calling API call for Switcher to get the token")
+    logger.debug("calling API call for Switcher to validate the token")
     response = requests.post(request_url, data=request_data)
 
     if response.status_code == 200:
         logger.debug("request successful")
-        response_data = response.json()
         try:
-            token = DeviceToken(response_data)
-
+            response_json = response.json()
+            result = response_json.get("result", None)
+            if result is not None:
+                is_token_valid = result.lower() == "true"
         except ValueError:
             logger.debug("response content is not valid JSON")
     else:
         logger.debug("request failed with status code: %s", response.status_code)
-    return token
+    return is_token_valid
