@@ -19,6 +19,7 @@ import time
 from binascii import crc_hqx, hexlify, unhexlify
 from logging import getLogger
 from struct import pack
+from typing import Union
 
 import requests
 
@@ -165,7 +166,9 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     return DeviceType.MINI
 
 
-def convert_token_to_packet(device_type: DeviceType, token: str | None) -> str:
+def convert_token_to_packet(
+    device_type: DeviceType, token: Union[str, None] = None
+) -> str:
     """Return token packet from token if is valid, otherwise empty string."""
     is_token_needed = bool(device_type.token_needed)
     is_token_not_empty = token is not None and str(token) != ""
@@ -181,7 +184,7 @@ def convert_token_to_packet(device_type: DeviceType, token: str | None) -> str:
     return ""
 
 
-def is_token_valid(device_type: DeviceType, token: str | None) -> bool:
+def is_token_valid(device_type: DeviceType, token: Union[str, None] = None) -> bool:
     """Return true if token is used and valid."""
     is_token_needed = bool(device_type.token_needed)
     is_token_not_empty = token is not None and str(token) != ""
