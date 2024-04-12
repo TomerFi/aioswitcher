@@ -99,6 +99,7 @@ def _parse_device_from_datagram(
                     parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
+                    device_type.token_needed,
                     power_consumption,
                     electric_current,
                     (
@@ -121,6 +122,7 @@ def _parse_device_from_datagram(
                     parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
+                    device_type.token_needed,
                     power_consumption,
                     electric_current,
                 )
@@ -137,6 +139,7 @@ def _parse_device_from_datagram(
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
+                    device_type.token_needed,
                     parser.get_shutter_position(),
                     parser.get_shutter_direction(),
                 )
@@ -153,6 +156,7 @@ def _parse_device_from_datagram(
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
+                    device_type.token_needed,
                     parser.get_thermostat_mode(),
                     parser.get_thermostat_temp(),
                     parser.get_thermostat_target_temp(),

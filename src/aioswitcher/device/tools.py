@@ -22,7 +22,7 @@ from struct import pack
 
 import requests
 
-from ..device import DeviceType
+from ..device import DeviceType, tok
 
 logger = getLogger(__name__)
 
@@ -163,6 +163,32 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     elif device_type == DeviceType.RUNNER_MINI.value:
         return DeviceType.RUNNER_MINI
     return DeviceType.MINI
+
+
+def convert_token_to_packet(device_type: DeviceType, token: str | None) -> str:
+    """Return token packet from token if is valid, otherwise empty string."""
+    is_token_needed = bool(device_type.token_needed)
+    is_token_not_empty = token is not None and str(token) != ""
+    if is_token_needed:
+        if is_token_not_empty:
+            try:
+                token_packet = tok.he(token)
+            except (KeyError, ValueError) as ve:
+                raise RuntimeError("convert token to packet was not successful") from ve
+            return str(token_packet)
+        else:
+            raise RuntimeError("a token is needed but missing")
+    return ""
+
+
+def is_token_valid(device_type: DeviceType, token: str | None) -> bool:
+    """Return true if token is used and valid."""
+    is_token_needed = bool(device_type.token_needed)
+    is_token_not_empty = token is not None and str(token) != ""
+    if is_token_needed:
+        if is_token_not_empty:
+            return True
+    return False
 
 
 def validate_token(username: str, token: str) -> bool:
