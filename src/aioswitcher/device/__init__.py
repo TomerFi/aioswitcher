@@ -30,7 +30,7 @@ class DeviceCategory(Enum):
     POWER_PLUG = auto()
     THERMOSTAT = auto()
     SHUTTER = auto()
-    SHUTTER_SINGLE_LIGHT_DUAL = auto()
+    SINGLE_SHUTTER_DUAL_LIGHT = auto()
 
 
 @unique
