@@ -14,7 +14,7 @@
 
 """Switcher integration device module tools test cases."""
 
-from binascii import Error, unhexlify
+from binascii import unhexlify
 from datetime import datetime, timedelta
 from struct import unpack
 from unittest.mock import patch
@@ -22,7 +22,7 @@ from unittest.mock import patch
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher.device import DeviceType, tok, tools
+from aioswitcher.device import DeviceType, tools
 
 
 def test_seconds_to_iso_time_with_a_valid_seconds_value_should_return_a_time_string():
@@ -118,46 +118,35 @@ def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, t
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
 
 
-@mark.parametrize("token, token_packet", [
-    ("zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
-    ])
-def test_tok_with_valid_token_should_return_valid_token_packet(token, token_packet):
-    assert_that(tok.he(token)).is_equal_to(token_packet)
-
-
-@mark.parametrize("token, error_type, response", [
-    ("", ValueError, "Zero-length input cannot be unpadded"),
-    (None, RuntimeError, "received None token as input")
-    ])
-def test_tok_with_empty_token_should_throw_an_error(token, error_type, response):
-    assert_that(tok.he).raises(
-        error_type
-    ).when_called_with(token).is_equal_to(response)
-
-
-@mark.parametrize("token, error_type", [
-    ("zvVvd7JxtN7Cg==", Error),
-    ("zvVvd7Jx3", Error),
-    ("zvVvddsad21d127Jx3", Error)
-    ])
-def test_tok_with_invalid_token_should_throw_an_error(token, error_type):
-    assert_that(tok.he).raises(
-        error_type
-    ).when_called_with(token)
-
-
 @mark.parametrize("type, token, token_packet", [
-    (DeviceType.RUNNER, "", ""),
-    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", ""),
-    (DeviceType.RUNNER, None, "")
+    (DeviceType.RUNNER, "", None),
+    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", None),
+    (DeviceType.RUNNER, None, None),
+    (DeviceType.RUNNER_S11, "zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
     ])
 def test_convert_token_to_packet_should_return_expected_packet(type, token, token_packet):
     assert_that(tools.convert_token_to_packet(type, token)).is_equal_to(token_packet)
 
 
+@mark.parametrize("type, token, error_type, response", [
+    (DeviceType.RUNNER_S11, "zvVvd7JxtN7Cg==", RuntimeError, "convert token to packet was not successful"),
+    (DeviceType.RUNNER_S11, "zvVvd7J", RuntimeError, "convert token to packet was not successful"),
+    (DeviceType.RUNNER_S11, "", RuntimeError, "a token is needed but missing"),
+    (DeviceType.RUNNER_S11, None, RuntimeError, "a token is needed but missing")
+    ])
+def test_convert_token_to_packet_with_empty_token_should_throw_an_error(type, token, error_type, response):
+    assert_that(tools.convert_token_to_packet).raises(
+        error_type
+    ).when_called_with(type, token).is_equal_to(response)
+
+
 @mark.parametrize("type, token, is_token_valid", [
     (DeviceType.RUNNER, "", False),
-    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", False)
+    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", False),
+    (DeviceType.RUNNER, None, False),
+    (DeviceType.RUNNER_S11, "zvVvd7JxtN7CgvkD1Psujw==", True),
+    (DeviceType.RUNNER_S11, "", False),
+    (DeviceType.RUNNER_S11, None, False)
     ])
 def test_is_token_valid_should_return_expected_bool(type, token, is_token_valid):
     assert_that(tools.is_token_valid(type, token)).is_equal_to(is_token_valid)

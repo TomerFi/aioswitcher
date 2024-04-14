@@ -16,14 +16,17 @@
 
 import datetime
 import time
+from base64 import b64decode
 from binascii import crc_hqx, hexlify, unhexlify
 from logging import getLogger
 from struct import pack
 from typing import Union
 
 import requests
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
 
-from ..device import DeviceType, tok
+from ..device import DeviceType
 
 logger = getLogger(__name__)
 
@@ -168,30 +171,40 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
 
 def convert_token_to_packet(
     device_type: DeviceType, token: Union[str, None] = None
-) -> str:
-    """Return token packet from token if is valid, otherwise empty string."""
-    is_token_needed = bool(device_type.token_needed)
-    is_token_not_empty = token is not None and str(token) != ""
+) -> str | None:
+    """Convert a token to token packet.
+
+    Args:
+        device_type: the type of the device.
+        token: the token of the user sent by Email
+
+    Return:
+        Token packet if token is valid,
+        otherwise empty string or raise error.
+
+    """
+    token_key = b"jzNrAOjc%lpg3pVr5cF!5Le06ZgOdWuJ"
+    is_token_needed = device_type.token_needed
+    is_token_not_empty = bool(token)
     if is_token_needed:
-        if is_token_not_empty:
+        if is_token_not_empty and token is not None:
             try:
-                token_packet = tok.he(token)
+                encrypted_value = b64decode(bytes(token, "utf-8"))
+                cipher = AES.new(token_key, AES.MODE_ECB)
+                decrypted_value = cipher.decrypt(encrypted_value)
+                unpadded_decrypted_value = unpad(decrypted_value, AES.block_size)
+                token_packet = hexlify(unpadded_decrypted_value).decode()
             except (KeyError, ValueError) as ve:
                 raise RuntimeError("convert token to packet was not successful") from ve
-            return str(token_packet)
+            return token_packet
         else:
             raise RuntimeError("a token is needed but missing")
-    return ""
+    return None
 
 
 def is_token_valid(device_type: DeviceType, token: Union[str, None] = None) -> bool:
     """Return true if token is used and valid."""
-    is_token_needed = bool(device_type.token_needed)
-    is_token_not_empty = token is not None and str(token) != ""
-    if is_token_needed:
-        if is_token_not_empty:
-            return True
-    return False
+    return device_type.token_needed and bool(token)
 
 
 def validate_token(username: str, token: str) -> bool:

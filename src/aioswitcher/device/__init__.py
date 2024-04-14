@@ -30,6 +30,7 @@ class DeviceCategory(Enum):
     POWER_PLUG = auto()
     THERMOSTAT = auto()
     SHUTTER = auto()
+    SHUTTER_SINGLE_LIGHT_DUAL = auto()
 
 
 @unique
@@ -45,6 +46,13 @@ class DeviceType(Enum):
     BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT, False
     RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER, False
     RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER, False
+    RUNNER_S11 = (
+        "Switcher Runner S11",
+        "0f01",
+        2,
+        DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL,
+        True,
+    )
 
     def __new__(
         cls,
