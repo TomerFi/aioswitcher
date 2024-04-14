@@ -50,7 +50,7 @@ class DeviceType(Enum):
         "Switcher Runner S11",
         "0f01",
         2,
-        DeviceCategory.SHUTTER_SINGLE_LIGHT_DUAL,
+        DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT,
         True,
     )
 

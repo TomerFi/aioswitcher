@@ -171,7 +171,7 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
 
 def convert_token_to_packet(
     device_type: DeviceType, token: Union[str, None] = None
-) -> str | None:
+) -> Union[str, None]:
     """Convert a token to token packet.
 
     Args:
