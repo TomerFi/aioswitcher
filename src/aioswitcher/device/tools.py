@@ -183,23 +183,22 @@ def convert_token_to_packet(
         otherwise empty string or raise error.
 
     """
-    token_key = b"jzNrAOjc%lpg3pVr5cF!5Le06ZgOdWuJ"
-    is_token_needed = device_type.token_needed
-    is_token_not_empty = bool(token)
-    if is_token_needed:
-        if is_token_not_empty and token is not None:
-            try:
-                encrypted_value = b64decode(bytes(token, "utf-8"))
-                cipher = AES.new(token_key, AES.MODE_ECB)
-                decrypted_value = cipher.decrypt(encrypted_value)
-                unpadded_decrypted_value = unpad(decrypted_value, AES.block_size)
-                token_packet = hexlify(unpadded_decrypted_value).decode()
-            except (KeyError, ValueError) as ve:
-                raise RuntimeError("convert token to packet was not successful") from ve
-            return token_packet
-        else:
-            raise RuntimeError("a token is needed but missing")
-    return None
+    if not device_type.token_needed:
+        return None
+
+    if not bool(token):
+        raise RuntimeError("a token is needed but missing")
+
+    try:
+        token_key = b"jzNrAOjc%lpg3pVr5cF!5Le06ZgOdWuJ"
+        encrypted_value = b64decode(bytes(token, "utf-8"))
+        cipher = AES.new(token_key, AES.MODE_ECB)
+        decrypted_value = cipher.decrypt(encrypted_value)
+        unpadded_decrypted_value = unpad(decrypted_value, AES.block_size)
+        token_packet = hexlify(unpadded_decrypted_value).decode()
+    except (KeyError, ValueError) as ve:
+        raise RuntimeError("convert token to packet was not successful") from ve
+    return token_packet
 
 
 def is_token_valid(device_type: DeviceType, token: Union[str, None] = None) -> bool:
