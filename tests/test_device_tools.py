@@ -140,18 +140,6 @@ def test_convert_token_to_packet_with_empty_token_should_throw_an_error(type, to
     ).when_called_with(type, token).is_equal_to(response)
 
 
-@mark.parametrize("type, token, is_token_valid", [
-    (DeviceType.RUNNER, "", False),
-    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", False),
-    (DeviceType.RUNNER, None, False),
-    (DeviceType.RUNNER_S11, "zvVvd7JxtN7CgvkD1Psujw==", True),
-    (DeviceType.RUNNER_S11, "", False),
-    (DeviceType.RUNNER_S11, None, False)
-    ])
-def test_is_token_valid_should_return_expected_bool(type, token, is_token_valid):
-    assert_that(tools.is_token_valid(type, token)).is_equal_to(is_token_valid)
-
-
 @patch('requests.post')
 @mark.parametrize("username, token, is_token_valid", [
     ("test@switcher.com", "zvVvd7JxtN7CgvkD1Psujw==", True)

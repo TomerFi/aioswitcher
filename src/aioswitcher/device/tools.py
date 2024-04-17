@@ -201,11 +201,6 @@ def convert_token_to_packet(
     return token_packet
 
 
-def is_token_valid(device_type: DeviceType, token: Union[str, None] = None) -> bool:
-    """Return true if token is used and valid."""
-    return device_type.token_needed and bool(token)
-
-
 def validate_token(username: str, token: str) -> bool:
     """Make API call to validate a Token by username and token."""
     request_url = "https://switcher.co.il/ValidateToken/"
