@@ -189,10 +189,9 @@ def convert_token_to_packet(
         cipher = AES.new(token_key, AES.MODE_ECB)
         decrypted_value = cipher.decrypt(encrypted_value)
         unpadded_decrypted_value = unpad(decrypted_value, AES.block_size)
-        token_packet = hexlify(unpadded_decrypted_value).decode()
+        return hexlify(unpadded_decrypted_value).decode()
     except (KeyError, ValueError) as ve:
         raise RuntimeError("convert token to packet was not successful") from ve
-    return token_packet
 
 
 def validate_token(username: str, token: str) -> bool:

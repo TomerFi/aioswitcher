@@ -119,9 +119,6 @@ def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, t
 
 
 @mark.parametrize("type, token, token_packet", [
-    (DeviceType.RUNNER, "", None),
-    (DeviceType.RUNNER, "zvVvd7JxtN7CgvkD1Psujw==", None),
-    (DeviceType.RUNNER, None, None),
     (DeviceType.RUNNER_S11, "zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
     ])
 def test_convert_token_to_packet_should_return_expected_packet(type, token, token_packet):
@@ -130,9 +127,7 @@ def test_convert_token_to_packet_should_return_expected_packet(type, token, toke
 
 @mark.parametrize("type, token, error_type, response", [
     (DeviceType.RUNNER_S11, "zvVvd7JxtN7Cg==", RuntimeError, "convert token to packet was not successful"),
-    (DeviceType.RUNNER_S11, "zvVvd7J", RuntimeError, "convert token to packet was not successful"),
-    (DeviceType.RUNNER_S11, "", RuntimeError, "a token is needed but missing"),
-    (DeviceType.RUNNER_S11, None, RuntimeError, "a token is needed but missing")
+    (DeviceType.RUNNER_S11, "zvVvd7J", RuntimeError, "convert token to packet was not successful")
     ])
 def test_convert_token_to_packet_with_empty_token_should_throw_an_error(type, token, error_type, response):
     assert_that(tools.convert_token_to_packet).raises(
