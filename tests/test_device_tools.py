@@ -118,21 +118,21 @@ def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, t
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
 
 
-@mark.parametrize("type, token, token_packet", [
-    (DeviceType.RUNNER_S11, "zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
+@mark.parametrize("token, token_packet", [
+    ("zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
     ])
-def test_convert_token_to_packet_should_return_expected_packet(type, token, token_packet):
-    assert_that(tools.convert_token_to_packet(type, token)).is_equal_to(token_packet)
+def test_convert_token_to_packet_should_return_expected_packet(token, token_packet):
+    assert_that(tools.convert_token_to_packet(token)).is_equal_to(token_packet)
 
 
-@mark.parametrize("type, token, error_type, response", [
-    (DeviceType.RUNNER_S11, "zvVvd7JxtN7Cg==", RuntimeError, "convert token to packet was not successful"),
-    (DeviceType.RUNNER_S11, "zvVvd7J", RuntimeError, "convert token to packet was not successful")
+@mark.parametrize("token, error_type, response", [
+    ("zvVvd7JxtN7Cg==", RuntimeError, "convert token to packet was not successful"),
+    ("zvVvd7J", RuntimeError, "convert token to packet was not successful")
     ])
-def test_convert_token_to_packet_with_false_token_should_throw_an_error(type, token, error_type, response):
+def test_convert_token_to_packet_with_false_token_should_throw_an_error(token, error_type, response):
     assert_that(tools.convert_token_to_packet).raises(
         error_type
-    ).when_called_with(type, token).is_equal_to(response)
+    ).when_called_with(token).is_equal_to(response)
 
 
 @patch('requests.post')
