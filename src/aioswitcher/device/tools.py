@@ -169,13 +169,10 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     return DeviceType.MINI
 
 
-def convert_token_to_packet(
-    device_type: DeviceType, token: Union[str, None] = None
-) -> Union[str, None]:
+def convert_token_to_packet(token: str) -> Union[str, None]:
     """Convert a token to token packet.
 
     Args:
-        device_type: the type of the device.
         token: the token of the user sent by Email
 
     Return:
