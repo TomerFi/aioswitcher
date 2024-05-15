@@ -183,12 +183,6 @@ def convert_token_to_packet(
         otherwise empty string or raise error.
 
     """
-    if not device_type.token_needed:
-        return None
-
-    if not bool(token):
-        raise RuntimeError("a token is needed but missing")
-
     try:
         token_key = b"jzNrAOjc%lpg3pVr5cF!5Le06ZgOdWuJ"
         encrypted_value = b64decode(bytes(token, "utf-8"))
