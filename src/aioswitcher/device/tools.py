@@ -20,7 +20,6 @@ from base64 import b64decode
 from binascii import crc_hqx, hexlify, unhexlify
 from logging import getLogger
 from struct import pack
-from typing import Union
 
 import requests
 from Crypto.Cipher import AES
@@ -169,7 +168,7 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     return DeviceType.MINI
 
 
-def convert_token_to_packet(token: str) -> Union[str, None]:
+def convert_token_to_packet(token: str) -> str:
     """Convert a token to token packet.
 
     Args:
