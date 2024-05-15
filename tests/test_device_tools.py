@@ -129,7 +129,7 @@ def test_convert_token_to_packet_should_return_expected_packet(type, token, toke
     (DeviceType.RUNNER_S11, "zvVvd7JxtN7Cg==", RuntimeError, "convert token to packet was not successful"),
     (DeviceType.RUNNER_S11, "zvVvd7J", RuntimeError, "convert token to packet was not successful")
     ])
-def test_convert_token_to_packet_with_empty_token_should_throw_an_error(type, token, error_type, response):
+def test_convert_token_to_packet_with_false_token_should_throw_an_error(type, token, error_type, response):
     assert_that(tools.convert_token_to_packet).raises(
         error_type
     ).when_called_with(type, token).is_equal_to(response)
