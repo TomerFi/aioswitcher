@@ -14,7 +14,6 @@
 
 """Switcher integration device module."""
 
-import json
 from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -30,24 +29,37 @@ class DeviceCategory(Enum):
     POWER_PLUG = auto()
     THERMOSTAT = auto()
     SHUTTER = auto()
+    SINGLE_SHUTTER_DUAL_LIGHT = auto()
 
 
 @unique
 class DeviceType(Enum):
     """Enum for relaying the type of the switcher devices."""
 
-    MINI = "Switcher Mini", "030f", 1, DeviceCategory.WATER_HEATER
-    POWER_PLUG = "Switcher Power Plug", "01a8", 1, DeviceCategory.POWER_PLUG
-    TOUCH = "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER
-    V2_ESP = "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER
-    V2_QCA = "Switcher V2 (qualcomm)", "01a1", 1, DeviceCategory.WATER_HEATER
-    V4 = "Switcher V4", "0317", 1, DeviceCategory.WATER_HEATER
-    BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT
-    RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER
-    RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER
+    MINI = "Switcher Mini", "030f", 1, DeviceCategory.WATER_HEATER, False
+    POWER_PLUG = "Switcher Power Plug", "01a8", 1, DeviceCategory.POWER_PLUG, False
+    TOUCH = "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER, False
+    V2_ESP = "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER, False
+    V2_QCA = "Switcher V2 (qualcomm)", "01a1", 1, DeviceCategory.WATER_HEATER, False
+    V4 = "Switcher V4", "0317", 1, DeviceCategory.WATER_HEATER, False
+    BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT, False
+    RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER, False
+    RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER, False
+    RUNNER_S11 = (
+        "Switcher Runner S11",
+        "0f01",
+        2,
+        DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT,
+        True,
+    )
 
     def __new__(
-        cls, value: str, hex_rep: str, protocol_type: int, category: DeviceCategory
+        cls,
+        value: str,
+        hex_rep: str,
+        protocol_type: int,
+        category: DeviceCategory,
+        token_needed: bool,
     ) -> "DeviceType":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
@@ -55,6 +67,7 @@ class DeviceType(Enum):
         new_enum._hex_rep = hex_rep  # type: ignore
         new_enum._protocol_type = protocol_type  # type: ignore
         new_enum._category = category  # type: ignore
+        new_enum._token_needed = token_needed  # type: ignore
         return new_enum
 
     @property
@@ -76,6 +89,11 @@ class DeviceType(Enum):
     def category(self) -> DeviceCategory:
         """Return the category of the device type."""
         return self._category  # type: ignore
+
+    @property
+    def token_needed(self) -> bool:
+        """Return true if token in needed for the device."""
+        return self._token_needed  # type: ignore
 
 
 @unique
@@ -206,25 +224,6 @@ class ShutterDirection(Enum):
         return self._value  # type: ignore
 
 
-class DeviceToken(str):
-    """Class representing the Switcher Token response."""
-
-    response: str
-
-    def __init__(self, response: str) -> None:
-        """Initialize class."""
-        self.response = response
-
-    def to_json(self) -> str:
-        """Convert str response to json."""
-        return json.dumps(self.response)
-
-    @property
-    def value(self) -> str:
-        """Return the value of the token."""
-        return self.response.get("token", "")  # type: ignore
-
-
 @dataclass
 class SwitcherBase(ABC):
     """Abstraction for all switcher devices.
@@ -247,6 +246,7 @@ class SwitcherBase(ABC):
     ip_address: str
     mac_address: str
     name: str
+    token_needed: bool
     last_data_update: datetime = field(init=False)
 
     def __post_init__(self) -> None:

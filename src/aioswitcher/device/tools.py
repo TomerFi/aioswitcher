@@ -16,11 +16,14 @@
 
 import datetime
 import time
+from base64 import b64decode
 from binascii import crc_hqx, hexlify, unhexlify
 from logging import getLogger
 from struct import pack
 
 import requests
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
 
 from ..device import DeviceType
 
@@ -163,6 +166,28 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
     elif device_type == DeviceType.RUNNER_MINI.value:
         return DeviceType.RUNNER_MINI
     return DeviceType.MINI
+
+
+def convert_token_to_packet(token: str) -> str:
+    """Convert a token to token packet.
+
+    Args:
+        token: the token of the user sent by Email
+
+    Return:
+        Token packet if token is valid,
+        otherwise empty string or raise error.
+
+    """
+    try:
+        token_key = b"jzNrAOjc%lpg3pVr5cF!5Le06ZgOdWuJ"
+        encrypted_value = b64decode(bytes(token, "utf-8"))
+        cipher = AES.new(token_key, AES.MODE_ECB)
+        decrypted_value = cipher.decrypt(encrypted_value)
+        unpadded_decrypted_value = unpad(decrypted_value, AES.block_size)
+        return hexlify(unpadded_decrypted_value).decode()
+    except (KeyError, ValueError) as ve:
+        raise RuntimeError("convert token to packet was not successful") from ve
 
 
 def validate_token(username: str, token: str) -> bool:
