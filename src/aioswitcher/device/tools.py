@@ -223,7 +223,7 @@ def get_shutter_index(device_type: DeviceType, device_num: int) -> int:
     if device_type == DeviceType.RUNNER_S11:
         if device_num == 1:
             return 3
-    return -1
+    return 0
 
 
 def get_light_index(device_type: DeviceType, device_num: int) -> int:
@@ -233,4 +233,4 @@ def get_light_index(device_type: DeviceType, device_num: int) -> int:
             return 1
         elif device_num == 2:
             return 2
-    return -1
+    return 0
