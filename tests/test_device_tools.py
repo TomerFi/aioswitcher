@@ -118,6 +118,23 @@ def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, t
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
 
 
+@mark.parametrize("token, token_packet", [
+    ("zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
+    ])
+def test_convert_token_to_packet_should_return_expected_packet(token, token_packet):
+    assert_that(tools.convert_token_to_packet(token)).is_equal_to(token_packet)
+
+
+@mark.parametrize("token, error_type, response", [
+    ("zvVvd7JxtN7Cg==", RuntimeError, "convert token to packet was not successful"),
+    ("zvVvd7J", RuntimeError, "convert token to packet was not successful")
+    ])
+def test_convert_token_to_packet_with_false_token_should_throw_an_error(token, error_type, response):
+    assert_that(tools.convert_token_to_packet).raises(
+        error_type
+    ).when_called_with(token).is_equal_to(response)
+
+
 @patch('requests.post')
 @mark.parametrize("username, token, is_token_valid", [
     ("test@switcher.com", "zvVvd7JxtN7CgvkD1Psujw==", True)
