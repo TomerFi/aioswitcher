@@ -121,6 +121,31 @@ class DeviceState(Enum):
         return self._value  # type: ignore
 
 
+@final
+class LightState(Enum):
+    """Enum class representing the light's state."""
+
+    ON = "01", "on"
+    OFF = "00", "off"
+
+    def __new__(cls, value: str, display: str) -> "LightState":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the state."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the state."""
+        return self._value  # type: ignore
+
+
 class ThermostatMode(Enum):
     """Enum class representing the thermostat device's position."""
 
@@ -321,6 +346,23 @@ class SwitcherShutterBase(ABC):
     direction: ShutterDirection
 
 
+@dataclass
+class SwitcherSingleShutterDualLightBase(ABC):
+    """Abstraction for all switcher devices controlling shutter with dual light.
+
+    Args:
+        position: the current position of the shutter (integer percentage).
+        direction: the current direction of the shutter.
+        light: the current light state.
+        light2: the current second light state.
+    """
+
+    position: int
+    direction: ShutterDirection
+    light: LightState
+    light2: LightState
+
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -375,4 +417,16 @@ class SwitcherShutter(SwitcherShutterBase, SwitcherBase):
         """Post initialization validate device type category as SHUTTER."""
         if self.device_type.category != DeviceCategory.SHUTTER:
             raise ValueError("only shutters are allowed")
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherSingleShutterDualLight(SwitcherSingleShutterDualLightBase, SwitcherBase):
+    """Implementation of the Switcher Shutter with dual light device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as SINGLE_SHUTTER_DUAL_LIGHT."""  # noqa: E501
+        if self.device_type.category != DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT:
+            raise ValueError("only shutters with dual lights are allowed")
         return super().__post_init__()

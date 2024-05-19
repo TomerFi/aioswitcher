@@ -797,8 +797,11 @@ class SwitcherType2Api(SwitcherApi):
         except (KeyError, ValueError) as ve:
             raise RuntimeError("get breeze state request was not successful") from ve
 
-    async def get_shutter_state(self) -> SwitcherShutterStateResponse:
-        """Use for sending the get state packet to the Runner device.
+    async def get_shutter_state(self, index: int = 1) -> SwitcherShutterStateResponse:
+        """Use for sending the get state packet to the Runners devices.
+
+        Args:
+            index: which runner to set get state, default to 1.
 
         Returns:
             An instance of ``SwitcherShutterStateResponse``.
@@ -816,7 +819,9 @@ class SwitcherType2Api(SwitcherApi):
             self._writer.write(unhexlify(signed_packet))
             state_resp = await self._reader.read(1024)
             try:
-                response = SwitcherShutterStateResponse(state_resp)
+                response = SwitcherShutterStateResponse(
+                    state_resp, self._device_type, index
+                )
                 return response
             except (KeyError, ValueError) as ve:
                 raise RuntimeError(

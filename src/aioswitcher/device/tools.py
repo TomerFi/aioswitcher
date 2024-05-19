@@ -165,6 +165,8 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
         return DeviceType.RUNNER
     elif device_type == DeviceType.RUNNER_MINI.value:
         return DeviceType.RUNNER_MINI
+    elif device_type == DeviceType.RUNNER_S11.value:
+        return DeviceType.RUNNER_S11
     return DeviceType.MINI
 
 
@@ -211,3 +213,24 @@ def validate_token(username: str, token: str) -> bool:
     else:
         logger.debug("request failed with status code: %s", response.status_code)
     return is_token_valid
+
+
+def get_shutter_index(device_type: DeviceType, device_num: int) -> int:
+    """Return the currect shutter index (based of device type)."""
+    if device_type == DeviceType.RUNNER or device_type == DeviceType.RUNNER_MINI:
+        if device_num == 1:
+            return 1
+    if device_type == DeviceType.RUNNER_S11:
+        if device_num == 1:
+            return 3
+    return -1
+
+
+def get_light_index(device_type: DeviceType, device_num: int) -> int:
+    """Return the currect light index (based of device type)."""
+    if device_type == DeviceType.RUNNER_S11:
+        if device_num == 1:
+            return 1
+        elif device_num == 2:
+            return 2
+    return -1
