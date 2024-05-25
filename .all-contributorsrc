@@ -135,6 +135,15 @@
         "code",
         "test"
       ]
+    },
+    {
+      "login": "cdce8p",
+      "name": "Marc Mueller",
+      "avatar_url": "https://avatars.githubusercontent.com/u/30130371?v=4",
+      "profile": "https://github.com/cdce8p",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "commitConvention": "angular",
