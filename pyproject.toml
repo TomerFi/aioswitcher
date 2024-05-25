@@ -17,7 +17,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries :: Python Modules",
   "Typing :: Typed"
 ]
-include = [ "py.typed" ]
+include = [ ]
 exclude = [ ]
 
   [tool.poetry.dependencies]
