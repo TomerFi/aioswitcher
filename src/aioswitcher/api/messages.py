@@ -143,7 +143,7 @@ class StateMessageParser:
         start_index = 156 + (index * 32)
         end_index = start_index + 4
         hex_dir = self._hex_response[start_index:end_index].decode()
-        directions = dict(map(lambda d: (d.value, d), ShutterDirection))
+        directions = dict(map(lambda s: (s.value, s), ShutterDirection))
         return directions[hex_dir]
 
 
