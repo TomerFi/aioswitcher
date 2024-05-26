@@ -426,7 +426,10 @@ class SwitcherSingleShutterDualLight(SwitcherSingleShutterDualLightBase, Switche
     """Implementation of the Switcher Shutter with dual light device."""
 
     def __post_init__(self) -> None:
-        """Post initialization validate device type category as SINGLE_SHUTTER_DUAL_LIGHT."""  # noqa: E501
+        """Post initialization.
+
+        Validate device type category as SINGLE_SHUTTER_DUAL_LIGHT.
+        """
         if self.device_type.category != DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT:
             raise ValueError("only shutters with dual lights are allowed")
         return super().__post_init__()
