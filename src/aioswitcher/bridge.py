@@ -148,8 +148,8 @@ def _parse_device_from_datagram(
                     parser.get_mac(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(get_shutter_index(device_type, 1)),
-                    parser.get_shutter_direction(get_shutter_index(device_type, 1)),
+                    parser.get_shutter_position(get_shutter_index(device_type, 0)),
+                    parser.get_shutter_direction(get_shutter_index(device_type, 0)),
                 )
             )
 
@@ -168,10 +168,10 @@ def _parse_device_from_datagram(
                     parser.get_mac(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(get_shutter_index(device_type, 1)),
-                    parser.get_shutter_direction(get_shutter_index(device_type, 1)),
+                    parser.get_shutter_position(get_shutter_index(device_type, 0)),
+                    parser.get_shutter_direction(get_shutter_index(device_type, 0)),
+                    parser.get_light_state(get_light_index(device_type, 0)),
                     parser.get_light_state(get_light_index(device_type, 1)),
-                    parser.get_light_state(get_light_index(device_type, 2)),
                 )
             )
 
@@ -415,7 +415,6 @@ class DatagramParser:
 
     def get_shutter_position(self, index: int) -> int:
         """Return the current position of the shutter 0 <= pos <= 100."""
-        index -= 1
         start_index = 135 if index == 0 else 135 + (index * 16)
         end_index = start_index + 2
         hex_pos = hexlify(self.message[start_index:end_index]).decode()
@@ -423,7 +422,6 @@ class DatagramParser:
 
     def get_shutter_direction(self, index: int) -> ShutterDirection:
         """Return the current direction of the shutter (UP/DOWN/STOP)."""
-        index -= 1
         start_index = 137 if index == 0 else 137 + (index * 16)
         end_index = start_index + 2
         hex_direction = hexlify(self.message[start_index:end_index]).decode()
@@ -432,7 +430,6 @@ class DatagramParser:
 
     def get_light_state(self, index: int) -> LightState:
         """Extract the light state from the broadcast message."""
-        index -= 1
         start_index = 135 if index == 0 else 135 + (index * 16)
         end_index = start_index + 2
         hex_pos = hexlify(self.message[start_index:end_index]).decode()

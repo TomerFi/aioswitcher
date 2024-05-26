@@ -216,21 +216,29 @@ def validate_token(username: str, token: str) -> bool:
 
 
 def get_shutter_index(device_type: DeviceType, device_num: int) -> int:
-    """Return the currect shutter index (based of device type)."""
+    """Return the correct shutter index.
+
+    Used in retriving the shutter position/direction from the packet
+    (based of device type and device number).
+    """
     if device_type == DeviceType.RUNNER or device_type == DeviceType.RUNNER_MINI:
-        if device_num == 1:
-            return 1
+        if device_num == 0:
+            return 0
     if device_type == DeviceType.RUNNER_S11:
-        if device_num == 1:
-            return 3
-    return 0
+        if device_num == 0:
+            return 2
+    raise ValueError("only shutters are allowed")
 
 
 def get_light_index(device_type: DeviceType, device_num: int) -> int:
-    """Return the currect light index (based of device type)."""
+    """Return the correct light index.
+
+    Used in retriving the light on/off status from the packet
+    (based of device type and device number).
+    """
     if device_type == DeviceType.RUNNER_S11:
-        if device_num == 1:
+        if device_num == 0:
+            return 0
+        elif device_num == 1:
             return 1
-        elif device_num == 2:
-            return 2
-    return 0
+    raise ValueError("only devices that has lights are allowed")

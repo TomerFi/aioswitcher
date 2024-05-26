@@ -161,18 +161,38 @@ def test_validate_token_should_return_token_invalid(mock_post, username, token, 
     assert_that(tools.validate_token(username, token)).is_equal_to(is_token_valid)
 
 
-@mark.parametrize("type, index, num", [
-    (DeviceType.RUNNER, 1, 1),
-    (DeviceType.RUNNER_MINI, 1, 1),
-    (DeviceType.RUNNER_S11, 1, 3),
+@mark.parametrize("device_type, device_num, index", [
+    (DeviceType.RUNNER, 0, 1),
+    (DeviceType.RUNNER_MINI, 0, 1),
+    (DeviceType.RUNNER_S11, 0, 3),
     ])
-def test_get_shutter_index_should_return_expected_index(type, index, num):
-    assert_that(tools.get_shutter_index(type, index)).is_equal_to(num)
+def test_get_shutter_index_should_return_expected_index(device_type, device_num, index):
+    assert_that(tools.get_shutter_index(device_type, device_num)).is_equal_to(index)
 
 
-@mark.parametrize("type, index, num", [
-    (DeviceType.RUNNER_S11, 1, 1),
-    (DeviceType.RUNNER_S11, 2, 2),
+@mark.parametrize("device_type, device_num, error, error_msg", [
+    (DeviceType.TOUCH, ValueError, "only shutters are allowed")
     ])
-def test_get_light_index_should_return_expected_index(type, index, num):
-    assert_that(tools.get_light_index(type, index)).is_equal_to(num)
+def test_get_shutter_index_with_different_device_should_raise_error(device_type, device_num, error, error_msg):
+    assert_that(tools.get_shutter_index).raises(error).when_called_with(
+        device_type,
+        device_num
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, device_num, index", [
+    (DeviceType.RUNNER_S11, 0, 1),
+    (DeviceType.RUNNER_S11, 1, 2),
+    ])
+def test_get_light_index_should_return_expected_index(device_type, device_num, index):
+    assert_that(tools.get_light_index(device_type, device_num)).is_equal_to(index)
+
+
+@mark.parametrize("device_type, device_num, error, error_msg", [
+    (DeviceType.TOUCH, ValueError, "only devices that has lights are allowed")
+    ])
+def test_get_light_index_with_different_device_should_raise_error(device_type, device_num, error, error_msg):
+    assert_that(tools.get_light_index).raises(error).when_called_with(
+        device_type,
+        device_num
+    ).is_equal_to(error_msg)
