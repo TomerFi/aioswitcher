@@ -415,14 +415,14 @@ class DatagramParser:
 
     def get_shutter_position(self, index: int) -> int:
         """Return the current position of the shutter 0 <= pos <= 100."""
-        start_index = 135 if index == 0 else 135 + (index * 16)
+        start_index = 135 + (index * 16)
         end_index = start_index + 2
         hex_pos = hexlify(self.message[start_index:end_index]).decode()
         return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
 
     def get_shutter_direction(self, index: int) -> ShutterDirection:
         """Return the current direction of the shutter (UP/DOWN/STOP)."""
-        start_index = 137 if index == 0 else 137 + (index * 16)
+        start_index = 137 + (index * 16)
         end_index = start_index + 2
         hex_direction = hexlify(self.message[start_index:end_index]).decode()
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
@@ -430,7 +430,7 @@ class DatagramParser:
 
     def get_light_state(self, index: int) -> LightState:
         """Extract the light state from the broadcast message."""
-        start_index = 135 if index == 0 else 135 + (index * 16)
+        start_index = 135 + (index * 16)
         end_index = start_index + 2
         hex_pos = hexlify(self.message[start_index:end_index]).decode()
         hex_device_state = hex_pos[0:2]
