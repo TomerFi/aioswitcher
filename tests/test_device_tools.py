@@ -162,16 +162,16 @@ def test_validate_token_should_return_token_invalid(mock_post, username, token, 
 
 
 @mark.parametrize("device_type, device_num, index", [
-    (DeviceType.RUNNER, 0, 1),
-    (DeviceType.RUNNER_MINI, 0, 1),
-    (DeviceType.RUNNER_S11, 0, 3),
+    (DeviceType.RUNNER, 0, 0),
+    (DeviceType.RUNNER_MINI, 0, 0),
+    (DeviceType.RUNNER_S11, 0, 2),
     ])
 def test_get_shutter_index_should_return_expected_index(device_type, device_num, index):
     assert_that(tools.get_shutter_index(device_type, device_num)).is_equal_to(index)
 
 
 @mark.parametrize("device_type, device_num, error, error_msg", [
-    (DeviceType.TOUCH, ValueError, "only shutters are allowed")
+    (DeviceType.TOUCH, 0, ValueError, "only shutters are allowed")
     ])
 def test_get_shutter_index_with_different_device_should_raise_error(device_type, device_num, error, error_msg):
     assert_that(tools.get_shutter_index).raises(error).when_called_with(
@@ -181,15 +181,15 @@ def test_get_shutter_index_with_different_device_should_raise_error(device_type,
 
 
 @mark.parametrize("device_type, device_num, index", [
-    (DeviceType.RUNNER_S11, 0, 1),
-    (DeviceType.RUNNER_S11, 1, 2),
+    (DeviceType.RUNNER_S11, 0, 0),
+    (DeviceType.RUNNER_S11, 1, 1),
     ])
 def test_get_light_index_should_return_expected_index(device_type, device_num, index):
     assert_that(tools.get_light_index(device_type, device_num)).is_equal_to(index)
 
 
 @mark.parametrize("device_type, device_num, error, error_msg", [
-    (DeviceType.TOUCH, ValueError, "only devices that has lights are allowed")
+    (DeviceType.TOUCH, 0, ValueError, "only devices that has lights are allowed")
     ])
 def test_get_light_index_with_different_device_should_raise_error(device_type, device_num, error, error_msg):
     assert_that(tools.get_light_index).raises(error).when_called_with(
