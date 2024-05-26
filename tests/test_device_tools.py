@@ -161,38 +161,38 @@ def test_validate_token_should_return_token_invalid(mock_post, username, token, 
     assert_that(tools.validate_token(username, token)).is_equal_to(is_token_valid)
 
 
-@mark.parametrize("device_type, device_num, index", [
+@mark.parametrize("device_type, circuit_number, index", [
     (DeviceType.RUNNER, 0, 0),
     (DeviceType.RUNNER_MINI, 0, 0),
     (DeviceType.RUNNER_S11, 0, 2),
     ])
-def test_get_shutter_index_should_return_expected_index(device_type, device_num, index):
-    assert_that(tools.get_shutter_index(device_type, device_num)).is_equal_to(index)
+def test_get_shutter_index_should_return_expected_index(device_type, circuit_number, index):
+    assert_that(tools.get_shutter_index(device_type, circuit_number)).is_equal_to(index)
 
 
-@mark.parametrize("device_type, device_num, error, error_msg", [
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
     (DeviceType.TOUCH, 0, ValueError, "only shutters are allowed")
     ])
-def test_get_shutter_index_with_different_device_should_raise_error(device_type, device_num, error, error_msg):
+def test_get_shutter_index_with_different_device_should_raise_error(device_type, circuit_number, error, error_msg):
     assert_that(tools.get_shutter_index).raises(error).when_called_with(
         device_type,
-        device_num
+        circuit_number
     ).is_equal_to(error_msg)
 
 
-@mark.parametrize("device_type, device_num, index", [
+@mark.parametrize("device_type, circuit_number, index", [
     (DeviceType.RUNNER_S11, 0, 0),
     (DeviceType.RUNNER_S11, 1, 1),
     ])
-def test_get_light_index_should_return_expected_index(device_type, device_num, index):
-    assert_that(tools.get_light_index(device_type, device_num)).is_equal_to(index)
+def test_get_light_index_should_return_expected_index(device_type, circuit_number, index):
+    assert_that(tools.get_light_index(device_type, circuit_number)).is_equal_to(index)
 
 
-@mark.parametrize("device_type, device_num, error, error_msg", [
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
     (DeviceType.TOUCH, 0, ValueError, "only devices that has lights are allowed")
     ])
-def test_get_light_index_with_different_device_should_raise_error(device_type, device_num, error, error_msg):
+def test_get_light_index_with_different_device_should_raise_error(device_type, circuit_number, error, error_msg):
     assert_that(tools.get_light_index).raises(error).when_called_with(
         device_type,
-        device_num
+        circuit_number
     ).is_equal_to(error_msg)

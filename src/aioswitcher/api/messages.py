@@ -142,9 +142,9 @@ class StateMessageParser:
         """Return the current direction of the shutter (UP/DOWN/STOP)."""
         start_index = 156 + (index * 32)
         end_index = start_index + 4
-        hex_direction = self._hex_response[start_index:end_index].decode()
+        hex_dir = self._hex_response[start_index:end_index].decode()
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
-        return directions[hex_direction]
+        return directions[hex_dir]
 
 
 @dataclass
