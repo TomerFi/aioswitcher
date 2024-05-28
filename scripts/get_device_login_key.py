@@ -78,7 +78,8 @@ def listen_udp(specific_ip: str, port: int) -> None:
     sock.close()
 
 
-def main():
+def main() -> None:
+    """Fetch the devices's login key."""
     args = parser.parse_args()
     print("ip address: " + args.ip_address)
     print("port: " + str(args.port))

@@ -113,7 +113,8 @@ async def print_devices(delay: int, ports: List[int]) -> None:
         await asyncio.sleep(delay)
 
 
-def main():
+def main() -> None:
+    """Run the device discovery script."""
     args = parser.parse_args()
 
     if args.type == "1":

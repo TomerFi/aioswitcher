@@ -452,7 +452,8 @@ async def set_shutter_position(
         )
 
 
-def main():
+def main() -> None:
+    """Run the device controller script."""
     try:
         args = main_parser.parse_args()
 
