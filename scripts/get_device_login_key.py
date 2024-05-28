@@ -78,8 +78,12 @@ def listen_udp(specific_ip: str, port: int) -> None:
     sock.close()
 
 
-if __name__ == "__main__":
+def main():
     args = parser.parse_args()
     print("ip address: " + args.ip_address)
     print("port: " + str(args.port))
     listen_udp(args.ip_address, args.port)
+
+
+if __name__ == "__main__":
+    main()
