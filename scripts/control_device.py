@@ -452,7 +452,8 @@ async def set_shutter_position(
         )
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Run the device controller script."""
     try:
         args = main_parser.parse_args()
 
@@ -572,3 +573,7 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         exit()
+
+
+if __name__ == "__main__":
+    main()

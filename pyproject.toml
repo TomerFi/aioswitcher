@@ -20,8 +20,8 @@ classifiers = [
 include = [ ]
 exclude = [ ]
 
-  [tool.poetry.dependencies]
-  python = "^3.9.0"
+[tool.poetry.dependencies]
+python = "^3.9.0"
 
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
@@ -108,3 +108,8 @@ skip_covered = true
 [build-system]
 requires = [ "poetry-core>=1.2.0" ]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+control_device = "scripts.control_device:main"
+discover_devices = "scripts.discover_devices:main"
+get_device_login_key = "scripts.get_device_login_key:main"

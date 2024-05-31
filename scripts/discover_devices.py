@@ -113,7 +113,8 @@ async def print_devices(delay: int, ports: List[int]) -> None:
         await asyncio.sleep(delay)
 
 
-if __name__ == "__main__":
+def main() -> None:
+    """Run the device discovery script."""
     args = parser.parse_args()
 
     if args.type == "1":
@@ -132,3 +133,7 @@ if __name__ == "__main__":
         asyncio.run(print_devices(args.delay, ports))
     except KeyboardInterrupt:
         exit()
+
+
+if __name__ == "__main__":
+    main()
