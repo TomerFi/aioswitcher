@@ -18,7 +18,7 @@ from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto, unique
-from typing import final
+from typing import List, final
 
 
 @unique
@@ -104,31 +104,6 @@ class DeviceState(Enum):
     OFF = "00", "off"
 
     def __new__(cls, value: str, display: str) -> "DeviceState":
-        """Override the default enum constructor and include extra properties."""
-        new_enum = object.__new__(cls)
-        new_enum._value = value  # type: ignore
-        new_enum._display = display  # type: ignore
-        return new_enum
-
-    @property
-    def display(self) -> str:
-        """Return the display name of the state."""
-        return self._display  # type: ignore
-
-    @property
-    def value(self) -> str:
-        """Return the value of the state."""
-        return self._value  # type: ignore
-
-
-@final
-class LightState(Enum):
-    """Enum class representing the light's state."""
-
-    ON = "01", "on"
-    OFF = "00", "off"
-
-    def __new__(cls, value: str, display: str) -> "LightState":
         """Override the default enum constructor and include extra properties."""
         new_enum = object.__new__(cls)
         new_enum._value = value  # type: ignore
@@ -353,14 +328,12 @@ class SwitcherSingleShutterDualLightBase(ABC):
     Args:
         position: the current position of the shutter (integer percentage).
         direction: the current direction of the shutter.
-        light: the current light state.
-        light2: the current second light state.
+        lights: the current array of lights state.
     """
 
     position: int
     direction: ShutterDirection
-    light: LightState
-    light2: LightState
+    lights: List[DeviceState]
 
 
 @final
