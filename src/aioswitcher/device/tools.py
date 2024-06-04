@@ -247,9 +247,7 @@ def get_light_index(device_type: DeviceType, circuit_number: int) -> int:
     (based of device type and circuit number).
     """
     if device_type == DeviceType.RUNNER_S11:
-        if circuit_number == 0:
-            return 0
-        elif circuit_number == 1:
-            return 1
+        if circuit_number in [0, 1]:
+            return circuit_number
 
     raise ValueError("only devices that has lights are allowed")
