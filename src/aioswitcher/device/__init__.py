@@ -18,7 +18,7 @@ from abc import ABC
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum, auto, unique
-from typing import final
+from typing import List, final
 
 
 @unique
@@ -321,6 +321,21 @@ class SwitcherShutterBase(ABC):
     direction: ShutterDirection
 
 
+@dataclass
+class SwitcherSingleShutterDualLightBase(ABC):
+    """Abstraction for all switcher devices controlling shutter with dual light.
+
+    Args:
+        position: the current position of the shutter (integer percentage).
+        direction: the current direction of the shutter.
+        lights: the current array of lights state.
+    """
+
+    position: int
+    direction: ShutterDirection
+    lights: List[DeviceState]
+
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -375,4 +390,19 @@ class SwitcherShutter(SwitcherShutterBase, SwitcherBase):
         """Post initialization validate device type category as SHUTTER."""
         if self.device_type.category != DeviceCategory.SHUTTER:
             raise ValueError("only shutters are allowed")
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherSingleShutterDualLight(SwitcherSingleShutterDualLightBase, SwitcherBase):
+    """Implementation of the Switcher Shutter with dual light device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization.
+
+        Validate device type category as SINGLE_SHUTTER_DUAL_LIGHT.
+        """
+        if self.device_type.category != DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT:
+            raise ValueError("only shutters with dual lights are allowed")
         return super().__post_init__()

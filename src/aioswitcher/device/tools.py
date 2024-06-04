@@ -165,6 +165,8 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
         return DeviceType.RUNNER
     elif device_type == DeviceType.RUNNER_MINI.value:
         return DeviceType.RUNNER_MINI
+    elif device_type == DeviceType.RUNNER_S11.value:
+        return DeviceType.RUNNER_S11
     return DeviceType.MINI
 
 
@@ -211,3 +213,41 @@ def validate_token(username: str, token: str) -> bool:
     else:
         logger.debug("request failed with status code: %s", response.status_code)
     return is_token_valid
+
+
+# More info about get_shutter_index and get_light_index functions
+# Those functions return the index of the circuit sub device,
+#   used in retreving state from the packet.
+# Used for Switcher Runners and Switcher Lights
+# Runner and Runner Mini: has no lights & one shutter circuits ->
+#   shutter circuit is 0, get_light_index would raise an error.
+# Runner S11: has two lights circuits & one shutter circuits ->
+#   Lights circuits are numbered 0 & 1, shutter circuit is 2.
+def get_shutter_index(device_type: DeviceType, circuit_number: int) -> int:
+    """Return the correct shutter index.
+
+    Used in retriving the shutter position/direction from the packet
+    (based of device type and circuit number).
+    """
+    if circuit_number != 0:
+        raise ValueError("Invalid circuit number")
+
+    if device_type in (DeviceType.RUNNER, DeviceType.RUNNER_MINI):
+        return 0
+    elif device_type == DeviceType.RUNNER_S11:
+        return 2
+
+    raise ValueError("only shutters are allowed")
+
+
+def get_light_index(device_type: DeviceType, circuit_number: int) -> int:
+    """Return the correct light index.
+
+    Used in retriving the light on/off status from the packet
+    (based of device type and circuit number).
+    """
+    if device_type == DeviceType.RUNNER_S11:
+        if circuit_number in [0, 1]:
+            return circuit_number
+
+    raise ValueError("only devices that has lights are allowed")
