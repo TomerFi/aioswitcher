@@ -48,7 +48,8 @@ parser.add_argument(
     type=str,
 )
 
-if __name__ == "__main__":
+def main() -> None:
+    """Validate the personal Token of the user."""
     try:
         args = parser.parse_args()
 
@@ -60,3 +61,7 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         exit()
+
+
+if __name__ == "__main__":
+    main()
