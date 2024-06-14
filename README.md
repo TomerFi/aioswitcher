@@ -99,14 +99,14 @@ asyncio.run(print_devices(60))
       async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
           # get the device current state
           await api.get_shutter_state()
-          # open the shutter to 30%, shutter number id is 1
-          await api.set_position(30, 1)
-          # stop the shutter if currently rolling, shutter number id is 1
-          await api.stop_shutter(1)
-          # turn on the light, number id is 1 (Only for Runner S11 and Runner S12)
-          await api.api.set_light(LightState.ON, 1)
-          # turn off the light, number id is 1 (Only for Runner S11 and Runner S12)
-          await api.api.set_light(LightState.OFF, 1)
+          # open the shutter to 30%, shutter number id is 0
+          await api.set_position(30, 0)
+          # stop the shutter if currently rolling, shutter number id is 0
+          await api.stop_shutter(0)
+          # turn on the light, number id is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(LightState.ON, 0)
+          # turn off the light, number id is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(LightState.OFF, 0)
 
   asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00", ""))
   asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00", ""))
