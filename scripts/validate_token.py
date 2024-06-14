@@ -48,6 +48,7 @@ parser.add_argument(
     type=str,
 )
 
+
 def main() -> None:
     """Validate the personal Token of the user."""
     try:
