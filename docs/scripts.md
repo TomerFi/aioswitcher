@@ -21,7 +21,7 @@ You can change the delay by passing an int argument: discover_devices.py 30
 
 Switcher devices uses two protocol types:
     Protocol type 1 (UDP port 20002 or port 10002), used by: Switcher Mini, Switcher Power Plug, Switcher Touch, Switcher V2 (esp), Switcher V2 (qualcomm), Switcher V4
-    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini
+    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini, Switcher Runner S11
 You can change the scanned protocol type by passing an int argument: discover_devices.py -t 1
 
 Note:
@@ -84,6 +84,8 @@ subcommands:
     stop_shutter        stop shutter
     turn_off            turn off the device
     turn_on             turn on the device
+    turn_off_light      turn off light
+    turn_on_light       turn on light
 
 example usage:
 
@@ -113,7 +115,19 @@ python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.2
 
 python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"
 
-python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98"-p 50
+python control_device.py stop_shutter -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"
+
+python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50
+
+python control_device.py set_shutter_position -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50
+
+python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
 
 python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"
 
@@ -312,7 +326,7 @@ options:
 ### script/control_device.py set_shutter_position
 
 ```shell
-usage: control_device.py set_shutter_position [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -l DEVICE_KEY -i
+usage: control_device.py set_shutter_position [-h] [-v] [-k TOKEN] -c DEVICE_TYPE -d DEVICE_ID -l DEVICE_KEY -i
                                               IP_ADDRESS -p POSITION
 
 options:
@@ -320,6 +334,8 @@ options:
   -v, --verbose         include the raw message
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -333,13 +349,15 @@ options:
 ### script/control_device.py stop_shutter
 
 ```shell
-usage: control_device.py stop_shutter [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
+usage: control_device.py stop_shutter [-h] [-v] [-k TOKEN] -c DEVICE_TYPE -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -385,6 +403,46 @@ options:
                         the ip address assigned to the device
   -t [TIMER], --timer [TIMER]
                         set minutes timer for turn on operation
+```
+
+### script/control_device.py turn_off_light
+
+```shell
+usage: control_device.py turn_off_light [-h] [-v] [-k TOKEN] -c DEVICE_TYPE -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+```
+
+### script/control_device.py turn_on_light
+
+```shell
+usage: control_device.py turn_on_light [-h] [-v] [-k TOKEN] -c DEVICE_TYPE -d DEVICE_ID -l DEVICE_KEY -i IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices.
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
 ```
 
 ## script/get_device_login_key.py
