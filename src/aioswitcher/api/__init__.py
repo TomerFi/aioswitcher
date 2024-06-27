@@ -171,7 +171,7 @@ class SwitcherApi(ABC):
 
         """
         timestamp = current_timestamp_to_hexadecimal()
-        if self._device_type and self._device_type.token_needed and bool(self._token):
+        if self._token != "":
             packet = packets.LOGIN_TOKEN_PACKET_TYPE2.format(
                 self._token, timestamp, self._device_id
             )
@@ -190,7 +190,7 @@ class SwitcherApi(ABC):
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
 
-        if self._device_type and self._device_type.token_needed and bool(self._token):
+        if self._token != "":
             packet = packets.LOGIN2_TOKEN_PACKET_TYPE2.format(
                 self._device_id, timestamp, self._token
             )
@@ -768,7 +768,7 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-        index = get_shutter_index(self._device_type, index) + 1
+        index_packet = get_shutter_index(self._device_type, index) + 1
         logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login()
         if not login_resp.successful:
@@ -779,9 +779,9 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._device_type and self._device_type.token_needed and bool(self._token):
+        if self._token != "":
             command = "0000"
-            hex_pos = f"0{index}{command}" if index else command
+            hex_pos = f"0{index_packet}{command}"
 
             packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
@@ -817,7 +817,7 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-        index = get_shutter_index(self._device_type, index) + 1
+        index_packet = get_shutter_index(self._device_type, index) + 1
         hex_pos = "{0:0{1}x}".format(position, 2)
 
         logger.debug("about to send set position command")
@@ -830,8 +830,8 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._device_type and self._device_type.token_needed and bool(self._token):
-            hex_pos = f"0{index}{hex_pos}" if index else hex_pos
+        if self._token != "":
+            hex_pos = f"0{index_packet}{hex_pos}"
 
             packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
@@ -929,8 +929,8 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-        index = get_light_index(self._device_type, index) + 1
-        hex_pos = f"0{index}{command.value}" if index else command.value
+        index_packet = get_light_index(self._device_type, index) + 1
+        hex_pos = f"0{index_packet}{command.value}"
 
         logger.debug("about to send set light command")
         timestamp, login_resp = await self._login()
@@ -942,7 +942,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._device_type and self._device_type.token_needed and bool(self._token):
+        if self._token != "":
             packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
                 self._device_id,

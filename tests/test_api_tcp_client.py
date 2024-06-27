@@ -51,6 +51,7 @@ device_type_api1 = DeviceType.TOUCH
 device_type_api2 = DeviceType.RUNNER
 device_type_token_api2 = DeviceType.RUNNER_S11
 device_index = 0
+device_index2 = 1
 device_id = "aaaaaa"
 device_key = "18"
 device_ip = "1.2.3.4"
@@ -426,6 +427,15 @@ async def test_set_light_function_with_valid_packets(reader_mock, writer_write, 
     three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "set_light_response")
     with patch.object(reader_mock, "read", side_effect=three_packets):
         response = await connected_api_token_type2.set_light(DeviceState.ON, device_index)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+async def test_set_light_function_with_valid_packets_second_light(reader_mock, writer_write, connected_api_token_type2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "set_light_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2.set_light(DeviceState.ON, device_index2)
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
