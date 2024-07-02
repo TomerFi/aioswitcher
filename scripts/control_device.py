@@ -293,7 +293,7 @@ set_shutter_position_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select shutter number id to operate",
+    help="select circuit number to operate",
 )
 
 # stop shutter parser
@@ -306,7 +306,7 @@ stop_shutter_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select shutter number id to operate",
+    help="select circuit number to operate",
 )
 
 # turn_off parser
@@ -337,7 +337,7 @@ turn_on_light_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select light number id to turn off",
+    help="select circuit number to turn off",
 )
 
 # turn_on_light parser
@@ -350,7 +350,7 @@ turn_on_light_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select light number id to turn on",
+    help="select circuit number to turn on",
 )
 
 

@@ -171,7 +171,7 @@ class SwitcherApi(ABC):
 
         """
         timestamp = current_timestamp_to_hexadecimal()
-        if self._token != "":
+        if bool(self._token):
             packet = packets.LOGIN_TOKEN_PACKET_TYPE2.format(
                 self._token, timestamp, self._device_id
             )
@@ -190,7 +190,7 @@ class SwitcherApi(ABC):
         self._writer.write(unhexlify(signed_packet))
         response = await self._reader.read(1024)
 
-        if self._token != "":
+        if bool(self._token):
             packet = packets.LOGIN2_TOKEN_PACKET_TYPE2.format(
                 self._device_id, timestamp, self._token
             )
@@ -768,6 +768,8 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
+        # We need to convert selected circuit number to actual place in the packet.
+        # That is why we add + 1
         index_packet = get_shutter_index(self._device_type, index) + 1
         logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login()
@@ -779,7 +781,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._token != "":
+        if bool(self._token):
             command = "0000"
             hex_pos = f"0{index_packet}{command}"
 
@@ -817,6 +819,8 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
+        # We need to convert selected circuit number to actual place in the packet.
+        # That is why we add + 1
         index_packet = get_shutter_index(self._device_type, index) + 1
         hex_pos = "{0:0{1}x}".format(position, 2)
 
@@ -830,7 +834,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._token != "":
+        if bool(self._token):
             hex_pos = f"0{index_packet}{hex_pos}"
 
             packet = packets.GENERAL_TOKEN_COMMAND.format(
@@ -929,6 +933,8 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
+        # We need to convert selected circuit number to actual place in the packet.
+        # That is why we add + 1
         index_packet = get_light_index(self._device_type, index) + 1
         hex_pos = f"0{index_packet}{command.value}"
 
@@ -942,7 +948,7 @@ class SwitcherType2Api(SwitcherApi):
             "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
         )
 
-        if self._token != "":
+        if bool(self._token):
             packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
                 self._device_id,

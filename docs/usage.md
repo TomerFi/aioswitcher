@@ -104,13 +104,13 @@ async def control_runner(device_type, device_ip, device_id, device_key, token) :
     async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
         # get the device current state (1)
         await api.get_shutter_state()
-        # open the shutter to 30%, shutter number id is 0
+        # open the shutter to 30%, circuit number is 0
         await api.set_position(30, 0)
-        # stop the shutter if currently rolling, shutter number id is 0
+        # stop the shutter if currently rolling, circuit number is 0
         await api.stop_shutter(0)
-        # turn on the light, number id is 0 (Only for Runner S11 and Runner S12)
+        # turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)
         await api.api.set_light(DeviceState.ON, 0)
-        # turn off the light, number id is 0 (Only for Runner S11 and Runner S12)
+        # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
         await api.api.set_light(DeviceState.OFF, 0)
 
 asyncio.run(
