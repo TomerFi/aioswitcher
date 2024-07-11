@@ -176,8 +176,7 @@ class SwitcherApi(ABC):
                 self._token, timestamp, self._device_id
             )
         elif (
-            self._device_type
-            and self._device_type == DeviceType.BREEZE
+            self._device_type == DeviceType.BREEZE
             or self._device_type == DeviceType.RUNNER
             or self._device_type == DeviceType.RUNNER_MINI
         ):
