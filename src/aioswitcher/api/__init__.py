@@ -111,7 +111,7 @@ class SwitcherApi(ABC):
         if self._device_type.token_needed and bool(token):
             self._token = convert_token_to_packet(str(token))
         else:
-            self._token = ""
+            self._token = None
 
     @property
     def connected(self) -> bool:
