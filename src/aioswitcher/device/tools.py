@@ -215,16 +215,19 @@ def validate_token(username: str, token: str) -> bool:
     return is_token_valid
 
 
-# More info about get_shutter_index and get_light_index functions
+# More info about get_shutter_discovery_packet_index
+# and get_light_discovery_packet_index functions
 # Those functions return the index of the circuit sub device,
 #   used in retreving state from the packet.
 # Used for Switcher Runners and Switcher Lights
 # Runner and Runner Mini: has no lights & one shutter circuits ->
-#   shutter circuit is 0, get_light_index would raise an error.
+#   shutter circuit is 0, get_light_discovery_packet_index would raise an error.
 # Runner S11: has two lights circuits & one shutter circuits ->
 #   Lights circuits are numbered 0 & 1, shutter circuit is 2.
-def get_shutter_index(device_type: DeviceType, circuit_number: int) -> int:
-    """Return the correct shutter index.
+def get_shutter_discovery_packet_index(
+    device_type: DeviceType, circuit_number: int
+) -> int:
+    """Return the correct shutter discovery packet index.
 
     Used in retriving the shutter position/direction from the packet
     (based of device type and circuit number).
@@ -240,8 +243,10 @@ def get_shutter_index(device_type: DeviceType, circuit_number: int) -> int:
     raise ValueError("only shutters are allowed")
 
 
-def get_light_index(device_type: DeviceType, circuit_number: int) -> int:
-    """Return the correct light index.
+def get_light_discovery_packet_index(
+    device_type: DeviceType, circuit_number: int
+) -> int:
+    """Return the correct light discovery packet index.
 
     Used in retriving the light on/off status from the packet
     (based of device type and circuit number).
@@ -253,3 +258,21 @@ def get_light_index(device_type: DeviceType, circuit_number: int) -> int:
             raise ValueError("Invalid circuit number")
 
     raise ValueError("only devices that has lights are allowed")
+
+
+def get_shutter_api_packet_index(device_type: DeviceType, circuit_number: int) -> int:
+    """Return the correct shutter api packet index.
+
+    Used in sending the shutter position/direction with the packet
+    (based of device type and circuit number).
+    """
+    return get_shutter_discovery_packet_index(device_type, circuit_number) + 1
+
+
+def get_light_api_packet_index(device_type: DeviceType, circuit_number: int) -> int:
+    """Return the correct light api packet index.
+
+    Used in sending the light on/off status with the packet
+    (based of device type and circuit number).
+    """
+    return get_light_discovery_packet_index(device_type, circuit_number) + 1

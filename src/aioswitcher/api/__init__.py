@@ -35,8 +35,8 @@ from ..device import (
 from ..device.tools import (
     convert_token_to_packet,
     current_timestamp_to_hexadecimal,
-    get_light_index,
-    get_shutter_index,
+    get_light_api_packet_index,
+    get_shutter_api_packet_index,
     minutes_to_hexadecimal_seconds,
     set_message_length,
     sign_packet_with_crc_key,
@@ -770,7 +770,7 @@ class SwitcherType2Api(SwitcherApi):
         """
         # We need to convert selected circuit number to actual place in the packet.
         # That is why we add + 1
-        index_packet = get_shutter_index(self._device_type, index) + 1
+        index_packet = get_shutter_api_packet_index(self._device_type, index)
         logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login()
         if not login_resp.successful:
@@ -821,7 +821,7 @@ class SwitcherType2Api(SwitcherApi):
         """
         # We need to convert selected circuit number to actual place in the packet.
         # That is why we add + 1
-        index_packet = get_shutter_index(self._device_type, index) + 1
+        index_packet = get_shutter_api_packet_index(self._device_type, index)
         hex_pos = "{0:0{1}x}".format(position, 2)
 
         logger.debug("about to send set position command")
@@ -935,7 +935,7 @@ class SwitcherType2Api(SwitcherApi):
         """
         # We need to convert selected circuit number to actual place in the packet.
         # That is why we add + 1
-        index_packet = get_light_index(self._device_type, index) + 1
+        index_packet = get_light_api_packet_index(self._device_type, index)
         hex_pos = f"0{index_packet}{command.value}"
 
         logger.debug("about to send set light command")

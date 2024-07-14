@@ -41,8 +41,8 @@ from .device import (
     ThermostatSwing,
 )
 from .device.tools import (
-    get_light_index,
-    get_shutter_index,
+    get_light_discovery_packet_index,
+    get_shutter_discovery_packet_index,
     seconds_to_iso_time,
     watts_to_amps,
 )
@@ -147,8 +147,12 @@ def _parse_device_from_datagram(
                     parser.get_mac(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(get_shutter_index(device_type, 0)),
-                    parser.get_shutter_direction(get_shutter_index(device_type, 0)),
+                    parser.get_shutter_position(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
+                    parser.get_shutter_direction(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
                 )
             )
 
@@ -167,11 +171,19 @@ def _parse_device_from_datagram(
                     parser.get_mac(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(get_shutter_index(device_type, 0)),
-                    parser.get_shutter_direction(get_shutter_index(device_type, 0)),
+                    parser.get_shutter_position(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
+                    parser.get_shutter_direction(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
                     [
-                        parser.get_light_state(get_light_index(device_type, 0)),
-                        parser.get_light_state(get_light_index(device_type, 1)),
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 0)
+                        ),
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 1)
+                        ),
                     ],
                 )
             )
