@@ -108,10 +108,11 @@ class SwitcherApi(ABC):
         self._device_key = device_key
         self._port = port
         self._connected = False
-        if self._device_type.token_needed and bool(token):
+        self._token = None
+        if self._device_type.token_needed:
+            if not token:
+                raise RuntimeError("A token is needed but is missing")
             self._token = convert_token_to_packet(str(token))
-        else:
-            self._token = None
 
     @property
     def connected(self) -> bool:

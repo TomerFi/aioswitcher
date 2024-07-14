@@ -122,6 +122,12 @@ async def test_api_as_a_context_manager(reader_mock, writer_mock):
             assert_that(api.connected).is_true()
 
 
+async def test_api_with_token_needed_but_missing_should_raise_error():
+    with raises(RuntimeError, match="A token is needed but is missing"):
+        with patch("aioswitcher.api.open_connection", return_value=b''):
+            await SwitcherType2Api(device_type_token_api2, device_ip, device_id, device_key, token_empty)
+
+
 async def test_login_function(reader_mock, writer_write, connected_api_type1, resource_path_root):
     response_packet = _load_dummy_packet(resource_path_root, "login_response")
     with patch.object(reader_mock, "read", return_value=response_packet):
