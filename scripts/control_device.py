@@ -51,6 +51,8 @@ python control_device.py delete_schedule -c "Switcher Touch" -d ab1c2d -i "111.2
 python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"\n
 python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
 
+python control_device.py get_shutter_state -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
+python control_device.py get_shutter_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
 python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
 python control_device.py stop_shutter -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
 python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50\n
@@ -274,6 +276,13 @@ set_name_parser.add_argument(
     help="new name for the device",
 )
 
+# get_shutter_state parser
+subparsers.add_parser(
+    "get_shutter_state",
+    help="get the current shutter state of a device",
+    parents=[shared_parser],
+)
+
 # stop shutter parser
 set_shutter_position_parser = subparsers.add_parser(
     "set_shutter_position",
@@ -376,6 +385,21 @@ async def get_thermostat_state(
         device_type, device_ip, device_id, device_key, token
     ) as api:
         printer.pprint(asdict(await api.get_breeze_state(), verbose))
+
+
+async def get_shutter_state(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use to launch a get_shutter_state request."""
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
+        printer.pprint(asdict(await api.get_shutter_state(), verbose))
 
 
 async def get_state(
@@ -702,6 +726,18 @@ def main() -> None:
                     args.end_time,
                     args.weekdays,
                     args.verbose,
+                )
+            )
+
+        elif args.action == "get_shutter_state":
+            asyncio.run(
+                get_shutter_state(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
+                    args.token,
                 )
             )
 

@@ -126,7 +126,6 @@ asyncio.run(
 
 1. [SwitcherShutterStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherShutterStateResponse)
 2. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
-3. [SwitcherShutterStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherShutterStateResponse)
 
 ```python
 async def control_breeze(device_type, device_ip, device_id, device_key, remote_manager, remote_id) :
