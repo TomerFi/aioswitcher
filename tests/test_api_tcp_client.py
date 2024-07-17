@@ -29,6 +29,7 @@ from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
 from aioswitcher.api.messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
+    SwitcherLightStateResponse,
     SwitcherLoginResponse,
     SwitcherShutterStateResponse,
     SwitcherStateResponse,
@@ -445,6 +446,39 @@ async def test_set_shutter_position_token_device_function_with_valid_packets(rea
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+async def test_get_light_state_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "get_light_state_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2.get_light_state()
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherLightStateResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+async def test_get_light_state_function_with_a_faulty_device_should_raise_error(reader_mock, writer_write, connected_api_type2, resource_path_root):
+    login_response_packet = _load_dummy_packet(resource_path_root, "login2_response")
+    get_state_response_packet = _load_dummy_packet(resource_path_root, "get_light_state_response")
+    with raises(RuntimeError, match="get light state request was not successful"):
+        with patch.object(reader_mock, "read", side_effect=[login_response_packet, get_state_response_packet]):
+            await connected_api_type2.get_light_state()
+    assert_that(writer_write.call_count).is_equal_to(2)
+
+
+async def test_get_light_state_function_with_a_faulty_login_response_should_raise_error(reader_mock, writer_write, connected_api_type2):
+    with raises(RuntimeError, match="login request was not successful"):
+        with patch.object(reader_mock, "read", return_value=b''):
+            await connected_api_type2.get_light_state()
+    writer_write.assert_called_once()
+
+
+async def test_get_light_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2, resource_path_root):
+    login_response_packet = _load_dummy_packet(resource_path_root, "login_response")
+    with raises(RuntimeError, match="get light state request was not successful"):
+        with patch.object(reader_mock, "read", side_effect=[login_response_packet, b'']):
+            await connected_api_type2.get_light_state()
+    assert_that(writer_write.call_count).is_equal_to(2)
 
 
 async def test_set_light_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2, resource_path_root):

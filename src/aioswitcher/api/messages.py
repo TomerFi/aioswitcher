@@ -27,6 +27,7 @@ from ..device import (
     ThermostatSwing,
 )
 from ..device.tools import (
+    get_light_discovery_packet_index,
     get_shutter_discovery_packet_index,
     seconds_to_iso_time,
     watts_to_amps,
@@ -149,6 +150,18 @@ class StateMessageParser:
         hex_dir = self._hex_response[start_index:end_index].decode()
         directions = dict(map(lambda s: (s.value, s), ShutterDirection))
         return directions[hex_dir]
+
+    def get_light_state(self, index: int) -> DeviceState:
+        """Return the current light state."""
+        start_index = 152 + (index * 32)
+        end_index = start_index + 2
+        hex_pos = self._hex_response[start_index:end_index].decode()
+        hex_device_state = hex_pos[0:2]
+        return (
+            DeviceState.ON
+            if hex_device_state == DeviceState.ON.value
+            else DeviceState.OFF
+        )
 
 
 @dataclass
@@ -274,3 +287,20 @@ class SwitcherShutterStateResponse(SwitcherBaseResponse):
 
         self.direction = parser.get_shutter_direction(index)
         self.position = parser.get_shutter_position(index)
+
+
+@final
+@dataclass
+class SwitcherLightStateResponse(SwitcherBaseResponse):
+    """Representation of the Switcher light devices state response message."""
+
+    state: DeviceState = field(init=False)
+    device_type: DeviceType
+    index: int
+
+    def __post_init__(self) -> None:
+        """Post initialization of the message."""
+        parser = StateMessageParser(self.unparsed_response)
+        index = get_light_discovery_packet_index(self.device_type, self.index)
+
+        self.state = parser.get_light_state(index)

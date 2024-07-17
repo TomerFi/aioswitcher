@@ -49,6 +49,7 @@ from . import packets
 from .messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
+    SwitcherLightStateResponse,
     SwitcherLoginResponse,
     SwitcherShutterStateResponse,
     SwitcherStateResponse,
@@ -359,6 +360,18 @@ class SwitcherApi(ABC):
 
         Returns:
             An instance of ``SwitcherBaseResponse``.
+
+        """
+        raise NotImplementedError
+
+    async def get_light_state(self, index: int = 0) -> SwitcherBaseResponse:
+        """Use for sending the get state packet to the Light devices.
+
+        Args:
+            index: which light to set get state, default to 0.
+
+        Returns:
+            An instance of ``SwitcherLightStateResponse``.
 
         """
         raise NotImplementedError
@@ -918,6 +931,36 @@ class SwitcherType2Api(SwitcherApi):
                 raise RuntimeError(
                     "get shutter state request was not successful"
                 ) from ve
+        raise RuntimeError("login request was not successful")
+
+    async def get_light_state(self, index: int = 0) -> SwitcherLightStateResponse:
+        """Use for sending the get state packet to the Light devices.
+
+        Args:
+            index: which light to set get state, default to 0.
+
+        Returns:
+            An instance of ``SwitcherLightStateResponse``.
+
+        """
+        timestamp, login_resp = await self._login()
+        if login_resp.successful:
+            packet = packets.GET_STATE_PACKET2_TYPE2.format(
+                login_resp.session_id, timestamp, self._device_id
+            )
+
+            signed_packet = sign_packet_with_crc_key(packet)
+
+            logger.debug("sending a get state packet")
+            self._writer.write(unhexlify(signed_packet))
+            state_resp = await self._reader.read(1024)
+            try:
+                response = SwitcherLightStateResponse(
+                    state_resp, self._device_type, index
+                )
+                return response
+            except (KeyError, ValueError) as ve:
+                raise RuntimeError("get light state request was not successful") from ve
         raise RuntimeError("login request was not successful")
 
     async def set_light(

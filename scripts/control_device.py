@@ -58,6 +58,8 @@ python control_device.py stop_shutter -c "Switcher Runner S11" -k "zvVvd7JxtN7Cg
 python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50\n
 python control_device.py set_shutter_position -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50\n
 
+python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
 python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
 python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
 python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
@@ -336,6 +338,13 @@ turn_on_parser.add_argument(
     help="set minutes timer for turn on operation",
 )
 
+# get_light_state parser
+subparsers.add_parser(
+    "get_light_state",
+    help="get the current light state of a device",
+    parents=[shared_parser],
+)
+
 # turn_off_light parser
 turn_on_light_parser = subparsers.add_parser(
     "turn_off_light", help="turn off light", parents=[shared_parser]
@@ -392,6 +401,7 @@ async def get_shutter_state(
     device_id: str,
     device_key: str,
     device_ip: str,
+    index: int,
     verbose: bool,
     token: Union[str, None] = None,
 ) -> None:
@@ -399,7 +409,7 @@ async def get_shutter_state(
     async with SwitcherType2Api(
         device_type, device_ip, device_id, device_key, token
     ) as api:
-        printer.pprint(asdict(await api.get_shutter_state(), verbose))
+        printer.pprint(asdict(await api.get_shutter_state(index), verbose))
 
 
 async def get_state(
@@ -600,6 +610,22 @@ async def set_shutter_position(
         )
 
 
+async def get_light_state(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use to launch a get_light_state request."""
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
+        printer.pprint(asdict(await api.get_light_state(index), verbose))
+
+
 async def turn_on_light(
     device_type: DeviceType,
     device_id: str,
@@ -793,6 +819,19 @@ def main() -> None:
                     args.device_id,
                     args.device_key,
                     args.ip_address,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "get_light_state":
+            asyncio.run(
+                get_light_state(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.index,
                     args.verbose,
                     args.token,
                 )
