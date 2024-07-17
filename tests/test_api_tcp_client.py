@@ -49,10 +49,14 @@ from aioswitcher.device import (
 
 device_type_api1 = DeviceType.TOUCH
 device_type_api2 = DeviceType.RUNNER
-device_index = 2
+device_type_token_api2 = DeviceType.RUNNER_S11
+device_index = 0
+device_index2 = 1
 device_id = "aaaaaa"
 device_key = "18"
 device_ip = "1.2.3.4"
+token_empty = ""
+token_not_empty = "zvVvd7JxtN7CgvkD1Psujw=="
 pytestmark = mark.asyncio
 faulty_dummy_response = skipUnless(
     os.environ.get('CI'),
@@ -89,7 +93,16 @@ async def connected_api_type1(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherType2Api(device_type_api2, device_ip, device_id, device_key)
+        api = SwitcherType2Api(device_type_api2, device_ip, device_id, device_key, token_empty)
+        await api.connect()
+        yield api
+        await api.disconnect()
+
+
+@pytest_asyncio.fixture
+async def connected_api_token_type2(reader_mock, writer_mock):
+    with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
+        api = SwitcherType2Api(device_type_token_api2, device_ip, device_id, device_key, token_not_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -109,6 +122,12 @@ async def test_api_as_a_context_manager(reader_mock, writer_mock):
             assert_that(api.connected).is_true()
 
 
+async def test_api_with_token_needed_but_missing_should_raise_error():
+    with raises(RuntimeError, match="A token is needed but is missing"):
+        with patch("aioswitcher.api.open_connection", return_value=b''):
+            await SwitcherType2Api(device_type_token_api2, device_ip, device_id, device_key, token_empty)
+
+
 async def test_login_function(reader_mock, writer_write, connected_api_type1, resource_path_root):
     response_packet = _load_dummy_packet(resource_path_root, "login_response")
     with patch.object(reader_mock, "read", return_value=response_packet):
@@ -123,6 +142,15 @@ async def test_login2_function(reader_mock, writer_write, connected_api_type2, r
     with patch.object(reader_mock, "read", return_value=response_packet):
         response = await connected_api_type2._login()
     writer_write.assert_called_once()
+    assert_that(response[1]).is_instance_of(SwitcherLoginResponse)
+    assert_that(response[1].unparsed_response).is_equal_to(response_packet)
+
+
+async def test_login_token_function(reader_mock, writer_write, connected_api_token_type2, resource_path_root):
+    response_packet = _load_dummy_packet(resource_path_root, "login_response")
+    with patch.object(reader_mock, "read", return_value=response_packet):
+        response = await connected_api_token_type2._login()
+    assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response[1]).is_instance_of(SwitcherLoginResponse)
     assert_that(response[1].unparsed_response).is_equal_to(response_packet)
 
@@ -386,7 +414,7 @@ async def test_create_schedule_function_with_valid_packets(reader_mock, writer_w
 async def test_stop_shutter_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
     two_packets = _get_dummy_packets(resource_path_root, "login_response", "stop_shutter_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        response = await connected_api_type2.stop_shutter()
+        response = await connected_api_type2.stop_shutter(device_index)
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
@@ -395,10 +423,28 @@ async def test_stop_shutter_device_function_with_valid_packets(reader_mock, writ
 async def test_set_shutter_position_device_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
     two_packets = _get_dummy_packets(resource_path_root, "login_response", "set_shutter_position_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
-        response = await connected_api_type2.set_position(50)
+        response = await connected_api_type2.set_position(50, device_index)
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+
+
+async def test_set_light_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "set_light_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2.set_light(DeviceState.ON, device_index)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+async def test_set_light_function_with_valid_packets_second_light(reader_mock, writer_write, connected_api_token_type2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "set_light_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2.set_light(DeviceState.ON, device_index2)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_get_shutter_state_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
@@ -436,7 +482,7 @@ async def test_set_position_function_with_a_faulty_get_state_response_should_rai
 async def test_stop_position_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_type2):
     with raises(RuntimeError, match="login request was not successful"):
         with patch.object(reader_mock, "read", return_value=b''):
-            await connected_api_type2.stop_shutter()
+            await connected_api_type2.stop_shutter(device_index)
     writer_write.assert_called_once()
 
 

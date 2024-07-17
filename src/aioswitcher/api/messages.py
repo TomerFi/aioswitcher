@@ -26,7 +26,11 @@ from ..device import (
     ThermostatMode,
     ThermostatSwing,
 )
-from ..device.tools import get_shutter_index, seconds_to_iso_time, watts_to_amps
+from ..device.tools import (
+    get_shutter_discovery_packet_index,
+    seconds_to_iso_time,
+    watts_to_amps,
+)
 from ..schedule.parser import SwitcherSchedule, get_schedules
 
 
@@ -266,7 +270,7 @@ class SwitcherShutterStateResponse(SwitcherBaseResponse):
     def __post_init__(self) -> None:
         """Post initialization of the message."""
         parser = StateMessageParser(self.unparsed_response)
-        index = get_shutter_index(self.device_type, self.index)
+        index = get_shutter_discovery_packet_index(self.device_type, self.index)
 
         self.direction = parser.get_shutter_direction(index)
         self.position = parser.get_shutter_position(index)
