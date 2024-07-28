@@ -266,6 +266,8 @@ def get_shutter_api_packet_index(device_type: DeviceType, circuit_number: int) -
     Used in sending the shutter position/direction with the packet
     (based of device type and circuit number).
     """
+    # We need to convert selected circuit number to actual place in the packet.
+    # That is why we add + 1
     return get_shutter_discovery_packet_index(device_type, circuit_number) + 1
 
 
@@ -275,4 +277,6 @@ def get_light_api_packet_index(device_type: DeviceType, circuit_number: int) -> 
     Used in sending the light on/off status with the packet
     (based of device type and circuit number).
     """
+    # We need to convert selected circuit number to actual place in the packet.
+    # That is why we add + 1
     return get_light_discovery_packet_index(device_type, circuit_number) + 1

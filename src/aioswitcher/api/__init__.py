@@ -781,8 +781,6 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-        # We need to convert selected circuit number to actual place in the packet.
-        # That is why we add + 1
         index_packet = get_shutter_api_packet_index(self._device_type, index)
         logger.debug("about to send stop shutter command")
         timestamp, login_resp = await self._login()
@@ -832,8 +830,6 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-        # We need to convert selected circuit number to actual place in the packet.
-        # That is why we add + 1
         index_packet = get_shutter_api_packet_index(self._device_type, index)
         hex_pos = "{0:0{1}x}".format(position, 2)
 
@@ -976,8 +972,6 @@ class SwitcherType2Api(SwitcherApi):
             An instance of ``SwitcherBaseResponse``.
 
         """
-        # We need to convert selected circuit number to actual place in the packet.
-        # That is why we add + 1
         index_packet = get_light_api_packet_index(self._device_type, index)
         hex_pos = f"0{index_packet}{command.value}"
 
