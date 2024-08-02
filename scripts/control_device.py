@@ -279,10 +279,18 @@ set_name_parser.add_argument(
 )
 
 # get_shutter_state parser
-subparsers.add_parser(
+get_shutter_state_parser = subparsers.add_parser(
     "get_shutter_state",
     help="get the current shutter state of a device",
     parents=[shared_parser],
+)
+get_shutter_state_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to operate",
 )
 
 # stop shutter parser
@@ -304,7 +312,7 @@ set_shutter_position_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select circuit number to operate",
+    help="the circuit number to operate",
 )
 
 # stop shutter parser
@@ -317,7 +325,7 @@ stop_shutter_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select circuit number to operate",
+    help="the circuit number to operate",
 )
 
 # turn_off parser
@@ -339,10 +347,18 @@ turn_on_parser.add_argument(
 )
 
 # get_light_state parser
-subparsers.add_parser(
+get_light_state_parser = subparsers.add_parser(
     "get_light_state",
     help="get the current light state of a device",
     parents=[shared_parser],
+)
+get_light_state_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to turn off",
 )
 
 # turn_off_light parser
@@ -355,7 +371,7 @@ turn_on_light_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select circuit number to turn off",
+    help="the circuit number to turn off",
 )
 
 # turn_on_light parser
@@ -368,7 +384,7 @@ turn_on_light_parser.add_argument(
     required=False,
     type=int,
     default=0,
-    help="select circuit number to turn on",
+    help="the circuit number to turn on",
 )
 
 
@@ -762,6 +778,7 @@ def main() -> None:
                     args.device_id,
                     args.device_key,
                     args.ip_address,
+                    args.index,
                     args.verbose,
                     args.token,
                 )

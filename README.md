@@ -104,9 +104,9 @@ asyncio.run(print_devices(60))
           # stop the shutter if currently rolling, circuit number is 0
           await api.stop_shutter(0)
           # turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)
-          await api.api.set_light(LightState.ON, 0)
+          await api.api.set_light(DeviceState.ON, 0)
           # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
-          await api.api.set_light(LightState.OFF, 0)
+          await api.api.set_light(DeviceState.OFF, 0)
 
   asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00"))
   asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00"))
