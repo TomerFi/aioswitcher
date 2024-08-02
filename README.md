@@ -39,9 +39,9 @@ asyncio.run(print_devices(60))
   <summary>Power Plug API</summary>
 
   ```python
-  async def control_power_plug(device_ip, device_id, device_key) :
-      # for connecting to a device we need its id, login key and ip address
-      async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+  async def control_power_plug(device_type, device_ip, device_id, device_key) :
+      # for connecting to a device we need its type, id, login key and ip address
+      async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
           # get the device current state
           await api.get_state()
           # turn the device on
@@ -51,7 +51,7 @@ asyncio.run(print_devices(60))
           # set the device name to 'my new name'
           await api.set_device_name("my new name")
 
-  asyncio.run(control_power_plug("111.222.11.22", "ab1c2d", "00"))
+  asyncio.run(control_power_plug(DeviceType.POWER_PLUG, "111.222.11.22", "ab1c2d", "00"))
   ```
 
 </details>
@@ -60,9 +60,9 @@ asyncio.run(print_devices(60))
   <summary>Water Heater API</summary>
 
   ```python
-  async def control_water_heater(device_ip, device_id, device_key) :
-      # for connecting to a device we need its id, login key and ip address
-      async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+  async def control_water_heater(device_type, device_ip, device_id, device_key) :
+      # for connecting to a device we need its type, id, login key and ip address
+      async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
           # get the device current state
           await api.get_state()
           # turn the device on for 15 minutes
@@ -81,7 +81,11 @@ asyncio.run(print_devices(60))
           # executing on sunday and friday
           await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
-  asyncio.run(control_water_heater("111.222.11.22", "ab1c2d", "00"))
+  asyncio.run(control_water_heater(DeviceType.MINI, "111.222.11.22", "ab1c2d" , "00"))
+  asyncio.run(control_water_heater(DeviceType.TOUCH, "111.222.11.22", "ab1c2d" , "00"))
+  asyncio.run(control_water_heater(DeviceType.V2_ESP, "111.222.11.22", "ab1c2d" , "00"))
+  asyncio.run(control_water_heater(DeviceType.V2_QCA, "111.222.11.22", "ab1c2d" , "00"))
+  asyncio.run(control_water_heater(DeviceType.V4, "111.222.11.22", "ab1c2d" , "00"))
   ```
 
 </details>
@@ -90,17 +94,23 @@ asyncio.run(print_devices(60))
   <summary>Runner API</summary>
 
   ```python
-  async def control_runner(device_ip, device_id, device_key) :
-      # for connecting to a device we need its id, login key and ip address
-      async with SwitcherType2Api(device_ip, device_id, device_key) as api:
+  async def control_runner(device_type, device_ip, device_id, device_key, token) :
+      # for connecting to a device we need its type, id, login key and ip address
+      async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
           # get the device current state
           await api.get_shutter_state()
-          # open the shutter to 30%
-          await api.set_position(30)
-          # stop the shutter if currently rolling
-          await api.stop()
+          # open the shutter to 30%, circuit number is 0
+          await api.set_position(30, 0)
+          # stop the shutter if currently rolling, circuit number is 0
+          await api.stop_shutter(0)
+          # turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(DeviceState.ON, 0)
+          # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(DeviceState.OFF, 0)
 
-  asyncio.run(control_runner("111.222.11.22", "ab1c2d", "00"))
+  asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00"))
+  asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00"))
+  asyncio.run(control_runner(DeviceType.RUNNER_S11, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   ```
 
 </details>
@@ -109,9 +119,9 @@ asyncio.run(print_devices(60))
   <summary>Breeze API</summary>
 
   ```python
-  async def control_breeze(device_ip, device_id, device_key, remote_manager, remote_id) :
-      # for connecting to a device we need its id, login key and ip address
-      async with SwitcherType2Api(device_ip, device_id, device_key) as api:
+  async def control_breeze(device_type, device_ip, device_id, device_key, remote_manager, remote_id) :
+      # for connecting to a device we need its type, id, login key and ip address
+      async with SwitcherType2Api(device_type, device_ip, device_id, device_key) as api:
           # get the device current state
           await api.get_breeze_state()
           # initialize the Breeze RemoteManager and get the remote
@@ -130,16 +140,17 @@ asyncio.run(print_devices(60))
 
   # create the remote manager outside the context for re-using
   remote_manager = SwitcherBreezeRemoteManager()
-  asyncio.run(control_breeze("111.222.11.22", "ab1c2d", "00", remote_manager, "DLK65863"))
+  asyncio.run(control_breeze(DeviceType.BREEZE, "111.222.11.22", "ab1c2d", "00", remote_manager, "DLK65863"))
   ```
 
 </details>
 
 ## Command Line Helper Scripts
 
-- [discover_devices.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/discover_devices.py) can discover devices and their
-  states (can be run by `poetry run discover_devices`).
+- [discover_devices.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/discover_devices.py) can discover devices and their states (can be run by `poetry run discover_devices`).
 - [control_device.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/control_device.py) can control a device (can be run by `poetry run control_device`).
+- [get_device_login_key.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/get_device_login_key) can get a device login key (can be run by `poetry run get_device_login_key`).
+- [validate_token.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/validate_token.py) can validate a device token which is a must for newer devices, used for communicating with devices (can be run by `poetry run validate_token`).
 
 ## Disclaimer
 

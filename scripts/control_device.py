@@ -26,39 +26,52 @@ from aioswitcher.api import Command, SwitcherType1Api, SwitcherType2Api
 from aioswitcher.api.remotes import SwitcherBreezeRemoteManager
 from aioswitcher.device import (
     DeviceState,
+    DeviceType,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
 )
+from aioswitcher.device.tools import convert_str_to_devicetype
 from aioswitcher.schedule import Days
 
 printer = PrettyPrinter(indent=4)
 
 _examples = """example usage:
 
-python control_device.py get_state -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on -d ab1c2d -l 18 -i "111.222.11.22"\n
-python control_device.py turn_on -d ab1c2d -i "111.222.11.22" -t 15\n
-python control_device.py turn_off -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_off -d ab1c2d -l 18 -i "111.222.11.22"\n
-python control_device.py set_name -d ab1c2d -i "111.222.11.22" -n "My Boiler"\n
-python control_device.py set_auto_shutdown -d ab1c2d -i "111.222.11.22" -r 2 -m 30\n
-python control_device.py get_schedules -d ab1c2d -i "111.222.11.22"\n
-python control_device.py delete_schedule -d ab1c2d -i "111.222.11.22" -s 3\n
-python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"\n
-python control_device.py create_schedule -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
+python control_device.py get_state -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
+python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
+python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"\n
+python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -t 15\n
+python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
+python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"\n
+python control_device.py set_name -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "My Boiler"\n
+python control_device.py set_auto_shutdown -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -r 2 -m 30\n
+python control_device.py get_schedules -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
+python control_device.py delete_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -s 3\n
+python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"\n
+python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
 
-python control_device.py stop_shutter -d f2239a -i "192.168.50.98"\n
-python control_device.py set_shutter_position -d f2239a -i "192.168.50.98"-p 50\n
+python control_device.py get_shutter_state -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
+python control_device.py get_shutter_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
+python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
+python control_device.py stop_shutter -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
+python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50\n
+python control_device.py set_shutter_position -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50\n
 
-python control_device.py get_thermostat_state -d 3a20b7 -i "192.168.50.77"\n
+python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
 
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on\n
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24\n
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u\n
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry\n
-python control_device.py control_thermostat -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off\n
+python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"\n
+
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on\n
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24\n
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u\n
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry\n
+python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off\n
 """  # noqa E501
 
 # shared parse
@@ -69,6 +82,22 @@ shared_parser.add_argument(
     default=False,
     action="store_true",
     help="include the raw message",
+)
+possible_types = [t.value for t in DeviceType]
+shared_parser.add_argument(
+    "-c",
+    "--device-type",
+    type=str,
+    choices=possible_types,
+    required=True,
+    help="the type of the device",
+)
+shared_parser.add_argument(
+    "-k",
+    "--token",
+    default=None,
+    type=str,
+    help="the token for communicating with the new switcher devices",
 )
 shared_parser.add_argument(
     "-d",
@@ -249,6 +278,21 @@ set_name_parser.add_argument(
     help="new name for the device",
 )
 
+# get_shutter_state parser
+get_shutter_state_parser = subparsers.add_parser(
+    "get_shutter_state",
+    help="get the current shutter state of a device",
+    parents=[shared_parser],
+)
+get_shutter_state_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to operate",
+)
+
 # stop shutter parser
 set_shutter_position_parser = subparsers.add_parser(
     "set_shutter_position",
@@ -262,10 +306,26 @@ set_shutter_position_parser.add_argument(
     type=int,
     help="Shutter position percentage",
 )
+set_shutter_position_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to operate",
+)
 
 # stop shutter parser
 stop_shutter_parser = subparsers.add_parser(
     "stop_shutter", help="stop shutter", parents=[shared_parser]
+)
+stop_shutter_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to operate",
 )
 
 # turn_off parser
@@ -286,6 +346,47 @@ turn_on_parser.add_argument(
     help="set minutes timer for turn on operation",
 )
 
+# get_light_state parser
+get_light_state_parser = subparsers.add_parser(
+    "get_light_state",
+    help="get the current light state of a device",
+    parents=[shared_parser],
+)
+get_light_state_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to turn off",
+)
+
+# turn_off_light parser
+turn_on_light_parser = subparsers.add_parser(
+    "turn_off_light", help="turn off light", parents=[shared_parser]
+)
+turn_on_light_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to turn off",
+)
+
+# turn_on_light parser
+turn_on_light_parser = subparsers.add_parser(
+    "turn_on_light", help="turn on light", parents=[shared_parser]
+)
+turn_on_light_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to turn on",
+)
+
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
     """Use as custom implementation of the asdict utility method."""
@@ -297,22 +398,50 @@ def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
 
 
 async def get_thermostat_state(
-    device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to launch a get_breeze_state request."""
-    async with SwitcherType2Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(asdict(await api.get_breeze_state(), verbose))
 
 
+async def get_shutter_state(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use to launch a get_shutter_state request."""
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
+        printer.pprint(asdict(await api.get_shutter_state(index), verbose))
+
+
 async def get_state(
-    device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a get_state request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         printer.pprint(asdict(await api.get_state(), verbose))
 
 
 async def control_thermostat(
+    device_type: DeviceType,
     device_id: str,
     device_key: str,
     device_ip: str,
@@ -324,9 +453,12 @@ async def control_thermostat(
     swing: Union[str, None] = None,
     update_state: bool = False,
     verbose: bool = False,
+    token: Union[str, None] = None,
 ) -> None:
     """Control Breeze device."""
-    async with SwitcherType2Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(
             asdict(
                 await api.control_breeze_device(
@@ -344,30 +476,45 @@ async def control_thermostat(
 
 
 async def turn_on(
-    device_id: str, device_key: str, device_ip: str, timer: int, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    timer: int,
+    verbose: bool,
 ) -> None:
     """Use to launch a turn_on request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         printer.pprint(asdict(await api.control_device(Command.ON, timer), verbose))
 
 
 async def turn_off(
-    device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a turn_off request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         printer.pprint(asdict(await api.control_device(Command.OFF), verbose))
 
 
 async def set_name(
-    device_id: str, device_key: str, device_ip: str, name: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    name: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a set_name request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         printer.pprint(asdict(await api.set_device_name(name), verbose))
 
 
 async def set_auto_shutdown(
+    device_type: DeviceType,
     device_id: str,
     device_key: str,
     device_ip: str,
@@ -377,15 +524,19 @@ async def set_auto_shutdown(
 ) -> None:
     """Use to launch a set_auto_shutdown request."""
     td_val = timedelta(hours=hours, minutes=minutes)
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         printer.pprint(asdict(await api.set_auto_shutdown(td_val), verbose))
 
 
 async def get_schedules(
-    device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a get_schedules request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         response = await api.get_schedules()
         if verbose:
             printer.pprint({"unparsed_response": response.unparsed_response})
@@ -396,14 +547,20 @@ async def get_schedules(
 
 
 async def delete_schedule(
-    device_id: str, device_key: str, device_ip: str, schedule_id: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    schedule_id: str,
+    verbose: bool,
 ) -> None:
     """Use to launch a delete_schedule request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         printer.pprint(asdict(await api.delete_schedule(schedule_id), verbose))
 
 
 async def create_schedule(
+    device_type: DeviceType,
     device_id: str,
     device_key: str,
     device_ip: str,
@@ -413,7 +570,7 @@ async def create_schedule(
     verbose: bool,
 ) -> None:
     """Use to launch a create_schedule request."""
-    async with SwitcherType1Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType1Api(device_type, device_ip, device_id, device_key) as api:
         printer.pprint(
             asdict(
                 await api.create_schedule(
@@ -427,29 +584,94 @@ async def create_schedule(
 
 
 async def stop_shutter(
-    device_id: str, device_key: str, device_ip: str, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
 ) -> None:
     """Stop shutter."""
-    async with SwitcherType2Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(
             asdict(
-                await api.stop(),
+                await api.stop_shutter(index),
                 verbose,
             )
         )
 
 
 async def set_shutter_position(
-    device_id: str, device_key: str, device_ip: str, position: int, verbose: bool
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    position: int,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to set the shutter position."""
-    async with SwitcherType2Api(device_ip, device_id, device_key) as api:
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
         printer.pprint(
             asdict(
-                await api.set_position(position),
+                await api.set_position(position, index),
                 verbose,
             )
         )
+
+
+async def get_light_state(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use to launch a get_light_state request."""
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
+        printer.pprint(asdict(await api.get_light_state(index), verbose))
+
+
+async def turn_on_light(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use for turn on light."""
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
+        printer.pprint(asdict(await api.set_light(DeviceState.ON, index), verbose))
+
+
+async def turn_off_light(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use for turn off light."""
+    async with SwitcherType2Api(
+        device_type, device_ip, device_id, device_key, token
+    ) as api:
+        printer.pprint(asdict(await api.set_light(DeviceState.OFF, index), verbose))
 
 
 def main() -> None:
@@ -457,15 +679,23 @@ def main() -> None:
     try:
         args = main_parser.parse_args()
 
+        if "device_type" in args and type(args.device_type) is not DeviceType:
+            args.device_type = convert_str_to_devicetype(args.device_type)
+
         if args.action == "get_state":
             asyncio.run(
                 get_state(
-                    args.device_id, args.device_key, args.ip_address, args.verbose
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
                 )
             )
         elif args.action == "turn_on":
             asyncio.run(
                 turn_on(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
@@ -475,11 +705,18 @@ def main() -> None:
             )
         elif args.action == "turn_off":
             asyncio.run(
-                turn_off(args.device_id, args.device_key, args.ip_address, args.verbose)
+                turn_off(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
+                )
             )
         elif args.action == "set_name":
             asyncio.run(
                 set_name(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
@@ -490,6 +727,7 @@ def main() -> None:
         elif args.action == "set_auto_shutdown":
             asyncio.run(
                 set_auto_shutdown(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
@@ -501,12 +739,17 @@ def main() -> None:
         elif args.action == "get_schedules":
             asyncio.run(
                 get_schedules(
-                    args.device_id, args.device_key, args.ip_address, args.verbose
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
                 )
             )
         elif args.action == "delete_schedule":
             asyncio.run(
                 delete_schedule(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
@@ -517,6 +760,7 @@ def main() -> None:
         elif args.action == "create_schedule":
             asyncio.run(
                 create_schedule(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
@@ -527,30 +771,50 @@ def main() -> None:
                 )
             )
 
-        elif args.action == "stop_shutter":
+        elif args.action == "get_shutter_state":
             asyncio.run(
-                stop_shutter(
+                get_shutter_state(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
+                    args.index,
                     args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "stop_shutter":
+            asyncio.run(
+                stop_shutter(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.index,
+                    args.verbose,
+                    args.token,
                 )
             )
 
         elif args.action == "set_shutter_position":
             asyncio.run(
                 set_shutter_position(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
                     args.position,
+                    args.index,
                     args.verbose,
+                    args.token,
                 )
             )
 
         elif args.action == "control_thermostat":
             asyncio.run(
                 control_thermostat(
+                    args.device_type,
                     args.device_id,
                     args.device_key,
                     args.ip_address,
@@ -562,12 +826,57 @@ def main() -> None:
                     args.swing,
                     args.update,
                     args.verbose,
+                    args.token,
                 )
             )
         elif args.action == "get_thermostat_state":
             asyncio.run(
                 get_thermostat_state(
-                    args.device_id, args.device_key, args.ip_address, args.verbose
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "get_light_state":
+            asyncio.run(
+                get_light_state(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.index,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "turn_on_light":
+            asyncio.run(
+                turn_on_light(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.index,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "turn_off_light":
+            asyncio.run(
+                turn_off_light(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.index,
+                    args.verbose,
+                    args.token,
                 )
             )
 

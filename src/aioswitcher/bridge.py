@@ -33,13 +33,19 @@ from .device import (
     SwitcherBase,
     SwitcherPowerPlug,
     SwitcherShutter,
+    SwitcherSingleShutterDualLight,
     SwitcherThermostat,
     SwitcherWaterHeater,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
 )
-from .device.tools import seconds_to_iso_time, watts_to_amps
+from .device.tools import (
+    get_light_discovery_packet_index,
+    get_shutter_discovery_packet_index,
+    seconds_to_iso_time,
+    watts_to_amps,
+)
 
 __all__ = ["SwitcherBridge"]
 logger = getLogger(__name__)
@@ -48,7 +54,7 @@ logger = getLogger(__name__)
 # Protocol type 1 devices: V2, Touch, V4, Mini, Power Plug
 SWITCHER_UDP_PORT_TYPE1 = 20002
 SWITCHER_UDP_PORT_TYPE1_NEW_VERSION = 10002
-# Protocol type 2 devices: Breeze, Runner, Runner Mini
+# Protocol type 2 devices: Breeze, Runner, Runner Mini, Runner S11
 SWITCHER_UDP_PORT_TYPE2 = 20003
 SWITCHER_UDP_PORT_TYPE2_NEW_VERSION = 10003
 
@@ -57,6 +63,7 @@ SWITCHER_DEVICE_TO_UDP_PORT = {
     DeviceCategory.POWER_PLUG: SWITCHER_UDP_PORT_TYPE1,
     DeviceCategory.THERMOSTAT: SWITCHER_UDP_PORT_TYPE2,
     DeviceCategory.SHUTTER: SWITCHER_UDP_PORT_TYPE2,
+    DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
 }
 
 
@@ -99,6 +106,7 @@ def _parse_device_from_datagram(
                     parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
+                    device_type.token_needed,
                     power_consumption,
                     electric_current,
                     (
@@ -121,13 +129,14 @@ def _parse_device_from_datagram(
                     parser.get_ip_type1(),
                     parser.get_mac(),
                     parser.get_name(),
+                    device_type.token_needed,
                     power_consumption,
                     electric_current,
                 )
             )
 
         elif device_type and device_type.category == DeviceCategory.SHUTTER:
-            logger.debug("discovered a Runner switch switcher device")
+            logger.debug("discovered a Runner switcher device")
             device_callback(
                 SwitcherShutter(
                     device_type,
@@ -137,8 +146,45 @@ def _parse_device_from_datagram(
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
-                    parser.get_shutter_position(),
-                    parser.get_shutter_direction(),
+                    device_type.token_needed,
+                    parser.get_shutter_position(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
+                    parser.get_shutter_direction(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
+                )
+            )
+
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT
+        ):
+            logger.debug("discovered a Runner S11 switcher device")
+            device_callback(
+                SwitcherSingleShutterDualLight(
+                    device_type,
+                    DeviceState.ON,
+                    parser.get_device_id(),
+                    parser.get_device_key(),
+                    parser.get_ip_type2(),
+                    parser.get_mac(),
+                    parser.get_name(),
+                    device_type.token_needed,
+                    parser.get_shutter_position(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
+                    parser.get_shutter_direction(
+                        get_shutter_discovery_packet_index(device_type, 0)
+                    ),
+                    [
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 0)
+                        ),
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 1)
+                        ),
+                    ],
                 )
             )
 
@@ -153,6 +199,7 @@ def _parse_device_from_datagram(
                     parser.get_ip_type2(),
                     parser.get_mac(),
                     parser.get_name(),
+                    device_type.token_needed,
                     parser.get_thermostat_mode(),
                     parser.get_thermostat_temp(),
                     parser.get_thermostat_target_temp(),
@@ -289,6 +336,7 @@ class DatagramParser:
             len(self.message) == 165
             or len(self.message) == 168  # Switcher Breeze
             or len(self.message) == 159  # Switcher Runner and RunnerMini
+            or len(self.message) == 203  # Switcher Runner S11
         )
 
     def get_ip_type1(self) -> str:
@@ -376,18 +424,34 @@ class DatagramParser:
         devices = dict(map(lambda d: (d.hex_rep, d), DeviceType))
         return devices[hex_model]
 
-    # Switcher Runner and Runner Mini methods
+    # Switcher Runners methods
 
-    def get_shutter_position(self) -> int:
+    def get_shutter_position(self, index: int) -> int:
         """Return the current position of the shutter 0 <= pos <= 100."""
-        hex_pos = hexlify(self.message[135:137]).decode()
+        start_index = 135 + (index * 16)
+        end_index = start_index + 2
+        hex_pos = hexlify(self.message[start_index:end_index]).decode()
         return int(hex_pos[2:4]) + int(hex_pos[0:2], 16)
 
-    def get_shutter_direction(self) -> ShutterDirection:
+    def get_shutter_direction(self, index: int) -> ShutterDirection:
         """Return the current direction of the shutter (UP/DOWN/STOP)."""
-        hex_direction = hexlify(self.message[137:139]).decode()
+        start_index = 137 + (index * 16)
+        end_index = start_index + 2
+        hex_direction = hexlify(self.message[start_index:end_index]).decode()
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
         return directions[hex_direction]
+
+    def get_light_state(self, index: int) -> DeviceState:
+        """Extract the light state from the broadcast message."""
+        start_index = 135 + (index * 16)
+        end_index = start_index + 2
+        hex_pos = hexlify(self.message[start_index:end_index]).decode()
+        hex_device_state = hex_pos[0:2]
+        return (
+            DeviceState.ON
+            if hex_device_state == DeviceState.ON.value
+            else DeviceState.OFF
+        )
 
     # Switcher Breeze methods
 

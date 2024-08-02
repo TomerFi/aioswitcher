@@ -16,8 +16,18 @@
 
 import datetime
 import time
+from base64 import b64decode
 from binascii import crc_hqx, hexlify, unhexlify
+from logging import getLogger
 from struct import pack
+
+import requests
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import unpad
+
+from ..device import DeviceType
+
+logger = getLogger(__name__)
 
 
 def seconds_to_iso_time(all_seconds: int) -> str:
@@ -133,3 +143,140 @@ def set_message_length(message: str) -> str:
     """Set the message length."""
     length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
     return "fef0" + str(length) + message[8:]
+
+
+def convert_str_to_devicetype(device_type: str) -> DeviceType:
+    """Convert string name to DeviceType."""
+    if device_type == DeviceType.MINI.value:
+        return DeviceType.MINI
+    elif device_type == DeviceType.POWER_PLUG.value:
+        return DeviceType.POWER_PLUG
+    elif device_type == DeviceType.TOUCH.value:
+        return DeviceType.TOUCH
+    elif device_type == DeviceType.V2_ESP.value:
+        return DeviceType.V2_ESP
+    elif device_type == DeviceType.V2_QCA.value:
+        return DeviceType.V2_QCA
+    elif device_type == DeviceType.V4.value:
+        return DeviceType.V4
+    elif device_type == DeviceType.BREEZE.value:
+        return DeviceType.BREEZE
+    elif device_type == DeviceType.RUNNER.value:
+        return DeviceType.RUNNER
+    elif device_type == DeviceType.RUNNER_MINI.value:
+        return DeviceType.RUNNER_MINI
+    elif device_type == DeviceType.RUNNER_S11.value:
+        return DeviceType.RUNNER_S11
+    return DeviceType.MINI
+
+
+def convert_token_to_packet(token: str) -> str:
+    """Convert a token to token packet.
+
+    Args:
+        token: the token of the user sent by Email
+
+    Return:
+        Token packet if token is valid,
+        otherwise empty string or raise error.
+
+    """
+    try:
+        token_key = b"jzNrAOjc%lpg3pVr5cF!5Le06ZgOdWuJ"
+        encrypted_value = b64decode(bytes(token, "utf-8"))
+        cipher = AES.new(token_key, AES.MODE_ECB)
+        decrypted_value = cipher.decrypt(encrypted_value)
+        unpadded_decrypted_value = unpad(decrypted_value, AES.block_size)
+        return hexlify(unpadded_decrypted_value).decode()
+    except (KeyError, ValueError) as ve:
+        raise RuntimeError("convert token to packet was not successful") from ve
+
+
+def validate_token(username: str, token: str) -> bool:
+    """Make API call to validate a Token by username and token."""
+    request_url = "https://switcher.co.il/ValidateToken/"
+    request_data = {"email": username, "token": token}
+    is_token_valid = False
+
+    logger.debug("calling API call for Switcher to validate the token")
+    response = requests.post(request_url, data=request_data)
+
+    if response.status_code == 200:
+        logger.debug("request successful")
+        try:
+            response_json = response.json()
+            result = response_json.get("result", None)
+            if result is not None:
+                is_token_valid = result.lower() == "true"
+        except ValueError:
+            logger.debug("response content is not valid JSON")
+    else:
+        logger.debug("request failed with status code: %s", response.status_code)
+    return is_token_valid
+
+
+# More info about get_shutter_discovery_packet_index
+# and get_light_discovery_packet_index functions
+# Those functions return the index of the circuit sub device,
+#   used in retreving state from the packet.
+# Used for Switcher Runners and Switcher Lights
+# Runner and Runner Mini: has no lights & one shutter circuits ->
+#   shutter circuit is 0, get_light_discovery_packet_index would raise an error.
+# Runner S11: has two lights circuits & one shutter circuits ->
+#   Lights circuits are numbered 0 & 1, shutter circuit is 2.
+def get_shutter_discovery_packet_index(
+    device_type: DeviceType, circuit_number: int
+) -> int:
+    """Return the correct shutter discovery packet index.
+
+    Used in retriving the shutter position/direction from the packet
+    (based of device type and circuit number).
+    """
+    if circuit_number != 0:
+        raise ValueError("Invalid circuit number")
+
+    if device_type in (DeviceType.RUNNER, DeviceType.RUNNER_MINI):
+        return 0
+    elif device_type == DeviceType.RUNNER_S11:
+        return 2
+
+    raise ValueError("only shutters are allowed")
+
+
+def get_light_discovery_packet_index(
+    device_type: DeviceType, circuit_number: int
+) -> int:
+    """Return the correct light discovery packet index.
+
+    Used in retriving the light on/off status from the packet
+    (based of device type and circuit number).
+    """
+    if device_type == DeviceType.RUNNER_S11:
+        if circuit_number in [0, 1]:
+            return circuit_number
+        else:
+            raise ValueError("Invalid circuit number")
+
+    raise ValueError("only devices that has lights are allowed")
+
+
+def get_shutter_api_packet_index(device_type: DeviceType, circuit_number: int) -> int:
+    """Return the correct shutter api packet index.
+
+    Used in sending the shutter position/direction with the packet
+    (based of device type and circuit number).
+    """
+    # We need to convert selected circuit number to actual place in the packet.
+    # That is why we add + 1
+    return get_shutter_discovery_packet_index(device_type, circuit_number) + 1
+
+
+def get_light_api_packet_index(device_type: DeviceType, circuit_number: int) -> int:
+    """Return the correct light api packet index.
+
+    Used in sending the light on/off status with the packet
+    (based of device type and circuit number).
+    """
+    # We need to convert selected circuit number to actual place in the packet.
+    # That is why we add + 1
+    return get_light_discovery_packet_index(device_type, circuit_number) + 1

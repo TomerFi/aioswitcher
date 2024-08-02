@@ -22,7 +22,7 @@ from unittest.mock import patch
 from assertpy import assert_that
 from pytest import mark
 
-from aioswitcher.device import tools
+from aioswitcher.device import DeviceType, tools
 
 
 def test_seconds_to_iso_time_with_a_valid_seconds_value_should_return_a_time_string():
@@ -94,3 +94,186 @@ def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_an_e
 @mark.parametrize("watts, amps", [(1608, 7.3), (2600, 11.8), (3489, 15.9)])
 def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(watts, amps):
     assert_that(tools.watts_to_amps(watts)).is_equal_to(amps)
+
+
+@mark.parametrize("str, type", [
+    ("Switcher Mini", DeviceType.MINI),
+    ("Switcher Power Plug", DeviceType.POWER_PLUG),
+    ("Switcher Touch", DeviceType.TOUCH),
+    ("Switcher V2 (esp)", DeviceType.V2_ESP),
+    ("Switcher V2 (qualcomm)", DeviceType.V2_QCA),
+    ("Switcher V4", DeviceType.V4),
+    ("Switcher Breeze", DeviceType.BREEZE),
+    ("Switcher Runner", DeviceType.RUNNER),
+    ("Switcher Runner Mini", DeviceType.RUNNER_MINI),
+    ("Switcher Runner S11", DeviceType.RUNNER_S11)
+    ])
+def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
+    assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
+
+
+@mark.parametrize("str, type", [
+    ("Switcher new device does not define", DeviceType.MINI)
+    ])
+def test_convert_str_to_devicetype_with_unknown_device_should_return_mini(str, type):
+    assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
+
+
+@mark.parametrize("token, token_packet", [
+    ("zvVvd7JxtN7CgvkD1Psujw==", "eafc3e34")
+    ])
+def test_convert_token_to_packet_should_return_expected_packet(token, token_packet):
+    assert_that(tools.convert_token_to_packet(token)).is_equal_to(token_packet)
+
+
+@mark.parametrize("token, error_type, response", [
+    ("zvVvd7JxtN7Cg==", RuntimeError, "convert token to packet was not successful"),
+    ("zvVvd7J", RuntimeError, "convert token to packet was not successful")
+    ])
+def test_convert_token_to_packet_with_false_token_should_throw_an_error(token, error_type, response):
+    assert_that(tools.convert_token_to_packet).raises(
+        error_type
+    ).when_called_with(token).is_equal_to(response)
+
+
+@patch('requests.post')
+@mark.parametrize("username, token, is_token_valid", [
+    ("test@switcher.com", "zvVvd7JxtN7CgvkD1Psujw==", True)
+    ])
+def test_validate_token_should_return_token_valid(mock_post, username, token, is_token_valid):
+    mock_response = mock_post.return_value
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"result": "True"}
+    assert_that(tools.validate_token(username, token)).is_equal_to(is_token_valid)
+
+
+@patch('requests.post')
+@mark.parametrize("username, token, is_token_valid", [
+    ("test@switcher.com", "", False),
+    ("test@switcher.com", "notvalidtoken", False),
+    ("", "notvalidtoken", False),
+    ("", "", False)
+    ])
+def test_validate_token_should_return_token_invalid(mock_post, username, token, is_token_valid):
+    mock_response = mock_post.return_value
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"result": "False"}
+    assert_that(tools.validate_token(username, token)).is_equal_to(is_token_valid)
+
+
+@mark.parametrize("device_type, circuit_number, index", [
+    (DeviceType.RUNNER, 0, 0),
+    (DeviceType.RUNNER_MINI, 0, 0),
+    (DeviceType.RUNNER_S11, 0, 2),
+    ])
+def test_get_shutter_discovery_packet_index_should_return_expected_index(device_type, circuit_number, index):
+    assert_that(tools.get_shutter_discovery_packet_index(device_type, circuit_number)).is_equal_to(index)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.RUNNER, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.RUNNER_MINI, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.RUNNER_S11, 1, ValueError, "Invalid circuit number"),
+    ])
+def test_get_shutter_discovery_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_shutter_discovery_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.TOUCH, 0, ValueError, "only shutters are allowed")
+    ])
+def test_get_shutter_discovery_packet_index_with_different_device_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_shutter_discovery_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, circuit_number, index", [
+    (DeviceType.RUNNER_S11, 0, 0),
+    (DeviceType.RUNNER_S11, 1, 1),
+    ])
+def test_get_light_discovery_packet_index_should_return_expected_index(device_type, circuit_number, index):
+    assert_that(tools.get_light_discovery_packet_index(device_type, circuit_number)).is_equal_to(index)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.RUNNER_S11, 2, ValueError, "Invalid circuit number")
+    ])
+def test_get_light_discovery_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_light_discovery_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.TOUCH, 0, ValueError, "only devices that has lights are allowed")
+    ])
+def test_get_light_discovery_packet_index_with_different_device_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_light_discovery_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, circuit_number, index", [
+    (DeviceType.RUNNER, 0, 1),
+    (DeviceType.RUNNER_MINI, 0, 1),
+    (DeviceType.RUNNER_S11, 0, 3),
+    ])
+def test_get_shutter_api_packet_index_should_return_expected_index(device_type, circuit_number, index):
+    assert_that(tools.get_shutter_api_packet_index(device_type, circuit_number)).is_equal_to(index)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.RUNNER, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.RUNNER_MINI, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.RUNNER_S11, 1, ValueError, "Invalid circuit number"),
+    ])
+def test_get_shutter_api_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_shutter_api_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.TOUCH, 0, ValueError, "only shutters are allowed")
+    ])
+def test_get_shutter_api_packet_index_with_different_device_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_shutter_api_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, circuit_number, index", [
+    (DeviceType.RUNNER_S11, 0, 1),
+    (DeviceType.RUNNER_S11, 1, 2),
+    ])
+def test_get_light_api_packet_index_should_return_expected_index(device_type, circuit_number, index):
+    assert_that(tools.get_light_api_packet_index(device_type, circuit_number)).is_equal_to(index)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.RUNNER_S11, 2, ValueError, "Invalid circuit number")
+    ])
+def test_get_light_api_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_light_api_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
+
+
+@mark.parametrize("device_type, circuit_number, error, error_msg", [
+    (DeviceType.TOUCH, 0, ValueError, "only devices that has lights are allowed")
+    ])
+def test_get_light_api_packet_index_with_different_device_should_raise_error(device_type, circuit_number, error, error_msg):
+    assert_that(tools.get_light_api_packet_index).raises(error).when_called_with(
+        device_type,
+        circuit_number
+    ).is_equal_to(error_msg)
