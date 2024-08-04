@@ -104,7 +104,7 @@ def _parse_device_from_datagram(
                     parser.get_device_id(),
                     parser.get_device_key(),
                     parser.get_ip_type1(),
-                    parser.get_mac(),
+                    parser.get_mac_type1(),
                     parser.get_name(),
                     device_type.token_needed,
                     power_consumption,
@@ -127,7 +127,7 @@ def _parse_device_from_datagram(
                     parser.get_device_id(),
                     parser.get_device_key(),
                     parser.get_ip_type1(),
-                    parser.get_mac(),
+                    parser.get_mac_type1(),
                     parser.get_name(),
                     device_type.token_needed,
                     power_consumption,
@@ -144,7 +144,7 @@ def _parse_device_from_datagram(
                     parser.get_device_id(),
                     parser.get_device_key(),
                     parser.get_ip_type2(),
-                    parser.get_mac(),
+                    parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
                     parser.get_shutter_position(
@@ -168,7 +168,7 @@ def _parse_device_from_datagram(
                     parser.get_device_id(),
                     parser.get_device_key(),
                     parser.get_ip_type2(),
-                    parser.get_mac(),
+                    parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
                     parser.get_shutter_position(
@@ -197,7 +197,7 @@ def _parse_device_from_datagram(
                     parser.get_device_id(),
                     parser.get_device_key(),
                     parser.get_ip_type2(),
-                    parser.get_mac(),
+                    parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
                     parser.get_thermostat_mode(),
@@ -351,9 +351,26 @@ class DatagramParser:
         ip_addr = int(hex_ip[0:2] + hex_ip[2:4] + hex_ip[4:6] + hex_ip[6:8], 16)
         return inet_ntoa(pack(">L", ip_addr))
 
-    def get_mac(self) -> str:
-        """Extract the MAC address from the broadcast message."""
+    def get_mac_type1(self) -> str:
+        """Extract the MAC address from the broadcast message (Heater, Plug)."""
         hex_mac = hexlify(self.message)[160:172].decode().upper()
+        return (
+            hex_mac[0:2]
+            + ":"
+            + hex_mac[2:4]
+            + ":"
+            + hex_mac[4:6]
+            + ":"
+            + hex_mac[6:8]
+            + ":"
+            + hex_mac[8:10]
+            + ":"
+            + hex_mac[10:12]
+        )
+
+    def get_mac_type2(self) -> str:
+        """Extract the MAC address from the broadcast message (Breeze, Runners)."""
+        hex_mac = hexlify(self.message)[162:174].decode().upper()
         return (
             hex_mac[0:2]
             + ":"
