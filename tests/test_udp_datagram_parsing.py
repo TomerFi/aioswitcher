@@ -39,7 +39,7 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
     assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
-    assert_that(sut_parser.get_mac()).is_equal_to("12:A1:A2:1A:BC:1A")
+    assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
     assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.OFF)
@@ -65,7 +65,7 @@ def test_datagram_state_on(resource_path, type_suffix, expected_type):
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
     assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
-    assert_that(sut_parser.get_mac()).is_equal_to("12:A1:A2:1A:BC:1A")
+    assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
     assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.ON)
