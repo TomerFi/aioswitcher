@@ -20,10 +20,10 @@ from struct import pack, unpack
 
 import time_machine
 from assertpy import assert_that
+from freezegun import freeze_time
 from pytest import fixture, mark
 
 from aioswitcher.schedule import Days, tools
-from freezegun import freeze_time
 
 days_by_weekdays = dict(map(lambda d: (d.weekday, d), Days))
 
