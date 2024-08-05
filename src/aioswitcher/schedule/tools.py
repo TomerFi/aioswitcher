@@ -45,10 +45,15 @@ def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
         current_datetime.time().strftime("%H:%M"), "%H:%M"
     ).time()
     schedule_time = datetime.strptime(start_time, "%H:%M").time()
+    current_time_plus_one_hour = (
+        datetime.combine(datetime.today(), current_time) + timedelta(hours=1)
+    ).time()
 
     execution_days = [d.weekday for d in days]
     # if scheduled for later on today, return "due today"
-    if current_weekday in execution_days and current_time < schedule_time:
+    if current_weekday in execution_days and (
+        current_time < schedule_time or current_time_plus_one_hour >= schedule_time
+    ):
         return f"Due today at {start_time}"
 
     execution_days.sort()

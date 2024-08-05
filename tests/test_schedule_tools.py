@@ -20,6 +20,7 @@ from struct import pack, unpack
 
 import time_machine
 from assertpy import assert_that
+from freezegun import freeze_time
 from pytest import fixture, mark
 
 from aioswitcher.schedule import Days, tools
@@ -48,6 +49,13 @@ def test_pretty_next_run_with_no_selected_days_should_return_due_today(one_hour_
 
 
 def test_pretty_next_run_with_todays_day_should_return_due_today(todays_day, one_hour_from_now):
+    expected_return = f"Due today at {one_hour_from_now}"
+    assert_that(tools.pretty_next_run(one_hour_from_now, {todays_day})).is_equal_to(expected_return)
+
+
+@freeze_time("23:00:00")
+def test_pretty_next_run_with_todays_day_end_of_day_should_return_due_today(todays_day):
+    one_hour_from_now = "00:00"
     expected_return = f"Due today at {one_hour_from_now}"
     assert_that(tools.pretty_next_run(one_hour_from_now, {todays_day})).is_equal_to(expected_return)
 
