@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aioswitcher"
-version = "3.4.4.dev"
+version = "4.0.0"
 description = "Switcher Python Integration."
 license = "Apache-2.0"
 authors = [ "Tomer Figenblat <tomer@tomfi.info>" ]
@@ -20,10 +20,10 @@ classifiers = [
 include = [ ]
 exclude = [ ]
 
-[tool.poetry.dependencies]
-python = "^3.9.0"
-types-requests = "^2.31.0.6"
-pycryptodome = ">=3.18.0"
+  [tool.poetry.dependencies]
+  python = "^3.9.0"
+  types-requests = "^2.31.0.6"
+  pycryptodome = ">=3.18.0"
 
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
@@ -51,6 +51,12 @@ mkdocs-material = ">=8.3.8,<10.0.0"
 mkdocstrings = ">=0.19,<0.23"
 mkdocstrings-python = ">=0.7.1,<1.4.0"
 poethepoet = ">=0.16.1,<0.22.0"
+
+  [tool.poetry.scripts]
+  control_device = "scripts.control_device:main"
+  discover_devices = "scripts.discover_devices:main"
+  get_device_login_key = "scripts.get_device_login_key:main"
+  validate_token = "scripts.validate_token:main"
 
 [tool.poe.tasks]
 install = "poetry install --no-interaction"
@@ -111,9 +117,3 @@ skip_covered = true
 [build-system]
 requires = [ "poetry-core>=1.2.0" ]
 build-backend = "poetry.core.masonry.api"
-
-[tool.poetry.scripts]
-control_device = "scripts.control_device:main"
-discover_devices = "scripts.discover_devices:main"
-get_device_login_key = "scripts.get_device_login_key:main"
-validate_token = "scripts.validate_token:main"
