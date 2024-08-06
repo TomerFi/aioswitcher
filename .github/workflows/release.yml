@@ -3,6 +3,14 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      title:
+        description: "Release title defaults to the semantic version"
+        required: false
+      bump:
+        description: "Bump type (major/minor/patch) defaults to auto"
+        default: "auto"
+        required: true
 
 jobs:
   release:
@@ -46,7 +54,9 @@ jobs:
 
       - name: Determine version and create changelog
         id: bumper
-        uses: tomerfi/version-bumper-action@1.2.2
+        uses: tomerfi/version-bumper-action@2.0.2
+        with:
+          bump: '${{ github.event.inputs.bump }}'
 
       - name: Set new project version
         uses: sandstromviktor/toml-editor@2.0.0
@@ -90,6 +100,17 @@ jobs:
           git push
         # yamllint enable rule:line-length
 
+      - name: Create a release name
+        id: release_name
+        uses: actions/github-script@v6
+        with:
+          script: |
+            var retval = '${{ steps.bumper.outputs.new_version }}'
+            if ('${{ github.event.inputs.title }}') {
+              retval = retval.concat(' - ${{ github.event.inputs.title }}')
+            }
+            core.setOutput('value', retval)
+
       - name: Create a release
         id: gh_release
         uses: actions/github-script@v6
@@ -99,6 +120,7 @@ jobs:
             const repo_name = context.payload.repository.full_name
             const response = await github.request('POST /repos/' + repo_name + '/releases', {
               tag_name: '${{ steps.bumper.outputs.new_version }}',
+              name: '${{ steps.release_name.outputs.value }}',
               generate_release_notes: true
             })
             core.setOutput('html_url', response.data.html_url)
