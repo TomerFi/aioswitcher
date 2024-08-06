@@ -56,6 +56,8 @@ test-pypi-publish: clean-dist # requires testpypi configuration for poetry
 #########################
 lint: black flake8 isort mypy yamllint
 
+lint-with-fix: black-with-fix flake8 isort-with-fix mypy yamllint
+
 black:
 	poetry run black --check src/ docs/ scripts/
 
