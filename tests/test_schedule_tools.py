@@ -53,8 +53,10 @@ def test_pretty_next_run_with_todays_day_should_return_due_today(todays_day, one
     assert_that(tools.pretty_next_run(one_hour_from_now, {todays_day})).is_equal_to(expected_return)
 
 
-@freeze_time("23:00:00")
-def test_pretty_next_run_with_todays_day_end_of_day_should_return_due_today(todays_day):
+@freeze_time("2024-01-01 23:00:00")
+def test_pretty_next_run_with_specific_date_and_time_end_of_day_should_return_due_today():
+    # todays_day at 2024-01-01 is Monday which is 0
+    todays_day = days_by_weekdays[0]
     one_hour_from_now = "00:00"
     expected_return = f"Due today at {one_hour_from_now}"
     assert_that(tools.pretty_next_run(one_hour_from_now, {todays_day})).is_equal_to(expected_return)
