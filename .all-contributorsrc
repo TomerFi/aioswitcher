@@ -153,6 +153,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "ayal",
+      "name": "ayal",
+      "avatar_url": "https://avatars.githubusercontent.com/u/121446?v=4",
+      "profile": "https://github.com/ayal",
+      "contributions": [
+        "bug",
+        "code"
+      ]
     }
   ],
   "commitConvention": "angular",
