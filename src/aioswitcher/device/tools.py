@@ -21,7 +21,7 @@ from binascii import crc_hqx, hexlify, unhexlify
 from logging import getLogger
 from struct import pack
 
-import requests
+import aiohttp
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
 
@@ -192,26 +192,28 @@ def convert_token_to_packet(token: str) -> str:
         raise RuntimeError("convert token to packet was not successful") from ve
 
 
-def validate_token(username: str, token: str) -> bool:
-    """Make API call to validate a Token by username and token."""
+async def validate_token(username: str, token: str) -> bool:
+    """Make an asynchronous API call to validate a Token by username and token."""
     request_url = "https://switcher.co.il/ValidateToken/"
     request_data = {"email": username, "token": token}
     is_token_valid = False
 
     logger.debug("calling API call for Switcher to validate the token")
-    response = requests.post(request_url, data=request_data)
 
-    if response.status_code == 200:
-        logger.debug("request successful")
-        try:
-            response_json = response.json()
-            result = response_json.get("result", None)
-            if result is not None:
-                is_token_valid = result.lower() == "true"
-        except ValueError:
-            logger.debug("response content is not valid JSON")
-    else:
-        logger.debug("request failed with status code: %s", response.status_code)
+    async with aiohttp.ClientSession() as session:
+        async with session.post(request_url, data=request_data) as response:
+            if response.status == 200:
+                logger.debug("request successful")
+                try:
+                    response_json = await response.json()
+                    result = response_json.get("result", None)
+                    if result is not None:
+                        is_token_valid = result.lower() == "true"
+                except aiohttp.ContentTypeError:
+                    logger.debug("response content is not valid JSON")
+            else:
+                logger.debug("request failed with status code: %s", response.status)
+
     return is_token_valid
 
 

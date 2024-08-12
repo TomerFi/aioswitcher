@@ -17,6 +17,7 @@
 """Python script for validating a Token from Switcher."""
 
 from argparse import ArgumentParser, RawDescriptionHelpFormatter
+import asyncio
 
 from aioswitcher.device.tools import validate_token
 
@@ -49,12 +50,12 @@ parser.add_argument(
 )
 
 
-def main() -> None:
+async def main() -> None:
     """Validate the personal Token of the user."""
     try:
         args = parser.parse_args()
 
-        response = validate_token(args.username, args.token)
+        response = await validate_token(args.username, args.token)
         if response:
             print("Your Personal Token is valid")
         else:
@@ -65,4 +66,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

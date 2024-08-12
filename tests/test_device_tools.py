@@ -20,6 +20,7 @@ from struct import unpack
 from unittest.mock import patch
 
 from assertpy import assert_that
+import pytest_asyncio
 from pytest import mark
 
 from aioswitcher.device import DeviceType, tools
@@ -136,25 +137,24 @@ def test_convert_token_to_packet_with_false_token_should_throw_an_error(token, e
     ).when_called_with(token).is_equal_to(response)
 
 
-@patch('requests.post')
+@pytest_asyncio.fixture
 @mark.parametrize("username, token, is_token_valid", [
     ("test@switcher.com", "zvVvd7JxtN7CgvkD1Psujw==", True)
     ])
-def test_validate_token_should_return_token_valid(mock_post, username, token, is_token_valid):
+async def test_validate_token_should_return_token_valid(mock_post, username, token, is_token_valid):
     mock_response = mock_post.return_value
     mock_response.status_code = 200
     mock_response.json.return_value = {"result": "True"}
     assert_that(tools.validate_token(username, token)).is_equal_to(is_token_valid)
 
-
-@patch('requests.post')
+@pytest_asyncio.fixture
 @mark.parametrize("username, token, is_token_valid", [
     ("test@switcher.com", "", False),
     ("test@switcher.com", "notvalidtoken", False),
     ("", "notvalidtoken", False),
     ("", "", False)
     ])
-def test_validate_token_should_return_token_invalid(mock_post, username, token, is_token_valid):
+async def test_validate_token_should_return_token_invalid(mock_post, username, token, is_token_valid):
     mock_response = mock_post.return_value
     mock_response.status_code = 200
     mock_response.json.return_value = {"result": "False"}
