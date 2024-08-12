@@ -186,6 +186,7 @@ Thanks goes to these wonderful people ([emoji key][1]):
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/dmatik"><img src="https://avatars.githubusercontent.com/u/5577386?v=4?s=100" width="100px;" alt="dmatik"/><br /><sub><b>dmatik</b></sub></a><br /><a href="#blog-dmatik" title="Blogposts">📝</a> <a href="#ideas-dmatik" title="Ideas, Planning, & Feedback">🤔</a> <a href="#userTesting-dmatik" title="User Testing">📓</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/epenet"><img src="https://avatars.githubusercontent.com/u/6771947?v=4?s=100" width="100px;" alt="epenet"/><br /><sub><b>epenet</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/issues?q=author%3Aepenet" title="Bug reports">🐛</a> <a href="https://github.com/TomerFi/aioswitcher/commits?author=epenet" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jafar-atili"><img src="https://avatars.githubusercontent.com/u/19508787?v=4?s=100" width="100px;" alt="jafar-atili"/><br /><sub><b>jafar-atili</b></sub></a><br /><a href="https://github.com/TomerFi/aioswitcher/commits?author=jafar-atili" title="Code">💻</a> <a href="https://github.com/TomerFi/aioswitcher/commits?author=jafar-atili" title="Documentation">📖</a></td>
     </tr>
   </tbody>
