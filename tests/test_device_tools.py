@@ -19,8 +19,8 @@ from datetime import datetime, timedelta
 from struct import unpack
 from unittest.mock import patch
 
-from assertpy import assert_that
 import pytest_asyncio
+from assertpy import assert_that
 from pytest import mark
 
 from aioswitcher.device import DeviceType, tools
@@ -146,6 +146,7 @@ async def test_validate_token_should_return_token_valid(mock_post, username, tok
     mock_response.status_code = 200
     mock_response.json.return_value = {"result": "True"}
     assert_that(tools.validate_token(username, token)).is_equal_to(is_token_valid)
+
 
 @pytest_asyncio.fixture
 @mark.parametrize("username, token, is_token_valid", [

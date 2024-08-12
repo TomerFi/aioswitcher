@@ -16,8 +16,8 @@
 
 """Python script for validating a Token from Switcher."""
 
-from argparse import ArgumentParser, RawDescriptionHelpFormatter
 import asyncio
+from argparse import ArgumentParser, RawDescriptionHelpFormatter
 
 from aioswitcher.device.tools import validate_token
 
