@@ -21,6 +21,7 @@ from binascii import crc_hqx, hexlify, unhexlify
 from logging import getLogger
 from struct import pack
 
+import ssl
 import aiohttp
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import unpad
@@ -29,6 +30,8 @@ from ..device import DeviceType
 
 logger = getLogger(__name__)
 
+# Preload the SSL context
+ssl_context = ssl.create_default_context()
 
 def seconds_to_iso_time(all_seconds: int) -> str:
     """Convert seconds to iso time.
@@ -201,7 +204,7 @@ async def validate_token(username: str, token: str) -> bool:
     logger.debug("calling API call for Switcher to validate the token")
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(request_url, data=request_data) as response:
+        async with session.post(request_url, data=request_data, ssl=ssl_context) as response:
             if response.status == 200:
                 logger.debug("request successful")
                 try:
