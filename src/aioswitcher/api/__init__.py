@@ -141,14 +141,12 @@ class SwitcherApi(ABC):
 
     async def connect(self) -> None:
         """Connect to asynchronous socket and get reader and writer object."""
-        print("connecting...")
         logger.info("connecting to the switcher device")
         self._reader, self._writer = await open_connection(
             host=self._ip_address,
             port=self._port,
             family=AF_INET,
         )
-        print("connected")
 
         self._connected = True
         logger.info("switcher device connected")
