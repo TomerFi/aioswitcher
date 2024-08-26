@@ -30,6 +30,7 @@ from ..device import DeviceType
 
 logger = getLogger(__name__)
 
+
 def seconds_to_iso_time(all_seconds: int) -> str:
     """Convert seconds to iso time.
 
