@@ -30,10 +30,6 @@ from ..device import DeviceType
 
 logger = getLogger(__name__)
 
-# Preload the SSL context
-ssl_context = ssl.create_default_context()
-
-
 def seconds_to_iso_time(all_seconds: int) -> str:
     """Convert seconds to iso time.
 
@@ -201,6 +197,8 @@ async def validate_token(username: str, token: str) -> bool:
     request_url = "https://switcher.co.il/ValidateToken/"
     request_data = {"email": username, "token": token}
     is_token_valid = False
+    # Preload the SSL context
+    ssl_context = ssl.create_default_context()
 
     logger.debug("calling API call for Switcher to validate the token")
 
