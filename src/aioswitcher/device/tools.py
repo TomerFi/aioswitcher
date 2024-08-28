@@ -15,6 +15,7 @@
 """Switcher integration device module tools."""
 
 import datetime
+import ssl
 import time
 from base64 import b64decode
 from binascii import crc_hqx, hexlify, unhexlify
@@ -197,11 +198,15 @@ async def validate_token(username: str, token: str) -> bool:
     request_url = "https://switcher.co.il/ValidateToken/"
     request_data = {"email": username, "token": token}
     is_token_valid = False
+    # Preload the SSL context
+    ssl_context = ssl.SSLContext()
 
     logger.debug("calling API call for Switcher to validate the token")
 
     async with aiohttp.ClientSession() as session:
-        async with session.post(request_url, data=request_data) as response:
+        async with session.post(
+            request_url, data=request_data, ssl=ssl_context
+        ) as response:
             if response.status == 200:
                 logger.debug("request successful")
                 try:
