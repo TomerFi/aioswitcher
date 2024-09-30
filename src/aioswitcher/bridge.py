@@ -375,7 +375,7 @@ class DatagramParser:
             len(self.message) == 165
             or len(self.message) == 168  # Switcher Breeze
             or len(self.message) == 159  # Switcher Runner and RunnerMini
-            or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S1
+            or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S12
         )
 
     def get_ip_type1(self) -> str:
