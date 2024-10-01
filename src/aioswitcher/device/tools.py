@@ -247,7 +247,7 @@ def get_shutter_discovery_packet_index(
         if circuit_number != 0:
             raise ValueError("Invalid circuit number")
     if device_type == DeviceType.RUNNER_S12:
-        if circuit_number not in [0,1]:
+        if circuit_number not in [0, 1]:
             raise ValueError("Invalid circuit number")
 
     if device_type in (DeviceType.RUNNER, DeviceType.RUNNER_MINI):
@@ -269,9 +269,9 @@ def get_light_discovery_packet_index(
     (based of device type and circuit number).
     """
     if device_type == DeviceType.RUNNER_S11:
-        if circuit_number not in [0,1]:
+        if circuit_number not in [0, 1]:
             raise ValueError("Invalid circuit number")
-        return circuit_number 
+        return circuit_number
     if device_type == DeviceType.RUNNER_S12:
         if circuit_number != 0:
             raise ValueError("Invalid circuit number")
