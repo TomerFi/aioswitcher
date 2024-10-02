@@ -243,12 +243,10 @@ def get_shutter_discovery_packet_index(
     Used in retriving the shutter position/direction from the packet
     (based of device type and circuit number).
     """
-    if device_type != DeviceType.RUNNER_S12:
-        if circuit_number != 0:
-            raise ValueError("Invalid circuit number")
-    if device_type == DeviceType.RUNNER_S12:
-        if circuit_number not in [0, 1]:
-            raise ValueError("Invalid circuit number")
+    if device_type != DeviceType.RUNNER_S12 and circuit_number != 0:
+        raise ValueError("Invalid circuit number")
+    if device_type == DeviceType.RUNNER_S12 and circuit_number not in [0, 1]:
+        raise ValueError("Invalid circuit number")
 
     if device_type in (DeviceType.RUNNER, DeviceType.RUNNER_MINI):
         return 0
