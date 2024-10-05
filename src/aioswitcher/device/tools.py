@@ -168,6 +168,8 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
         return DeviceType.RUNNER_MINI
     elif device_type == DeviceType.RUNNER_S11.value:
         return DeviceType.RUNNER_S11
+    elif device_type == DeviceType.RUNNER_S12.value:
+        return DeviceType.RUNNER_S12
     return DeviceType.MINI
 
 
@@ -231,6 +233,8 @@ async def validate_token(username: str, token: str) -> bool:
 #   shutter circuit is 0, get_light_discovery_packet_index would raise an error.
 # Runner S11: has two lights circuits & one shutter circuits ->
 #   Lights circuits are numbered 0 & 1, shutter circuit is 2.
+# Runner S12: has one lights circuits & two shutter circuits ->
+#   Lights circuit is 0, shutter circuits are numbered 1 & 2.
 def get_shutter_discovery_packet_index(
     device_type: DeviceType, circuit_number: int
 ) -> int:
@@ -239,13 +243,17 @@ def get_shutter_discovery_packet_index(
     Used in retriving the shutter position/direction from the packet
     (based of device type and circuit number).
     """
-    if circuit_number != 0:
+    if device_type != DeviceType.RUNNER_S12 and circuit_number != 0:
+        raise ValueError("Invalid circuit number")
+    if device_type == DeviceType.RUNNER_S12 and circuit_number not in [0, 1]:
         raise ValueError("Invalid circuit number")
 
     if device_type in (DeviceType.RUNNER, DeviceType.RUNNER_MINI):
         return 0
     elif device_type == DeviceType.RUNNER_S11:
         return 2
+    elif device_type == DeviceType.RUNNER_S12:
+        return circuit_number + 1
 
     raise ValueError("only shutters are allowed")
 
@@ -259,10 +267,13 @@ def get_light_discovery_packet_index(
     (based of device type and circuit number).
     """
     if device_type == DeviceType.RUNNER_S11:
-        if circuit_number in [0, 1]:
-            return circuit_number
-        else:
+        if circuit_number not in [0, 1]:
             raise ValueError("Invalid circuit number")
+        return circuit_number
+    if device_type == DeviceType.RUNNER_S12:
+        if circuit_number != 0:
+            raise ValueError("Invalid circuit number")
+        return 0
 
     raise ValueError("only devices that has lights are allowed")
 

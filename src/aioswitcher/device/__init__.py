@@ -30,6 +30,7 @@ class DeviceCategory(Enum):
     THERMOSTAT = auto()
     SHUTTER = auto()
     SINGLE_SHUTTER_DUAL_LIGHT = auto()
+    DUAL_SHUTTER_SINGLE_LIGHT = auto()
 
 
 @unique
@@ -50,6 +51,13 @@ class DeviceType(Enum):
         "0f01",
         2,
         DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT,
+        True,
+    )
+    RUNNER_S12 = (
+        "Switcher Runner S12",
+        "0f02",
+        2,
+        DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT,
         True,
     )
 
@@ -336,6 +344,21 @@ class SwitcherSingleShutterDualLightBase(ABC):
     lights: List[DeviceState]
 
 
+@dataclass
+class SwitcherDualShutterSingleLightBase(ABC):
+    """Abstraction for all switcher devices controlling dual shutter with single light.
+
+    Args:
+        position: the current array of position of the shutter (integer percentage).
+        direction: the current array of direction of the shutter.
+        lights: the current lights state.
+    """
+
+    position: List[int]
+    direction: List[ShutterDirection]
+    lights: DeviceState
+
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -405,4 +428,19 @@ class SwitcherSingleShutterDualLight(SwitcherSingleShutterDualLightBase, Switche
         """
         if self.device_type.category != DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT:
             raise ValueError("only shutters with dual lights are allowed")
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherDualShutterSingleLight(SwitcherDualShutterSingleLightBase, SwitcherBase):
+    """Implementation of the Switcher dual Shutter with single light device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization.
+
+        Validate device type category as DUAL_SHUTTER_SINGLE_LIGHT.
+        """
+        if self.device_type.category != DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT:
+            raise ValueError("only dual shutters with single lights are allowed")
         return super().__post_init__()

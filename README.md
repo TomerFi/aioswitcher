@@ -111,6 +111,7 @@ asyncio.run(print_devices(60))
   asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00"))
   asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00"))
   asyncio.run(control_runner(DeviceType.RUNNER_S11, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  asyncio.run(control_runner(DeviceType.RUNNER_S12, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   ```
 
 </details>
