@@ -35,6 +35,7 @@ from .device import (
     SwitcherPowerPlug,
     SwitcherShutter,
     SwitcherSingleShutterDualLight,
+    SwitcherLight,
     SwitcherThermostat,
     SwitcherWaterHeater,
     ThermostatFanLevel,
@@ -66,6 +67,7 @@ SWITCHER_DEVICE_TO_UDP_PORT = {
     DeviceCategory.SHUTTER: SWITCHER_UDP_PORT_TYPE2,
     DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
     DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+    DeviceCategory.LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
 }
 
 
@@ -245,6 +247,26 @@ def _parse_device_from_datagram(
                     parser.get_thermostat_fan_level(),
                     parser.get_thermostat_swing(),
                     parser.get_thermostat_remote_id(),
+                )
+            )
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.LIGHT
+        ):
+            logger.debug("discovered a Light SL01 switcher device")
+            device_callback(
+                SwitcherLight(
+                    device_type,
+                    DeviceState.ON,
+                    parser.get_device_id(),
+                    parser.get_device_key(),
+                    parser.get_ip_type2(),
+                    parser.get_mac_type2(),
+                    parser.get_name(),
+                    device_type.token_needed,
+                    parser.get_light_state(
+                        get_light_discovery_packet_index(device_type, 0)
+                    ),
                 )
             )
         else:

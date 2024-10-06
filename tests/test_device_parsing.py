@@ -27,6 +27,7 @@ from aioswitcher.device import (
     SwitcherDualShutterSingleLight,
     SwitcherPowerPlug,
     SwitcherShutter,
+    SwitcherLight,
     SwitcherSingleShutterDualLight,
     SwitcherThermostat,
     SwitcherWaterHeater,
@@ -108,6 +109,15 @@ def test_a_single_runner_dual_light_datagram_produces_device(mock_device_cls, mo
 @patch.object(SwitcherDualShutterSingleLight, "__new__")
 @patch.object(DatagramParser, "is_switcher_originator", lambda s: True)
 def test_a_dual_runner_single_light_datagram_produces_device(mock_device_cls, mock_device, resource_path, mock_callback):
+    mock_device_cls.return_value = mock_device
+    sut_datagram = Path(f'{resource_path}.txt').read_text().replace('\n', '').encode()
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    mock_callback.assert_called_once_with(mock_device)
+
+
+@patch.object(SwitcherLight, "__new__")
+@patch.object(DatagramParser, "is_switcher_originator", lambda s: True)
+def test_a_light_datagram_produces_device(mock_device_cls, mock_device, resource_path, mock_callback):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f'{resource_path}.txt').read_text().replace('\n', '').encode()
     _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))

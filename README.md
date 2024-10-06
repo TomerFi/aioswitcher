@@ -146,6 +146,25 @@ asyncio.run(print_devices(60))
 
 </details>
 
+<details>
+  <summary>Light API</summary>
+
+  ```python
+  async def control_light(device_type, device_ip, device_id, device_key, token) :
+      # for connecting to a device we need its type, id, login key and ip address
+      async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
+          # get the device current state
+          await api.get_light_state()
+          # turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(DeviceState.ON, 0)
+          # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(DeviceState.OFF, 0)
+
+  asyncio.run(control_light(DeviceType.LIGHT_SL01, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  ```
+
+</details>
+
 ## Command Line Helper Scripts
 
 - [discover_devices.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/discover_devices.py) can discover devices and their states (can be run by `poetry run discover_devices`).

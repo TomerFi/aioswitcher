@@ -31,6 +31,7 @@ class DeviceCategory(Enum):
     SHUTTER = auto()
     SINGLE_SHUTTER_DUAL_LIGHT = auto()
     DUAL_SHUTTER_SINGLE_LIGHT = auto()
+    LIGHT = auto()
 
 
 @unique
@@ -58,6 +59,13 @@ class DeviceType(Enum):
         "0f02",
         2,
         DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT,
+        True,
+    )
+    LIGHT_SL01 = (
+        "Switcher Light SL01",
+        "0f04",
+        2,
+        DeviceCategory.LIGHT,
         True,
     )
 
@@ -359,6 +367,17 @@ class SwitcherDualShutterSingleLightBase(ABC):
     lights: DeviceState
 
 
+@dataclass
+class SwitcherLightBase(ABC):
+    """Abstraction for all switcher devices controlling light.
+
+    Args:
+        lights: the current lights state.
+    """
+
+    lights: DeviceState
+
+
 @final
 @dataclass
 class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
@@ -443,4 +462,16 @@ class SwitcherDualShutterSingleLight(SwitcherDualShutterSingleLightBase, Switche
         """
         if self.device_type.category != DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT:
             raise ValueError("only dual shutters with single lights are allowed")
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherLight(SwitcherLightBase, SwitcherBase):
+    """Implementation of the Switcher Light device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as LIGHT."""
+        if self.device_type.category != DeviceCategory.LIGHT:
+            raise ValueError("only lights are allowed")
         return super().__post_init__()

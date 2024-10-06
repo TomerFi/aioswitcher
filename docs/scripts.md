@@ -21,7 +21,7 @@ You can change the delay by passing an int argument: discover_devices.py 30
 
 Switcher devices uses two protocol types:
     Protocol type 1 (UDP port 20002 or port 10002), used by: Switcher Mini, Switcher Power Plug, Switcher Touch, Switcher V2 (esp), Switcher V2 (qualcomm), Switcher V4
-    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini, Switcher Runner S11, Switcher Runner S12
+    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini, Switcher Runner S11, Switcher Runner S12, Switcher Light SL01
 You can change the scanned protocol type by passing an int argument: discover_devices.py -t 1
 
 Note:
@@ -143,17 +143,23 @@ python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN
 
 python control_device.py get_light_state -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
 
+python control_device.py get_light_state -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
 python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
 
 python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
 
 python control_device.py turn_on_light -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
 
+python control_device.py turn_on_light -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
 python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
 
 python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
 
 python control_device.py turn_off_light -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_light -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
 
 python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"
 
