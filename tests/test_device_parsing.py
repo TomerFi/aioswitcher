@@ -25,9 +25,9 @@ from aioswitcher.bridge import DatagramParser, _parse_device_from_datagram
 from aioswitcher.device import (
     DeviceState,
     SwitcherDualShutterSingleLight,
+    SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
-    SwitcherLight,
     SwitcherSingleShutterDualLight,
     SwitcherThermostat,
     SwitcherWaterHeater,

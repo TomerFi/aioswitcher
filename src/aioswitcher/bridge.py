@@ -32,10 +32,10 @@ from .device import (
     ShutterDirection,
     SwitcherBase,
     SwitcherDualShutterSingleLight,
+    SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
     SwitcherSingleShutterDualLight,
-    SwitcherLight,
     SwitcherThermostat,
     SwitcherWaterHeater,
     ThermostatFanLevel,
@@ -249,10 +249,7 @@ def _parse_device_from_datagram(
                     parser.get_thermostat_remote_id(),
                 )
             )
-        elif (
-            device_type
-            and device_type.category == DeviceCategory.LIGHT
-        ):
+        elif device_type and device_type.category == DeviceCategory.LIGHT:
             logger.debug("discovered a Light SL01 switcher device")
             device_callback(
                 SwitcherLight(

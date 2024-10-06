@@ -274,7 +274,11 @@ def get_light_discovery_packet_index(
         if circuit_number not in [0, 1]:
             raise ValueError("Invalid circuit number")
         return circuit_number
-    if device_type in (DeviceType.RUNNER_S12, DeviceType.LIGHT_SL01, DeviceType.LIGHT_SL01_MINI):
+    if device_type in (
+        DeviceType.RUNNER_S12,
+        DeviceType.LIGHT_SL01,
+        DeviceType.LIGHT_SL01_MINI,
+    ):
         if circuit_number != 0:
             raise ValueError("Invalid circuit number")
         return 0
