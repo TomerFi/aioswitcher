@@ -129,7 +129,8 @@ asyncio.run(
 ```
 
 1. [SwitcherShutterStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherShutterStateResponse)
-2. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
+2. [SwitcherLightStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherLightStateResponse)
+3. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
 
   ```python
   async def control_light(device_type, device_ip, device_id, device_key, token) :
@@ -145,7 +146,7 @@ asyncio.run(
   asyncio.run(control_light(DeviceType.LIGHT_SL01, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   asyncio.run(control_light(DeviceType.LIGHT_SL01_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   ```
-1. [SwitcherLightStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherShutterStateResponse)
+1. [SwitcherLightStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherLightStateResponse)
 2. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
 
 ```python
