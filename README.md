@@ -161,6 +161,7 @@ asyncio.run(print_devices(60))
           await api.api.set_light(DeviceState.OFF, 0)
 
   asyncio.run(control_light(DeviceType.LIGHT_SL01, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  asyncio.run(control_light(DeviceType.LIGHT_SL01_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   ```
 
 </details>

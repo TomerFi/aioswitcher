@@ -90,13 +90,14 @@ asyncio.run(
 7. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
 8. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
 
-### Type2 API (Switcher Breeze and Runner)
+### Type2 API (Switcher Breeze, Runner and Lights)
 
-We can use the Type2 API to gain the following capabilities on Switcher Breeze and Runner:
+We can use the Type2 API to gain the following capabilities on Switcher Breeze, Runner and Lights:
 
 - Get the current state
 - Control Runner position
 - Control Breeze (State, Mode, Fan Level, Target Temperature, Vertical Swing)
+- Control Lights (State, Turn On, Turn Off)
 
 ```python
 async def control_runner(device_type, device_ip, device_id, device_key, token) :
@@ -128,6 +129,23 @@ asyncio.run(
 ```
 
 1. [SwitcherShutterStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherShutterStateResponse)
+2. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
+
+  ```python
+  async def control_light(device_type, device_ip, device_id, device_key, token) :
+      # for connecting to a device we need its type, id, login key and ip address
+      async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
+          # get the device current state
+          await api.get_light_state()
+          # turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(DeviceState.ON, 0)
+          # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.api.set_light(DeviceState.OFF, 0)
+
+  asyncio.run(control_light(DeviceType.LIGHT_SL01, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  asyncio.run(control_light(DeviceType.LIGHT_SL01_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  ```
+1. [SwitcherLightStateResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherShutterStateResponse)
 2. [SwitcherBaseResponse](./codedocs.md#src.aioswitcher.api.messages.SwitcherBaseResponse)
 
 ```python

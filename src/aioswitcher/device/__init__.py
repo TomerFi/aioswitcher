@@ -68,6 +68,13 @@ class DeviceType(Enum):
         DeviceCategory.LIGHT,
         True,
     )
+    LIGHT_SL01_MINI = (
+        "Switcher Light SL01 Mini",
+        "0f07",
+        2,
+        DeviceCategory.LIGHT,
+        True,
+    )
 
     def __new__(
         cls,
