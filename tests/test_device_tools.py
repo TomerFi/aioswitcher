@@ -108,7 +108,9 @@ def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(wat
     ("Switcher Runner", DeviceType.RUNNER),
     ("Switcher Runner Mini", DeviceType.RUNNER_MINI),
     ("Switcher Runner S11", DeviceType.RUNNER_S11),
-    ("Switcher Runner S12", DeviceType.RUNNER_S12)
+    ("Switcher Runner S12", DeviceType.RUNNER_S12),
+    ("Switcher Light SL01", DeviceType.LIGHT_SL01),
+    ("Switcher Light SL01 Mini", DeviceType.LIGHT_SL01_MINI)
     ])
 def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)

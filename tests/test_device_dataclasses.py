@@ -23,8 +23,11 @@ from aioswitcher.device import (
     DeviceState,
     DeviceType,
     ShutterDirection,
+    SwitcherDualShutterSingleLight,
+    SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
+    SwitcherSingleShutterDualLight,
     SwitcherThermostat,
     SwitcherWaterHeater,
     ThermostatFanLevel,
@@ -237,3 +240,49 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_shutter_shoul
         fake_data.position,
         fake_data.direction
     ).is_equal_to("only shutters are allowed")
+
+
+def test_given_a_device_of_type_power_plug_when_instantiating_as_a_single_shutter_dual_light_should_raise_an_error(fake_data):
+    assert_that(SwitcherSingleShutterDualLight).raises(ValueError).when_called_with(
+        DeviceType.POWER_PLUG,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.device_key,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.token_needed,
+        fake_data.position,
+        fake_data.direction,
+        [fake_data.lights, fake_data.lights]
+    ).is_equal_to("only shutters with dual lights are allowed")
+
+
+def test_given_a_device_of_type_power_plug_when_instantiating_as_a_dual_shutter_single_light_should_raise_an_error(fake_data):
+    assert_that(SwitcherDualShutterSingleLight).raises(ValueError).when_called_with(
+        DeviceType.POWER_PLUG,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.device_key,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.token_needed,
+        [fake_data.position, fake_data.position],
+        [fake_data.direction, fake_data.direction],
+        fake_data.lights
+    ).is_equal_to("only dual shutters with single lights are allowed")
+
+
+def test_given_a_device_of_type_power_plug_when_instantiating_as_a_light_should_raise_an_error(fake_data):
+    assert_that(SwitcherLight).raises(ValueError).when_called_with(
+        DeviceType.POWER_PLUG,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.device_key,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.token_needed,
+        fake_data.lights
+    ).is_equal_to("only lights are allowed")
