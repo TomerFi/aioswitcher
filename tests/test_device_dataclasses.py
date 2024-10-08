@@ -14,7 +14,7 @@
 
 """Switcher integration devices dataclasses test cases."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List
 
 from assertpy import assert_that
@@ -57,12 +57,12 @@ class FakeData:
     target_temperature: int = 24
     temperature: float = 26.5
     remote_id: str = "ELEC7022"
-    position: List[int] = [50]
-    position2: List[int] = [50, 50]
-    direction: List[ShutterDirection] = [ShutterDirection.SHUTTER_STOP]
-    direction2: List[ShutterDirection] = [ShutterDirection.SHUTTER_STOP, ShutterDirection.SHUTTER_STOP]
-    lights: List[DeviceState] = [DeviceState.ON]
-    lights2: List[DeviceState] = [DeviceState.ON, DeviceState.ON]
+    position: List[int] = field(default_factory=lambda: [50])
+    position2: List[int] = field(default_factory=lambda: [50, 50])
+    direction: List[ShutterDirection] = field(default_factory=lambda: [ShutterDirection.SHUTTER_STOP])
+    direction2: List[ShutterDirection] = field(default_factory=lambda: [ShutterDirection.SHUTTER_STOP, ShutterDirection.SHUTTER_STOP])
+    lights: List[DeviceState] = field(default_factory=lambda: [DeviceState.ON])
+    lights2: List[DeviceState] = field(default_factory=lambda: [DeviceState.ON, DeviceState.ON])
 
 
 @fixture
