@@ -15,6 +15,7 @@
 """Switcher integration devices dataclasses test cases."""
 
 from dataclasses import dataclass
+from typing import List
 
 from assertpy import assert_that
 from pytest import fixture, mark
@@ -56,8 +57,12 @@ class FakeData:
     target_temperature: int = 24
     temperature: float = 26.5
     remote_id: str = "ELEC7022"
-    position: int = 50
-    direction: ShutterDirection = ShutterDirection.SHUTTER_STOP
+    position: List[int] = [50]
+    position2: List[int] = [50, 50]
+    direction: List[ShutterDirection] = [ShutterDirection.SHUTTER_STOP]
+    direction2: List[ShutterDirection] = [ShutterDirection.SHUTTER_STOP, ShutterDirection.SHUTTER_STOP]
+    lights: List[DeviceState] = [DeviceState.ON]
+    lights2: List[DeviceState] = [DeviceState.ON, DeviceState.ON]
 
 
 @fixture
@@ -254,7 +259,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_single_shutte
         fake_data.token_needed,
         fake_data.position,
         fake_data.direction,
-        [fake_data.lights, fake_data.lights]
+        fake_data.lights2
     ).is_equal_to("only shutters with dual lights are allowed")
 
 
@@ -268,8 +273,8 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_dual_shutter_
         fake_data.mac_address,
         fake_data.name,
         fake_data.token_needed,
-        [fake_data.position, fake_data.position],
-        [fake_data.direction, fake_data.direction],
+        fake_data.position2,
+        fake_data.direction2,
         fake_data.lights
     ).is_equal_to("only dual shutters with single lights are allowed")
 

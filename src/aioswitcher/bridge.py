@@ -151,12 +151,16 @@ def _parse_device_from_datagram(
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
-                    parser.get_shutter_direction(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
+                    [
+                        parser.get_shutter_position(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
+                    [
+                        parser.get_shutter_direction(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                 )
             )
 
@@ -175,12 +179,16 @@ def _parse_device_from_datagram(
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
-                    parser.get_shutter_direction(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
+                    [
+                        parser.get_shutter_position(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
+                    [
+                        parser.get_shutter_direction(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                     [
                         parser.get_light_state(
                             get_light_discovery_packet_index(device_type, 0)
@@ -223,9 +231,11 @@ def _parse_device_from_datagram(
                             get_shutter_discovery_packet_index(device_type, 1)
                         ),
                     ],
-                    parser.get_light_state(
-                        get_light_discovery_packet_index(device_type, 0)
-                    ),
+                    [
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                 )
             )
 
@@ -261,9 +271,11 @@ def _parse_device_from_datagram(
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_light_state(
-                        get_light_discovery_packet_index(device_type, 0)
-                    ),
+                    [
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                 )
             )
         else:

@@ -336,12 +336,12 @@ class SwitcherShutterBase(ABC):
     """Abstraction for all switcher devices controlling shutter.
 
     Args:
-        position: the current position of the shutter (integer percentage).
-        direction: the current direction of the shutter.
+        position: the current array of position of the shutter (integer percentage).
+        direction: the current array of direction of the shutter.
     """
 
-    position: int
-    direction: ShutterDirection
+    position: List[int]
+    direction: List[ShutterDirection]
 
 
 @dataclass
@@ -349,13 +349,13 @@ class SwitcherSingleShutterDualLightBase(ABC):
     """Abstraction for all switcher devices controlling shutter with dual light.
 
     Args:
-        position: the current position of the shutter (integer percentage).
-        direction: the current direction of the shutter.
-        light: the current array of lights state.
+        position: the current array of position of the shutter (integer percentage).
+        direction: the current array of direction of the shutter.
+        light: the current array of light state.
     """
 
-    position: int
-    direction: ShutterDirection
+    position: List[int]
+    direction: List[ShutterDirection]
     light: List[DeviceState]
 
 
@@ -366,12 +366,12 @@ class SwitcherDualShutterSingleLightBase(ABC):
     Args:
         position: the current array of position of the shutter (integer percentage).
         direction: the current array of direction of the shutter.
-        light: the current light state.
+        light: the current array of light state.
     """
 
     position: List[int]
     direction: List[ShutterDirection]
-    light: DeviceState
+    light: List[DeviceState]
 
 
 @dataclass
@@ -379,10 +379,10 @@ class SwitcherLightBase(ABC):
     """Abstraction for all switcher devices controlling light.
 
     Args:
-        light: the current light state.
+        light: the current array of light state.
     """
 
-    light: DeviceState
+    light: List[DeviceState]
 
 
 @final
