@@ -32,6 +32,7 @@ from .device import (
     ShutterDirection,
     SwitcherBase,
     SwitcherDualShutterSingleLight,
+    SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
     SwitcherSingleShutterDualLight,
@@ -66,6 +67,7 @@ SWITCHER_DEVICE_TO_UDP_PORT = {
     DeviceCategory.SHUTTER: SWITCHER_UDP_PORT_TYPE2,
     DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
     DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+    DeviceCategory.LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
 }
 
 
@@ -149,12 +151,16 @@ def _parse_device_from_datagram(
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
-                    parser.get_shutter_direction(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
+                    [
+                        parser.get_shutter_position(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
+                    [
+                        parser.get_shutter_direction(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                 )
             )
 
@@ -173,12 +179,16 @@ def _parse_device_from_datagram(
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
-                    parser.get_shutter_position(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
-                    parser.get_shutter_direction(
-                        get_shutter_discovery_packet_index(device_type, 0)
-                    ),
+                    [
+                        parser.get_shutter_position(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
+                    [
+                        parser.get_shutter_direction(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                     [
                         parser.get_light_state(
                             get_light_discovery_packet_index(device_type, 0)
@@ -221,9 +231,11 @@ def _parse_device_from_datagram(
                             get_shutter_discovery_packet_index(device_type, 1)
                         ),
                     ],
-                    parser.get_light_state(
-                        get_light_discovery_packet_index(device_type, 0)
-                    ),
+                    [
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                 )
             )
 
@@ -245,6 +257,25 @@ def _parse_device_from_datagram(
                     parser.get_thermostat_fan_level(),
                     parser.get_thermostat_swing(),
                     parser.get_thermostat_remote_id(),
+                )
+            )
+        elif device_type and device_type.category == DeviceCategory.LIGHT:
+            logger.debug("discovered a Light SL01 switcher device")
+            device_callback(
+                SwitcherLight(
+                    device_type,
+                    DeviceState.ON,
+                    parser.get_device_id(),
+                    parser.get_device_key(),
+                    parser.get_ip_type2(),
+                    parser.get_mac_type2(),
+                    parser.get_name(),
+                    device_type.token_needed,
+                    [
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                 )
             )
         else:
@@ -376,6 +407,8 @@ class DatagramParser:
             or len(self.message) == 168  # Switcher Breeze
             or len(self.message) == 159  # Switcher Runner and RunnerMini
             or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S12
+            or len(self.message)
+            == 207  # Switcher Light SL01 and Switcher Light SL01 Mini
         )
 
     def get_ip_type1(self) -> str:

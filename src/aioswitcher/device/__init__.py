@@ -31,6 +31,7 @@ class DeviceCategory(Enum):
     SHUTTER = auto()
     SINGLE_SHUTTER_DUAL_LIGHT = auto()
     DUAL_SHUTTER_SINGLE_LIGHT = auto()
+    LIGHT = auto()
 
 
 @unique
@@ -58,6 +59,20 @@ class DeviceType(Enum):
         "0f02",
         2,
         DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT,
+        True,
+    )
+    LIGHT_SL01 = (
+        "Switcher Light SL01",
+        "0f04",
+        2,
+        DeviceCategory.LIGHT,
+        True,
+    )
+    LIGHT_SL01_MINI = (
+        "Switcher Light SL01 Mini",
+        "0f07",
+        2,
+        DeviceCategory.LIGHT,
         True,
     )
 
@@ -321,12 +336,12 @@ class SwitcherShutterBase(ABC):
     """Abstraction for all switcher devices controlling shutter.
 
     Args:
-        position: the current position of the shutter (integer percentage).
-        direction: the current direction of the shutter.
+        position: the current array of position of the shutter (integer percentage).
+        direction: the current array of direction of the shutter.
     """
 
-    position: int
-    direction: ShutterDirection
+    position: List[int]
+    direction: List[ShutterDirection]
 
 
 @dataclass
@@ -334,14 +349,14 @@ class SwitcherSingleShutterDualLightBase(ABC):
     """Abstraction for all switcher devices controlling shutter with dual light.
 
     Args:
-        position: the current position of the shutter (integer percentage).
-        direction: the current direction of the shutter.
-        lights: the current array of lights state.
+        position: the current array of position of the shutter (integer percentage).
+        direction: the current array of direction of the shutter.
+        light: the current array of light state.
     """
 
-    position: int
-    direction: ShutterDirection
-    lights: List[DeviceState]
+    position: List[int]
+    direction: List[ShutterDirection]
+    light: List[DeviceState]
 
 
 @dataclass
@@ -351,12 +366,23 @@ class SwitcherDualShutterSingleLightBase(ABC):
     Args:
         position: the current array of position of the shutter (integer percentage).
         direction: the current array of direction of the shutter.
-        lights: the current lights state.
+        light: the current array of light state.
     """
 
     position: List[int]
     direction: List[ShutterDirection]
-    lights: DeviceState
+    light: List[DeviceState]
+
+
+@dataclass
+class SwitcherLightBase(ABC):
+    """Abstraction for all switcher devices controlling light.
+
+    Args:
+        light: the current array of light state.
+    """
+
+    light: List[DeviceState]
 
 
 @final
@@ -443,4 +469,16 @@ class SwitcherDualShutterSingleLight(SwitcherDualShutterSingleLightBase, Switche
         """
         if self.device_type.category != DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT:
             raise ValueError("only dual shutters with single lights are allowed")
+        return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherLight(SwitcherLightBase, SwitcherBase):
+    """Implementation of the Switcher Light device."""
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as LIGHT."""
+        if self.device_type.category != DeviceCategory.LIGHT:
+            raise ValueError("only lights are allowed")
         return super().__post_init__()

@@ -170,6 +170,10 @@ def convert_str_to_devicetype(device_type: str) -> DeviceType:
         return DeviceType.RUNNER_S11
     elif device_type == DeviceType.RUNNER_S12.value:
         return DeviceType.RUNNER_S12
+    elif device_type == DeviceType.LIGHT_SL01.value:
+        return DeviceType.LIGHT_SL01
+    elif device_type == DeviceType.LIGHT_SL01_MINI.value:
+        return DeviceType.LIGHT_SL01_MINI
     return DeviceType.MINI
 
 
@@ -229,12 +233,14 @@ async def validate_token(username: str, token: str) -> bool:
 # Those functions return the index of the circuit sub device,
 #   used in retreving state from the packet.
 # Used for Switcher Runners and Switcher Lights
-# Runner and Runner Mini: has no lights & one shutter circuits ->
+# Runner and Runner Mini: has no lights circuits & one shutter circuits ->
 #   shutter circuit is 0, get_light_discovery_packet_index would raise an error.
 # Runner S11: has two lights circuits & one shutter circuits ->
 #   Lights circuits are numbered 0 & 1, shutter circuit is 2.
 # Runner S12: has one lights circuits & two shutter circuits ->
 #   Lights circuit is 0, shutter circuits are numbered 1 & 2.
+# Light SL01 and Light SL01 Mini: has one lights circuits & has no shutter circuits ->
+#   Lights circuit is 0, get_shutter_discovery_packet_index would raise an error.
 def get_shutter_discovery_packet_index(
     device_type: DeviceType, circuit_number: int
 ) -> int:
@@ -270,7 +276,11 @@ def get_light_discovery_packet_index(
         if circuit_number not in [0, 1]:
             raise ValueError("Invalid circuit number")
         return circuit_number
-    if device_type == DeviceType.RUNNER_S12:
+    if device_type in (
+        DeviceType.RUNNER_S12,
+        DeviceType.LIGHT_SL01,
+        DeviceType.LIGHT_SL01_MINI,
+    ):
         if circuit_number != 0:
             raise ValueError("Invalid circuit number")
         return 0

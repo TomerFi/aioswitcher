@@ -108,7 +108,9 @@ def test_watts_to_amps_with_parameterized_watts_should_procude_expected_amps(wat
     ("Switcher Runner", DeviceType.RUNNER),
     ("Switcher Runner Mini", DeviceType.RUNNER_MINI),
     ("Switcher Runner S11", DeviceType.RUNNER_S11),
-    ("Switcher Runner S12", DeviceType.RUNNER_S12)
+    ("Switcher Runner S12", DeviceType.RUNNER_S12),
+    ("Switcher Light SL01", DeviceType.LIGHT_SL01),
+    ("Switcher Light SL01 Mini", DeviceType.LIGHT_SL01_MINI)
     ])
 def test_convert_str_to_devicetype_should_return_expected_devicetype(str, type):
     assert_that(tools.convert_str_to_devicetype(str)).is_equal_to(type)
@@ -201,6 +203,8 @@ def test_get_shutter_discovery_packet_index_with_different_device_should_raise_e
     (DeviceType.RUNNER_S11, 0, 0),
     (DeviceType.RUNNER_S11, 1, 1),
     (DeviceType.RUNNER_S12, 0, 0),
+    (DeviceType.LIGHT_SL01, 0, 0),
+    (DeviceType.LIGHT_SL01_MINI, 0, 0),
     ])
 def test_get_light_discovery_packet_index_should_return_expected_index(device_type, circuit_number, index):
     assert_that(tools.get_light_discovery_packet_index(device_type, circuit_number)).is_equal_to(index)
@@ -208,7 +212,9 @@ def test_get_light_discovery_packet_index_should_return_expected_index(device_ty
 
 @mark.parametrize("device_type, circuit_number, error, error_msg", [
     (DeviceType.RUNNER_S11, 2, ValueError, "Invalid circuit number"),
-    (DeviceType.RUNNER_S12, 1, ValueError, "Invalid circuit number")
+    (DeviceType.RUNNER_S12, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL01, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL01_MINI, 1, ValueError, "Invalid circuit number")
     ])
 def test_get_light_discovery_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
     assert_that(tools.get_light_discovery_packet_index).raises(error).when_called_with(
@@ -265,6 +271,8 @@ def test_get_shutter_api_packet_index_with_different_device_should_raise_error(d
     (DeviceType.RUNNER_S11, 0, 1),
     (DeviceType.RUNNER_S11, 1, 2),
     (DeviceType.RUNNER_S12, 0, 1),
+    (DeviceType.LIGHT_SL01, 0, 1),
+    (DeviceType.LIGHT_SL01_MINI, 0, 1),
     ])
 def test_get_light_api_packet_index_should_return_expected_index(device_type, circuit_number, index):
     assert_that(tools.get_light_api_packet_index(device_type, circuit_number)).is_equal_to(index)
@@ -272,7 +280,9 @@ def test_get_light_api_packet_index_should_return_expected_index(device_type, ci
 
 @mark.parametrize("device_type, circuit_number, error, error_msg", [
     (DeviceType.RUNNER_S11, 2, ValueError, "Invalid circuit number"),
-    (DeviceType.RUNNER_S12, 1, ValueError, "Invalid circuit number")
+    (DeviceType.RUNNER_S12, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL01, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL01_MINI, 1, ValueError, "Invalid circuit number")
     ])
 def test_get_light_api_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
     assert_that(tools.get_light_api_packet_index).raises(error).when_called_with(

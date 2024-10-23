@@ -104,9 +104,9 @@ asyncio.run(print_devices(60))
           # stop the shutter if currently rolling, circuit number is 0
           await api.stop_shutter(0)
           # turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)
-          await api.api.set_light(DeviceState.ON, 0)
+          await api.set_light(DeviceState.ON, 0)
           # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
-          await api.api.set_light(DeviceState.OFF, 0)
+          await api.set_light(DeviceState.OFF, 0)
 
   asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00"))
   asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00"))
@@ -142,6 +142,26 @@ asyncio.run(print_devices(60))
   # create the remote manager outside the context for re-using
   remote_manager = SwitcherBreezeRemoteManager()
   asyncio.run(control_breeze(DeviceType.BREEZE, "111.222.11.22", "ab1c2d", "00", remote_manager, "DLK65863"))
+  ```
+
+</details>
+
+<details>
+  <summary>Light API</summary>
+
+  ```python
+  async def control_light(device_type, device_ip, device_id, device_key, token) :
+      # for connecting to a device we need its type, id, login key and ip address
+      async with SwitcherType2Api(device_type, device_ip, device_id, device_key, token) as api:
+          # get the device current state
+          await api.get_light_state()
+          # turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.set_light(DeviceState.ON, 0)
+          # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
+          await api.set_light(DeviceState.OFF, 0)
+
+  asyncio.run(control_light(DeviceType.LIGHT_SL01, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  asyncio.run(control_light(DeviceType.LIGHT_SL01_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   ```
 
 </details>
