@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -840,7 +840,7 @@ You<span class="w"> </span>can<span class="w"> </span>change<span class="w"> </s
 
 Switcher<span class="w"> </span>devices<span class="w"> </span>uses<span class="w"> </span>two<span class="w"> </span>protocol<span class="w"> </span>types:
 <span class="w">    </span>Protocol<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">(</span>UDP<span class="w"> </span>port<span class="w"> </span><span class="m">20002</span><span class="w"> </span>or<span class="w"> </span>port<span class="w"> </span><span class="m">10002</span><span class="o">)</span>,<span class="w"> </span>used<span class="w"> </span>by:<span class="w"> </span>Switcher<span class="w"> </span>Mini,<span class="w"> </span>Switcher<span class="w"> </span>Power<span class="w"> </span>Plug,<span class="w"> </span>Switcher<span class="w"> </span>Touch,<span class="w"> </span>Switcher<span class="w"> </span>V2<span class="w"> </span><span class="o">(</span>esp<span class="o">)</span>,<span class="w"> </span>Switcher<span class="w"> </span>V2<span class="w"> </span><span class="o">(</span>qualcomm<span class="o">)</span>,<span class="w"> </span>Switcher<span class="w"> </span>V4
-<span class="w">    </span>Protocol<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">(</span>UDP<span class="w"> </span>port<span class="w"> </span><span class="m">20003</span><span class="w"> </span>or<span class="w"> </span>port<span class="w"> </span><span class="m">10003</span><span class="o">)</span>,<span class="w"> </span>used<span class="w"> </span>by:<span class="w"> </span>Switcher<span class="w"> </span>Breeze,<span class="w"> </span>Switcher<span class="w"> </span>Runner,<span class="w"> </span>Switcher<span class="w"> </span>Runner<span class="w"> </span>Mini,<span class="w"> </span>Switcher<span class="w"> </span>Runner<span class="w"> </span>S11,<span class="w"> </span>Switcher<span class="w"> </span>Runner<span class="w"> </span>S12
+<span class="w">    </span>Protocol<span class="w"> </span><span class="nb">type</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="o">(</span>UDP<span class="w"> </span>port<span class="w"> </span><span class="m">20003</span><span class="w"> </span>or<span class="w"> </span>port<span class="w"> </span><span class="m">10003</span><span class="o">)</span>,<span class="w"> </span>used<span class="w"> </span>by:<span class="w"> </span>Switcher<span class="w"> </span>Breeze,<span class="w"> </span>Switcher<span class="w"> </span>Runner,<span class="w"> </span>Switcher<span class="w"> </span>Runner<span class="w"> </span>Mini,<span class="w"> </span>Switcher<span class="w"> </span>Runner<span class="w"> </span>S11,<span class="w"> </span>Switcher<span class="w"> </span>Runner<span class="w"> </span>S12,<span class="w"> </span>Switcher<span class="w"> </span>Light<span class="w"> </span>SL01,<span class="w"> </span>Switcher<span class="w"> </span>Light<span class="w"> </span>SL01<span class="w"> </span>Mini
 You<span class="w"> </span>can<span class="w"> </span>change<span class="w"> </span>the<span class="w"> </span>scanned<span class="w"> </span>protocol<span class="w"> </span><span class="nb">type</span><span class="w"> </span>by<span class="w"> </span>passing<span class="w"> </span>an<span class="w"> </span>int<span class="w"> </span>argument:<span class="w"> </span>discover_devices.py<span class="w"> </span>-t<span class="w"> </span><span class="m">1</span>
 
 Note:
@@ -959,17 +959,29 @@ python<span class="w"> </span>control_device.py<span class="w"> </span>get_light
 
 python<span class="w"> </span>control_device.py<span class="w"> </span>get_light_state<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Runner S12&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
 
+python<span class="w"> </span>control_device.py<span class="w"> </span>get_light_state<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Light SL01&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
+
+python<span class="w"> </span>control_device.py<span class="w"> </span>get_light_state<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Light SL01 Mini&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
+
 python<span class="w"> </span>control_device.py<span class="w"> </span>turn_on_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Runner S11&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span><span class="w"> </span>-x<span class="w"> </span><span class="m">0</span>
 
 python<span class="w"> </span>control_device.py<span class="w"> </span>turn_on_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Runner S11&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span><span class="w"> </span>-x<span class="w"> </span><span class="m">1</span>
 
 python<span class="w"> </span>control_device.py<span class="w"> </span>turn_on_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Runner S12&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
 
+python<span class="w"> </span>control_device.py<span class="w"> </span>turn_on_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Light SL01&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
+
+python<span class="w"> </span>control_device.py<span class="w"> </span>turn_on_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Light SL01 Mini&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
+
 python<span class="w"> </span>control_device.py<span class="w"> </span>turn_off_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Runner S11&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span><span class="w"> </span>-x<span class="w"> </span><span class="m">0</span>
 
 python<span class="w"> </span>control_device.py<span class="w"> </span>turn_off_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Runner S11&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span><span class="w"> </span>-x<span class="w"> </span><span class="m">1</span>
 
 python<span class="w"> </span>control_device.py<span class="w"> </span>turn_off_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Runner S12&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
+
+python<span class="w"> </span>control_device.py<span class="w"> </span>turn_off_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Light SL01&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
+
+python<span class="w"> </span>control_device.py<span class="w"> </span>turn_off_light<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Light SL01 Mini&quot;</span><span class="w"> </span>-k<span class="w"> </span><span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="w"> </span>-d<span class="w"> </span>ab1c2d<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;111.222.11.22&quot;</span>
 
 python<span class="w"> </span>control_device.py<span class="w"> </span>get_thermostat_state<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Switcher Breeze&quot;</span><span class="w"> </span>-d<span class="w"> </span>3a20b7<span class="w"> </span>-i<span class="w"> </span><span class="s2">&quot;192.168.50.77&quot;</span>
 
@@ -1344,7 +1356,7 @@ python<span class="w"> </span>validate_token.py<span class="w"> </span>--usernam
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    2024-10-05
+    2024-10-24
   </span>
 
     
@@ -1440,7 +1452,7 @@ python<span class="w"> </span>validate_token.py<span class="w"> </span>--usernam
     <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "header.autohide", "navigation.indexes", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>

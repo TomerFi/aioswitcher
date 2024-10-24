@@ -22,7 +22,7 @@
       
       
       <link rel="icon" href="../img/favicon.ico">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.39">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.42">
     
     
       
@@ -30,7 +30,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.8c3ca2c6.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.0253249f.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -388,9 +388,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#type2-api-switcher-breeze-and-runner" class="md-nav__link">
+  <a href="#type2-api-switcher-breeze-runner-and-lights" class="md-nav__link">
     <span class="md-ellipsis">
-      Type2 API (Switcher Breeze and Runner)
+      Type2 API (Switcher Breeze, Runner and Lights)
     </span>
   </a>
   
@@ -504,9 +504,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#type2-api-switcher-breeze-and-runner" class="md-nav__link">
+  <a href="#type2-api-switcher-breeze-runner-and-lights" class="md-nav__link">
     <span class="md-ellipsis">
-      Type2 API (Switcher Breeze and Runner)
+      Type2 API (Switcher Breeze, Runner and Lights)
     </span>
   </a>
   
@@ -617,12 +617,13 @@ The following code will print all discovered devices for 60 seconds.</p>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
 </ol>
-<h3 id="type2-api-switcher-breeze-and-runner">Type2 API (Switcher Breeze and Runner)<a class="headerlink" href="#type2-api-switcher-breeze-and-runner" title="Permanent link">⚓︎</a></h3>
-<p>We can use the Type2 API to gain the following capabilities on Switcher Breeze and Runner:</p>
+<h3 id="type2-api-switcher-breeze-runner-and-lights">Type2 API (Switcher Breeze, Runner and Lights)<a class="headerlink" href="#type2-api-switcher-breeze-runner-and-lights" title="Permanent link">⚓︎</a></h3>
+<p>We can use the Type2 API to gain the following capabilities on Switcher Breeze, Runner and Lights:</p>
 <ul>
 <li>Get the current state</li>
 <li>Control Runner position</li>
 <li>Control Breeze (State, Mode, Fan Level, Target Temperature, Vertical Swing)</li>
+<li>Control Lights (State, Turn On, Turn Off)</li>
 </ul>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_runner</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="p">:</span>
     <span class="c1"># for connecting to a device we need its type, id, login key, token and ip address</span>
@@ -634,9 +635,9 @@ The following code will print all discovered devices for 60 seconds.</p>
         <span class="c1"># stop the shutter if currently rolling, circuit number is 0</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">stop_shutter</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)</span>
-        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="c1"># turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)</span>
-        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
     <span class="n">control_runner</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">RUNNER</span><span class="p">,</span> <span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="s2">&quot;00&quot;</span><span class="p">)</span>
@@ -653,8 +654,24 @@ The following code will print all discovered devices for 60 seconds.</p>
 </code></pre></div>
 <ol>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherShutterStateResponse">SwitcherShutterStateResponse</a></li>
+<li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherLightStateResponse">SwitcherLightStateResponse</a></li>
 <li><a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
 </ol>
+<p><div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_light</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="p">:</span>
+    <span class="c1"># for connecting to a device we need its type, id, login key and ip address</span>
+    <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
+        <span class="c1"># get the device current state</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_light_state</span><span class="p">()</span>
+        <span class="c1"># turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">control_light</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">LIGHT_SL01</span><span class="p">,</span> <span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="s2">&quot;00&quot;</span><span class="p">,</span> <span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="p">))</span>
+<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">control_light</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">LIGHT_SL01_MINI</span><span class="p">,</span> <span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="s2">&quot;00&quot;</span><span class="p">,</span> <span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="p">))</span>
+</code></pre></div>
+1. <a href="../codedocs/#src.aioswitcher.api.messages.SwitcherLightStateResponse">SwitcherLightStateResponse</a>
+2. <a href="../codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></p>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_breeze</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">remote_manager</span><span class="p">,</span> <span class="n">remote_id</span><span class="p">)</span> <span class="p">:</span>
     <span class="c1"># for connecting to a device we need its type, id, login key and ip address</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
@@ -710,7 +727,7 @@ The following code will print all discovered devices for 60 seconds.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    2024-10-05
+    2024-10-24
   </span>
 
     
@@ -806,7 +823,7 @@ The following code will print all discovered devices for 60 seconds.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["content.code.annotate", "header.autohide", "navigation.indexes", "navigation.tracking", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.6ce7567c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.525ec568.min.js"></script>
+      <script src="../assets/javascripts/bundle.83f73b43.min.js"></script>
       
     
   </body>
