@@ -306,7 +306,7 @@ def _parse_device_from_datagram(
                         ),
                         parser.get_light_state(
                             get_light_discovery_packet_index(device_type, 1)
-                        )
+                        ),
                     ],
                 )
             )
@@ -440,7 +440,8 @@ class DatagramParser:
             or len(self.message) == 159  # Switcher Runner and RunnerMini
             or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S12
             or len(self.message)
-            == 207  # Switcher Light SL01, Switcher Light SL01 Mini, Switcher Light SL02 and Switcher Light SL02 Mini
+            == 207  # Switcher Light SL01, Switcher Light SL01 Mini,
+            # Switcher Light SL02 and Switcher Light SL02 Mini
         )
 
     def get_ip_type1(self) -> str:
