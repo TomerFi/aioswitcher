@@ -162,6 +162,8 @@ asyncio.run(print_devices(60))
 
   asyncio.run(control_light(DeviceType.LIGHT_SL01, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   asyncio.run(control_light(DeviceType.LIGHT_SL01_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  asyncio.run(control_light(DeviceType.LIGHT_SL02, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+  asyncio.run(control_light(DeviceType.LIGHT_SL02_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
   ```
 
 </details>
@@ -235,4 +237,4 @@ Thanks goes to these wonderful people ([emoji key][1]):
 [gh-pages-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pages.yml/badge.svg
 [license-badge]: https://img.shields.io/github/license/tomerfi/aioswitcher
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi&color=1082C2
-[pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
+[pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi[pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi

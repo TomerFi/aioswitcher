@@ -57,7 +57,9 @@ from aioswitcher.device import (
         (DeviceType.RUNNER_S11, "Switcher Runner S11", "0f01", 2, DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT, True),
         (DeviceType.RUNNER_S12, "Switcher Runner S12", "0f02", 2, DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT, True),
         (DeviceType.LIGHT_SL01, "Switcher Light SL01", "0f04", 2, DeviceCategory.LIGHT, True),
-        (DeviceType.LIGHT_SL01_MINI, "Switcher Light SL01 Mini", "0f07", 2, DeviceCategory.LIGHT, True)
+        (DeviceType.LIGHT_SL01_MINI, "Switcher Light SL01 Mini", "0f07", 2, DeviceCategory.LIGHT, True),
+        (DeviceType.LIGHT_SL02, "Switcher Light SL02", "0f05", 2, DeviceCategory.LIGHT, True),
+        (DeviceType.LIGHT_SL02_MINI, "Switcher Light SL02 Mini", "0f08", 2, DeviceCategory.LIGHT, True)
     ],
 )
 def test_the_given_type_custom_properties_are_returning_the_expected_data(
