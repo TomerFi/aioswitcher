@@ -278,7 +278,11 @@ def get_light_discovery_packet_index(
     Used in retriving the light on/off status from the packet
     (based of device type and circuit number).
     """
-    if device_type == DeviceType.RUNNER_S11:
+    if device_type in (
+        DeviceType.RUNNER_S11,
+        DeviceType.LIGHT_SL02,
+        DeviceType.LIGHT_SL02_MINI,
+    ):
         if circuit_number not in [0, 1]:
             raise ValueError("Invalid circuit number")
         return circuit_number
