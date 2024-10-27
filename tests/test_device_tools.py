@@ -219,8 +219,8 @@ def test_get_light_discovery_packet_index_should_return_expected_index(device_ty
     (DeviceType.RUNNER_S12, 1, ValueError, "Invalid circuit number"),
     (DeviceType.LIGHT_SL01, 1, ValueError, "Invalid circuit number"),
     (DeviceType.LIGHT_SL01_MINI, 1, ValueError, "Invalid circuit number"),
-    (DeviceType.LIGHT_SL02, 1, ValueError, "Invalid circuit number"),
-    (DeviceType.LIGHT_SL02_MINI, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL02, 2, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL02_MINI, 2, ValueError, "Invalid circuit number"),
     ])
 def test_get_light_discovery_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
     assert_that(tools.get_light_discovery_packet_index).raises(error).when_called_with(
@@ -291,8 +291,8 @@ def test_get_light_api_packet_index_should_return_expected_index(device_type, ci
     (DeviceType.RUNNER_S12, 1, ValueError, "Invalid circuit number"),
     (DeviceType.LIGHT_SL01, 1, ValueError, "Invalid circuit number"),
     (DeviceType.LIGHT_SL01_MINI, 1, ValueError, "Invalid circuit number"),
-    (DeviceType.LIGHT_SL02, 1, ValueError, "Invalid circuit number"),
-    (DeviceType.LIGHT_SL02_MINI, 1, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL02, 2, ValueError, "Invalid circuit number"),
+    (DeviceType.LIGHT_SL02_MINI, 2, ValueError, "Invalid circuit number"),
     ])
 def test_get_light_api_packet_index_with_invalid_circuit_number_should_raise_error(device_type, circuit_number, error, error_msg):
     assert_that(tools.get_light_api_packet_index).raises(error).when_called_with(
