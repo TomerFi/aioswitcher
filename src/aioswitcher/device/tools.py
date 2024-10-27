@@ -290,8 +290,6 @@ def get_light_discovery_packet_index(
         DeviceType.RUNNER_S12,
         DeviceType.LIGHT_SL01,
         DeviceType.LIGHT_SL01_MINI,
-        DeviceType.LIGHT_SL02,
-        DeviceType.LIGHT_SL02_MINI,
     ):
         if circuit_number != 0:
             raise ValueError("Invalid circuit number")
