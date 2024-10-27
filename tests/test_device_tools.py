@@ -208,7 +208,9 @@ def test_get_shutter_discovery_packet_index_with_different_device_should_raise_e
     (DeviceType.LIGHT_SL01, 0, 0),
     (DeviceType.LIGHT_SL01_MINI, 0, 0),
     (DeviceType.LIGHT_SL02, 0, 0),
+    (DeviceType.LIGHT_SL02, 1, 1),
     (DeviceType.LIGHT_SL02_MINI, 0, 0),
+    (DeviceType.LIGHT_SL02_MINI, 1, 1),
     ])
 def test_get_light_discovery_packet_index_should_return_expected_index(device_type, circuit_number, index):
     assert_that(tools.get_light_discovery_packet_index(device_type, circuit_number)).is_equal_to(index)
@@ -280,7 +282,9 @@ def test_get_shutter_api_packet_index_with_different_device_should_raise_error(d
     (DeviceType.LIGHT_SL01, 0, 1),
     (DeviceType.LIGHT_SL01_MINI, 0, 1),
     (DeviceType.LIGHT_SL02, 0, 1),
+    (DeviceType.LIGHT_SL02, 1, 2),
     (DeviceType.LIGHT_SL02_MINI, 0, 1),
+    (DeviceType.LIGHT_SL02_MINI, 1, 2),
     ])
 def test_get_light_api_packet_index_should_return_expected_index(device_type, circuit_number, index):
     assert_that(tools.get_light_api_packet_index(device_type, circuit_number)).is_equal_to(index)
