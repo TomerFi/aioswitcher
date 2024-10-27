@@ -237,4 +237,4 @@ Thanks goes to these wonderful people ([emoji key][1]):
 [gh-pages-status]: https://github.com/TomerFi/aioswitcher/actions/workflows/pages.yml/badge.svg
 [license-badge]: https://img.shields.io/github/license/tomerfi/aioswitcher
 [pypi-downloads]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi&color=1082C2
-[pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi[pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
+[pypi-version]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
