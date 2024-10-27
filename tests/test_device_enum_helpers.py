@@ -60,6 +60,7 @@ from aioswitcher.device import (
         (DeviceType.LIGHT_SL01_MINI, "Switcher Light SL01 Mini", "0f07", 2, DeviceCategory.LIGHT, True),
         (DeviceType.LIGHT_SL02, "Switcher Light SL02", "0f05", 2, DeviceCategory.LIGHT, True),
         (DeviceType.LIGHT_SL02_MINI, "Switcher Light SL02 Mini", "0f08", 2, DeviceCategory.LIGHT, True),
+        (DeviceType.LIGHT_SL03, "Switcher Light SL03", "0f06", 2, DeviceCategory.LIGHT, True),
     ],
 )
 def test_the_given_type_custom_properties_are_returning_the_expected_data(

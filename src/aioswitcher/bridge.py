@@ -310,6 +310,36 @@ def _parse_device_from_datagram(
                     ],
                 )
             )
+
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.LIGHT
+            and device_type == DeviceType.LIGHT_SL03
+        ):
+            logger.debug("discovered a Light SL03 switcher device")
+            device_callback(
+                SwitcherLight(
+                    device_type,
+                    DeviceState.ON,
+                    parser.get_device_id(),
+                    parser.get_device_key(),
+                    parser.get_ip_type2(),
+                    parser.get_mac_type2(),
+                    parser.get_name(),
+                    device_type.token_needed,
+                    [
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 0)
+                        ),
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 1)
+                        ),
+                        parser.get_light_state(
+                            get_light_discovery_packet_index(device_type, 2)
+                        ),
+                    ],
+                )
+            )
         else:
             warn("discovered an unknown switcher device")
 
@@ -441,7 +471,7 @@ class DatagramParser:
             or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S12
             or len(self.message)
             == 207  # Switcher Light SL01, Switcher Light SL01 Mini,
-            # Switcher Light SL02 and Switcher Light SL02 Mini
+            # Switcher Light SL02, Switcher Light SL02 Mini and Switcher Light SL03
         )
 
     def get_ip_type1(self) -> str:
