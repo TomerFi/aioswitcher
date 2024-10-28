@@ -1,10 +1,15 @@
+# aioswitcher docs
 
-# aioswitcher documentation
+--8<-- "install.md"
 
---8<-- "docs/install.md"
+???- info "Supported devices."
+    --8<-- "supported.md"
 
---8<-- "docs/usage.md"
+## Bridge
 
---8<-- "docs/scripts.md"
+--8<-- "usage_bridge.md"
 
---8<-- "docs/codedocs.md"
+## API
+
+--8<-- "usage_api.md"
+

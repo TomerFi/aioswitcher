@@ -4,6 +4,8 @@
 ::: src.aioswitcher
 
 ::: src.aioswitcher.api
+    options:
+        show_source: true
 
 ::: src.aioswitcher.api.messages
 

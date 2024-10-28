@@ -1,6 +1,6 @@
 ---
 site_name: aioswitcher
-site_url: https://aioswitcher.info
+site_url: https://aioswitcher.tomfi.info
 site_author: Tomer Figenblat
 site_description: PyPi module integrating with various Switcher devices.
 
@@ -11,19 +11,30 @@ edit_uri: ""
 nav:
   - Home: index.md
   - Install: install.md
-  - Usage: usage.md
-  - Command line scripts: scripts.md
+  - Usage:
+      - Bridge: usage_bridge.md
+      - API: usage_api.md
+  - Supported devices: supported.md
   - Code documentation: codedocs.md
+  - Helper scripts: scripts.md
 
 markdown_extensions:
   - admonition
   - def_list
   - pymdownx.betterem
+  - pymdownx.caret
+  - pymdownx.critic
   - pymdownx.details
-  - pymdownx.highlight
+  - pymdownx.mark
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
+  - pymdownx.magiclink
   - pymdownx.smartsymbols
-  - pymdownx.snippets
+  - pymdownx.snippets:
+      base_path: ["docs"]
   - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
@@ -33,9 +44,6 @@ markdown_extensions:
 
 extra:
   social:
-    - icon: fontawesome/brands/twitter
-      link: https://twitter.com/realTomFi
-      name: realTomfi on Twitter
     - icon: fontawesome/brands/github
       link: https://github.com/TomerFi
       name: TomerFi on GitHub
@@ -55,7 +63,17 @@ extra:
 plugins:
   - search
   - git-revision-date
-  - mkdocstrings
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            filters:
+              - "!^_"
+            summary:
+              attributes: false
+              functions: true
+              modules: true
 
 theme:
   name: material
@@ -65,21 +83,34 @@ theme:
     code: Fira Code
     text: Open Sans
   palette:
+    - media: "(prefers-color-scheme)"
+      primary: red
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to system preference
     - media: "(prefers-color-scheme: light)"
+      primary: red
       scheme: default
       toggle:
-        icon: material/toggle-switch-off-outline
+        icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
+      primary: red
       scheme: slate
       toggle:
-        icon: material/toggle-switch
+        icon: material/brightness-4
         name: Switch to light mode
   features:
     - content.code.annotate
     - header.autohide
     - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.instant.preview
     - navigation.tracking
+    - navigation.top
+    - toc.follow
     - search.highlight
     - search.share
     - search.suggest
+    - content.code.copy

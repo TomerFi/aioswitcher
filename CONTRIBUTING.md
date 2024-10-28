@@ -9,29 +9,32 @@ Contributing is pretty straight-forward:
 - Commit your changes
 - Create a pull request against the `dev` branch
 
-## Install remote development version
+## Installing
 
-Contributions are welcome in all shapes or forms.
-If you're a user, you can play around with the current version in development and report back if you bump into anything
-suspicious.
+### Install remote development version
 
-Install remote development version using `pip`:
+Contributions are welcome in all shapes or forms. If you're a user, you can play around with the current development
+version and report back any findings.
+
+Install the remote development version using `pip`:
 
 ```shell
 pip install git+https://github.com/TomerFi/aioswitcher#dev
 ```
 
-## Install local development version
+### Install local development version
 
-In order to test your changes you can install the current development version from your active working branch.
+If you need to test your changes locally, you can install your work-in-progress from your active working branch.
 
-Install local development version using `pip`:
+Install the local development version using `pip`:
 
 ```shell
 pip install --upgrade .
 ```
 
-## Prepare the environment
+## Developing
+
+### Prepare the development environment
 
 With [Python >= 3.10][python-site] use [pip][pip-docs] to install [poetry][poetry-site]:
 
@@ -39,13 +42,7 @@ With [Python >= 3.10][python-site] use [pip][pip-docs] to install [poetry][poetr
   pip install -r requirements.txt
 ```
 
-## Get started
-
-Note the [code documentation][aioswitcher-code-docs], hosted in this project's [documentation site][aioswitcher-docs-site].<br/>
-
-### Get started using poethepoet
-
-If you prefer using *Python*'s [poethepoet][poethepoet-site], here are some scripts to get you started:
+### Get started with poetry
 
 ```shell
 poetry run poe install # install all dependencies and the current project
@@ -54,21 +51,18 @@ poetry run poe lint # will lint the project using black, flake8, isort, mypy, an
 poetry run poe docs_serve # will build and serve a local version of the documentation site
 ```
 
-### Get started using make
+## Documentation
 
-If you prefer using *GNU*'s [make][make-manual], here are some targets to get you started:
+We use [MkDocs][mkdocs-site] and [Material][material-site] for building our documentation site,
+https://aioswitcher.tomfi.info/. See [docs](docs) and [mkdocs.yml](mkdocs.yml). 
 
-```shell
-make install # install all dependencies and the current project
-make test # will run all unit-tests
-make lint # will lint the project using black, flake8, isort, mypy, and yamllint
-make docs-serve # will build and serve a local version of the documentation site
-```
+> [!NOTE]   
+> We're generating [code documentation][aioswitcher-code-docs] from _docstrings_.
 
 <!-- Links -->
 [aioswitcher-code-docs]: https://aioswitcher.tomfi.info/codedocs/
-[aioswitcher-docs-site]: https://aioswitcher.tomfi.info/
-[make-manual]: https://www.gnu.org/software/make/manual/make.html
+[material-site]: https://squidfunk.github.io/mkdocs-material/
+[mkdocs-site]: https://www.mkdocs.org/
 [pip-docs]: https://pypi.org/project/pip/
 [poethepoet-site]: https://github.com/nat-n/poethepoet
 [poetry-site]: https://poetry.eustace.io/

@@ -1,62 +1,28 @@
-# Command line scripts
-
-## scripts/discover_devices.py
+Use the following helper CLI scripts to work with Swithcer devices. You can run the various scripts using _poetry_
+scripts mechanism:
 
 ```shell
-usage: discover_devices.py [-h] [-t {1,2,all}] [delay]
+poetry run control_device --help
+poetry run discover_devices --help
+poetry run get_device_login_key --help
+poetry run validate_token --help
+```
+Or with Python:
 
-Discover and print info of Switcher devices
-
-positional arguments:
-  delay                 number of seconds to run, defaults to 60
-
-options:
-  -h, --help            show this help message and exit
-  -t {1,2,all}, --type {1,2,all}
-                        set protocol type: ['1', '2', 'all']
-
-Executing this script will print a serialized version of the discovered Switcher
-devices broadcasting on the local network for 60 seconds.
-You can change the delay by passing an int argument: discover_devices.py 30
-
-Switcher devices uses two protocol types:
-    Protocol type 1 (UDP port 20002 or port 10002), used by: Switcher Mini, Switcher Power Plug, Switcher Touch, Switcher V2 (esp), Switcher V2 (qualcomm), Switcher V4
-    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini, Switcher Runner S11, Switcher Runner S12, Switcher Light SL01, Switcher Light SL01 Mini, Switcher Light SL02, Switcher Light SL02 Mini, Switcher Light SL03
-You can change the scanned protocol type by passing an int argument: discover_devices.py -t 1
-
-Note:
-    WILL PRINT PRIVATE INFO SUCH AS DEVICE ID AND MAC.
-
-Example output:
-    Switcher devices broadcast a status message every approximately 4 seconds. This
-    script listens for these messages and prints a serialized version of the to the
-    standard output, for example (note the ``device_id`` and ``mac_address`` properties)::
-    ```
-        {   'auto_shutdown': '03:00:00',
-            'device_id': 'aaaaaa',
-            'device_state': <DeviceState.OFF: ('0000', 'off')>,
-            'device_type': <DeviceType.V2_ESP: ('Switcher V2 (esp)', 'a7', <DeviceCategory.WATER_HEATER: 1>)>,
-            'electric_current': 0.0,
-            'ip_address': '192.168.1.33',
-            'last_data_update': datetime.datetime(2021, 6, 13, 11, 11, 44, 883003),
-            'mac_address': '12:A1:A2:1A:BC:1A',
-            'name': 'My Switcher Boiler',
-            'power_consumption': 0,
-            'remaining_time': '00:00:00'}
-    ```
-Print all protocol types devices for 30 seconds:
-    python discover_devices.py 30 -t all
-
-Print only protocol type 1 devices:
-    python discover_devices.py -t 1
-
-Print only protocol type 2 devices:
-    python discover_devices.py -t 2
+```shell
+python scripts/control_device.py --help
+python scripts/discover_devices.py --help
+python scripts/get_device_login_key.py --help
+python scripts/validate_token.py --help
 ```
 
-## script/control_device.py
+!!!note
+    Don't forget to install the required aioswitcher version. If you're testing while developing, make sure to install
+    the work-in-progress.
 
-```shell
+## Control device
+
+```shell title="scripts/control_device.py"
 usage: control_device.py [-h]
                          {control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,get_thermostat_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on}
                          ...
@@ -240,9 +206,35 @@ python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "1
 python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off
 ```
 
-### script/control_device.py control_thermostat
+### Create schedule
 
-```shell
+```shell title="scripts/control_device.py create_schedule"
+usage: control_device.py create_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
+                                         -n START_TIME -f END_TIME
+                                         [-w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -n START_TIME, --start-time START_TIME
+                        the on time for the schedule, e.g. 13:00
+  -f END_TIME, --end-time END_TIME
+                        the off time for the schedule, e.g. 13:30
+  -w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...], --weekdays [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]
+                        days for recurring schedules
+```
+
+### Control thermostat
+
+```shell title="scripts/control_device.py control_thermostat"
 usage: control_device.py control_thermostat [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
                                             IP_ADDRESS -r REMOTE_ID
                                             [-s {on,off}]
@@ -277,35 +269,9 @@ options:
   -u, --update          update state without control
 ```
 
-### script/control_device.py create_schedule
+### Delete schedule
 
-```shell
-usage: control_device.py create_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
-                                         -n START_TIME -f END_TIME
-                                         [-w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]]
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-  -n START_TIME, --start-time START_TIME
-                        the on time for the schedule, e.g. 13:00
-  -f END_TIME, --end-time END_TIME
-                        the off time for the schedule, e.g. 13:30
-  -w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...], --weekdays [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]
-                        days for recurring schedules
-```
-
-### script/control_device.py delete_schedule
-
-```shell
+```shell title="scripts/control_device.py delete_schedule"
 usage: control_device.py delete_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                          -s SCHEDULE_ID
 
@@ -324,9 +290,31 @@ options:
                         the id of the schedule for deletion
 ```
 
-### script/control_device.py get_schedules
+### Get light state
 
-```shell
+```shell title="scripts/control_device.py get_light_state"
+usage: control_device.py get_light_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -x INDEX, --index INDEX
+                        the circuit number to turn off
+```
+
+### Get schedules
+
+```shell title="scripts/control_device.py get_schedules"
 usage: control_device.py get_schedules [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
 options:
@@ -342,88 +330,9 @@ options:
                         the ip address assigned to the device
 ```
 
-### script/control_device.py get_state
+### Get shutter state
 
-```shell
-usage: control_device.py get_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-```
-
-### script/control_device.py get_thermostat_state
-
-```shell
-usage: control_device.py get_thermostat_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
-                                              IP_ADDRESS
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-```
-
-### script/control_device.py set_auto_shutdown
-
-```shell
-usage: control_device.py set_auto_shutdown [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
-                                           IP_ADDRESS -r HOURS [-m [MINUTES]]
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-  -r HOURS, --hours HOURS
-                        number hours for the auto shutdown
-  -m [MINUTES], --minutes [MINUTES]
-                        number hours for the auto shutdown
-```
-
-### script/control_device.py set_name
-
-```shell
-usage: control_device.py set_name [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS -n NAME
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-  -n NAME, --name NAME  new name for the device
-```
-
-### script/control_device.py get_shutter_state
-
-```shell
+```shell title="scripts/control_device.py get_shutter_state"
 usage: control_device.py get_shutter_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                            [-x INDEX]
 
@@ -444,9 +353,88 @@ options:
                         the circuit number to operate
 ```
 
-### script/control_device.py set_shutter_position
+### Get state
 
-```shell
+```shell title="scripts/control_device.py get_state"
+usage: control_device.py get_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+```
+
+### Get thermostat state
+
+```shell title="scripts/control_device.py get_thermostat_state"
+usage: control_device.py get_thermostat_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
+                                              IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+```
+
+### Set auto shutdown
+
+```shell title="scripts/control_device.py set_auto_shutdown"
+usage: control_device.py set_auto_shutdown [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
+                                           IP_ADDRESS -r HOURS [-m [MINUTES]]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -r HOURS, --hours HOURS
+                        number hours for the auto shutdown
+  -m [MINUTES], --minutes [MINUTES]
+                        number hours for the auto shutdown
+```
+
+### Set name
+
+```shell title="scripts/control_device.py set_name"
+usage: control_device.py set_name [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS -n NAME
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -n NAME, --name NAME  new name for the device
+```
+
+### Set shutter position
+
+```shell title="scripts/control_device.py set_shutter_position"
 usage: control_device.py set_shutter_position [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i
                                               IP_ADDRESS -p POSITION [-x INDEX]
 
@@ -469,9 +457,9 @@ options:
                         the circuit number to operate
 ```
 
-### script/control_device.py stop_shutter
+### Stop shutter
 
-```shell
+```shell title="scripts/control_device.py stop_shutter"
 usage: control_device.py stop_shutter [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -491,53 +479,9 @@ options:
                         the circuit number to operate
 ```
 
-### script/control_device.py turn_off_shutter_child_lock
+### Turn off
 
-```shell
-usage: control_device.py turn_off_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-  -x INDEX, --index INDEX
-                        the circuit number to turn off
-```
-
-### script/control_device.py turn_on_shutter_child_lock
-
-```shell
-usage: control_device.py turn_on_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-  -x INDEX, --index INDEX
-                        the circuit number to turn on
-```
-
-### script/control_device.py turn_off
-
-```shell
+```shell title="scripts/control_device.py turn_off"
 usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
 options:
@@ -553,9 +497,9 @@ options:
                         the ip address assigned to the device
 ```
 
-### script/control_device.py turn_on
+### Turn on
 
-```shell
+```shell title="scripts/control_device.py turn_on"
 usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                  [-t [TIMER]]
 
@@ -574,31 +518,9 @@ options:
                         set minutes timer for turn on operation
 ```
 
-### script/control_device.py get_light_state
+### Turn off light
 
-```shell
-usage: control_device.py get_light_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
-
-options:
-  -h, --help            show this help message and exit
-  -v, --verbose         include the raw message
-  -c DEVICE_TYPE, --device-type DEVICE_TYPE
-                        the type of the device
-  -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
-  -d DEVICE_ID, --device-id DEVICE_ID
-                        the identification of the device
-  -l DEVICE_KEY, --device-key DEVICE_KEY
-                        the login key of the device
-  -i IP_ADDRESS, --ip-address IP_ADDRESS
-                        the ip address assigned to the device
-  -x INDEX, --index INDEX
-                        the circuit number to turn off
-```
-
-### script/control_device.py turn_off_light
-
-```shell
+```shell title="scripts/control_device.py turn_off_light"
 usage: control_device.py turn_off_light [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -618,9 +540,9 @@ options:
                         the circuit number to turn off
 ```
 
-### script/control_device.py turn_on_light
+### Turn on light
 
-```shell
+```shell title="scripts/control_device.py turn_on_light"
 usage: control_device.py turn_on_light [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -640,9 +562,107 @@ options:
                         the circuit number to turn on
 ```
 
-## script/get_device_login_key.py
+### Turn off shutter child lock
 
-```shell
+```shell title="scripts/control_device.py turn_off_shutter_child_lock"
+usage: control_device.py turn_off_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -x INDEX, --index INDEX
+                        the circuit number to turn off
+```
+
+### Turn on shutter child lock
+
+```shell title="scripts/control_device.py turn_on_shutter_child_lock"
+usage: control_device.py turn_on_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -x INDEX, --index INDEX
+                        the circuit number to turn on
+```
+
+## Discover devices
+
+```shell title="scripts/discover_devices.py"
+usage: discover_devices.py [-h] [-t {1,2,all}] [delay]
+
+Discover and print info of Switcher devices
+
+positional arguments:
+  delay                 number of seconds to run, defaults to 60
+
+options:
+  -h, --help            show this help message and exit
+  -t {1,2,all}, --type {1,2,all}
+                        set protocol type: ['1', '2', 'all']
+
+Executing this script will print a serialized version of the discovered Switcher
+devices broadcasting on the local network for 60 seconds.
+You can change the delay by passing an int argument: discover_devices.py 30
+
+Switcher devices uses two protocol types:
+    Protocol type 1 (UDP port 20002 or port 10002), used by: Switcher Mini, Switcher Power Plug, Switcher Touch, Switcher V2 (esp), Switcher V2 (qualcomm), Switcher V4
+    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini, Switcher Runner S11, Switcher Runner S12, Switcher Light SL01, Switcher Light SL01 Mini, Switcher Light SL02, Switcher Light SL02 Mini, Switcher Light SL03
+You can change the scanned protocol type by passing an int argument: discover_devices.py -t 1
+
+Note:
+    WILL PRINT PRIVATE INFO SUCH AS DEVICE ID AND MAC.
+
+Example output:
+    Switcher devices broadcast a status message every approximately 4 seconds. This
+    script listens for these messages and prints a serialized version of the to the
+    standard output, for example (note the ``device_id`` and ``mac_address`` properties)::
+    ```
+        {   'auto_shutdown': '03:00:00',
+            'device_id': 'aaaaaa',
+            'device_state': <DeviceState.OFF: ('0000', 'off')>,
+            'device_type': <DeviceType.V2_ESP: ('Switcher V2 (esp)', 'a7', <DeviceCategory.WATER_HEATER: 1>)>,
+            'electric_current': 0.0,
+            'ip_address': '192.168.1.33',
+            'last_data_update': datetime.datetime(2021, 6, 13, 11, 11, 44, 883003),
+            'mac_address': '12:A1:A2:1A:BC:1A',
+            'name': 'My Switcher Boiler',
+            'power_consumption': 0,
+            'remaining_time': '00:00:00'}
+    ```
+Print all protocol types devices for 30 seconds:
+    python discover_devices.py 30 -t all
+
+Print only protocol type 1 devices:
+    python discover_devices.py -t 1
+
+Print only protocol type 2 devices:
+    python discover_devices.py -t 2
+```
+
+## Get device login key
+
+```shell title="scripts/get_device_login_key.py"
 usage: get_device_login_key.py [-h] -i IP_ADDRESS -p {20002,10002,20003,10003}
 
 Get the login key of your Switcher device
@@ -658,9 +678,9 @@ example usage:
 python get_device_login_key.py -i "111.222.11.22" -p 10002
 ```
 
-## script/validate_token.py
+## Validate token
 
-```shell
+```shell title="scripts/validate_token.py"
 usage: validate_token.py [-h] -u USERNAME -t TOKEN
 
 Validate a Token from Switcher by username and token
