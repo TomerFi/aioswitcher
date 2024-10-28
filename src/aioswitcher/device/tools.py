@@ -238,17 +238,13 @@ async def validate_token(username: str, token: str) -> bool:
 #   used in retreving state from the packet.
 # Used for Switcher Runners and Switcher Lights
 # Runner and Runner Mini: has no lights circuits & one shutter circuits ->
-#   shutter circuit is 0,
-#   get_light_discovery_packet_index would raise an error.
+#   shutter circuit is 0, get_light_discovery_packet_index would raise an error.
 # Runner S11: has two lights circuits & one shutter circuits ->
-#   Lights circuits are numbered 0 & 1,
-#   shutter circuit is 2.
+#   Lights circuits are numbered 0 & 1, shutter circuit is 2.
 # Runner S12: has one lights circuits & two shutter circuits ->
-#   Lights circuit is 0,
-#   shutter circuits are numbered 1 & 2.
+#   Lights circuit is 0, shutter circuits are numbered 1 & 2.
 # Light SL01 and Light SL01 Mini: has one lights circuits & has no shutter circuits ->
-#   Lights circuit is 0,
-#   get_shutter_discovery_packet_index would raise an error.
+#   Lights circuit is 0, get_shutter_discovery_packet_index would raise an error.
 # Light SL02 and Light SL02 Mini: has two lights circuits & has no shutter circuits ->
 #   Lights circuits are numbered 0 & 1,
 #   get_shutter_discovery_packet_index would raise an error.
