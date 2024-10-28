@@ -123,6 +123,7 @@ def test_a_light_datagram_produces_device(mock_device_cls, mock_device, resource
     _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
     mock_callback.assert_called_once_with(mock_device)
 
+
 @patch.object(SwitcherLight, "__new__")
 @patch.object(DatagramParser, "is_switcher_originator", lambda s: True)
 def test_a_dual_light_datagram_produces_device(mock_device_cls, mock_device, resource_path, mock_callback):
