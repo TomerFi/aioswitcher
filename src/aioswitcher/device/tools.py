@@ -246,8 +246,7 @@ async def validate_token(username: str, token: str) -> bool:
 # Runner S12: has one lights circuits & two shutter circuits ->
 #   Lights circuit is 0, shutter circuits are numbered 1 & 2.
 # Light SL01 and Light SL01 Mini: has one lights circuits & has no shutter circuits ->
-#   Lights circuit is 0, 
-#   get_shutter_discovery_packet_index would raise an error.
+#   Lights circuit is 0, get_shutter_discovery_packet_index would raise an error.
 # Light SL02 and Light SL02 Mini: has two lights circuits & has no shutter circuits ->
 #   Lights circuits are numbered 0 & 1,
 #   get_shutter_discovery_packet_index would raise an error.
