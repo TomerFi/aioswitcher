@@ -508,8 +508,8 @@ The following code will print all discovered devices for 60 seconds.</p>
 <div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_runner</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="p">:</span>
     <span class="c1"># for connecting to a device we need its type, id, login key, token and ip address</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
-        <span class="c1"># get the device current state (1)</span>
-        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_shutter_state</span><span class="p">()</span>
+        <span class="c1"># get the shutter current state, circuit number is 0</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_shutter_state</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="c1"># open the shutter to 30%, circuit number is 0</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_position</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
         <span class="c1"># stop the shutter if currently rolling, circuit number is 0</span>
@@ -540,11 +540,11 @@ The following code will print all discovered devices for 60 seconds.</p>
 <p><div class="highlight"><pre><span></span><code><span class="k">async</span> <span class="k">def</span> <span class="nf">control_light</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="p">:</span>
     <span class="c1"># for connecting to a device we need its type, id, login key and ip address</span>
     <span class="k">async</span> <span class="k">with</span> <span class="n">SwitcherType2Api</span><span class="p">(</span><span class="n">device_type</span><span class="p">,</span> <span class="n">device_ip</span><span class="p">,</span> <span class="n">device_id</span><span class="p">,</span> <span class="n">device_key</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span> <span class="k">as</span> <span class="n">api</span><span class="p">:</span>
-        <span class="c1"># get the device current state</span>
-        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_light_state</span><span class="p">()</span>
-        <span class="c1"># turn on the light, circuit number is 0 (Only for Runner S11 and Runner S12)</span>
+        <span class="c1"># get the light current state, circuit number is 0</span>
+        <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">get_light_state</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="c1"># turn on the light, circuit number is 0 (Only for Runner S11, Runner S12 and Lights)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">ON</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="c1"># turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)</span>
+        <span class="c1"># turn off the light, circuit number is 0 (Only for Runner S11, Runner S12 and Lights)</span>
         <span class="k">await</span> <span class="n">api</span><span class="o">.</span><span class="n">set_light</span><span class="p">(</span><span class="n">DeviceState</span><span class="o">.</span><span class="n">OFF</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">control_light</span><span class="p">(</span><span class="n">DeviceType</span><span class="o">.</span><span class="n">LIGHT_SL01</span><span class="p">,</span> <span class="s2">&quot;111.222.11.22&quot;</span><span class="p">,</span> <span class="s2">&quot;ab1c2d&quot;</span><span class="p">,</span> <span class="s2">&quot;00&quot;</span><span class="p">,</span> <span class="s2">&quot;zvVvd7JxtN7CgvkD1Psujw==&quot;</span><span class="p">))</span>
@@ -582,9 +582,9 @@ The following code will print all discovered devices for 60 seconds.</p>
 </code></pre></div>
 <ol>
 <li><a href="codedocs/#src.aioswitcher.api.messages.SwitcherThermostatStateResponse">SwitcherThermostatStateResponse</a></li>
-<li><a href="codedocs/#src.aioswitcher.api.messages.SwitcherBreezeRemote">SwitcherBreezeRemote</a></li>
+<li><a href="codedocs/#src.aioswitcher.api.remotes.SwitcherBreezeRemote">SwitcherBreezeRemote</a></li>
 <li><a href="codedocs/#src.aioswitcher.api.messages.SwitcherBaseResponse">SwitcherBaseResponse</a></li>
-<li><a href="codedocs/#src.aioswitcher.api.SwitcherBreezeRemoteManager">SwitcherBreezeRemoteManager</a></li>
+<li><a href="codedocs/#src.aioswitcher.api.remotes.SwitcherBreezeRemoteManager">SwitcherBreezeRemoteManager</a></li>
 </ol>
 <div class="admonition info">
 <p class="admonition-title">Info</p>
@@ -19194,7 +19194,7 @@ E.g. 3 will result in a set of MONDAY and the remainder will be 1.</p>
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    2024-10-29
+    2024-10-30
   </span>
 
     
