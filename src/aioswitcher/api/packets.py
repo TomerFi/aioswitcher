@@ -30,6 +30,7 @@ PHONE_ID = "0000"
 DEVICE_PASS = "00000000"
 STOP_SHUTTER_PRECOMMAND = "3702"
 SET_POSITION_PRECOMMAND = "3701"
+SET_CHILD_LOCK_PRECOMMAND = "3707"
 SET_LIGHT_PRECOMMAND = "370a"
 
 # login packet for Type1 devices
@@ -162,6 +163,21 @@ RUNNER_SET_POSITION = (
     + PAD_72_ZEROS
     + "3701"
     + "0100"
+    + "{}"
+)
+
+# used for old runners devices that are not require a token within the packet.
+# used in this action: set_position
+# format values are local session id, timestamp, device id, hex_pos
+RUNNER_SET_CHILD_LOCK = (
+    "fef0000003050102{}000000"
+    + "000000000000000000"
+    + "{}"
+    + "00000000000000000000f0fe"
+    + "{}"
+    + PAD_72_ZEROS
+    + "3707"
+    + "0600"
     + "{}"
 )
 

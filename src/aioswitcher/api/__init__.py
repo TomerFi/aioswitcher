@@ -26,6 +26,7 @@ from typing import Optional, Set, Tuple, Type, Union, final
 from ..device import (
     DeviceState,
     DeviceType,
+    ShutterChildLock,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
@@ -606,6 +607,54 @@ class SwitcherApi:
             )
         else:
             packet = packets.RUNNER_SET_POSITION.format(
+                login_resp.session_id, timestamp, self._device_id, hex_pos
+            )
+
+        packet = set_message_length(packet)
+        signed_packet = sign_packet_with_crc_key(packet)
+
+        logger.debug("sending a control packet")
+
+        self._writer.write(unhexlify(signed_packet))
+        response = await self._reader.read(1024)
+        return SwitcherBaseResponse(response)
+
+    async def set_shutter_child_lock(
+        self, command: ShutterChildLock, index: int = 0
+    ) -> SwitcherBaseResponse:
+        """Use for turn on/off shutter child lock.
+
+        Args:
+            command: use the ``aioswitcher.api.ShutterChildLock`` enum.
+            index: which shutter child lock to turn on/off, default to 0.
+
+        Returns:
+            An instance of ``SwitcherBaseResponse``.
+
+        """
+        index_packet = get_shutter_api_packet_index(self._device_type, index)
+        hex_pos = f"0{index_packet}{command.value}"
+
+        logger.debug("about to send set shutter child lock command")
+        timestamp, login_resp = await self._login()
+        if not login_resp.successful:
+            logger.error("Failed to log into device with id %s", self._device_id)
+            raise RuntimeError("login request was not successful")
+
+        logger.debug(
+            "logged in session_id=%s, timestamp=%s", login_resp.session_id, timestamp
+        )
+
+        if bool(self._token):
+            packet = packets.GENERAL_TOKEN_COMMAND.format(
+                timestamp,
+                self._device_id,
+                self._token,
+                packets.SET_CHILD_LOCK_PRECOMMAND,
+                hex_pos,
+            )
+        else:
+            packet = packets.RUNNER_SET_CHILD_LOCK.format(
                 login_resp.session_id, timestamp, self._device_id, hex_pos
             )
 

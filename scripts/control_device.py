@@ -26,6 +26,7 @@ from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.api.remotes import SwitcherBreezeRemoteManager
 from aioswitcher.device import (
     DeviceState,
+    ShutterChildLock,
     DeviceType,
     ThermostatFanLevel,
     ThermostatMode,
@@ -364,6 +365,32 @@ stop_shutter_parser.add_argument(
     help="the circuit number to operate",
 )
 
+# turn_off_shutter_child_lock parser
+turn_on_shutter_child_lock_parser = subparsers.add_parser(
+    "turn_off_shutter_child_lock", help="turn off shutter child lock", parents=[shared_parser]
+)
+turn_on_shutter_child_lock_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to turn off",
+)
+
+# turn_on_shutter_child_lock parser
+turn_on_shutter_child_lock_parser = subparsers.add_parser(
+    "turn_on_shutter_child_lock", help="turn on shutter child lock", parents=[shared_parser]
+)
+turn_on_shutter_child_lock_parser.add_argument(
+    "-x",
+    "--index",
+    required=False,
+    type=int,
+    default=0,
+    help="the circuit number to turn on",
+)
+
 # turn_off parser
 turn_on_parser = subparsers.add_parser(
     "turn_off", help="turn off the device", parents=[shared_parser]
@@ -652,6 +679,34 @@ async def set_shutter_position(
         )
 
 
+async def turn_on_shutter_child_lock(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use for turn on shutter child lock."""
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
+        printer.pprint(asdict(await api.set_shutter_child_lock(ShutterChildLock.ON, index), verbose))
+
+
+async def turn_off_shutter_child_lock(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    index: int,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use for turn off shutter child lock."""
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
+        printer.pprint(asdict(await api.set_shutter_child_lock(ShutterChildLock.OFF, index), verbose))
+
+
 async def get_light_state(
     device_type: DeviceType,
     device_id: str,
@@ -825,6 +880,32 @@ def main() -> None:
                     args.device_key,
                     args.ip_address,
                     args.position,
+                    args.index,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "turn_on_shutter_child_lock":
+            asyncio.run(
+                turn_on_shutter_child_lock(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
+                    args.index,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "turn_off_shutter_child_lock":
+            asyncio.run(
+                turn_off_shutter_child_lock(
+                    args.device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
                     args.index,
                     args.verbose,
                     args.token,
