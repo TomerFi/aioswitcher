@@ -28,6 +28,7 @@ from aioswitcher.device import (
     SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
+    ShutterChildLock,
     SwitcherSingleShutterDualLight,
     SwitcherThermostat,
     SwitcherWaterHeater,
@@ -61,6 +62,8 @@ class FakeData:
     position2: List[int] = field(default_factory=lambda: [50, 50])
     direction: List[ShutterDirection] = field(default_factory=lambda: [ShutterDirection.SHUTTER_STOP])
     direction2: List[ShutterDirection] = field(default_factory=lambda: [ShutterDirection.SHUTTER_STOP, ShutterDirection.SHUTTER_STOP])
+    child_lock: List[ShutterChildLock] = field(default_factory=lambda: [ShutterChildLock.OFF])
+    child_lock2: List[ShutterChildLock] = field(default_factory=lambda: [ShutterChildLock.OFF, ShutterChildLock.OFF])
     light: List[DeviceState] = field(default_factory=lambda: [DeviceState.ON])
     light2: List[DeviceState] = field(default_factory=lambda: [DeviceState.ON, DeviceState.ON])
 
@@ -167,7 +170,8 @@ def test_given_a_device_of_type_shutter_when_instantiating_as_a_shutter_should_b
         fake_data.name,
         fake_data.token_needed,
         fake_data.position,
-        fake_data.direction
+        fake_data.direction,
+        fake_data.child_lock
     )
 
     assert_that(sut.device_type).is_equal_to(DeviceType.RUNNER)
@@ -178,6 +182,7 @@ def test_given_a_device_of_type_shutter_when_instantiating_as_a_shutter_should_b
     assert_that(sut.name).is_equal_to(fake_data.name)
     assert_that(sut.position).is_equal_to(fake_data.position)
     assert_that(sut.direction).is_equal_to(fake_data.direction)
+    assert_that(sut.child_lock).is_equal_to(fake_data.child_lock)
 
 
 def test_given_a_device_of_type_single_shutter_dual_light_when_instantiating_as_a_shutter_should_be_instatiated_properly(fake_data):
@@ -192,6 +197,7 @@ def test_given_a_device_of_type_single_shutter_dual_light_when_instantiating_as_
         fake_data.token_needed,
         fake_data.position,
         fake_data.direction,
+        fake_data.child_lock,
         fake_data.light
     )
 
@@ -203,6 +209,7 @@ def test_given_a_device_of_type_single_shutter_dual_light_when_instantiating_as_
     assert_that(sut.name).is_equal_to(fake_data.name)
     assert_that(sut.position).is_equal_to(fake_data.position)
     assert_that(sut.direction).is_equal_to(fake_data.direction)
+    assert_that(sut.child_lock).is_equal_to(fake_data.child_lock)
     assert_that(sut.light).is_equal_to(fake_data.light)
 
 
@@ -218,6 +225,7 @@ def test_given_a_device_of_type_dual_shutter_single_light_when_instantiating_as_
         fake_data.token_needed,
         fake_data.position,
         fake_data.direction,
+        fake_data.child_lock,
         fake_data.light
     )
 
@@ -229,6 +237,7 @@ def test_given_a_device_of_type_dual_shutter_single_light_when_instantiating_as_
     assert_that(sut.name).is_equal_to(fake_data.name)
     assert_that(sut.position).is_equal_to(fake_data.position)
     assert_that(sut.direction).is_equal_to(fake_data.direction)
+    assert_that(sut.child_lock).is_equal_to(fake_data.child_lock)
     assert_that(sut.light).is_equal_to(fake_data.light)
 
 
@@ -317,7 +326,8 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_shutter_shoul
         fake_data.name,
         fake_data.token_needed,
         fake_data.position,
-        fake_data.direction
+        fake_data.direction,
+        fake_data.child_lock
     ).is_equal_to("only shutters are allowed")
 
 
@@ -333,6 +343,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_single_shutte
         fake_data.token_needed,
         fake_data.position,
         fake_data.direction,
+        fake_data.child_lock,
         fake_data.light2
     ).is_equal_to("only shutters with dual lights are allowed")
 
@@ -349,6 +360,7 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_dual_shutter_
         fake_data.token_needed,
         fake_data.position2,
         fake_data.direction2,
+        fake_data.child_lock2,
         fake_data.light
     ).is_equal_to("only dual shutters with single lights are allowed")
 

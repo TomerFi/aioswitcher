@@ -268,6 +268,31 @@ class ShutterDirection(Enum):
         return self._value  # type: ignore
 
 
+@final
+class ShutterChildLock(Enum):
+    """Enum class representing the shutter device's child lock state."""
+
+    ON = "01", "on"
+    OFF = "00", "off"
+
+    def __new__(cls, value: str, display: str) -> "ShutterChildLock":
+        """Override the default enum constructor and include extra properties."""
+        new_enum = object.__new__(cls)
+        new_enum._value = value  # type: ignore
+        new_enum._display = display  # type: ignore
+        return new_enum
+
+    @property
+    def display(self) -> str:
+        """Return the display name of the swing."""
+        return self._display  # type: ignore
+
+    @property
+    def value(self) -> str:
+        """Return the value of the swing."""
+        return self._value  # type: ignore
+
+
 @dataclass
 class SwitcherBase(ABC):
     """Abstraction for all switcher devices.
@@ -363,6 +388,7 @@ class SwitcherShutterBase(ABC):
 
     position: List[int]
     direction: List[ShutterDirection]
+    child_lock: List[ShutterChildLock]
 
 
 @dataclass
@@ -377,6 +403,7 @@ class SwitcherSingleShutterDualLightBase(ABC):
 
     position: List[int]
     direction: List[ShutterDirection]
+    child_lock: List[ShutterChildLock]
     light: List[DeviceState]
 
 
@@ -392,6 +419,7 @@ class SwitcherDualShutterSingleLightBase(ABC):
 
     position: List[int]
     direction: List[ShutterDirection]
+    child_lock: List[ShutterChildLock]
     light: List[DeviceState]
 
 

@@ -29,6 +29,7 @@ from .device import (
     DeviceCategory,
     DeviceState,
     DeviceType,
+    ShutterChildLock,
     ShutterDirection,
     SwitcherBase,
     SwitcherDualShutterSingleLight,
@@ -161,6 +162,11 @@ def _parse_device_from_datagram(
                             get_shutter_discovery_packet_index(device_type, 0)
                         )
                     ],
+                    [
+                        parser.get_shutter_child_lock(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
                 )
             )
 
@@ -186,6 +192,11 @@ def _parse_device_from_datagram(
                     ],
                     [
                         parser.get_shutter_direction(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        )
+                    ],
+                    [
+                        parser.get_shutter_child_lock(
                             get_shutter_discovery_packet_index(device_type, 0)
                         )
                     ],
@@ -228,6 +239,14 @@ def _parse_device_from_datagram(
                             get_shutter_discovery_packet_index(device_type, 0)
                         ),
                         parser.get_shutter_direction(
+                            get_shutter_discovery_packet_index(device_type, 1)
+                        ),
+                    ],
+                    [
+                        parser.get_shutter_child_lock(
+                            get_shutter_discovery_packet_index(device_type, 0)
+                        ),
+                        parser.get_shutter_child_lock(
                             get_shutter_discovery_packet_index(device_type, 1)
                         ),
                     ],
@@ -592,6 +611,18 @@ class DatagramParser:
         hex_direction = hexlify(self.message[start_index:end_index]).decode()
         directions = dict(map(lambda d: (d.value, d), ShutterDirection))
         return directions[hex_direction]
+
+    def get_shutter_child_lock(self, index: int) -> ShutterChildLock:
+        """Extract the shutter child lock state from the broadcast message."""
+        start_index = 136 + (index * 16)
+        end_index = start_index + 2
+        hex_pos = hexlify(self.message[start_index:end_index]).decode()
+        hex_device_state = hex_pos[0:2]
+        return (
+            ShutterChildLock.ON
+            if hex_device_state == ShutterChildLock.ON.value
+            else ShutterChildLock.OFF
+        )
 
     def get_light_state(self, index: int) -> DeviceState:
         """Extract the light state from the broadcast message."""

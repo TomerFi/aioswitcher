@@ -21,6 +21,7 @@ from typing import Set, final
 from ..device import (
     DeviceState,
     DeviceType,
+    ShutterChildLock,
     ShutterDirection,
     ThermostatFanLevel,
     ThermostatMode,
@@ -151,6 +152,18 @@ class StateMessageParser:
         directions = dict(map(lambda s: (s.value, s), ShutterDirection))
         return directions[hex_dir]
 
+    def get_shutter_child_lock(self, index: int) -> ShutterChildLock:
+        """Return the current shutter child lock."""
+        start_index = 154 + (index * 32)
+        end_index = start_index + 2
+        hex_pos = self._hex_response[start_index:end_index].decode()
+        hex_device_state = hex_pos[0:2]
+        return (
+            ShutterChildLock.ON
+            if hex_device_state == ShutterChildLock.ON.value
+            else ShutterChildLock.OFF
+        )
+
     def get_light_state(self, index: int) -> DeviceState:
         """Return the current light state."""
         start_index = 152 + (index * 32)
@@ -277,6 +290,7 @@ class SwitcherShutterStateResponse(SwitcherBaseResponse):
 
     position: int = field(init=False)
     direction: ShutterDirection = field(init=False)
+    child_lock: ShutterChildLock = field(init=False)
     device_type: DeviceType
     index: int
 
@@ -287,6 +301,7 @@ class SwitcherShutterStateResponse(SwitcherBaseResponse):
 
         self.direction = parser.get_shutter_direction(index)
         self.position = parser.get_shutter_position(index)
+        self.child_lock = parser.get_shutter_child_lock(index)
 
 
 @final
