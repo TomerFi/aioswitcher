@@ -38,7 +38,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Install deno runtime
         uses: denoland/setup-deno@v1.1.2
@@ -88,7 +88,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ matrix.python }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
 
       - name: Install project build dependencies
         run: make install-all-deps
@@ -145,7 +145,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Build documentation site
         run: |
