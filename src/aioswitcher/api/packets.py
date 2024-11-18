@@ -170,14 +170,14 @@ RUNNER_SET_POSITION = (
 # used in this action: set_position
 # format values are local session id, timestamp, device id, hex_pos
 RUNNER_SET_CHILD_LOCK = (
-    "fef0000003050102{}000000"
+    "fef0580003050102{}000000"
     + "000000000000000000"
     + "{}"
     + "00000000000000000000f0fe"
     + "{}"
     + PAD_72_ZEROS
     + "3707"
-    + "0600"
+    + "0100"
     + "{}"
 )
 

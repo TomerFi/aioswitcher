@@ -23,12 +23,12 @@ from pytest import fixture, mark
 from aioswitcher.device import (
     DeviceState,
     DeviceType,
+    ShutterChildLock,
     ShutterDirection,
     SwitcherDualShutterSingleLight,
     SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
-    ShutterChildLock,
     SwitcherSingleShutterDualLight,
     SwitcherThermostat,
     SwitcherWaterHeater,

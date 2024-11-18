@@ -26,8 +26,8 @@ from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.api.remotes import SwitcherBreezeRemoteManager
 from aioswitcher.device import (
     DeviceState,
-    ShutterChildLock,
     DeviceType,
+    ShutterChildLock,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
@@ -367,7 +367,9 @@ stop_shutter_parser.add_argument(
 
 # turn_off_shutter_child_lock parser
 turn_on_shutter_child_lock_parser = subparsers.add_parser(
-    "turn_off_shutter_child_lock", help="turn off shutter child lock", parents=[shared_parser]
+    "turn_off_shutter_child_lock",
+    help="turn off shutter child lock",
+    parents=[shared_parser],
 )
 turn_on_shutter_child_lock_parser.add_argument(
     "-x",
@@ -380,7 +382,9 @@ turn_on_shutter_child_lock_parser.add_argument(
 
 # turn_on_shutter_child_lock parser
 turn_on_shutter_child_lock_parser = subparsers.add_parser(
-    "turn_on_shutter_child_lock", help="turn on shutter child lock", parents=[shared_parser]
+    "turn_on_shutter_child_lock",
+    help="turn on shutter child lock",
+    parents=[shared_parser],
 )
 turn_on_shutter_child_lock_parser.add_argument(
     "-x",
@@ -690,7 +694,11 @@ async def turn_on_shutter_child_lock(
 ) -> None:
     """Use for turn on shutter child lock."""
     async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
-        printer.pprint(asdict(await api.set_shutter_child_lock(ShutterChildLock.ON, index), verbose))
+        printer.pprint(
+            asdict(
+                await api.set_shutter_child_lock(ShutterChildLock.ON, index), verbose
+            )
+        )
 
 
 async def turn_off_shutter_child_lock(
@@ -704,7 +712,11 @@ async def turn_off_shutter_child_lock(
 ) -> None:
     """Use for turn off shutter child lock."""
     async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
-        printer.pprint(asdict(await api.set_shutter_child_lock(ShutterChildLock.OFF, index), verbose))
+        printer.pprint(
+            asdict(
+                await api.set_shutter_child_lock(ShutterChildLock.OFF, index), verbose
+            )
+        )
 
 
 async def get_light_state(

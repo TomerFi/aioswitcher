@@ -633,7 +633,7 @@ class SwitcherApi:
 
         """
         index_packet = get_shutter_api_packet_index(self._device_type, index)
-        hex_pos = f"0{index_packet}{command.value}"
+        hex_pos = command.value
 
         logger.debug("about to send set shutter child lock command")
         timestamp, login_resp = await self._login()
@@ -646,6 +646,7 @@ class SwitcherApi:
         )
 
         if bool(self._token):
+            hex_pos = f"0{index_packet}{command.value}"
             packet = packets.GENERAL_TOKEN_COMMAND.format(
                 timestamp,
                 self._device_id,

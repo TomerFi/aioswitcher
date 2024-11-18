@@ -47,8 +47,8 @@ from aioswitcher.api.remotes import (
 )
 from aioswitcher.device import (
     DeviceState,
-    ShutterChildLock,
     DeviceType,
+    ShutterChildLock,
     ThermostatFanLevel,
     ThermostatMode,
     ThermostatSwing,
