@@ -167,7 +167,7 @@ RUNNER_SET_POSITION = (
 )
 
 # used for old runners devices that are not require a token within the packet.
-# used in this action: set_position
+# used in this action: set_shutter_child_lock
 # format values are local session id, timestamp, device id, hex_pos
 RUNNER_SET_CHILD_LOCK = (
     "fef0580003050102{}000000"
