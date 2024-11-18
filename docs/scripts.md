@@ -82,6 +82,8 @@ subcommands:
     set_shutter_position
                         set shutter position
     stop_shutter        stop shutter
+    turn_off_shutter_child_lock turn off shutter child lock
+    turn_on_shutter_child_lock turn on shutter child lock
     turn_off            turn off the device
     turn_on             turn on the device
     turn_off_light      turn off light
@@ -136,6 +138,22 @@ python control_device.py set_shutter_position -c "Switcher Runner S11" -k "zvVvd
 python control_device.py set_shutter_position -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 0
 
 python control_device.py set_shutter_position -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 1
+
+python control_device.py turn_on_shutter_child_lock -c "Switcher Runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_shutter_child_lock -c "Switcher Runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
 
 python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
 
@@ -471,6 +489,50 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to operate
+```
+
+### script/control_device.py turn_off_shutter_child_lock
+
+```shell
+usage: control_device.py turn_off_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -x INDEX, --index INDEX
+                        the circuit number to turn off
+```
+
+### script/control_device.py turn_on_shutter_child_lock
+
+```shell
+usage: control_device.py turn_on_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+  -x INDEX, --index INDEX
+                        the circuit number to turn on
 ```
 
 ### script/control_device.py turn_off
