@@ -289,7 +289,7 @@ class ShutterChildLock(Enum):
 
     @property
     def value(self) -> str:
-        """Return the value of the swing."""
+        """Return the value of the shutter child lock."""
         return self._value  # type: ignore
 
 
