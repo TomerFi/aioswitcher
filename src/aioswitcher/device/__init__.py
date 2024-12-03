@@ -284,7 +284,7 @@ class ShutterChildLock(Enum):
 
     @property
     def display(self) -> str:
-        """Return the display name of the swing."""
+        """Return the display name of the shutter child lock."""
         return self._display  # type: ignore
 
     @property
