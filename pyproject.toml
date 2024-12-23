@@ -59,8 +59,6 @@ poethepoet = "^0.31.1"
   validate_token = "scripts.validate_token:main"
 
 [tool.poe.tasks]
-install = "poetry install --no-interaction"
-install_docs_only = "poetry install --no-interaction --without dev"
 test = "poetry run pytest -v"
 test_cov = "poetry run pytest -v --cov --cov-report=term"
 test_rep = "poetry run pytest -v --cov --cov-report=xml:coverage.xml --junit-xml junit.xml"

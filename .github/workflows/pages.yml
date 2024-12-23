@@ -41,7 +41,7 @@ jobs:
 
       - name: Build documentation site
         run: |
-          poetry run poe install_docs_only
+          poetry install --no-interaction --without dev
           poetry run poe docs_build
 
       - name: Deploy to GH-Pages

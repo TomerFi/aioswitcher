@@ -79,7 +79,7 @@ jobs:
 
       - name: Verify documentation site build
         run: |
-          poetry run poe install_docs_only
+          poetry install --no-interaction --without dev
           poetry run poe docs_build
 
       - name: Publish build to PyPi

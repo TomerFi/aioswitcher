@@ -49,7 +49,7 @@ jobs:
 
       - name: Install, test with coverage report, and build
         run: |
-          poetry run poe install
+          poetry install --no-interaction
           poetry run poe test_rep
           poetry build
 
