@@ -1,28 +1,17 @@
-Use the following helper CLI scripts to work with Swithcer devices. You can run the various scripts using _poetry_
-scripts mechanism:
-
-```shell
-poetry run control_device --help
-poetry run discover_devices --help
-poetry run get_device_login_key --help
-poetry run validate_token --help
-```
-Or with Python:
-
-```shell
-python scripts/control_device.py --help
-python scripts/discover_devices.py --help
-python scripts/get_device_login_key.py --help
-python scripts/validate_token.py --help
-```
+Use the following helper CLI scripts to work with Swithcer devices. You can run the various scripts using the _poetry_
+scripts mechanism or Python.
 
 !!!note
-    Don't forget to install the required aioswitcher version. If you're testing while developing, make sure to install
-    the work-in-progress.
+    If running with Python, don't forget to install the required aioswitcher version. If you're testing while
+    developing, install the work-in-progress version.
 
 ## Control device
 
+Use to control devices.
+
 ```shell title="scripts/control_device.py"
+$ poetry run control_device --help
+
 usage: control_device.py [-h]
                          {control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,get_thermostat_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on}
                          ...
@@ -209,6 +198,8 @@ python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "1
 ### Create schedule
 
 ```shell title="scripts/control_device.py create_schedule"
+$ poetry run control_device create_schedule --help
+
 usage: control_device.py create_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                          -n START_TIME -f END_TIME
                                          [-w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]]
@@ -235,6 +226,8 @@ options:
 ### Control thermostat
 
 ```shell title="scripts/control_device.py control_thermostat"
+$ poetry run control_device control_thermostat --help
+
 usage: control_device.py control_thermostat [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
                                             IP_ADDRESS -r REMOTE_ID
                                             [-s {on,off}]
@@ -272,6 +265,8 @@ options:
 ### Delete schedule
 
 ```shell title="scripts/control_device.py delete_schedule"
+$ poetry run control_device delete_schedule --help
+
 usage: control_device.py delete_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                          -s SCHEDULE_ID
 
@@ -293,6 +288,8 @@ options:
 ### Get light state
 
 ```shell title="scripts/control_device.py get_light_state"
+$ poetry run control_device get_light_state --help
+
 usage: control_device.py get_light_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -315,6 +312,8 @@ options:
 ### Get schedules
 
 ```shell title="scripts/control_device.py get_schedules"
+$ poetry run control_device get_schedules --help
+
 usage: control_device.py get_schedules [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
 options:
@@ -333,6 +332,8 @@ options:
 ### Get shutter state
 
 ```shell title="scripts/control_device.py get_shutter_state"
+$ poetry run control_device get_shutter_state --help
+
 usage: control_device.py get_shutter_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                            [-x INDEX]
 
@@ -356,6 +357,8 @@ options:
 ### Get state
 
 ```shell title="scripts/control_device.py get_state"
+$ poetry run control_device get_state --help
+
 usage: control_device.py get_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
 options:
@@ -374,6 +377,8 @@ options:
 ### Get thermostat state
 
 ```shell title="scripts/control_device.py get_thermostat_state"
+$ poetry run control_device get_thermostat_state --help
+
 usage: control_device.py get_thermostat_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
                                               IP_ADDRESS
 
@@ -393,6 +398,8 @@ options:
 ### Set auto shutdown
 
 ```shell title="scripts/control_device.py set_auto_shutdown"
+$ poetry run control_device set_auto_shutdown --help
+
 usage: control_device.py set_auto_shutdown [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
                                            IP_ADDRESS -r HOURS [-m [MINUTES]]
 
@@ -416,6 +423,8 @@ options:
 ### Set name
 
 ```shell title="scripts/control_device.py set_name"
+$ poetry run control_device set_name --help
+
 usage: control_device.py set_name [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS -n NAME
 
 options:
@@ -435,6 +444,8 @@ options:
 ### Set shutter position
 
 ```shell title="scripts/control_device.py set_shutter_position"
+$ poetry run control_device set_shutter_position --help
+
 usage: control_device.py set_shutter_position [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i
                                               IP_ADDRESS -p POSITION [-x INDEX]
 
@@ -460,6 +471,8 @@ options:
 ### Stop shutter
 
 ```shell title="scripts/control_device.py stop_shutter"
+$ poetry run control_device stop_shutter --help
+
 usage: control_device.py stop_shutter [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -482,6 +495,8 @@ options:
 ### Turn off
 
 ```shell title="scripts/control_device.py turn_off"
+$ poetry run control_device turn_off --help
+
 usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
 options:
@@ -500,6 +515,8 @@ options:
 ### Turn on
 
 ```shell title="scripts/control_device.py turn_on"
+$ poetry run control_device turn_on --help
+
 usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                  [-t [TIMER]]
 
@@ -521,6 +538,8 @@ options:
 ### Turn off light
 
 ```shell title="scripts/control_device.py turn_off_light"
+$ poetry run control_device turn_off_light --help
+
 usage: control_device.py turn_off_light [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -543,6 +562,8 @@ options:
 ### Turn on light
 
 ```shell title="scripts/control_device.py turn_on_light"
+$ poetry run control_device turn_on_light --help
+
 usage: control_device.py turn_on_light [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -565,6 +586,8 @@ options:
 ### Turn off shutter child lock
 
 ```shell title="scripts/control_device.py turn_off_shutter_child_lock"
+$ poetry run control_device turn_off_shutter_child_lock --help
+
 usage: control_device.py turn_off_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -587,6 +610,8 @@ options:
 ### Turn on shutter child lock
 
 ```shell title="scripts/control_device.py turn_on_shutter_child_lock"
+$ poetry run control_device turn_on_shutter_child_lock --help
+
 usage: control_device.py turn_on_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
 options:
@@ -608,7 +633,11 @@ options:
 
 ## Discover devices
 
+Use to discover devices and their states.
+
 ```shell title="scripts/discover_devices.py"
+$ poetry run discover_devices --help
+
 usage: discover_devices.py [-h] [-t {1,2,all}] [delay]
 
 Discover and print info of Switcher devices
@@ -659,10 +688,14 @@ Print only protocol type 1 devices:
 Print only protocol type 2 devices:
     python discover_devices.py -t 2
 ```
-
+``
 ## Get device login key
 
+Use to fetch the login key from devices.
+
 ```shell title="scripts/get_device_login_key.py"
+$ poetry run get_device_login_key --help
+
 usage: get_device_login_key.py [-h] -i IP_ADDRESS -p {20002,10002,20003,10003}
 
 Get the login key of your Switcher device
@@ -680,7 +713,11 @@ python get_device_login_key.py -i "111.222.11.22" -p 10002
 
 ## Validate token
 
+Use to validate your device token.
+
 ```shell title="scripts/validate_token.py"
+$ poetry run validate_token --help
+
 usage: validate_token.py [-h] -u USERNAME -t TOKEN
 
 Validate a Token from Switcher by username and token

@@ -13,13 +13,6 @@ Check the docs: [https://aioswitcher.tomfi.info][docs-aioswitcher]
 
 Looking for a containerized solution? Check [https://switcher-webapi.tomfi.info][switcher-webapi].
 
-## Command Line Helper Scripts
-
-- [discover_devices.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/discover_devices.py) can discover devices and their states (can be run by `poetry run discover_devices`).
-- [control_device.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/control_device.py) can control a device (can be run by `poetry run control_device`).
-- [get_device_login_key.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/get_device_login_key) can get a device login key (can be run by `poetry run get_device_login_key`).
-- [validate_token.py](https://github.com/TomerFi/aioswitcher/blob/dev/scripts/validate_token.py) can validate a device token which is a must for newer devices, used for communicating with devices (can be run by `poetry run validate_token`).
-
 ## Disclaimer
 
 This is **NOT** an official module, and it is **NOT** officially supported by the vendor.</br>

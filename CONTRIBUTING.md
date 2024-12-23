@@ -44,8 +44,16 @@ With [Python >= 3.10][python-site] use [pip][pip-docs] to install [poetry][poetr
 
 ### Get started with poetry
 
+After installing, run [poe][poethepoet-site] for _help_, this will list the available tasks:
+
 ```shell
-poetry run poe install # install all dependencies and the current project
+poetry install # install all dependencies and the current project
+poetry run poe --help # display all available tasks
+```
+
+Common [poe][poethepoet-site] tasks:
+
+```shell
 poetry run poe test # will run all unit-tests
 poetry run poe lint # will lint the project using black, flake8, isort, mypy, and yamllint
 poetry run poe docs_serve # will build and serve a local version of the documentation site
