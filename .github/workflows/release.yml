@@ -79,11 +79,13 @@ jobs:
 
       - name: Verify documentation site build
         run: |
-          make install-docs-only-deps
-          make docs-build
+          poetry run poe install_docs_only
+          poetry run poe docs_build
 
       - name: Publish build to PyPi
-        run: PYPI_TOKEN="${{ secrets.PYPI_TOKEN }}" make publish
+        run: |
+          rm -rf ./dist
+          poetry publish --build --no-interaction -u __token__ -p ${{ secrets.PYPI_TOKEN }}
 
       - name: Set development project version
         uses: sandstromviktor/toml-editor@2.0.0

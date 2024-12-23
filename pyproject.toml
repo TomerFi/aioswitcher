@@ -60,6 +60,7 @@ poethepoet = "^0.31.1"
 
 [tool.poe.tasks]
 install = "poetry install --no-interaction"
+install_docs_only = "poetry install --no-interaction --without dev"
 test = "poetry run pytest -v"
 test_cov = "poetry run pytest -v --cov --cov-report=term"
 test_rep = "poetry run pytest -v --cov --cov-report=xml:coverage.xml --junit-xml junit.xml"
@@ -73,7 +74,7 @@ isort = "poetry run isort --check-only src/ tests/ docs/ scripts/"
 isort_fix = "poetry run isort src/ tests/ docs/ scripts/"
 mypy = "poetry run mypy src/ scripts/"
 yamllint = "poetry run yamllint --format colored --strict ."
-docs_build = "poetry run mkdocs build"
+docs_build = "poetry run mkdocs build --strict"
 docs_serve = "poetry run mkdocs serve"
 
 [tool.pytest.ini_options]
