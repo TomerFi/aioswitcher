@@ -12,6 +12,9 @@ on:
         default: "auto"
         required: true
 
+env:
+  MAIN_PY_VER: "3.10"
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -19,33 +22,35 @@ jobs:
     name: Build, publish, and release
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
 
       - name: Prepare python environment
         run: |
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
+          poetry lock --no-update
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-poetry-release-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Configure git
         run: |
@@ -54,7 +59,7 @@ jobs:
 
       - name: Determine version and create changelog
         id: bumper
-        uses: tomerfi/version-bumper-action@2.0.2
+        uses: tomerfi/version-bumper-action@2.0.3
         with:
           bump: '${{ github.event.inputs.bump }}'
 
@@ -65,17 +70,15 @@ jobs:
           key: tool.poetry.version
           value: ${{ steps.bumper.outputs.new_version }}
 
+      # yamllint disable rule:line-length
       - name: Commit, tag, and push
-        # yamllint disable rule:line-length
-        # editorconfig-checker-disable
         run: |
           git add pyproject.toml
           git commit -m "build: bump version to ${{ steps.bumper.outputs.new_version }} [skip ci]"
           git push
           git tag ${{ steps.bumper.outputs.new_version }} -m "${{ steps.bumper.outputs.new_version }}"
           git push origin ${{ steps.bumper.outputs.new_version }}
-        # yamllint enable rule:line-length
-        # editorconfig-checker-enable
+      # yamllint enable rule:line-length
 
       - name: Verify documentation site build
         run: |
@@ -94,17 +97,17 @@ jobs:
           key: tool.poetry.version
           value: ${{ steps.bumper.outputs.next_dev_iteration }}
 
+      # yamllint disable rule:line-length
       - name: Commit and push
-        # yamllint disable rule:line-length
         run: |
           git add pyproject.toml
           git commit -m "build: bump version to ${{ steps.bumper.outputs.next_dev_iteration }} [skip ci]"
           git push
-        # yamllint enable rule:line-length
+      # yamllint enable rule:line-length
 
       - name: Create a release name
         id: release_name
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             var retval = '${{ steps.bumper.outputs.new_version }}'
@@ -115,7 +118,7 @@ jobs:
 
       - name: Create a release
         id: gh_release
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.RELEASE_PAT }}
           script: |

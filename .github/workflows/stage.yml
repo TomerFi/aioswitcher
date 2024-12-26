@@ -6,46 +6,52 @@ on:
   push:
     branches:
       - dev
-    paths-ignore:
-      - ".github"
-      - ".vscode"
+    paths:
+      - src/**
+      - pyproject.toml
+      - requirements.txt
+
+env:
+  MAIN_PY_VER: "3.10"
 
 jobs:
-  stage:
+  test:
     runs-on: ubuntu-latest
     environment: staging
     name: Stage project
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v2.0.0
         with:
           timezone: Asia/Jerusalem
 
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
 
       - name: Prepare python environment
         run: |
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
+          poetry lock --no-update
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-poetry-test-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Install, test with coverage report, and build
         run: |
@@ -54,7 +60,8 @@ jobs:
           poetry build
 
       - name: Push to CodeCov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
+        if: ${{ matrix.python == env.MAIN_PY_VER }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml

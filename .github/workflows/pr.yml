@@ -3,6 +3,8 @@ name: Pull request build
 
 on:
   pull_request:
+    branches:
+      - dev
 
 env:
   MAIN_PY_VER: "3.10"
@@ -15,15 +17,15 @@ jobs:
       pull-requests: read
     steps:
       - name: Source checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ env.MAIN_PY_VER }}
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
@@ -33,15 +35,13 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
+          poetry lock --no-update
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
-
-      - name: Install deno runtime
-        uses: denoland/setup-deno@v1.1.2
 
       - name: Lint the project
         run: |
@@ -60,7 +60,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Source checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v2.0.0
@@ -68,12 +68,12 @@ jobs:
           timezone: Asia/Jerusalem
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
 
       - name: Cache pip repository
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ matrix.python }}
@@ -83,12 +83,14 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
+          poetry lock --no-update
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-poetry-test-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
 
       - name: Install project build dependencies
         run: poetry install --no-interaction
@@ -108,7 +110,7 @@ jobs:
           report_individual_runs: true
 
       - name: Push to CodeCov
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         if: ${{ matrix.python == env.MAIN_PY_VER }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -122,15 +124,15 @@ jobs:
       pull-requests: read
     steps:
       - name: Source checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
@@ -140,12 +142,14 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
+          poetry lock --no-update
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-poetry-docs-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Build documentation site
         run: |

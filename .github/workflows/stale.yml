@@ -1,0 +1,21 @@
+---
+name: 'Close stale issues and PRs'
+on:
+  schedule:
+    - cron: '0 2 * * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v9
+        with:
+          stale-issue-label: "status: stale"
+          stale-issue-message: >
+            This issue has been automatically marked as stale because it has not had
+            recent activity. It will be closed if no further activity occurs. Thank you
+            for your contributions.
+          close-issue-message: Closing this issue.
+          days-before-stale: 30
+          exempt-issue-labels: |
+            status: confirmed,status: on-hold,type: todo,type: wip,type: enhancement

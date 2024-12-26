@@ -1,0 +1,30 @@
+---
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /.github/workflows
+    schedule:
+      interval: weekly
+    labels:
+      - "type: dependencies"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    assignees:
+      - "tomerfi"
+      - "thecode"
+      - "YogevBokobza"
+
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: daily
+    labels:
+      - "type: dependencies"
+    commit-message:
+      prefix: "build"
+      include: "scope"
+    assignees:
+      - "tomerfi"
+      - "thecode"
+      - "YogevBokobza"

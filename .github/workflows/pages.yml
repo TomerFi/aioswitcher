@@ -2,8 +2,12 @@
 name: Pages Deploy
 
 on:
+  workflow_dispatch:
   release:
     types: [published]
+
+env:
+  MAIN_PY_VER: "3.10"
 
 jobs:
   deploy-pages:
@@ -12,32 +16,34 @@ jobs:
     name: Build documentation site and deploy to GH-Pages
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
 
-      - name: Setup Python 3.10
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
 
       - name: Prepare python environment
         run: |
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
+          poetry lock --no-update
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}
+          # yamllint disable-line rule:line-length
+          key: ${{ runner.os }}-poetry-docs-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Build documentation site
         run: |
@@ -45,7 +51,7 @@ jobs:
           poetry run poe docs_build
 
       - name: Deploy to GH-Pages
-        uses: peaceiris/actions-gh-pages@v3.9.3
+        uses: peaceiris/actions-gh-pages@v4.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site

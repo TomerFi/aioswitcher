@@ -13,4 +13,4 @@ pr:
   conventionalTitle:
   tasksList:
   autoApprove:
-    users: ['dependabot', 'allcontributors']
+    users: ['dependabot']
