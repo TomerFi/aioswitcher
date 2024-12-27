@@ -7,7 +7,7 @@ on:
       - dev
 
 env:
-  MAIN_PY_VER: "3.10"
+  MAIN_PY_VER: "3.13"
 
 jobs:
   lint:
@@ -35,7 +35,6 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
-          poetry lock --no-update
 
       - name: Cache poetry virtual environment
         uses: actions/cache@v4
@@ -45,6 +44,7 @@ jobs:
 
       - name: Lint the project
         run: |
+          poetry lock --no-update
           poetry install --no-interaction
           poetry run poe lint
 
@@ -53,7 +53,7 @@ jobs:
     needs: [lint]
     strategy:
       matrix:
-        python: ["3.9", "3.10"]
+        python: ["3.12", "3.13"]
     name: Test project with Python ${{ matrix.python }}
     permissions:
       checks: write
@@ -83,17 +83,17 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
-          poetry lock --no-update
 
       - name: Cache poetry virtual environment
         uses: actions/cache@v4
         with:
           path: .venv
-          # yamllint disable-line rule:line-length
-          key: ${{ runner.os }}-poetry-test-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ matrix.python }}
 
       - name: Install project build dependencies
-        run: poetry install --no-interaction
+        run: |
+          poetry lock --no-update
+          poetry install --no-interaction
 
       - name: Test the project
         run: >
@@ -142,16 +142,15 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
-          poetry lock --no-update
 
       - name: Cache poetry virtual environment
         uses: actions/cache@v4
         with:
           path: .venv
-          # yamllint disable-line rule:line-length
-          key: ${{ runner.os }}-poetry-docs-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Build documentation site
         run: |
+          poetry lock --no-update
           poetry install --no-interaction
           poetry run poe docs_build

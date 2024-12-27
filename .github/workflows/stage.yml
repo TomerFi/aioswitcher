@@ -8,11 +8,12 @@ on:
       - dev
     paths:
       - src/**
+      - tests/**
       - pyproject.toml
       - requirements.txt
 
 env:
-  MAIN_PY_VER: "3.10"
+  MAIN_PY_VER: "3.13"
 
 jobs:
   test:
@@ -44,17 +45,16 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
-          poetry lock --no-update
 
       - name: Cache poetry virtual environment
         uses: actions/cache@v4
         with:
           path: .venv
-          # yamllint disable-line rule:line-length
-          key: ${{ runner.os }}-poetry-test-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Install, test with coverage report, and build
         run: |
+          poetry lock --no-update
           poetry install --no-interaction
           poetry run poe test_rep
           poetry build

@@ -13,7 +13,7 @@ on:
         required: true
 
 env:
-  MAIN_PY_VER: "3.10"
+  MAIN_PY_VER: "3.13"
 
 jobs:
   release:
@@ -43,14 +43,12 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
-          poetry lock --no-update
 
       - name: Cache poetry virtual environment
         uses: actions/cache@v4
         with:
           path: .venv
-          # yamllint disable-line rule:line-length
-          key: ${{ runner.os }}-poetry-release-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Configure git
         run: |
@@ -82,7 +80,8 @@ jobs:
 
       - name: Verify documentation site build
         run: |
-          poetry install --no-interaction --without dev
+          poetry lock --no-update
+          poetry install --no-interaction
           poetry run poe docs_build
 
       - name: Publish build to PyPi

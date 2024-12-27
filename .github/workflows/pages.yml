@@ -7,7 +7,7 @@ on:
     types: [published]
 
 env:
-  MAIN_PY_VER: "3.10"
+  MAIN_PY_VER: "3.13"
 
 jobs:
   deploy-pages:
@@ -36,18 +36,17 @@ jobs:
           pip install -r requirements.txt
           poetry config virtualenvs.create true
           poetry config virtualenvs.in-project true
-          poetry lock --no-update
 
       - name: Cache poetry virtual environment
         uses: actions/cache@v4
         with:
           path: .venv
-          # yamllint disable-line rule:line-length
-          key: ${{ runner.os }}-poetry-docs-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
+          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
 
       - name: Build documentation site
         run: |
-          poetry install --no-interaction --without dev
+          poetry lock --no-update
+          poetry install --no-interaction
           poetry run poe docs_build
 
       - name: Deploy to GH-Pages
