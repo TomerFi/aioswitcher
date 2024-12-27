@@ -46,7 +46,7 @@ def test_minutes_to_hexadecimal_seconds_with_correct_minutes_should_return_expec
 def test_minutes_to_hexadecimal_seconds_with_a_negative_value_should_throw_an_error():
     assert_that(tools.minutes_to_hexadecimal_seconds).raises(
         Exception
-    ).when_called_with(-1).is_equal_to("argument out of range")
+    ).when_called_with(-1).is_equal_to("'I' format requires 0 <= number <= 4294967295")
 
 
 def test_timedelta_to_hexadecimal_seconds_with_an_allowed_timedelta_should_return_an_hex_timestamp():
@@ -90,7 +90,7 @@ def test_current_timestamp_to_hexadecimal_should_return_the_current_timestamp():
 def test_current_timestamp_to_hexadecimal_with_errornous_value_should_throw_an_error(_):
     assert_that(tools.current_timestamp_to_hexadecimal).raises(
         Exception
-    ).when_called_with().is_equal_to("argument out of range")
+    ).when_called_with().is_equal_to("'I' format requires 0 <= number <= 4294967295")
 
 
 @mark.parametrize("watts, amps", [(1608, 7.3), (2600, 11.8), (3489, 15.9)])
