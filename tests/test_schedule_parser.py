@@ -14,9 +14,12 @@
 
 """Switcher integration schedule parser module test cases."""
 
+import time
 from binascii import unhexlify
+from datetime import datetime, timedelta
 from pathlib import Path
 
+import pytz
 from assertpy import assert_that
 
 from aioswitcher.schedule import Days, ScheduleState
@@ -44,8 +47,10 @@ def test_schedule_parser_with_a_weekly_recurring_enabled_schedule_data():
     assert_that(sut.is_enabled()).is_true()
     assert_that(sut.is_recurring()).is_true()
     assert_that(sut.get_days()).contains_only(Days.MONDAY)
-    assert_that(sut.get_start_time()).is_equal_to("17:00")
-    assert_that(sut.get_end_time()).is_equal_to("18:00")
+    assert_that(sut.get_start_time()).is_equal_to(
+        local_time_for_time_in_timezone("17:00", "Asia/Jerusalem"))
+    assert_that(sut.get_end_time()).is_equal_to(
+        local_time_for_time_in_timezone("18:00", "Asia/Jerusalem"))
     assert_that(sut.get_state()).is_equal_to(ScheduleState.ENABLED)
     assert_that(sut.schedule).is_equal_to(schedule_data)
 
@@ -57,8 +62,10 @@ def test_schedule_parser_with_a_daily_recurring_enabled_schedule_data():
     assert_that(sut.is_enabled()).is_true()
     assert_that(sut.is_recurring()).is_true()
     assert_that(sut.get_days()).is_equal_to(set(Days))
-    assert_that(sut.get_start_time()).is_equal_to("17:00")
-    assert_that(sut.get_end_time()).is_equal_to("18:00")
+    assert_that(sut.get_start_time()).is_equal_to(
+        local_time_for_time_in_timezone("17:00", "Asia/Jerusalem"))
+    assert_that(sut.get_end_time()).is_equal_to(
+        local_time_for_time_in_timezone("18:00", "Asia/Jerusalem"))
     assert_that(sut.get_state()).is_equal_to(ScheduleState.ENABLED)
     assert_that(sut.schedule).is_equal_to(schedule_data)
 
@@ -70,8 +77,10 @@ def test_schedule_parser_with_a_partial_daily_recurring_enabled_schedule_data():
     assert_that(sut.is_enabled()).is_true()
     assert_that(sut.is_recurring()).is_true()
     assert_that(sut.get_days()).contains_only(Days.SUNDAY, Days.SATURDAY, Days.FRIDAY, Days.THURSDAY, Days.TUESDAY, Days.WEDNESDAY)
-    assert_that(sut.get_start_time()).is_equal_to("17:30")
-    assert_that(sut.get_end_time()).is_equal_to("18:30")
+    assert_that(sut.get_start_time()).is_equal_to(
+        local_time_for_time_in_timezone("17:30", "Asia/Jerusalem"))
+    assert_that(sut.get_end_time()).is_equal_to(
+        local_time_for_time_in_timezone("18:30", "Asia/Jerusalem"))
     assert_that(sut.get_state()).is_equal_to(ScheduleState.ENABLED)
     assert_that(sut.schedule).is_equal_to(schedule_data)
 
@@ -83,8 +92,10 @@ def test_schedule_parser_with_a_non_recurring_enabled_schedule_data():
     assert_that(sut.is_enabled()).is_true()
     assert_that(sut.is_recurring()).is_false()
     assert_that(sut.get_days()).is_empty()
-    assert_that(sut.get_start_time()).is_equal_to("17:00")
-    assert_that(sut.get_end_time()).is_equal_to("18:00")
+    assert_that(sut.get_start_time()).is_equal_to(
+        local_time_for_time_in_timezone("17:00", "Asia/Jerusalem"))
+    assert_that(sut.get_end_time()).is_equal_to(
+        local_time_for_time_in_timezone("18:00", "Asia/Jerusalem"))
     assert_that(sut.get_state()).is_equal_to(ScheduleState.ENABLED)
     assert_that(sut.schedule).is_equal_to(schedule_data)
 
@@ -95,3 +106,25 @@ def test_get_schedules_with_a_two_schedules_packet(resource_path):
     assert_that(set_of_schedules).is_length(2)
     for schedule in set_of_schedules:
         assert_that(schedule).is_instance_of(SwitcherSchedule)
+
+
+# local_time_for_time_in_timezone is a utility function taking a time and a timezone,
+# and returning the local time matching the given time in the given timezone.
+#
+# Examples, assuming my local timezone is EST:
+# local_time_for_time_in_timezone("17:00", "Asia/Jerusalem") will return 10:00
+# local_time_for_time_in_timezone("17:00", "Asia/Kolkata") will return 06:30
+# local_time_for_time_in_timezone("17:00", "US/Pacific") will return 20:00
+# local_time_for_time_in_timezone("17:00", "EST") will return 17:00
+def local_time_for_time_in_timezone(val, tz):
+    local_ts = datetime.now().replace(tzinfo=None, second=0, microsecond=0)
+    remote_ts = (datetime.now(pytz.timezone(tz))
+                 .replace(tzinfo=None, second=0, microsecond=0))
+
+    fmt = "%H:%M"
+    parsed = time.strptime(val, fmt)
+    target = timedelta(hours=parsed.tm_hour, minutes=parsed.tm_min)
+    delta = local_ts - remote_ts
+    diff = target + timedelta(seconds=delta.total_seconds())
+
+    return (datetime.min + diff).strftime(fmt)
