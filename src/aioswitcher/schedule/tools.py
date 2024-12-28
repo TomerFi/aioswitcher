@@ -16,7 +16,7 @@
 
 import time
 from binascii import hexlify
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from struct import pack
 from typing import Set, Union
 
@@ -38,7 +38,7 @@ def pretty_next_run(start_time: str, days: Set[Days] = set()) -> str:
     if not days:
         return f"Due today at {start_time}"
 
-    current_datetime = datetime.utcnow()
+    current_datetime = datetime.now(UTC)
     current_weekday = current_datetime.weekday()
 
     current_time = datetime.strptime(

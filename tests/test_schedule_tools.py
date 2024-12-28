@@ -15,7 +15,7 @@
 """Switcher integration pretty next run tool test cases."""
 
 from binascii import hexlify, unhexlify
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 from struct import pack, unpack
 
 import time_machine
@@ -30,7 +30,7 @@ days_by_weekdays = dict(map(lambda d: (d.weekday, d), Days))
 
 @fixture()
 def today():
-    return datetime.utcnow()
+    return datetime.now(UTC)
 
 
 @fixture
