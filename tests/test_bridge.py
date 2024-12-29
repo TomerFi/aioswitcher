@@ -40,23 +40,29 @@ def udp_broadcast_server():
     return server
 
 
+@fixture
+def unused_udp_broadcast_port(unused_udp_port_factory):
+    port = unused_udp_port_factory()
+    with patch("aioswitcher.bridge.SWITCHER_UDP_BROADCAST_PORTS", [port]):
+        yield port
+
+
 @patch("logging.Logger.info")
-async def test_stopping_before_started_and_establishing_a_connection_should_write_to_the_info_output(mock_info, mock_callback):
-    bridge = SwitcherBridge(mock_callback, [1234])
+async def test_stopping_before_started_and_establishing_a_connection_should_write_to_the_info_output(mock_info, unused_udp_broadcast_port, mock_callback):
+    port = unused_udp_broadcast_port
+    bridge = SwitcherBridge(mock_callback)
     assert_that(bridge.is_running).is_false()
     await bridge.stop()
-    mock_info.assert_called_with("udp bridge on port %s not started", 1234)
+    mock_info.assert_called_with("udp bridge on port %s not started", port)
 
 
-async def test_bridge_operation_as_a_context_manager(unused_udp_port_factory, mock_callback):
-    port = unused_udp_port_factory()
-    async with SwitcherBridge(mock_callback, [port]) as bridge:
+async def test_bridge_operation_as_a_context_manager(unused_udp_broadcast_port, mock_callback):
+    async with SwitcherBridge(mock_callback) as bridge:
         assert_that(bridge.is_running).is_true()
 
 
-async def test_bridge_start_and_stop_operations(unused_udp_port_factory, mock_callback):
-    port = unused_udp_port_factory()
-    bridge = SwitcherBridge(mock_callback, [port])
+async def test_bridge_start_and_stop_operations(unused_udp_broadcast_port, mock_callback):
+    bridge = SwitcherBridge(mock_callback)
     assert_that(bridge.is_running).is_false()
     await bridge.start()
     assert_that(bridge.is_running).is_true()
@@ -64,12 +70,12 @@ async def test_bridge_start_and_stop_operations(unused_udp_port_factory, mock_ca
     assert_that(bridge.is_running).is_false()
 
 
-async def test_bridge_callback_loading(udp_broadcast_server, unused_udp_port_factory, mock_callback, resource_path):
-    port = unused_udp_port_factory()
+async def test_bridge_callback_loading(udp_broadcast_server, unused_udp_broadcast_port, mock_callback, resource_path):
+    port = unused_udp_broadcast_port
     sut_v2_off_datagram = Path(f'{resource_path}_v2_off.txt').read_text().replace('\n', '').encode()
     sut_power_plug_off_datagram = Path(f'{resource_path}_power_plug_off.txt').read_text().replace('\n', '').encode()
 
-    async with SwitcherBridge(mock_callback, [port]):
+    async with SwitcherBridge(mock_callback):
         udp_broadcast_server.sendto(unhexlify(sut_v2_off_datagram), ("localhost", port))
         await sleep(0.2)
         udp_broadcast_server.sendto(unhexlify(sut_power_plug_off_datagram), ("localhost", port))

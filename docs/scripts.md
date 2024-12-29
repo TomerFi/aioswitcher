@@ -638,7 +638,7 @@ Use to discover devices and their states.
 ```shell title="scripts/discover_devices.py"
 $ poetry run discover_devices --help
 
-usage: discover_devices.py [-h] [-t {1,2,all}] [delay]
+usage: discover_devices.py [-h] [delay]
 
 Discover and print info of Switcher devices
 
@@ -647,17 +647,10 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -t {1,2,all}, --type {1,2,all}
-                        set protocol type: ['1', '2', 'all']
 
 Executing this script will print a serialized version of the discovered Switcher
 devices broadcasting on the local network for 60 seconds.
 You can change the delay by passing an int argument: discover_devices.py 30
-
-Switcher devices uses two protocol types:
-    Protocol type 1 (UDP port 20002 or port 10002), used by: Switcher Mini, Switcher Power Plug, Switcher Touch, Switcher V2 (esp), Switcher V2 (qualcomm), Switcher V4
-    Protocol type 2 (UDP port 20003 or port 10003), used by: Switcher Breeze, Switcher Runner, Switcher Runner Mini, Switcher Runner S11, Switcher Runner S12, Switcher Light SL01, Switcher Light SL01 Mini, Switcher Light SL02, Switcher Light SL02 Mini, Switcher Light SL03
-You can change the scanned protocol type by passing an int argument: discover_devices.py -t 1
 
 Note:
     WILL PRINT PRIVATE INFO SUCH AS DEVICE ID AND MAC.
@@ -679,14 +672,8 @@ Example output:
             'power_consumption': 0,
             'remaining_time': '00:00:00'}
     ```
-Print all protocol types devices for 30 seconds:
-    python discover_devices.py 30 -t all
-
-Print only protocol type 1 devices:
-    python discover_devices.py -t 1
-
-Print only protocol type 2 devices:
-    python discover_devices.py -t 2
+Print devices for 30 seconds:
+    python discover_devices.py 30
 ```
 ``
 ## Get device login key

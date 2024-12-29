@@ -22,7 +22,7 @@ from logging import getLogger
 from socket import AF_INET, inet_ntoa
 from struct import pack
 from types import TracebackType
-from typing import Any, Callable, Dict, List, Optional, Tuple, Type, final
+from typing import Any, Callable, Dict, Optional, Tuple, Type, final
 from warnings import warn
 
 from .device import (
@@ -61,15 +61,13 @@ SWITCHER_UDP_PORT_TYPE1_NEW_VERSION = 10002
 SWITCHER_UDP_PORT_TYPE2 = 20003
 SWITCHER_UDP_PORT_TYPE2_NEW_VERSION = 10003
 
-SWITCHER_DEVICE_TO_UDP_PORT = {
-    DeviceCategory.WATER_HEATER: SWITCHER_UDP_PORT_TYPE1,
-    DeviceCategory.POWER_PLUG: SWITCHER_UDP_PORT_TYPE1,
-    DeviceCategory.THERMOSTAT: SWITCHER_UDP_PORT_TYPE2,
-    DeviceCategory.SHUTTER: SWITCHER_UDP_PORT_TYPE2,
-    DeviceCategory.SINGLE_SHUTTER_DUAL_LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
-    DeviceCategory.DUAL_SHUTTER_SINGLE_LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
-    DeviceCategory.LIGHT: SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
-}
+# List of all the broadcast ports for all the devices
+SWITCHER_UDP_BROADCAST_PORTS = [
+    SWITCHER_UDP_PORT_TYPE1,
+    SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+    SWITCHER_UDP_PORT_TYPE2,
+    SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+]
 
 
 def _parse_device_from_datagram(
@@ -369,26 +367,12 @@ class SwitcherBridge:
 
     Args:
         on_device: a callable to which every new SwitcherBase device found will be send.
-        broadcast_ports: broadcast ports list, default for type 1 devices is 20002,
-            default for type 2 devices is 20003.
-            On newer type1 devices, the port is 10002.
-            On newer type2 devices, the port is 10003.
 
     """
 
-    def __init__(
-        self,
-        on_device: Callable[[SwitcherBase], Any],
-        broadcast_ports: List[int] = [
-            SWITCHER_UDP_PORT_TYPE1,
-            SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
-            SWITCHER_UDP_PORT_TYPE2,
-            SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
-        ],
-    ) -> None:
+    def __init__(self, on_device: Callable[[SwitcherBase], Any]) -> None:
         """Initialize the switcher bridge."""
         self._on_device = on_device
-        self._broadcast_ports = broadcast_ports
         self._is_running = False
         self._transports: Dict[int, Optional[BaseTransport]] = {}
 
@@ -408,7 +392,7 @@ class SwitcherBridge:
 
     async def start(self) -> None:
         """Create an asynchronous listener and start the bridge."""
-        for broadcast_port in self._broadcast_ports:
+        for broadcast_port in SWITCHER_UDP_BROADCAST_PORTS:
             logger.info("starting the udp bridge on port %s", broadcast_port)
             protocol_factory = UdpClientProtocol(
                 partial(_parse_device_from_datagram, self._on_device)
@@ -425,7 +409,7 @@ class SwitcherBridge:
 
     async def stop(self) -> None:
         """Stop the asynchronous bridge."""
-        for broadcast_port in self._broadcast_ports:
+        for broadcast_port in SWITCHER_UDP_BROADCAST_PORTS:
             transport = self._transports.get(broadcast_port)
 
             if transport and not transport.is_closing():
