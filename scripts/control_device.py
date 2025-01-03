@@ -37,105 +37,23 @@ from aioswitcher.schedule import Days
 printer = PrettyPrinter(indent=4)
 
 DEVICES = {
-    DeviceType.MINI.value.lower(): DeviceType.MINI,
-    DeviceType.POWER_PLUG.value.lower(): DeviceType.POWER_PLUG,
-    DeviceType.TOUCH.value.lower(): DeviceType.TOUCH,
-    DeviceType.V2_ESP.value.lower(): DeviceType.V2_ESP,
-    DeviceType.V2_QCA.value.lower(): DeviceType.V2_QCA,
-    DeviceType.V4.value.lower(): DeviceType.V4,
-    DeviceType.BREEZE.value.lower(): DeviceType.BREEZE,
-    DeviceType.RUNNER.value.lower(): DeviceType.RUNNER,
-    DeviceType.RUNNER_MINI.value.lower(): DeviceType.RUNNER_MINI,
-    DeviceType.RUNNER_S11.value.lower(): DeviceType.RUNNER_S11,
-    DeviceType.RUNNER_S12.value.lower(): DeviceType.RUNNER_S12,
-    DeviceType.LIGHT_SL01.value.lower(): DeviceType.LIGHT_SL01,
-    DeviceType.LIGHT_SL01_MINI.value.lower(): DeviceType.LIGHT_SL01_MINI,
-    DeviceType.LIGHT_SL02.value.lower(): DeviceType.LIGHT_SL02,
-    DeviceType.LIGHT_SL02_MINI.value.lower(): DeviceType.LIGHT_SL02_MINI,
-    DeviceType.LIGHT_SL03.value.lower(): DeviceType.LIGHT_SL03,
+    "mini": DeviceType.MINI,
+    "plug": DeviceType.POWER_PLUG,
+    "touch": DeviceType.TOUCH,
+    "v2esp": DeviceType.V2_ESP,
+    "v2qual": DeviceType.V2_QCA,
+    "v4": DeviceType.V4,
+    "breeze": DeviceType.BREEZE,
+    "runner": DeviceType.RUNNER,
+    "runnermini": DeviceType.RUNNER_MINI,
+    "runners11": DeviceType.RUNNER_S11,
+    "runners12": DeviceType.RUNNER_S12,
+    "light01": DeviceType.LIGHT_SL01,
+    "light01mini": DeviceType.LIGHT_SL01_MINI,
+    "light02": DeviceType.LIGHT_SL02,
+    "light02mini": DeviceType.LIGHT_SL02_MINI,
+    "light03": DeviceType.LIGHT_SL03,
 }
-
-_examples = """example usage:
-
-python control_device.py get_state -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"\n
-python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -t 15\n
-python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"\n
-python control_device.py set_name -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "My Boiler"\n
-python control_device.py set_auto_shutdown -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -r 2 -m 30\n
-python control_device.py get_schedules -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py delete_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -s 3\n
-python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"\n
-python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
-
-python control_device.py get_shutter_state -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
-python control_device.py get_shutter_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
-python control_device.py get_shutter_state -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0\n
-python control_device.py get_shutter_state -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1\n
-python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"\n
-python control_device.py stop_shutter -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
-python control_device.py stop_shutter -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0\n
-python control_device.py stop_shutter -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1\n
-python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50\n
-python control_device.py set_shutter_position -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50\n
-python control_device.py set_shutter_position -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 0\n
-python control_device.py set_shutter_position -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 1\n
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-
-python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py get_light_state -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py get_light_state -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py get_light_state -c "Switcher Light SL01 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py get_light_state -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py get_light_state -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py get_light_state -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py get_light_state -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py get_light_state -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py get_light_state -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py get_light_state -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
-python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_on_light -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on_light -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on_light -c "Switcher Light SL01 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_on_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_on_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_on_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_on_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_on_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_on_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_on_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
-python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_off_light -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_off_light -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_off_light -c "Switcher Light SL01 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-python control_device.py turn_off_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_off_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_off_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_off_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_off_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
-python control_device.py turn_off_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
-python control_device.py turn_off_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
-
-python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"\n
-
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on\n
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24\n
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u\n
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry\n
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off\n
-"""  # noqa E501
 
 # shared parse
 shared_parser = ArgumentParser(add_help=False)
@@ -146,7 +64,7 @@ shared_parser.add_argument(
     action="store_true",
     help="include the raw message",
 )
-possible_types = [t.value for t in DeviceType]
+possible_types = [t for t in DEVICES]
 shared_parser.add_argument(
     "-c",
     "--device-type",
@@ -188,16 +106,25 @@ shared_parser.add_argument(
 # parent parser
 main_parser = ArgumentParser(
     description="Control your Switcher device",
-    epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
 )
 
 subparsers = main_parser.add_subparsers(dest="action", description="supported actions")
 
 # control_thermostat parser
+_control_thermostat_examples = """example usage:
+
+poetry run control_device control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on\n
+poetry run control_device control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24\n
+poetry run control_device control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u\n
+poetry run control_device control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry\n
+poetry run control_device control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off\n
+"""  # noqa E501
 control_thermostat_parser = subparsers.add_parser(
     "control_thermostat",
     help="control a breeze device",
+    epilog=_control_thermostat_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 control_thermostat_parser.add_argument(
@@ -246,9 +173,16 @@ control_thermostat_parser.add_argument(
 )
 
 # create_schedule parser
+_create_schedule_examples = """example usage:
+
+poetry run control_device create_schedule -c "touch" -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"\n
+poetry run control_device create_schedule -c "touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday\n
+"""  # noqa E501
 create_schedule_parser = subparsers.add_parser(
     "create_schedule",
     help="create a new schedule",
+    epilog=_create_schedule_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 create_schedule_parser.add_argument(
@@ -277,9 +211,15 @@ create_schedule_parser.add_argument(
 )
 
 # delete_schedule parser
+_delete_schedule_examples = """example usage:
+
+poetry run control_device delete_schedule -c "touch" -d ab1c2d -i "111.222.11.22" -s 3\n
+"""  # noqa E501
 delete_schedule_parser = subparsers.add_parser(
     "delete_schedule",
     help="delete a device schedule",
+    epilog=_delete_schedule_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 delete_schedule_parser.add_argument(
@@ -291,26 +231,54 @@ delete_schedule_parser.add_argument(
 )
 
 # get_schedules parser
+_get_schedules_examples = """example usage:
+
+poetry run control_device get_schedules -c "touch" -d ab1c2d -i "111.222.11.22"\n
+"""  # noqa E501
 subparsers.add_parser(
-    "get_schedules", help="retrieve a device schedules", parents=[shared_parser]
+    "get_schedules",
+    help="retrieve a device schedules",
+    epilog=_get_schedules_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
 
 # get_state parser
+_get_state_examples = """example usage:
+
+poetry run control_device get_state -c "touch" -d ab1c2d -i "111.222.11.22"\n
+"""  # noqa E501
 subparsers.add_parser(
-    "get_state", help="get the current state of a device", parents=[shared_parser]
+    "get_state",
+    help="get the current state of a device",
+    epilog=_get_state_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
 
 # get_thermostat_state parser
+_get_thermostat_state_examples = """example usage:
+
+poetry run control_device get_thermostat_state -c "breeze" -d 3a20b7 -i "192.168.50.77"\n
+"""  # noqa E501
 subparsers.add_parser(
     "get_thermostat_state",
     help="get the current state a thermostat (breeze) device",
+    epilog=_get_thermostat_state_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 
 # set_auto_shutdown parser
+_set_auto_shutdown_examples = """example usage:
+
+poetry run control_device set_auto_shutdown -c "touch" -d ab1c2d -i "111.222.11.22" -r 2 -m 30\n
+"""  # noqa E501
 set_auto_shutdown_parser = subparsers.add_parser(
     "set_auto_shutdown",
     help="set the auto shutdown property (1h-24h)",
+    epilog=_set_auto_shutdown_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 set_auto_shutdown_parser.add_argument(
@@ -330,8 +298,16 @@ set_auto_shutdown_parser.add_argument(
 )
 
 # set_name parser
+_set_name_examples = """example usage:
+
+poetry run control_device set_name -c "touch" -d ab1c2d -i "111.222.11.22" -n "My Boiler"\n
+"""  # noqa E501
 set_name_parser = subparsers.add_parser(
-    "set_name", help="set the name of the device", parents=[shared_parser]
+    "set_name",
+    help="set the name of the device",
+    epilog=_set_name_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
 set_name_parser.add_argument(
     "-n",
@@ -342,9 +318,19 @@ set_name_parser.add_argument(
 )
 
 # get_shutter_state parser
+_get_shutter_state_examples = """example usage:
+
+poetry run control_device get_shutter_state -c "runner" -d f2239a -i "192.168.50.98"\n
+poetry run control_device get_shutter_state -c "runnermini" -d f2239a -i "192.168.50.98"\n
+poetry run control_device get_shutter_state -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
+poetry run control_device get_shutter_state -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0\n
+poetry run control_device get_shutter_state -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1\n
+"""  # noqa E501
 get_shutter_state_parser = subparsers.add_parser(
     "get_shutter_state",
     help="get the current shutter state of a device",
+    epilog=_get_shutter_state_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 get_shutter_state_parser.add_argument(
@@ -357,9 +343,19 @@ get_shutter_state_parser.add_argument(
 )
 
 # stop shutter parser
+_set_shutter_position_examples = """example usage:
+
+poetry run control_device set_shutter_position -c "runner" -d f2239a -i "192.168.50.98" -p 50\n
+poetry run control_device set_shutter_position -c "runnermini" -d f2239a -i "192.168.50.98" -p 50\n
+poetry run control_device set_shutter_position -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50\n
+poetry run control_device set_shutter_position -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 0\n
+poetry run control_device set_shutter_position -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 1\n
+"""  # noqa E501
 set_shutter_position_parser = subparsers.add_parser(
     "set_shutter_position",
     help="set shutter position",
+    epilog=_set_shutter_position_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 set_shutter_position_parser.add_argument(
@@ -379,8 +375,20 @@ set_shutter_position_parser.add_argument(
 )
 
 # stop shutter parser
+_stop_shutter_examples = """example usage:
+
+poetry run control_device stop_shutter -c "runner" -d f2239a -i "192.168.50.98"\n
+poetry run control_device stop_shutter -c "runnermini" -d f2239a -i "192.168.50.98"\n
+poetry run control_device stop_shutter -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"\n
+poetry run control_device stop_shutter -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0\n
+poetry run control_device stop_shutter -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1\n
+"""  # noqa E501
 stop_shutter_parser = subparsers.add_parser(
-    "stop_shutter", help="stop shutter", parents=[shared_parser]
+    "stop_shutter",
+    help="stop shutter",
+    epilog=_stop_shutter_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
 stop_shutter_parser.add_argument(
     "-x",
@@ -392,12 +400,22 @@ stop_shutter_parser.add_argument(
 )
 
 # turn_off_shutter_child_lock parser
-turn_on_shutter_child_lock_parser = subparsers.add_parser(
+_turn_off_shutter_child_lock_examples = """example usage:
+
+poetry run control_device turn_off_shutter_child_lock -c "runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_off_shutter_child_lock -c "runnermini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_off_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_off_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_off_shutter_child_lock -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+"""  # noqa E501
+turn_off_shutter_child_lock_parser = subparsers.add_parser(
     "turn_off_shutter_child_lock",
     help="turn off shutter child lock",
+    epilog=_turn_off_shutter_child_lock_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
-turn_on_shutter_child_lock_parser.add_argument(
+turn_off_shutter_child_lock_parser.add_argument(
     "-x",
     "--index",
     required=False,
@@ -407,9 +425,19 @@ turn_on_shutter_child_lock_parser.add_argument(
 )
 
 # turn_on_shutter_child_lock parser
+_turn_on_shutter_child_lock_examples = """example usage:
+
+poetry run control_device turn_on_shutter_child_lock -c "runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_on_shutter_child_lock -c "runnermini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_on_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_on_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_on_shutter_child_lock -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+"""  # noqa E501
 turn_on_shutter_child_lock_parser = subparsers.add_parser(
     "turn_on_shutter_child_lock",
     help="turn on shutter child lock",
+    epilog=_turn_on_shutter_child_lock_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 turn_on_shutter_child_lock_parser.add_argument(
@@ -422,13 +450,32 @@ turn_on_shutter_child_lock_parser.add_argument(
 )
 
 # turn_off parser
-turn_on_parser = subparsers.add_parser(
-    "turn_off", help="turn off the device", parents=[shared_parser]
+_turn_off_examples = """example usage:
+
+poetry run control_device turn_off -c "touch" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_off -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"\n
+"""  # noqa E501
+turn_off_parser = subparsers.add_parser(
+    "turn_off",
+    help="turn off the device",
+    epilog=_turn_off_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
 
 # turn_on parser
+_turn_on_examples = """example usage:
+
+poetry run control_device turn_on -c "touch" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_on -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"\n
+poetry run control_device turn_on -c "touch" -d ab1c2d -i "111.222.11.22" -t 15\n
+"""  # noqa E501
 turn_on_parser = subparsers.add_parser(
-    "turn_on", help="turn on the device", parents=[shared_parser]
+    "turn_on",
+    help="turn on the device",
+    epilog=_turn_on_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
 turn_on_parser.add_argument(
     "-t",
@@ -440,9 +487,26 @@ turn_on_parser.add_argument(
 )
 
 # get_light_state parser
+_get_light_state_examples = """example usage:
+
+poetry run control_device get_light_state -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device get_light_state -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device get_light_state -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device get_light_state -c "light01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device get_light_state -c "light01mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device get_light_state -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device get_light_state -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device get_light_state -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device get_light_state -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device get_light_state -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device get_light_state -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device get_light_state -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
+"""  # noqa E501
 get_light_state_parser = subparsers.add_parser(
     "get_light_state",
     help="get the current light state of a device",
+    epilog=_get_light_state_examples,
+    formatter_class=RawDescriptionHelpFormatter,
     parents=[shared_parser],
 )
 get_light_state_parser.add_argument(
@@ -455,10 +519,29 @@ get_light_state_parser.add_argument(
 )
 
 # turn_off_light parser
-turn_on_light_parser = subparsers.add_parser(
-    "turn_off_light", help="turn off light", parents=[shared_parser]
+_turn_off_light_examples = """example usage:
+
+poetry run control_device turn_off_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_off_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_off_light -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_off_light -c "light01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_off_light -c "light01mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_off_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_off_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_off_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_off_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_off_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_off_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_off_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
+"""  # noqa E501
+turn_off_light_parser = subparsers.add_parser(
+    "turn_off_light",
+    help="turn off light",
+    epilog=_turn_off_light_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
-turn_on_light_parser.add_argument(
+turn_off_light_parser.add_argument(
     "-x",
     "--index",
     required=False,
@@ -468,8 +551,27 @@ turn_on_light_parser.add_argument(
 )
 
 # turn_on_light parser
+_turn_on_light_examples = """example usage:
+
+poetry run control_device turn_on_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_on_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_on_light -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_on_light -c "light01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_on_light -c "light01mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
+poetry run control_device turn_on_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_on_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_on_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_on_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_on_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0\n
+poetry run control_device turn_on_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1\n
+poetry run control_device turn_on_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2\n
+"""  # noqa E501
 turn_on_light_parser = subparsers.add_parser(
-    "turn_on_light", help="turn on light", parents=[shared_parser]
+    "turn_on_light",
+    help="turn on light",
+    epilog=_turn_on_light_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
 )
 turn_on_light_parser.add_argument(
     "-x",
