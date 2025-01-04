@@ -43,156 +43,6 @@ subcommands:
     turn_on             turn on the device
     turn_off_light      turn off light
     turn_on_light       turn on light
-
-example usage:
-
-python control_device.py get_state -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"
-
-python control_device.py turn_on -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -t 15
-
-python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_off -c "Switcher Touch" -d ab1c2d -l 18 -i "111.222.11.22"
-
-python control_device.py set_name -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "My Boiler"
-
-python control_device.py set_auto_shutdown -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -r 2 -m 30
-
-python control_device.py get_schedules -c "Switcher Touch" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py delete_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -s 3
-
-python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"
-
-python control_device.py create_schedule -c "Switcher Touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday
-
-python control_device.py get_shutter_state -c "Switcher Runner" -d f2239a -i "192.168.50.98"
-
-python control_device.py get_shutter_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"
-
-python control_device.py get_shutter_state -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0
-
-python control_device.py get_shutter_state -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1
-
-python control_device.py stop_shutter -c "Switcher Runner" -d f2239a -i "192.168.50.98"
-
-python control_device.py stop_shutter -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"
-
-python control_device.py stop_shutter -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0
-
-python control_device.py stop_shutter -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1
-
-python control_device.py set_shutter_position -c "Switcher Runner" -d f2239a -i "192.168.50.98" -p 50
-
-python control_device.py set_shutter_position -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50
-
-python control_device.py set_shutter_position -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 0
-
-python control_device.py set_shutter_position -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 1
-
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_on_shutter_child_lock -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_off_shutter_child_lock -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py get_light_state -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py get_light_state -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py get_light_state -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py get_light_state -c "Switcher Light SL01 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py get_light_state -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py get_light_state -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py get_light_state -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py get_light_state -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py get_light_state -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py get_light_state -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py get_light_state -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2
-
-python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_on_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_on_light -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_on_light -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_on_light -c "Switcher Light SL01 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_on_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_on_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_on_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_on_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_on_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22 -x 0
-
-python control_device.py turn_on_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22 -x 1
-
-python control_device.py turn_on_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22 -x 2
-
-python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_off_light -c "Switcher Runner S11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_off_light -c "Switcher Runner S12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_off_light -c "Switcher Light SL01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_off_light -c "Switcher Light SL01 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
-
-python control_device.py turn_off_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_off_light -c "Switcher Light SL02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_off_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_off_light -c "Switcher Light SL02 Mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_off_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
-
-python control_device.py turn_off_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
-
-python control_device.py turn_off_light -c "Switcher Light SL03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2
-
-python control_device.py get_thermostat_state -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77"
-
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on
-
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24
-
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u
-
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry
-
-python control_device.py control_thermostat -c "Switcher Breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off
 ```
 
 ### Create schedule
@@ -221,6 +71,12 @@ options:
                         the off time for the schedule, e.g. 13:30
   -w [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...], --weekdays [{Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday} ...]
                         days for recurring schedules
+
+example usage:
+
+python control_device.py create_schedule -c "touch" -d ab1c2d -i "111.222.11.22" -n "14:00" -f "14:30"
+
+python control_device.py create_schedule -c "touch" -d ab1c2d -i "111.222.11.22" -n "17:30" -f "18:30" -w Sunday Monday Friday
 ```
 
 ### Control thermostat
@@ -260,6 +116,18 @@ options:
   -t TEMPERATURE, --temperature TEMPERATURE
                         thermostat temperature, a positive integer
   -u, --update          update state without control
+
+example usage:
+
+python control_device.py control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s on
+
+python control_device.py control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24
+
+python control_device.py control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m cool -f high -t 24 -u
+
+python control_device.py control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -m dry
+
+python control_device.py control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50.77" -r ELEC7001 -s off
 ```
 
 ### Delete schedule
@@ -283,6 +151,10 @@ options:
                         the ip address assigned to the device
   -s SCHEDULE_ID, --schedule-id SCHEDULE_ID
                         the id of the schedule for deletion
+
+example usage:
+
+python control_device.py delete_schedule -c "touch" -d ab1c2d -i "111.222.11.22" -s 3
 ```
 
 ### Get light state
@@ -307,6 +179,32 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to turn off
+
+example usage:
+
+python control_device.py get_light_state -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py get_light_state -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py get_light_state -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py get_light_state -c "light01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py get_light_state -c "light01mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py get_light_state -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py get_light_state -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py get_light_state -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py get_light_state -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py get_light_state -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py get_light_state -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py get_light_state -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2
 ```
 
 ### Get schedules
@@ -327,6 +225,10 @@ options:
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
+
+example usage:
+
+python control_device.py get_schedules -c "touch" -d ab1c2d -i "111.222.11.22"
 ```
 
 ### Get shutter state
@@ -352,6 +254,18 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to operate
+
+example usage:
+
+python control_device.py get_shutter_state -c "runner" -d f2239a -i "192.168.50.98"
+
+python control_device.py get_shutter_state -c "runnermini" -d f2239a -i "192.168.50.98"
+
+python control_device.py get_shutter_state -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"
+
+python control_device.py get_shutter_state -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0
+
+python control_device.py get_shutter_state -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1
 ```
 
 ### Get state
@@ -372,6 +286,10 @@ options:
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
+
+example usage:
+
+python control_device.py get_state -c "touch" -d ab1c2d -i "111.222.11.22"
 ```
 
 ### Get thermostat state
@@ -393,6 +311,10 @@ options:
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
+
+example usage:
+
+python control_device.py get_thermostat_state -c "breeze" -d 3a20b7 -i "192.168.50.77"
 ```
 
 ### Set auto shutdown
@@ -418,6 +340,10 @@ options:
                         number hours for the auto shutdown
   -m [MINUTES], --minutes [MINUTES]
                         number hours for the auto shutdown
+
+example usage:
+
+python control_device.py set_auto_shutdown -c "touch" -d ab1c2d -i "111.222.11.22" -r 2 -m 30
 ```
 
 ### Set name
@@ -439,6 +365,10 @@ options:
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
   -n NAME, --name NAME  new name for the device
+
+example usage:
+
+python control_device.py set_name -c "touch" -d ab1c2d -i "111.222.11.22" -n "My Boiler"
 ```
 
 ### Set shutter position
@@ -466,6 +396,18 @@ options:
                         Shutter position percentage
   -x INDEX, --index INDEX
                         the circuit number to operate
+
+example usage:
+
+python control_device.py set_shutter_position -c "runner" -d f2239a -i "192.168.50.98" -p 50
+
+python control_device.py set_shutter_position -c "runnermini" -d f2239a -i "192.168.50.98" -p 50
+
+python control_device.py set_shutter_position -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50
+
+python control_device.py set_shutter_position -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 0
+
+python control_device.py set_shutter_position -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -p 50 -x 1
 ```
 
 ### Stop shutter
@@ -490,6 +432,18 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to operate
+
+example usage:
+
+python control_device.py stop_shutter -c "runner" -d f2239a -i "192.168.50.98"
+
+python control_device.py stop_shutter -c "runnermini" -d f2239a -i "192.168.50.98"
+
+python control_device.py stop_shutter -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"
+
+python control_device.py stop_shutter -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 0
+
+python control_device.py stop_shutter -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98" -x 1
 ```
 
 ### Turn off
@@ -510,6 +464,12 @@ options:
                         the login key of the device
   -i IP_ADDRESS, --ip-address IP_ADDRESS
                         the ip address assigned to the device
+
+example usage:
+
+python control_device.py turn_off -c "touch" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"
 ```
 
 ### Turn on
@@ -533,6 +493,14 @@ options:
                         the ip address assigned to the device
   -t [TIMER], --timer [TIMER]
                         set minutes timer for turn on operation
+
+example usage:
+
+python control_device.py turn_on -c "touch" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_on -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"
+
+python control_device.py turn_on -c "touch" -d ab1c2d -i "111.222.11.22" -t 15
 ```
 
 ### Turn off light
@@ -557,6 +525,32 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to turn off
+
+example usage:
+
+python control_device.py turn_off_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_off_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_off_light -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_light -c "light01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_light -c "light01mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_off_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_off_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_off_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_off_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_off_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_off_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 2
 ```
 
 ### Turn on light
@@ -581,6 +575,32 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to turn on
+
+example usage:
+
+python control_device.py turn_on_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_on_light -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_on_light -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_on_light -c "light01" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_on_light -c "light01mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_on_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_on_light -c "light02" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_on_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_on_light -c "light02mini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_on_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22 -x 0
+
+python control_device.py turn_on_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22 -x 1
+
+python control_device.py turn_on_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22 -x 2
 ```
 
 ### Turn off shutter child lock
@@ -605,6 +625,18 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to turn off
+
+example usage:
+
+python control_device.py turn_off_shutter_child_lock -c "runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_shutter_child_lock -c "runnermini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_off_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_off_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_off_shutter_child_lock -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
 ```
 
 ### Turn on shutter child lock
@@ -629,6 +661,18 @@ options:
                         the ip address assigned to the device
   -x INDEX, --index INDEX
                         the circuit number to turn on
+
+example usage:
+
+python control_device.py turn_on_shutter_child_lock -c "runner" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_on_shutter_child_lock -c "runnermini" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+
+python control_device.py turn_on_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 0
+
+python control_device.py turn_on_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
+
+python control_device.py turn_on_shutter_child_lock -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
 ```
 
 ## Discover devices
