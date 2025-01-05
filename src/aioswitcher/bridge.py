@@ -135,6 +135,12 @@ def _parse_device_from_datagram(
                     device_type.token_needed,
                     power_consumption,
                     electric_current,
+                    (
+                        parser.get_remaining()
+                        if device_state == DeviceState.ON
+                        else "00:00:00"
+                    ),
+                    parser.get_auto_shutdown(),
                 )
             )
 

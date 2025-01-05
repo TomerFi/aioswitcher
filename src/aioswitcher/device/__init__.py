@@ -436,7 +436,7 @@ class SwitcherLightBase(ABC):
 
 @final
 @dataclass
-class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
+class SwitcherPowerPlug(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
     """Implementation of the Switcher Power Plug device.
 
     Please Note the order of the inherited classes to understand the order of the

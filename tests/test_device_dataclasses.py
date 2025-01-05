@@ -115,6 +115,8 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_power_plug_sh
         fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
+        fake_data.remaining_time,
+        fake_data.auto_shutdown,
     )
 
     assert_that(sut.device_type).is_equal_to(DeviceType.POWER_PLUG)
@@ -125,6 +127,9 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_power_plug_sh
     assert_that(sut.name).is_equal_to(fake_data.name)
     assert_that(sut.power_consumption).is_equal_to(fake_data.power_consumption)
     assert_that(sut.electric_current).is_equal_to(fake_data.electric_current)
+    assert_that(sut.remaining_time).is_equal_to(fake_data.remaining_time)
+    assert_that(sut.auto_shutdown).is_equal_to(fake_data.auto_shutdown)
+    assert_that(sut.auto_off_set).is_equal_to(fake_data.auto_shutdown)
 
 
 def test_given_a_device_of_type_thermostat_when_instantiating_as_a_thermostat_should_be_instatiated_properly(fake_data):
@@ -276,6 +281,8 @@ def test_given_a_device_of_type_water_heater_when_instantiating_as_a_power_plug_
         fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
+        fake_data.remaining_time,
+        fake_data.auto_shutdown,
     ).is_equal_to("only power plugs are allowed")
 
 
