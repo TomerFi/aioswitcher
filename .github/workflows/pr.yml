@@ -44,7 +44,7 @@ jobs:
 
       - name: Lint the project
         run: |
-          poetry lock --no-update
+          poetry lock
           poetry install --no-interaction
           poetry run poe lint
 
@@ -92,7 +92,7 @@ jobs:
 
       - name: Install project build dependencies
         run: |
-          poetry lock --no-update
+          poetry lock
           poetry install --no-interaction
 
       - name: Test the project
@@ -151,6 +151,6 @@ jobs:
 
       - name: Build documentation site
         run: |
-          poetry lock --no-update
+          poetry lock
           poetry install --no-interaction
           poetry run poe docs_build

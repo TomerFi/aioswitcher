@@ -54,7 +54,7 @@ jobs:
 
       - name: Install, test with coverage report, and build
         run: |
-          poetry lock --no-update
+          poetry lock
           poetry install --no-interaction
           poetry run poe test_rep
           poetry build

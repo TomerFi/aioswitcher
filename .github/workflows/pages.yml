@@ -45,7 +45,7 @@ jobs:
 
       - name: Build documentation site
         run: |
-          poetry lock --no-update
+          poetry lock
           poetry install --no-interaction
           poetry run poe docs_build
 
