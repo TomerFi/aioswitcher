@@ -1,29 +1,40 @@
-[tool.poetry]
+[project]
 name = "aioswitcher"
 version = "6.0.1-dev"
-description = "Switcher Python Integration."
-license = "Apache-2.0"
-authors = [ "Tomer Figenblat <tomer@tomfi.info>" ]
-maintainers = [ "Shay Levy" ]
+description = "PyPi module integrating with various Switcher devices"
+license = { text = "Apache-2.0" }
 readme = "README.md"
+requires-python = ">=3.12.0,<4.0"
+authors = [
+    { name = "Tomer Figenblat", email = "tomer@tomfi.info" }
+]
+maintainers = [
+    { name = "Shay Levy" },
+    { name = "Yogev Bokobza" }
+]
+keywords = [ "home-automation", "smarthome", "switcher" ]
+classifiers = [
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Topic :: Home Automation",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed"
+]
+dependencies = [
+    "pycryptodome==3.18.0",
+    "aiohttp==3.10.3",
+]
+
+[project.urls]
 homepage = "https://pypi.org/project/aioswitcher/"
 repository = "https://github.com/tomerfi/aioswitcher"
 documentation = "https://aioswitcher.tomfi.info"
-keywords = [ "home", "automation", "switcher", "smart" ]
-classifiers = [
-  "Intended Audience :: Developers",
-  "Operating System :: OS Independent",
-  "Topic :: Home Automation",
-  "Topic :: Software Development :: Libraries :: Python Modules",
-  "Typing :: Typed"
-]
-include = [ ]
-exclude = [ ]
 
-  [tool.poetry.dependencies]
-  python = "^3.12.0"
-  pycryptodome = ">=3.18.0"
-  aiohttp = ">=3.10.3"
+[project.scripts]
+control_device = "scripts.control_device:main"
+discover_devices = "scripts.discover_devices:main"
+get_device_login_key = "scripts.get_device_login_key:main"
+validate_token = "scripts.validate_token:main"
 
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
@@ -43,7 +54,7 @@ pytest-sugar = "^1.0.0"
 pytz = "^2024.2"
 time-machine = "^2.16.0"
 yamllint = "^1.35.1"
-freezegun = ">=1.5.1"
+freezegun = "^1.5.1"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
@@ -52,12 +63,6 @@ mkdocs-material = "^9.5.49"
 mkdocstrings = "^0.27.0"
 mkdocstrings-python = "^1.12.2"
 poethepoet = "^0.32.1"
-
-  [tool.poetry.scripts]
-  control_device = "scripts.control_device:main"
-  discover_devices = "scripts.discover_devices:main"
-  get_device_login_key = "scripts.get_device_login_key:main"
-  validate_token = "scripts.validate_token:main"
 
 [tool.poe.tasks]
 test = "poetry run pytest -v"
@@ -113,5 +118,5 @@ precision = 2
 skip_covered = true
 
 [build-system]
-requires = [ "poetry-core>=1.2.0" ]
+requires = [ "poetry-core>=2.0.0,<3.0.0" ]
 build-backend = "poetry.core.masonry.api"
