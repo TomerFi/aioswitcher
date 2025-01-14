@@ -65,7 +65,7 @@ jobs:
         uses: sandstromviktor/toml-editor@2.0.0
         with:
           file: pyproject.toml
-          key: tool.poetry.version
+          key: project.version
           value: ${{ steps.bumper.outputs.next }}
 
       - name: Commit, tag, and push
@@ -91,7 +91,7 @@ jobs:
         uses: sandstromviktor/toml-editor@2.0.0
         with:
           file: pyproject.toml
-          key: tool.poetry.version
+          key: project.version
           value: ${{ steps.bumper.outputs.dev }}
 
       - name: Commit and push

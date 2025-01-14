@@ -38,9 +38,6 @@ dependencies = [ "pycryptodome>=3.18.0,<4.0.0", "aiohttp>=3.10.3,<4.0.0" ]
   get_device_login_key = "scripts.get_device_login_key:main"
   validate_token = "scripts.validate_token:main"
 
-[tool.poetry]
-version = "6.0.2-dev"
-
 [tool.poetry.group.dev.dependencies]
 assertpy = "^1.1"
 black = "^24.10.0"
