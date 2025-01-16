@@ -44,10 +44,6 @@ def seconds_to_iso_time(all_seconds: int) -> str:
     """
     minutes, seconds = divmod(int(all_seconds), 60)
     hours, minutes = divmod(minutes, 60)
-    if hours > 23:
-        hours = 0
-        minutes = 0
-        seconds = 0
 
     return datetime.time(hour=hours, minute=minutes, second=seconds).isoformat()
 
