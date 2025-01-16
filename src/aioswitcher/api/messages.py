@@ -233,7 +233,7 @@ class SwitcherStateResponse(SwitcherBaseResponse):
         parser = StateMessageParser(self.unparsed_response)
 
         self.state = parser.get_state()
-        self.time_left = parser.get_time_left()
+        self.time_left = parser.get_time_left() if self.state == DeviceState.ON and parser.get_auto_shutdown() != "00:00:00" else "00:00:00"
         self.time_on = parser.get_time_on()
         self.auto_shutdown = parser.get_auto_shutdown()
         self.power_consumption = parser.get_power_consumption()
