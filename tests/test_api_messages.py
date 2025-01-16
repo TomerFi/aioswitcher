@@ -66,9 +66,10 @@ def test_switcher_state_response_dataclass(get_power_consumption, get_auto_shutd
     assert_that(sut.power_consumption).is_equal_to(1640)
     assert_that(sut.electric_current).is_equal_to(7.5)
 
-    for mock_method in [get_power_consumption, get_auto_shutdown, get_time_on, get_time_left, get_state]:
+    for mock_method in [get_power_consumption, get_time_on, get_time_left, get_state]:
         mock_method.assert_called_once()
-
+    get_auto_shutdown.assert_called()
+    assert get_auto_shutdown.call_count == 2
 
 @patch(messages.__name__ + ".get_schedules", return_value={Mock(), Mock()})
 def test_switcher_get_schedules_response_dataclass_with_two_schedules(get_schedules):
