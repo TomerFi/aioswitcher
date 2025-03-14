@@ -73,7 +73,7 @@ def fake_data():
     return FakeData()
 
 
-@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4])
+@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4, DeviceType.HEATER])
 def test_given_a_device_of_type_water_heater_when_instantiating_as_a_water_heater_should_be_instatiated_properly(fake_data, device_type):
     sut = SwitcherWaterHeater(
         device_type,
@@ -263,7 +263,7 @@ def test_given_a_device_of_type_light_when_instantiating_as_a_shutter_should_be_
     assert_that(sut.light).is_equal_to(fake_data.light)
 
 
-@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4])
+@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4, DeviceType.HEATER])
 def test_given_a_device_of_type_water_heater_when_instantiating_as_a_power_plug_should_raise_an_error(fake_data, device_type):
     assert_that(SwitcherPowerPlug).raises(ValueError).when_called_with(
         device_type,

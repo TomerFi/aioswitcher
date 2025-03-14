@@ -15,6 +15,7 @@
 | Switcher Light SL02      |   [product][switcher-light-sl02]    |         4.3.x         |
 | Switcher Light SL02 Mini | [product][switcher-light-sl02-mini] |         4.3.x         |
 | Switcher Light SL03      |   [product][switcher-light-sl03]    |         4.4.x         |
+| Switcher Heater          |       [product][switcher-heater]    |         6.x.x         |
 
 !!!note
     Newer Switcher devices, such as Runner S11, require a token. Get yours at: https://switcher.co.il/GetKey
@@ -34,3 +35,4 @@
 [switcher-light-sl02]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-sl02/
 [switcher-light-sl02-mini]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-slmini02/
 [switcher-light-sl03]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-sl03/
+[switcher-heater]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/pre-register/
