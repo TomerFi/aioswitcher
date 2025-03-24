@@ -90,10 +90,15 @@ def _parse_device_from_datagram(
         device_type: DeviceType = parser.get_device_type()
         if device_type == DeviceType.BREEZE:
             device_state = parser.get_thermostat_state()
+        elif device_type == DeviceType.HEATER:
+            device_state = parser.get_heater_state()
         else:
             device_state = parser.get_device_state()
         if device_state == DeviceState.ON:
-            power_consumption = parser.get_power_consumption()
+            if device_type == DeviceType.HEATER:
+                power_consumption = parser.get_heater_power_consumption()
+            else:
+                power_consumption = parser.get_power_consumption()
             electric_current = watts_to_amps(power_consumption)
         else:
             power_consumption = 0
@@ -155,8 +160,8 @@ def _parse_device_from_datagram(
                     device_state,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type1(),
-                    parser.get_mac_type1(),
+                    parser.get_ip_type2(),
+                    parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
                     power_consumption,
@@ -689,3 +694,21 @@ class DatagramParser:
     def get_thermostat_remote_id(self) -> str:
         """Return the current thermostat remote."""
         return self.message[143:151].decode()
+
+    # Switcher Heater methods
+
+    def get_heater_state(self) -> DeviceState:
+        """Extract the heater state from the broadcast message."""
+        message = hexlify(self.message)
+        test = hexlify(self.message)[270:272].decode()
+        hex_device_state = hexlify(self.message)[270:272].decode()
+        return (
+            DeviceState.ON
+            if hex_device_state == DeviceState.ON.value
+            else DeviceState.OFF
+        )
+
+    def get_heater_power_consumption(self) -> int:
+        """Extract the heater power consumption from the broadcast message."""
+        hex_power_consumption = hexlify(self.message)[274:282]
+        return int(hex_power_consumption[2:4] + hex_power_consumption[0:2], 16)
