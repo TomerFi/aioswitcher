@@ -58,9 +58,9 @@ from .remotes import SwitcherBreezeRemote
 
 logger = getLogger(__name__)
 
-# Type 1 devices: Heaters (v2, touch, v4), Plug, Heater
+# Type 1 devices: Heaters (v2, touch, v4), Plug
 SWITCHER_TCP_PORT_TYPE1 = 9957
-# Type 2 devices: Breeze, Runners
+# Type 2 devices: Breeze, Runners, Heater
 SWITCHER_TCP_PORT_TYPE2 = 10000
 
 
