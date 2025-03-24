@@ -46,7 +46,7 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
     assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.OFF)
     assert_that(sut_parser.get_device_type()).is_equal_to(expected_type)
     assert_that(sut_parser.get_power_consumption()).is_equal_to(0)
-    if not expected_type == DeviceType.POWER_PLUG:
+    if expected_type not in (DeviceType.POWER_PLUG, DeviceType.HEATER):
         assert_that(sut_parser.get_remaining()).is_equal_to("00:00:00")
         assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
 
@@ -73,7 +73,7 @@ def test_datagram_state_on(resource_path, type_suffix, expected_type):
     assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.ON)
     assert_that(sut_parser.get_device_type()).is_equal_to(expected_type)
     assert_that(sut_parser.get_power_consumption()).is_equal_to(2600)
-    if not expected_type == DeviceType.POWER_PLUG:
+    if expected_type not in (DeviceType.POWER_PLUG, DeviceType.HEATER):
         assert_that(sut_parser.get_remaining()).is_equal_to("01:30:00")
         assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
 

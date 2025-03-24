@@ -26,6 +26,7 @@ from aioswitcher.device import (
     ShutterChildLock,
     ShutterDirection,
     SwitcherDualShutterSingleLight,
+    SwitcherHeater,
     SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
@@ -73,7 +74,7 @@ def fake_data():
     return FakeData()
 
 
-@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4, DeviceType.HEATER])
+@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4])
 def test_given_a_device_of_type_water_heater_when_instantiating_as_a_water_heater_should_be_instatiated_properly(fake_data, device_type):
     sut = SwitcherWaterHeater(
         device_type,
@@ -105,6 +106,30 @@ def test_given_a_device_of_type_water_heater_when_instantiating_as_a_water_heate
 
 def test_given_a_device_of_type_power_plug_when_instantiating_as_a_power_plug_should_be_instatiated_properly(fake_data):
     sut = SwitcherPowerPlug(
+        DeviceType.POWER_PLUG,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.device_key,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.token_needed,
+        fake_data.power_consumption,
+        fake_data.electric_current,
+    )
+
+    assert_that(sut.device_type).is_equal_to(DeviceType.POWER_PLUG)
+    assert_that(sut.device_state).is_equal_to(DeviceState.ON)
+    assert_that(sut.device_id).is_equal_to(fake_data.device_id)
+    assert_that(sut.ip_address).is_equal_to(fake_data.ip_address)
+    assert_that(sut.mac_address).is_equal_to(fake_data.mac_address)
+    assert_that(sut.name).is_equal_to(fake_data.name)
+    assert_that(sut.power_consumption).is_equal_to(fake_data.power_consumption)
+    assert_that(sut.electric_current).is_equal_to(fake_data.electric_current)
+
+
+def test_given_a_device_of_type_heater_when_instantiating_as_a_heater_should_be_instatiated_properly(fake_data):
+    sut = SwitcherHeater(
         DeviceType.POWER_PLUG,
         DeviceState.ON,
         fake_data.device_id,
@@ -263,7 +288,7 @@ def test_given_a_device_of_type_light_when_instantiating_as_a_shutter_should_be_
     assert_that(sut.light).is_equal_to(fake_data.light)
 
 
-@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4, DeviceType.HEATER])
+@mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4])
 def test_given_a_device_of_type_water_heater_when_instantiating_as_a_power_plug_should_raise_an_error(fake_data, device_type):
     assert_that(SwitcherPowerPlug).raises(ValueError).when_called_with(
         device_type,

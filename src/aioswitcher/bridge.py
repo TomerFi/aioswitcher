@@ -55,10 +55,10 @@ __all__ = ["SwitcherBridge"]
 logger = getLogger(__name__)
 
 
-# Protocol type 1 devices: V2, Touch, V4, Mini, Power Plug, Heater
+# Protocol type 1 devices: V2, Touch, V4, Mini, Power Plug
 SWITCHER_UDP_PORT_TYPE1 = 20002
 SWITCHER_UDP_PORT_TYPE1_NEW_VERSION = 10002
-# Protocol type 2 devices: Breeze, Runner, Runner Mini, Runner S11, Runner S12
+# Protocol type 2 devices: Breeze, Runner, Runner Mini, Runner S11, Runner S12, Heater
 SWITCHER_UDP_PORT_TYPE2 = 20003
 SWITCHER_UDP_PORT_TYPE2_NEW_VERSION = 10003
 
