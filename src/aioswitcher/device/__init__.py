@@ -40,11 +40,11 @@ class DeviceType(Enum):
 
     MINI = "Switcher Mini", "030f", 1, DeviceCategory.WATER_HEATER, False
     POWER_PLUG = "Switcher Power Plug", "01a8", 1, DeviceCategory.POWER_PLUG, False
+    HEATER = "Switcher Heater", "0317", 1, DeviceCategory.POWER_PLUG, False
     TOUCH = "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER, False
     V2_ESP = "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER, False
     V2_QCA = "Switcher V2 (qualcomm)", "01a1", 1, DeviceCategory.WATER_HEATER, False
     V4 = "Switcher V4", "0317", 1, DeviceCategory.WATER_HEATER, False
-    HEATER = "Switcher Heater", "0317", 1, DeviceCategory.WATER_HEATER, False
     BREEZE = "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT, False
     RUNNER = "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER, False
     RUNNER_MINI = "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER, False

@@ -20,6 +20,7 @@ async def control_power_plug(device_type, device_ip, device_id, device_key) :
         await api.set_device_name("my new name")
 
 asyncio.run(control_power_plug(DeviceType.POWER_PLUG, "111.222.11.22", "ab1c2d", "00"))
+asyncio.run(control_power_plug(DeviceType.HEATER, "111.222.11.22", "ab1c2d" , "00"))
 ```
 
 ## Water heater excerpt
@@ -57,7 +58,6 @@ asyncio.run(control_water_heater(DeviceType.TOUCH, "111.222.11.22", "ab1c2d" , "
 asyncio.run(control_water_heater(DeviceType.V2_ESP, "111.222.11.22", "ab1c2d" , "00"))
 asyncio.run(control_water_heater(DeviceType.V2_QCA, "111.222.11.22", "ab1c2d" , "00"))
 asyncio.run(control_water_heater(DeviceType.V4, "111.222.11.22", "ab1c2d" , "00"))
-asyncio.run(control_water_heater(DeviceType.HEATER, "111.222.11.22", "ab1c2d" , "00"))
 ```
 
 ## Runner device excerpt

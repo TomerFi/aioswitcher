@@ -39,11 +39,11 @@ printer = PrettyPrinter(indent=4)
 DEVICES = {
     "mini": DeviceType.MINI,
     "plug": DeviceType.POWER_PLUG,
+    "heater": DeviceType.HEATER,
     "touch": DeviceType.TOUCH,
     "v2esp": DeviceType.V2_ESP,
     "v2qual": DeviceType.V2_QCA,
     "v4": DeviceType.V4,
-    "heater": DeviceType.HEATER,
     "breeze": DeviceType.BREEZE,
     "runner": DeviceType.RUNNER,
     "runnermini": DeviceType.RUNNER_MINI,
