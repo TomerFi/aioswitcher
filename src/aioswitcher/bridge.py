@@ -33,6 +33,7 @@ from .device import (
     ShutterDirection,
     SwitcherBase,
     SwitcherDualShutterSingleLight,
+    SwitcherHeater,
     SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
@@ -121,10 +122,35 @@ def _parse_device_from_datagram(
                 )
             )
 
-        elif device_type and device_type.category == DeviceCategory.POWER_PLUG:
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.POWER_PLUG
+            and device_type == DeviceType.POWER_PLUG
+        ):
             logger.debug("discovered a power plug switcher device")
             device_callback(
                 SwitcherPowerPlug(
+                    device_type,
+                    device_state,
+                    parser.get_device_id(),
+                    parser.get_device_key(),
+                    parser.get_ip_type1(),
+                    parser.get_mac_type1(),
+                    parser.get_name(),
+                    device_type.token_needed,
+                    power_consumption,
+                    electric_current,
+                )
+            )
+
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.POWER_PLUG
+            and device_type == DeviceType.HEATER
+        ):
+            logger.debug("discovered a heater switcher device")
+            device_callback(
+                SwitcherHeater(
                     device_type,
                     device_state,
                     parser.get_device_id(),
@@ -469,6 +495,7 @@ class DatagramParser:
         """Verify the broadcast message had originated from a switcher device."""
         return hexlify(self.message)[0:4].decode() == "fef0" and (
             len(self.message) == 165
+            or len(self.message) == 171  # Switcher Heater
             or len(self.message) == 168  # Switcher Breeze
             or len(self.message) == 159  # Switcher Runner and RunnerMini
             or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S12

@@ -40,7 +40,7 @@ class DeviceType(Enum):
 
     MINI = "Switcher Mini", "030f", 1, DeviceCategory.WATER_HEATER, False
     POWER_PLUG = "Switcher Power Plug", "01a8", 1, DeviceCategory.POWER_PLUG, False
-    HEATER = "Switcher Heater", "0317", 1, DeviceCategory.POWER_PLUG, False
+    HEATER = "Switcher Heater", "031f", 1, DeviceCategory.POWER_PLUG, False
     TOUCH = "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER, False
     V2_ESP = "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER, False
     V2_QCA = "Switcher V2 (qualcomm)", "01a1", 1, DeviceCategory.WATER_HEATER, False
@@ -448,6 +448,22 @@ class SwitcherPowerPlug(SwitcherPowerBase, SwitcherBase):
         """Post initialization validate device type category as POWER_PLUG."""
         if self.device_type.category != DeviceCategory.POWER_PLUG:
             raise ValueError("only power plugs are allowed")
+        super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherHeater(SwitcherPowerBase, SwitcherBase):
+    """Implementation of the Switcher Heater device.
+
+    Please Note the order of the inherited classes to understand the order of the
+    instantiation parameters and the super call.
+    """
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as HEATER."""
+        if self.device_type.category != DeviceCategory.POWER_PLUG:
+            raise ValueError("only heater are allowed")
         super().__post_init__()
 
 

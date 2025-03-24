@@ -40,7 +40,7 @@ from aioswitcher.device import (
             DeviceCategory.POWER_PLUG,
             False,
         ),
-        (DeviceType.HEATER, "Switcher Heater", "0317", 1, DeviceCategory.POWER_PLUG, False),
+        (DeviceType.HEATER, "Switcher Heater", "031f", 1, DeviceCategory.POWER_PLUG, False),
         (DeviceType.TOUCH, "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER, False),
         (DeviceType.V2_ESP, "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER, False),
         (
