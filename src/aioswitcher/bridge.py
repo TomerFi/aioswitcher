@@ -700,8 +700,6 @@ class DatagramParser:
 
     def get_heater_state(self) -> DeviceState:
         """Extract the heater state from the broadcast message."""
-        message = hexlify(self.message)
-        test = hexlify(self.message)[270:272].decode()
         hex_device_state = hexlify(self.message)[270:272].decode()
         return (
             DeviceState.ON

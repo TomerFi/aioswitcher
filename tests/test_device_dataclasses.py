@@ -402,3 +402,18 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_light_should_
         fake_data.token_needed,
         fake_data.light
     ).is_equal_to("only lights are allowed")
+
+
+def test_given_a_device_of_type_power_plug_when_instantiating_as_a_heater_should_raise_an_error(fake_data):
+    assert_that(SwitcherHeater).raises(ValueError).when_called_with(
+        DeviceType.POWER_PLUG,
+        DeviceState.ON,
+        fake_data.device_id,
+        fake_data.device_key,
+        fake_data.ip_address,
+        fake_data.mac_address,
+        fake_data.name,
+        fake_data.token_needed,
+        fake_data.power_consumption,
+        fake_data.electric_current,
+    ).is_equal_to("only heaters are allowed")
