@@ -36,7 +36,6 @@ body:
         - Switcher Touch (V3)
         - Switcher V4
         - Switcher Power Plug
-        - Switcher Heater
         - Switcher Breeze
         - Switcher Runner
         - Switcher Runner Mini
@@ -47,6 +46,7 @@ body:
         - Switcher Light SL02
         - Switcher Light SL02 Mini
         - Switcher Light SL03
+        - Switcher Heater
     validations:
       required: true
 

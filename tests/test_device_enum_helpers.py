@@ -40,7 +40,6 @@ from aioswitcher.device import (
             DeviceCategory.POWER_PLUG,
             False,
         ),
-        (DeviceType.HEATER, "Switcher Heater", "031f", 2, DeviceCategory.POWER_PLUG, False),
         (DeviceType.TOUCH, "Switcher Touch", "030b", 1, DeviceCategory.WATER_HEATER, False),
         (DeviceType.V2_ESP, "Switcher V2 (esp)", "01a7", 1, DeviceCategory.WATER_HEATER, False),
         (
@@ -62,6 +61,7 @@ from aioswitcher.device import (
         (DeviceType.LIGHT_SL02, "Switcher Light SL02", "0f05", 2, DeviceCategory.LIGHT, True),
         (DeviceType.LIGHT_SL02_MINI, "Switcher Light SL02 Mini", "0f08", 2, DeviceCategory.LIGHT, True),
         (DeviceType.LIGHT_SL03, "Switcher Light SL03", "0f06", 2, DeviceCategory.LIGHT, True),
+        (DeviceType.HEATER, "Switcher Heater", "031f", 2, DeviceCategory.POWER_PLUG, True),
     ],
 )
 def test_the_given_type_custom_properties_are_returning_the_expected_data(

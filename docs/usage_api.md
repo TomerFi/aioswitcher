@@ -20,7 +20,6 @@ async def control_power_plug(device_type, device_ip, device_id, device_key) :
         await api.set_device_name("my new name")
 
 asyncio.run(control_power_plug(DeviceType.POWER_PLUG, "111.222.11.22", "ab1c2d", "00"))
-asyncio.run(control_power_plug(DeviceType.HEATER, "111.222.11.22", "ab1c2d" , "00"))
 ```
 
 ## Water heater excerpt
@@ -141,4 +140,26 @@ asyncio.run(control_light(DeviceType.LIGHT_SL01_MINI, "111.222.11.22", "ab1c2d",
 asyncio.run(control_light(DeviceType.LIGHT_SL02, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
 asyncio.run(control_light(DeviceType.LIGHT_SL02_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
 asyncio.run(control_light(DeviceType.LIGHT_SL03, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+```
+
+## Heater excerpt
+
+```python
+import asyncio
+from aioswitcher.api import Command, SwitcherApi
+from aioswitcher.device import DeviceType
+
+async def control_heater(device_type, device_ip, device_id, device_key, token) :
+    # for connecting to a device we need its type, id, login key and ip address
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
+        # get the device current state
+        await api.get_state()
+        # turn the device on
+        await api.control_device(Command.ON)
+        # turn the device off
+        await api.control_device(Command.OFF)
+        # set the device name to 'my new name'
+        await api.set_device_name("my new name")
+
+asyncio.run(control_power_plug(DeviceType.HEATER, "111.222.11.22", "ab1c2d" , "00", "zvVvd7JxtN7CgvkD1Psujw=="))
 ```

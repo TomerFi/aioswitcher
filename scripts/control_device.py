@@ -39,7 +39,6 @@ printer = PrettyPrinter(indent=4)
 DEVICES = {
     "mini": DeviceType.MINI,
     "plug": DeviceType.POWER_PLUG,
-    "heater": DeviceType.HEATER,
     "touch": DeviceType.TOUCH,
     "v2esp": DeviceType.V2_ESP,
     "v2qual": DeviceType.V2_QCA,
@@ -54,6 +53,7 @@ DEVICES = {
     "light02": DeviceType.LIGHT_SL02,
     "light02mini": DeviceType.LIGHT_SL02_MINI,
     "light03": DeviceType.LIGHT_SL03,
+    "heater": DeviceType.HEATER,
 }
 
 # shared parse

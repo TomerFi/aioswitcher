@@ -148,27 +148,6 @@ def _parse_device_from_datagram(
                 )
             )
 
-        elif (
-            device_type
-            and device_type.category == DeviceCategory.POWER_PLUG
-            and device_type == DeviceType.HEATER
-        ):
-            logger.debug("discovered a heater switcher device")
-            device_callback(
-                SwitcherHeater(
-                    device_type,
-                    device_state,
-                    parser.get_device_id(),
-                    parser.get_device_key(),
-                    parser.get_ip_type2(),
-                    parser.get_mac_type2(),
-                    parser.get_name(),
-                    device_type.token_needed,
-                    power_consumption,
-                    electric_current,
-                )
-            )
-
         elif device_type and device_type.category == DeviceCategory.SHUTTER:
             logger.debug("discovered a Runner switcher device")
             device_callback(
@@ -388,6 +367,28 @@ def _parse_device_from_datagram(
                     ],
                 )
             )
+
+        elif (
+            device_type
+            and device_type.category == DeviceCategory.POWER_PLUG
+            and device_type == DeviceType.HEATER
+        ):
+            logger.debug("discovered a heater switcher device")
+            device_callback(
+                SwitcherHeater(
+                    device_type,
+                    device_state,
+                    parser.get_device_id(),
+                    parser.get_device_key(),
+                    parser.get_ip_type2(),
+                    parser.get_mac_type2(),
+                    parser.get_name(),
+                    device_type.token_needed,
+                    power_consumption,
+                    electric_current,
+                )
+            )
+
         else:
             warn("discovered an unknown switcher device")
 
@@ -500,13 +501,13 @@ class DatagramParser:
         """Verify the broadcast message had originated from a switcher device."""
         return hexlify(self.message)[0:4].decode() == "fef0" and (
             len(self.message) == 165
-            or len(self.message) == 171  # Switcher Heater
             or len(self.message) == 168  # Switcher Breeze
             or len(self.message) == 159  # Switcher Runner and RunnerMini
             or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S12
             or len(self.message)
             == 207  # Switcher Light SL01, Switcher Light SL01 Mini,
             # Switcher Light SL02, Switcher Light SL02 Mini and Switcher Light SL03
+            or len(self.message) == 171  # Switcher Heater
         )
 
     def get_ip_type1(self) -> str:
