@@ -672,9 +672,10 @@ async def turn_on(
     device_ip: str,
     timer: int,
     verbose: bool,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to launch a turn_on request."""
-    async with SwitcherApi(device_type, device_ip, device_id, device_key) as api:
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         printer.pprint(asdict(await api.control_device(Command.ON, timer), verbose))
 
 
@@ -684,9 +685,10 @@ async def turn_off(
     device_key: str,
     device_ip: str,
     verbose: bool,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to launch a turn_off request."""
-    async with SwitcherApi(device_type, device_ip, device_id, device_key) as api:
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         printer.pprint(asdict(await api.control_device(Command.OFF), verbose))
 
 
@@ -919,6 +921,7 @@ def main() -> None:
                     args.ip_address,
                     args.timer,
                     args.verbose,
+                    args.token,
                 )
             )
         elif args.action == "turn_off":
@@ -929,6 +932,7 @@ def main() -> None:
                     args.device_key,
                     args.ip_address,
                     args.verbose,
+                    args.token,
                 )
             )
         elif args.action == "set_name":

@@ -245,13 +245,23 @@ class SwitcherApi:
             if minutes > 0
             else packets.NO_TIMER_REQUESTED
         )
-        packet = packets.SEND_CONTROL_PACKET.format(
-            login_resp.session_id,
-            timestamp,
-            self._device_id,
-            command.value,
-            timer,
-        )
+        if bool(self._token):
+            hex_pos = f"0{command.value}{timer}"
+            packet = packets.GENERAL_TOKEN_COMMAND.format(
+                timestamp,
+                self._device_id,
+                self._token,
+                packets.CONTROL_DEVICE_PRECOMMAND,
+                hex_pos,
+            )
+        else:
+            packet = packets.SEND_CONTROL_PACKET.format(
+                login_resp.session_id,
+                timestamp,
+                self._device_id,
+                command.value,
+                timer,
+            )
         response = await self._send_packet("control", packet)
         return SwitcherBaseResponse(response)
 
