@@ -32,6 +32,7 @@ class DeviceCategory(Enum):
     SINGLE_SHUTTER_DUAL_LIGHT = auto()
     DUAL_SHUTTER_SINGLE_LIGHT = auto()
     LIGHT = auto()
+    HEATER = auto()
 
 
 @unique
@@ -96,7 +97,7 @@ class DeviceType(Enum):
         DeviceCategory.LIGHT,
         True,
     )
-    HEATER = "Switcher Heater", "031f", 2, DeviceCategory.POWER_PLUG, True
+    HEATER = "Switcher Heater", "031f", 2, DeviceCategory.HEATER, True
 
     def __new__(
         cls,
@@ -545,6 +546,6 @@ class SwitcherHeater(SwitcherPowerBase, SwitcherBase):
 
     def __post_init__(self) -> None:
         """Post initialization validate device type category as HEATER."""
-        if self.device_type.category != DeviceCategory.POWER_PLUG:
+        if self.device_type.category != DeviceCategory.HEATER:
             raise ValueError("only heaters are allowed")
         super().__post_init__()

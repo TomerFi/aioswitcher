@@ -130,7 +130,6 @@ def _parse_device_from_datagram(
         elif (
             device_type
             and device_type.category == DeviceCategory.POWER_PLUG
-            and device_type == DeviceType.POWER_PLUG
         ):
             logger.debug("discovered a power plug switcher device")
             device_callback(
@@ -370,8 +369,7 @@ def _parse_device_from_datagram(
 
         elif (
             device_type
-            and device_type.category == DeviceCategory.POWER_PLUG
-            and device_type == DeviceType.HEATER
+            and device_type.category == DeviceCategory.HEATER
         ):
             logger.debug("discovered a heater switcher device")
             device_callback(

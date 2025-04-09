@@ -266,7 +266,7 @@ def test_given_a_device_of_type_light_when_instantiating_as_a_shutter_should_be_
 
 def test_given_a_device_of_type_heater_when_instantiating_as_a_heater_should_be_instatiated_properly(fake_data):
     sut = SwitcherHeater(
-        DeviceType.POWER_PLUG,
+        DeviceType.HEATER,
         DeviceState.ON,
         fake_data.device_id,
         fake_data.device_key,
@@ -278,7 +278,7 @@ def test_given_a_device_of_type_heater_when_instantiating_as_a_heater_should_be_
         fake_data.electric_current,
     )
 
-    assert_that(sut.device_type).is_equal_to(DeviceType.POWER_PLUG)
+    assert_that(sut.device_type).is_equal_to(DeviceType.HEATER)
     assert_that(sut.device_state).is_equal_to(DeviceState.ON)
     assert_that(sut.device_id).is_equal_to(fake_data.device_id)
     assert_that(sut.ip_address).is_equal_to(fake_data.ip_address)
