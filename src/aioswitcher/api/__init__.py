@@ -48,6 +48,7 @@ from . import packets
 from .messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
+    SwitcherHeaterStateResponse,
     SwitcherLightStateResponse,
     SwitcherLoginResponse,
     SwitcherShutterStateResponse,
@@ -752,3 +753,24 @@ class SwitcherApi:
 
         response = await self._send_packet("control", packet)
         return SwitcherBaseResponse(response)
+
+    async def get_heater_state(self) -> SwitcherHeaterStateResponse:
+        """Use for sending the get state packet to the Heater device.
+
+        Returns:
+            An instance of ``SwitcherHeaterStateResponse``.
+
+        """
+        timestamp, login_resp = await self._login()
+        if login_resp.successful:
+            packet = packets.GET_STATE_PACKET2_TYPE2.format(
+                login_resp.session_id, timestamp, self._device_id
+            )
+            state_resp = await self._send_packet("get heater state", packet)
+            try:
+                response = SwitcherHeaterStateResponse(state_resp)
+                if response.successful:
+                    return response
+            except (KeyError, ValueError) as ve:
+                raise RuntimeError("get heater state request was not successful") from ve
+        raise RuntimeError("login request was not successful")
