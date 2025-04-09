@@ -772,5 +772,7 @@ class SwitcherApi:
                 if response.successful:
                     return response
             except (KeyError, ValueError) as ve:
-                raise RuntimeError("get heater state request was not successful") from ve
+                raise RuntimeError(
+                    "get heater state request was not successful"
+                ) from ve
         raise RuntimeError("login request was not successful")
