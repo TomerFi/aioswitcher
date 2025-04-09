@@ -27,11 +27,11 @@ from aioswitcher.device import DeviceState, DeviceType
 @mark.parametrize("type_suffix, expected_type", [
     ("mini", DeviceType.MINI),
     ("power_plug", DeviceType.POWER_PLUG),
-    ("heater", DeviceType.HEATER),
     ("touch", DeviceType.TOUCH),
     ("v2_esp", DeviceType.V2_ESP),
     ("v2_qca", DeviceType.V2_QCA),
     ("v4", DeviceType.V4),
+    ("heater", DeviceType.HEATER),
 ])
 def test_datagram_state_off(resource_path, type_suffix, expected_type):
     sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
@@ -54,11 +54,11 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
 @mark.parametrize("type_suffix, expected_type", [
     ("mini", DeviceType.MINI),
     ("power_plug", DeviceType.POWER_PLUG),
-    ("heater", DeviceType.HEATER),
     ("touch", DeviceType.TOUCH),
     ("v2_esp", DeviceType.V2_ESP),
     ("v2_qca", DeviceType.V2_QCA),
     ("v4", DeviceType.V4),
+    ("heater", DeviceType.HEATER),
 ])
 def test_datagram_state_on(resource_path, type_suffix, expected_type):
     sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()

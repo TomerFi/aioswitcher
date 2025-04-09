@@ -154,8 +154,8 @@ async def control_heater(device_type, device_ip, device_id, device_key, token) :
     async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         # get the device current state
         await api.get_state()
-        # turn the device on
-        await api.control_device(Command.ON)
+        # turn the device on for 15 minutes
+        await api.control_device(Command.ON, 15)
         # turn the device off
         await api.control_device(Command.OFF)
         # set the device name to 'my new name'

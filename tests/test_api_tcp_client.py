@@ -57,6 +57,7 @@ from aioswitcher.device import (
 device_type_api1 = DeviceType.TOUCH
 device_type_api2 = DeviceType.RUNNER
 device_type_token_api2 = DeviceType.RUNNER_S11
+device_type_token_api2_2 = DeviceType.HEATER
 device_index = 0
 device_index2 = 1
 device_id = "aaaaaa"
@@ -112,6 +113,15 @@ async def connected_api_type2(reader_mock, writer_mock):
 async def connected_api_token_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
         api = SwitcherApi(device_type_token_api2, device_ip, device_id, device_key, token_not_empty)
+        await api.connect()
+        yield api
+        await api.disconnect()
+
+
+@pytest_asyncio.fixture
+async def connected_api_token_type2_2(reader_mock, writer_mock):
+    with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
+        api = SwitcherApi(device_type_token_api2_2, device_ip, device_id, device_key, token_not_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -366,11 +376,29 @@ async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, write
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
+async def test_turn_on_with_timer_token_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "turn_on_with_timer_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2_2.control_device(Command.ON, 15)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
 async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
     two_packets = _get_dummy_packets(resource_path_root, "login_response", "turn_off_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
         response = await connected_api_type1.control_device(Command.OFF)
     assert_that(writer_write.call_count).is_equal_to(2)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+
+
+async def test_turn_off_token_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
+    two_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "turn_off_response")
+    with patch.object(reader_mock, "read", side_effect=two_packets):
+        response = await connected_api_token_type2_2.control_device(Command.OFF)
+    assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
