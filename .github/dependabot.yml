@@ -11,7 +11,7 @@ updates:
       prefix: "ci"
     rebase-strategy: disabled
     assignees:
-      - "tomerfi"
+      - "TomerFi"
       - "thecode"
       - "YogevBokobza"
 
@@ -27,6 +27,6 @@ updates:
     rebase-strategy: disabled
     versioning-strategy: increase-if-necessary
     assignees:
-      - "tomerfi"
+      - "TomerFi"
       - "thecode"
       - "YogevBokobza"
