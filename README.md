@@ -9,9 +9,9 @@ PyPi module integrating with various [Switcher][switcher] devices.</br>
 pip install aioswitcher
 ```
 
-Check the docs: [https://aioswitcher.tomfi.info][docs-aioswitcher].
+Check the docs: [https://aioswitcher.figenblat.com][docs-aioswitcher].
 
-Looking for a containerized solution? -Check [https://switcher-webapi.tomfi.info][switcher-webapi].
+Looking for a containerized solution? -Check [https://switcher-webapi.figenblat.com][switcher-webapi].
 
 > [!Note]
 > This is a community-driven open-source project; the vendor does not officially support it.</br>
@@ -24,13 +24,13 @@ Looking for a containerized solution? -Check [https://switcher-webapi.tomfi.info
 [ci-stage]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml
 [pages-badge]: https://github.com/TomerFi/aioswitcher/actions/workflows/pages.yml/badge.svg
 [codecov-aioswitcher]: https://codecov.io/gh/TomerFi/aioswitcher
-[docs-aioswitcher]: https://aioswitcher.tomfi.info/
+[docs-aioswitcher]: https://aioswitcher.figenblat.com/
 [poetry-url]: https://python-poetry.org/
 [pypi-aioswitcher]: https://pypi.org/project/aioswitcher
 [repo-aioswitcher]: https://github.com/TomerFi/aioswitcher
 [switcher]: https://www.switcher.co.il/
 [switcher-v2-script]: https://github.com/NightRang3r/Switcher-V2-Python
-[switcher-webapi]: https://switcher-webapi.tomfi.info
+[switcher-webapi]: https://switcher-webapi.figenblat.com
 <!-- Badges Links -->
 [codecov-badge]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-badge]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml/badge.svg

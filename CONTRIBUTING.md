@@ -62,13 +62,13 @@ poetry run poe docs_serve # will build and serve a local version of the document
 ## Documentation
 
 We use [MkDocs][mkdocs-site] and [Material][material-site] for building our documentation site,
-https://aioswitcher.tomfi.info/. See [docs](docs) and [mkdocs.yml](mkdocs.yml). 
+https://aioswitcher.figenblat.com/. See [docs](docs) and [mkdocs.yml](mkdocs.yml). 
 
 > [!NOTE]   
 > We're generating [code documentation][aioswitcher-code-docs] from _docstrings_.
 
 <!-- Links -->
-[aioswitcher-code-docs]: https://aioswitcher.tomfi.info/codedocs/
+[aioswitcher-code-docs]: https://aioswitcher.figenblat.com/codedocs/
 [material-site]: https://squidfunk.github.io/mkdocs-material/
 [mkdocs-site]: https://www.mkdocs.org/
 [pip-docs]: https://pypi.org/project/pip/

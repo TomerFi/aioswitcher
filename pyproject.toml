@@ -30,7 +30,7 @@ dependencies = [ "pycryptodome>=3.18.0,<4.0.0", "aiohttp>=3.10.3,<4.0.0" ]
   [project.urls]
   homepage = "https://pypi.org/project/aioswitcher/"
   repository = "https://github.com/tomerfi/aioswitcher"
-  documentation = "https://aioswitcher.tomfi.info"
+  documentation = "https://aioswitcher.figenblat.com"
 
   [project.scripts]
   control_device = "scripts.control_device:main"
