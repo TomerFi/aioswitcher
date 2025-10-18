@@ -1,4 +1,4 @@
 User-Agent: *
 Allow: /
 
-Sitemap: https://aioswitcher.tomfi.info/sitemap.xml
+Sitemap: https://aioswitcher.figenblat.com/sitemap.xml

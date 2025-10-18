@@ -54,5 +54,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site
-          cname: aioswitcher.tomfi.info
+          cname: aioswitcher.figenblat.com
           commit_message: 'docs: deployed documentation site '
