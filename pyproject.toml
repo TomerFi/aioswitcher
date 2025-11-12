@@ -19,7 +19,7 @@ dependencies = [ "pycryptodome>=3.18.0,<4.0.0", "aiohttp>=3.10.3,<4.0.0" ]
 
   [[project.authors]]
   name = "Tomer Figenblat"
-  email = "tomer@tomfi.info"
+  email = "tomer@figenblat.com"
 
   [[project.maintainers]]
   name = "Shay Levy"
