@@ -470,6 +470,10 @@ example usage:
 python control_device.py turn_off -c "touch" -d ab1c2d -i "111.222.11.22"
 
 python control_device.py turn_off -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"
+
+python control_device.py turn_off -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -l 18 -i "192.168.50.98"
+
+python control_device.py turn_off -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -l 18 -i "192.168.50.98" -t 15
 ```
 
 ### Turn on
@@ -501,6 +505,10 @@ python control_device.py turn_on -c "touch" -d ab1c2d -i "111.222.11.22"
 python control_device.py turn_on -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"
 
 python control_device.py turn_on -c "touch" -d ab1c2d -i "111.222.11.22" -t 15
+
+python control_device.py turn_on -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -l 18 -i "192.168.50.98"
+
+python control_device.py turn_on -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -l 18 -i "192.168.50.98" -t 15
 ```
 
 ### Turn off light
