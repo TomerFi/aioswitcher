@@ -158,8 +158,6 @@ async def control_heater(device_type, device_ip, device_id, device_key, token) :
         await api.control_device(Command.ON, 15)
         # turn the device off
         await api.control_device(Command.OFF)
-        # set the device name to 'my new name'
-        await api.set_device_name("my new name")
 
 asyncio.run(control_heater(DeviceType.HEATER, "111.222.11.22", "ab1c2d" , "00", "zvVvd7JxtN7CgvkD1Psujw=="))
 ```
