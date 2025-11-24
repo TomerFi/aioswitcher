@@ -451,13 +451,15 @@ python control_device.py stop_shutter -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw=
 ```shell title="scripts/control_device.py turn_off"
 $ poetry run control_device turn_off --help
 
-usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
+usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -481,7 +483,7 @@ python control_device.py turn_off -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f
 ```shell title="scripts/control_device.py turn_on"
 $ poetry run control_device turn_on --help
 
-usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
+usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                  [-t [TIMER]]
 
 options:
@@ -489,6 +491,8 @@ options:
   -v, --verbose         include the raw message
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with the new switcher devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
