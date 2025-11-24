@@ -183,7 +183,7 @@ class StateMessageParser:
 
     def get_heater_time_left(self) -> str:
         """Return the time left for the heater device current run."""
-        hex_time_left = self._hex_response[192:200]
+        hex_time_left = self._hex_response[208:216]
         time_left_seconds = int(
             hex_time_left[6:8]
             + hex_time_left[4:6]
@@ -204,7 +204,7 @@ class StateMessageParser:
 
     def get_heater_auto_shutdown(self) -> str:
         """Return the value of the heater auto shutdown configuration."""
-        hex_auto_off = self._hex_response[208:216]
+        hex_auto_off = self._hex_response[192:200]
         auto_off_seconds = int(
             hex_auto_off[6:8]
             + hex_auto_off[4:6]
