@@ -35,4 +35,4 @@
 [switcher-light-sl02]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-sl02/
 [switcher-light-sl02-mini]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-slmini02/
 [switcher-light-sl03]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-sl03/
-[switcher-heater]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/pre-register/
+[switcher-heater]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-heater/
