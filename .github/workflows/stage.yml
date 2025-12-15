@@ -35,7 +35,7 @@ jobs:
           python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
@@ -47,7 +47,7 @@ jobs:
           poetry config virtualenvs.in-project true
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
