@@ -178,7 +178,7 @@ class StateMessageParser:
 
     def get_heater_power_consumption(self) -> int:
         """Return the current power consumption of the heater device."""
-        hex_power = self._hex_response[154:162]
+        hex_power = self._hex_response[168:176]
         return int(hex_power[2:4] + hex_power[0:2], 16)
 
     def get_heater_time_left(self) -> str:
