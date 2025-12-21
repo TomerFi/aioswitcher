@@ -378,6 +378,12 @@ def _parse_device_from_datagram(
                     device_type.token_needed,
                     power_consumption,
                     electric_current,
+                    (
+                        parser.get_heater_remaining()
+                        if device_state == DeviceState.ON
+                        else "00:00:00"
+                    ),
+                    parser.get_auto_shutdown(),
                 )
             )
 
@@ -703,3 +709,15 @@ class DatagramParser:
         """Extract the heater power consumption from the broadcast message."""
         hex_power_consumption = hexlify(self.message)[274:282]
         return int(hex_power_consumption[2:4] + hex_power_consumption[0:2], 16)
+
+    def get_heater_remaining(self) -> str:
+        """Extract the heater time remains for the current execution."""
+        hex_remaining_time = hexlify(self.message)[326:334]
+        int_remaining_time_seconds = int(
+            hex_remaining_time[6:8]
+            + hex_remaining_time[4:6]
+            + hex_remaining_time[2:4]
+            + hex_remaining_time[0:2],
+            16,
+        )
+        return seconds_to_iso_time(int_remaining_time_seconds)

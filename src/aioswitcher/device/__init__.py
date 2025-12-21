@@ -537,7 +537,7 @@ class SwitcherLight(SwitcherLightBase, SwitcherBase):
 
 @final
 @dataclass
-class SwitcherHeater(SwitcherPowerBase, SwitcherBase):
+class SwitcherHeater(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
     """Implementation of the Switcher Heater device.
 
     Please Note the order of the inherited classes to understand the order of the
