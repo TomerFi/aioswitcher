@@ -276,6 +276,8 @@ def test_given_a_device_of_type_heater_when_instantiating_as_a_heater_should_be_
         fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
+        fake_data.remaining_time,
+        fake_data.auto_shutdown,
     )
 
     assert_that(sut.device_type).is_equal_to(DeviceType.HEATER)
@@ -286,6 +288,9 @@ def test_given_a_device_of_type_heater_when_instantiating_as_a_heater_should_be_
     assert_that(sut.name).is_equal_to(fake_data.name)
     assert_that(sut.power_consumption).is_equal_to(fake_data.power_consumption)
     assert_that(sut.electric_current).is_equal_to(fake_data.electric_current)
+    assert_that(sut.remaining_time).is_equal_to(fake_data.remaining_time)
+    assert_that(sut.auto_shutdown).is_equal_to(fake_data.auto_shutdown)
+    assert_that(sut.auto_off_set).is_equal_to(fake_data.auto_shutdown)
 
 
 @mark.parametrize("device_type", [DeviceType.MINI, DeviceType.TOUCH, DeviceType.V2_ESP, DeviceType.V2_QCA, DeviceType.V4])
@@ -416,4 +421,6 @@ def test_given_a_device_of_type_power_plug_when_instantiating_as_a_heater_should
         fake_data.token_needed,
         fake_data.power_consumption,
         fake_data.electric_current,
+        fake_data.remaining_time,
+        fake_data.auto_shutdown,
     ).is_equal_to("only heaters are allowed")
