@@ -471,6 +471,7 @@ class DatagramParser:
             len(self.message) == 165
             or len(self.message) == 168  # Switcher Breeze
             or len(self.message) == 159  # Switcher Runner and RunnerMini
+            or len(self.message) == 170  # Switcher On Wall
             or len(self.message) == 203  # Switcher Runner S11 and Switcher Runner S12
             or len(self.message)
             == 207  # Switcher Light SL01, Switcher Light SL01 Mini,

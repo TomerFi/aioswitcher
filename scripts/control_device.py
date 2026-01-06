@@ -38,6 +38,7 @@ printer = PrettyPrinter(indent=4)
 
 DEVICES = {
     "mini": DeviceType.MINI,
+    "onwall": DeviceType.ON_WALL,
     "plug": DeviceType.POWER_PLUG,
     "touch": DeviceType.TOUCH,
     "v2esp": DeviceType.V2_ESP,

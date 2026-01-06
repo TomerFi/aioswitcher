@@ -4,6 +4,7 @@
 | Switcher Mini            |      [product][switcher-mini]       |         1.x.x         |
 | Switcher Touch (V3)      |      [product][switcher-touch]      |         1.x.x         |
 | Switcher V4              |       [product][switcher-v4]        |         1.x.x         |
+| Switcher On Wall         |    [product][switcher-on-wall]      |         6.1.x         |
 | Switcher Power Plug      |   [product][switcher-power-plug]    |         2.x.x         |
 | Switcher Breeze          |     [product][switcher-breeze]      |         3.x.x         |
 | Switcher Runner          |     [product][switcher-runner]      |         3.x.x         |
@@ -23,6 +24,7 @@
 [switcher-mini]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-mini/
 [switcher-touch]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/%D7%A1%D7%95%D7%95%D7%99%D7%A6%D7%A8-touch/
 [switcher-v4]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-v4/
+[switcher-on-wall]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-on-wall/
 [switcher-power-plug]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/%d7%a1%d7%95%d7%95%d7%99%d7%a6%d7%a8-smart-plug/
 [switcher-breeze]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-breeze/
 [switcher-runner]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-runner/

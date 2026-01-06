@@ -57,6 +57,7 @@ asyncio.run(control_water_heater(DeviceType.TOUCH, "111.222.11.22", "ab1c2d" , "
 asyncio.run(control_water_heater(DeviceType.V2_ESP, "111.222.11.22", "ab1c2d" , "00"))
 asyncio.run(control_water_heater(DeviceType.V2_QCA, "111.222.11.22", "ab1c2d" , "00"))
 asyncio.run(control_water_heater(DeviceType.V4, "111.222.11.22", "ab1c2d" , "00"))
+asyncio.run(control_water_heater(DeviceType.ON_WALL, "111.222.11.22", "ab1c2d" , "00"))
 ```
 
 ## Runner device excerpt

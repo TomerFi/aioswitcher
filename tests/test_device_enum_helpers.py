@@ -51,6 +51,7 @@ from aioswitcher.device import (
             False,
         ),
         (DeviceType.V4, "Switcher V4", "0317", 1, DeviceCategory.WATER_HEATER, False),
+        (DeviceType.ON_WALL, "Switcher On Wall", "0321", 1, DeviceCategory.WATER_HEATER, False),
         (DeviceType.BREEZE, "Switcher Breeze", "0e01", 2, DeviceCategory.THERMOSTAT, False),
         (DeviceType.RUNNER, "Switcher Runner", "0c01", 2, DeviceCategory.SHUTTER, False),
         (DeviceType.RUNNER_MINI, "Switcher Runner Mini", "0c02", 2, DeviceCategory.SHUTTER, False),
