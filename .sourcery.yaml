@@ -1,0 +1,10 @@
+# Sourcery configuration for aioswitcher
+# https://docs.sourcery.ai/Configuration/
+
+ignore:
+  - tests/**
+  - docs/**
+  - scripts/**
+
+rule_settings:
+  python_version: "3.12"

@@ -56,6 +56,8 @@ Common [poe][poethepoet-site] tasks:
 ```shell
 poetry run poe test # will run all unit-tests
 poetry run poe lint # will lint the project using black, flake8, isort, mypy, and yamllint
+poetry run poe sourcery # will review the code using Sourcery AI
+poetry run poe sourcery_fix # will auto-fix issues found by Sourcery
 poetry run poe docs_serve # will build and serve a local version of the documentation site
 ```
 
