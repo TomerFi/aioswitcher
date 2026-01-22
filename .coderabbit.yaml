@@ -18,6 +18,12 @@ reviews:
         - Proper use of pytest fixtures and async test patterns
         - Adequate test coverage and edge case handling
         - Clear test naming and organization
+    - path: scripts/**/*.py
+      instructions: |
+        Review utility scripts for:
+        - Clear CLI argument handling
+        - Proper error handling and user feedback
+        - Consistent logging and output formatting
   tools:
     ruff:
       enabled: true
