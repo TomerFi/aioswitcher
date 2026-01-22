@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+---
+reviews:
+  profile: chill
+  collapse_walkthrough: false
+  sequence_diagrams: true
+  path_instructions:
+    - path: src/**/*.py
+      instructions: |
+        Review Python code for:
+        - Type annotations and mypy compatibility
+        - Async/await patterns and proper coroutine usage
+        - Docstrings following PEP 257 conventions
+        - Code style conforming to black and isort standards
+    - path: tests/**/*.py
+      instructions: |
+        Review test code for:
+        - Proper use of pytest fixtures and async test patterns
+        - Adequate test coverage and edge case handling
+        - Clear test naming and organization
+  tools:
+    ruff:
+      enabled: true
+    yamllint:
+      enabled: true
