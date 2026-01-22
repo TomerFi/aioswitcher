@@ -1,6 +1,6 @@
 # Sourcery configuration for aioswitcher
 # https://docs.sourcery.ai/Configuration/
-
+---
 ignore:
   - tests/**
   - docs/**
