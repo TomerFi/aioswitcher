@@ -58,6 +58,7 @@ jobs:
       - name: Setup SSH signing
         run: |
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
           echo "${{ secrets.SIGNING_KEY }}" > ~/.ssh/signing_key
           chmod 600 ~/.ssh/signing_key
           git config gpg.format ssh
@@ -133,3 +134,7 @@ jobs:
               generate_release_notes: true
             })
             core.setOutput('html_url', response.data.html_url)
+
+      - name: Cleanup SSH signing key
+        if: always()
+        run: rm -f ~/.ssh/signing_key
