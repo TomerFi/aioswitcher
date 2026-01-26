@@ -1,9 +1,6 @@
 # yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
 ---
 reviews:
-  profile: chill
-  collapse_walkthrough: false
-  sequence_diagrams: true
   path_instructions:
     - path: src/**/*.py
       instructions: |
@@ -24,8 +21,3 @@ reviews:
         - Clear CLI argument handling
         - Proper error handling and user feedback
         - Consistent logging and output formatting
-  tools:
-    ruff:
-      enabled: true
-    yamllint:
-      enabled: true
