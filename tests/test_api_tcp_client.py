@@ -224,6 +224,7 @@ async def test_get_heater_state_function_with_a_faulty_get_state_response_should
             await connected_api_token_type2_2.get_heater_state()
     assert_that(writer_write.call_count).is_equal_to(3)
 
+
 async def test_get_breeze_state_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
     login_response_packet = _load_dummy_packet(resource_path_root, "login2_response")
     get_breeze_state_response_packet = _load_dummy_packet(resource_path_root, "get_breeze_state")
