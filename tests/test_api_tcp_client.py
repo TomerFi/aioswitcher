@@ -421,12 +421,12 @@ async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, c
 
 
 async def test_turn_off_token_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
-    two_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "turn_off_response")
-    with patch.object(reader_mock, "read", side_effect=two_packets):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "turn_off_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
         response = await connected_api_token_type2_2.control_device(Command.OFF)
     assert_that(writer_write.call_count).is_equal_to(3)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
-    assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_set_name_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
