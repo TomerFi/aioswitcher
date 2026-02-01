@@ -79,7 +79,7 @@ shared_parser.add_argument(
     "--token",
     default=None,
     type=str,
-    help="the token for communicating with the new switcher devices",
+    help="the token for communicating with switcher token based devices",
 )
 shared_parser.add_argument(
     "-d",

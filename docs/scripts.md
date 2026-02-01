@@ -170,7 +170,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -245,7 +245,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -385,7 +385,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -423,7 +423,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -459,7 +459,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -492,7 +492,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -528,7 +528,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -578,7 +578,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -628,7 +628,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -664,7 +664,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -700,7 +700,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY

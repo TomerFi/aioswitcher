@@ -55,10 +55,10 @@ from aioswitcher.device import (
     ThermostatSwing,
 )
 
-device_type_api1 = DeviceType.TOUCH
-device_type_api2 = DeviceType.RUNNER
-device_type_token_api2 = DeviceType.RUNNER_S11
-device_type_token_api2_2 = DeviceType.HEATER
+device_type_touch = DeviceType.TOUCH
+device_type_runner = DeviceType.RUNNER
+device_type_token_runner_s11 = DeviceType.RUNNER_S11
+device_type_token_heater = DeviceType.HEATER
 device_index = 0
 device_index2 = 1
 device_id = "aaaaaa"
@@ -95,7 +95,7 @@ def writer_mock(writer_write):
 @pytest_asyncio.fixture
 async def connected_api_type1(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherApi(device_type_api1, device_ip, device_id, device_key)
+        api = SwitcherApi(device_type_touch, device_ip, device_id, device_key)
         await api.connect()
         yield api
         await api.disconnect()
@@ -104,7 +104,7 @@ async def connected_api_type1(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherApi(device_type_api2, device_ip, device_id, device_key, token_empty)
+        api = SwitcherApi(device_type_runner, device_ip, device_id, device_key, token_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -113,7 +113,7 @@ async def connected_api_type2(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_token_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherApi(device_type_token_api2, device_ip, device_id, device_key, token_not_empty)
+        api = SwitcherApi(device_type_token_runner_s11, device_ip, device_id, device_key, token_not_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -122,7 +122,7 @@ async def connected_api_token_type2(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_token_type2_2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherApi(device_type_token_api2_2, device_ip, device_id, device_key, token_not_empty)
+        api = SwitcherApi(device_type_token_heater, device_ip, device_id, device_key, token_not_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -130,7 +130,7 @@ async def connected_api_token_type2_2(reader_mock, writer_mock):
 
 @patch("logging.Logger.info")
 async def test_stopping_before_started_and_connected_should_write_to_the_info_output(mock_info):
-    api = SwitcherApi(device_type_api1, device_ip, device_id, device_key)
+    api = SwitcherApi(device_type_touch, device_ip, device_id, device_key)
     assert_that(api.connected).is_false()
     await api.disconnect()
     mock_info.assert_called_with("switcher device not connected")
@@ -138,14 +138,14 @@ async def test_stopping_before_started_and_connected_should_write_to_the_info_ou
 
 async def test_api_as_a_context_manager(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        async with SwitcherApi(device_type_api1, device_ip, device_id, device_key) as api:
+        async with SwitcherApi(device_type_touch, device_ip, device_id, device_key) as api:
             assert_that(api.connected).is_true()
 
 
 async def test_api_with_token_needed_but_missing_should_raise_error():
     with raises(RuntimeError, match="A token is needed but is missing"):
         with patch("aioswitcher.api.open_connection", return_value=b''):
-            await SwitcherApi(device_type_token_api2, device_ip, device_id, device_key, token_empty)
+            await SwitcherApi(device_type_token_runner_s11, device_ip, device_id, device_key, token_empty)
 
 
 async def test_login_function(reader_mock, writer_write, connected_api_type1, resource_path_root):
