@@ -218,11 +218,11 @@ async def test_get_heater_state_function_with_a_faulty_login_response_should_rai
 
 async def test_get_heater_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
     login_response_packet = _load_dummy_packet(resource_path_root, "login_response")
-    with raises(RuntimeError, match="login request was not successful"):
-        with patch.object(reader_mock, "read", side_effect=[login_response_packet, b'']):
+    login2_response_packet = _load_dummy_packet(resource_path_root, "login2_response")
+    with raises(RuntimeError, match="get heater state request was not successful"):
+        with patch.object(reader_mock, "read", side_effect=[login_response_packet, login2_response_packet, b'']):
             await connected_api_token_type2_2.get_heater_state()
-    assert_that(writer_write.call_count).is_equal_to(2)
-
+    assert_that(writer_write.call_count).is_equal_to(3)
 
 async def test_get_breeze_state_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
     login_response_packet = _load_dummy_packet(resource_path_root, "login2_response")

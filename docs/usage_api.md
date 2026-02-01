@@ -150,7 +150,7 @@ from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.device import DeviceType
 
 async def control_heater(device_type, device_ip, device_id, device_key, token) :
-    # for connecting to a device we need its type, id, login key and ip address
+    # for connecting to a device we need its type, id, login key, ip address and token
     async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         # get the device current state
         await api.get_heater_state()

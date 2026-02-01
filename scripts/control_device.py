@@ -587,7 +587,7 @@ turn_on_light_parser.add_argument(
 _get_heater_state_examples = """example usage:
 
 poetry run control_device get_heater_state -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n
-"""  # noqa E501
+"""
 subparsers.add_parser(
     "get_heater_state",
     help="get the current state of a heater device",
