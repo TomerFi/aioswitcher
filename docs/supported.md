@@ -1,4 +1,4 @@
-| Name                     |                Link                 | Included from version | Is require a token |
+| Name                     |                Link                 | Included from version | Requires token     |
 |--------------------------|:-----------------------------------:|:---------------------:|:------------------:|
 | Switcher V2              |       [product][switcher-v2]        |         1.x.x         |         No         |
 | Switcher Mini            |      [product][switcher-mini]       |         1.x.x         |         No         |
