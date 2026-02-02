@@ -31,7 +31,6 @@ from aioswitcher.device import DeviceState, DeviceType
     ("v2_esp", DeviceType.V2_ESP),
     ("v2_qca", DeviceType.V2_QCA),
     ("v4", DeviceType.V4),
-    ("heater", DeviceType.HEATER),
 ])
 def test_datagram_state_off(resource_path, type_suffix, expected_type):
     sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
@@ -39,34 +38,33 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.1.33")
-    else:
-        assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_mac_type2()).is_equal_to("12:A1:A2:1A:BC:1A")
-    else:
-        assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_name()).is_equal_to("Switcher Heater_96EC")
-    else:
-        assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
+    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
+    assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
+    assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_heater_state()).is_equal_to(DeviceState.OFF)
-    else:
-        assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.OFF)
+    assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.OFF)
     assert_that(sut_parser.get_device_type()).is_equal_to(expected_type)
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_heater_power_consumption()).is_equal_to(0)
-    else:
-        assert_that(sut_parser.get_power_consumption()).is_equal_to(0)
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_heater_remaining()).is_equal_to("00:00:00")
-        assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
-    if expected_type not in (DeviceType.POWER_PLUG, DeviceType.HEATER):
+    assert_that(sut_parser.get_power_consumption()).is_equal_to(0)
+    if expected_type != DeviceType.POWER_PLUG:
         assert_that(sut_parser.get_remaining()).is_equal_to("00:00:00")
         assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
+
+
+def test_datagram_state_off_heater(resource_path):
+    sut_datagram = Path(f'{resource_path}.txt').read_text().replace('\n', '').encode()
+
+    sut_parser = DatagramParser(unhexlify(sut_datagram))
+
+    assert_that(sut_parser.is_switcher_originator()).is_true()
+    assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.1.33")
+    assert_that(sut_parser.get_mac_type2()).is_equal_to("12:A1:A2:1A:BC:1A")
+    assert_that(sut_parser.get_name()).is_equal_to("Switcher Heater_96EC")
+    assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
+    assert_that(sut_parser.get_heater_state()).is_equal_to(DeviceState.OFF)
+    assert_that(sut_parser.get_device_type()).is_equal_to(DeviceType.HEATER)
+    assert_that(sut_parser.get_heater_power_consumption()).is_equal_to(0)
+    assert_that(sut_parser.get_heater_remaining()).is_equal_to("00:00:00")
+    assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
 
 
 @mark.parametrize("type_suffix, expected_type", [
@@ -76,7 +74,6 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
     ("v2_esp", DeviceType.V2_ESP),
     ("v2_qca", DeviceType.V2_QCA),
     ("v4", DeviceType.V4),
-    ("heater", DeviceType.HEATER),
 ])
 def test_datagram_state_on(resource_path, type_suffix, expected_type):
     sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
@@ -84,34 +81,33 @@ def test_datagram_state_on(resource_path, type_suffix, expected_type):
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.1.33")
-    else:
-        assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_mac_type2()).is_equal_to("12:A1:A2:1A:BC:1A")
-    else:
-        assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_name()).is_equal_to("Switcher Heater_96EC")
-    else:
-        assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
+    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
+    assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
+    assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_heater_state()).is_equal_to(DeviceState.ON)
-    else:
-        assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.ON)
+    assert_that(sut_parser.get_device_state()).is_equal_to(DeviceState.ON)
     assert_that(sut_parser.get_device_type()).is_equal_to(expected_type)
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_heater_power_consumption()).is_equal_to(2600)
-    else:
-        assert_that(sut_parser.get_power_consumption()).is_equal_to(2600)
-    if expected_type == DeviceType.HEATER:
-        assert_that(sut_parser.get_heater_remaining()).is_equal_to("01:30:00")
-        assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
-    if expected_type not in (DeviceType.POWER_PLUG, DeviceType.HEATER):
+    assert_that(sut_parser.get_power_consumption()).is_equal_to(2600)
+    if expected_type != DeviceType.POWER_PLUG:
         assert_that(sut_parser.get_remaining()).is_equal_to("01:30:00")
         assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
+
+
+def test_datagram_state_on_heater(resource_path):
+    sut_datagram = Path(f'{resource_path}.txt').read_text().replace('\n', '').encode()
+
+    sut_parser = DatagramParser(unhexlify(sut_datagram))
+
+    assert_that(sut_parser.is_switcher_originator()).is_true()
+    assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.1.33")
+    assert_that(sut_parser.get_mac_type2()).is_equal_to("12:A1:A2:1A:BC:1A")
+    assert_that(sut_parser.get_name()).is_equal_to("Switcher Heater_96EC")
+    assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
+    assert_that(sut_parser.get_heater_state()).is_equal_to(DeviceState.ON)
+    assert_that(sut_parser.get_device_type()).is_equal_to(DeviceType.HEATER)
+    assert_that(sut_parser.get_heater_power_consumption()).is_equal_to(2600)
+    assert_that(sut_parser.get_heater_remaining()).is_equal_to("01:30:00")
+    assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
 
 
 @mark.parametrize("type_suffix", ["too_short", "wrong_start"])
