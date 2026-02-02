@@ -32,6 +32,7 @@ STOP_SHUTTER_PRECOMMAND = "3702"
 SET_POSITION_PRECOMMAND = "3701"
 SET_CHILD_LOCK_PRECOMMAND = "3707"
 SET_LIGHT_PRECOMMAND = "370a"
+CONTROL_DEVICE_PRECOMMAND = "3723"
 
 # login packet for Type1 devices
 # format value just timestamp (initial session id is P_SESSION)

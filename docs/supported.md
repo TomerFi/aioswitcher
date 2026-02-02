@@ -1,21 +1,22 @@
-| Name                     |                Link                 | Included from version |
-|--------------------------|:-----------------------------------:|:---------------------:|
-| Switcher V2              |       [product][switcher-v2]        |         1.x.x         |
-| Switcher Mini            |      [product][switcher-mini]       |         1.x.x         |
-| Switcher Touch (V3)      |      [product][switcher-touch]      |         1.x.x         |
-| Switcher V4              |       [product][switcher-v4]        |         1.x.x         |
-| Switcher On Wall         |    [product][switcher-on-wall]      |         6.1.x         |
-| Switcher Power Plug      |   [product][switcher-power-plug]    |         2.x.x         |
-| Switcher Breeze          |     [product][switcher-breeze]      |         3.x.x         |
-| Switcher Runner          |     [product][switcher-runner]      |         3.x.x         |
-| Switcher Runner Mini     |   [product][switcher-runner-mini]   |         3.x.x         |
-| Switcher Runner S11      |   [product][switcher-runner-s11]    |         4.x.x         |
-| Switcher Runner S12      |   [product][switcher-runner-s12]    |         4.1.x         |
-| Switcher Light SL01      |   [product][switcher-light-sl01]    |         4.2.x         |
-| Switcher Light SL01 Mini | [product][switcher-light-sl01-mini] |         4.2.x         |
-| Switcher Light SL02      |   [product][switcher-light-sl02]    |         4.3.x         |
-| Switcher Light SL02 Mini | [product][switcher-light-sl02-mini] |         4.3.x         |
-| Switcher Light SL03      |   [product][switcher-light-sl03]    |         4.4.x         |
+| Name                     |                Link                 | Included from version | Requires token     |
+|--------------------------|:-----------------------------------:|:---------------------:|:------------------:|
+| Switcher V2              |       [product][switcher-v2]        |         1.x.x         |         No         |
+| Switcher Mini            |      [product][switcher-mini]       |         1.x.x         |         No         |
+| Switcher Touch (V3)      |      [product][switcher-touch]      |         1.x.x         |         No         |
+| Switcher V4              |       [product][switcher-v4]        |         1.x.x         |         No         |
+| Switcher On Wall         |    [product][switcher-on-wall]      |         6.1.x         |         Yes        |
+| Switcher Power Plug      |   [product][switcher-power-plug]    |         2.x.x         |         No         |
+| Switcher Breeze          |     [product][switcher-breeze]      |         3.x.x         |         No         |
+| Switcher Runner          |     [product][switcher-runner]      |         3.x.x         |         No         |
+| Switcher Runner Mini     |   [product][switcher-runner-mini]   |         3.x.x         |         No         |
+| Switcher Runner S11      |   [product][switcher-runner-s11]    |         4.x.x         |         Yes        |
+| Switcher Runner S12      |   [product][switcher-runner-s12]    |         4.1.x         |         Yes        |
+| Switcher Light SL01      |   [product][switcher-light-sl01]    |         4.2.x         |         Yes        |
+| Switcher Light SL01 Mini | [product][switcher-light-sl01-mini] |         4.2.x         |         Yes        |
+| Switcher Light SL02      |   [product][switcher-light-sl02]    |         4.3.x         |         Yes        |
+| Switcher Light SL02 Mini | [product][switcher-light-sl02-mini] |         4.3.x         |         Yes        |
+| Switcher Light SL03      |   [product][switcher-light-sl03]    |         4.4.x         |         Yes        |
+| Switcher Heater          |       [product][switcher-heater]    |         6.x.x         |         Yes        |
 
 !!!note
     Newer Switcher devices, such as Runner S11, require a token. Get yours at: https://switcher.co.il/GetKey
@@ -36,3 +37,4 @@
 [switcher-light-sl02]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-sl02/
 [switcher-light-sl02-mini]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-slmini02/
 [switcher-light-sl03]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-light-sl03/
+[switcher-heater]: https://switcher.co.il/%D7%9E%D7%95%D7%A6%D7%A8/switcher-heater/

@@ -33,6 +33,7 @@ from .device import (
     ShutterDirection,
     SwitcherBase,
     SwitcherDualShutterSingleLight,
+    SwitcherHeater,
     SwitcherLight,
     SwitcherPowerPlug,
     SwitcherShutter,
@@ -57,7 +58,7 @@ logger = getLogger(__name__)
 # Protocol type 1 devices: V2, Touch, V4, Mini, Power Plug
 SWITCHER_UDP_PORT_TYPE1 = 20002
 SWITCHER_UDP_PORT_TYPE1_NEW_VERSION = 10002
-# Protocol type 2 devices: Breeze, Runner, Runner Mini, Runner S11, Runner S12
+# Protocol type 2 devices: Breeze, Runner, Runner Mini, Runner S11, Runner S12, Heater
 SWITCHER_UDP_PORT_TYPE2 = 20003
 SWITCHER_UDP_PORT_TYPE2_NEW_VERSION = 10003
 
@@ -89,10 +90,15 @@ def _parse_device_from_datagram(
         device_type: DeviceType = parser.get_device_type()
         if device_type == DeviceType.BREEZE:
             device_state = parser.get_thermostat_state()
+        elif device_type == DeviceType.HEATER:
+            device_state = parser.get_heater_state()
         else:
             device_state = parser.get_device_state()
         if device_state == DeviceState.ON:
-            power_consumption = parser.get_power_consumption()
+            if device_type == DeviceType.HEATER:
+                power_consumption = parser.get_heater_power_consumption()
+            else:
+                power_consumption = parser.get_power_consumption()
             electric_current = watts_to_amps(power_consumption)
         else:
             power_consumption = 0
@@ -357,6 +363,30 @@ def _parse_device_from_datagram(
                     ],
                 )
             )
+
+        elif device_type and device_type.category == DeviceCategory.HEATER:
+            logger.debug("discovered a heater switcher device")
+            device_callback(
+                SwitcherHeater(
+                    device_type,
+                    device_state,
+                    parser.get_device_id(),
+                    parser.get_device_key(),
+                    parser.get_ip_type2(),
+                    parser.get_mac_type2(),
+                    parser.get_name(),
+                    device_type.token_needed,
+                    power_consumption,
+                    electric_current,
+                    (
+                        parser.get_heater_remaining()
+                        if device_state == DeviceState.ON
+                        else "00:00:00"
+                    ),
+                    parser.get_auto_shutdown(),
+                )
+            )
+
         else:
             warn("discovered an unknown switcher device")
 
@@ -476,6 +506,7 @@ class DatagramParser:
             or len(self.message)
             == 207  # Switcher Light SL01, Switcher Light SL01 Mini,
             # Switcher Light SL02, Switcher Light SL02 Mini and Switcher Light SL03
+            or len(self.message) == 171  # Switcher Heater
         )
 
     def get_ip_type1(self) -> str:
@@ -663,3 +694,31 @@ class DatagramParser:
     def get_thermostat_remote_id(self) -> str:
         """Return the current thermostat remote."""
         return self.message[143:151].decode()
+
+    # Switcher Heater methods
+
+    def get_heater_state(self) -> DeviceState:
+        """Extract the heater state from the broadcast message."""
+        hex_device_state = hexlify(self.message)[270:272].decode()
+        return (
+            DeviceState.ON
+            if hex_device_state == DeviceState.ON.value
+            else DeviceState.OFF
+        )
+
+    def get_heater_power_consumption(self) -> int:
+        """Extract the heater power consumption from the broadcast message."""
+        hex_power_consumption = hexlify(self.message)[274:282]
+        return int(hex_power_consumption[2:4] + hex_power_consumption[0:2], 16)
+
+    def get_heater_remaining(self) -> str:
+        """Extract the heater time remains for the current execution."""
+        hex_remaining_time = hexlify(self.message)[326:334]
+        int_remaining_time_seconds = int(
+            hex_remaining_time[6:8]
+            + hex_remaining_time[4:6]
+            + hex_remaining_time[2:4]
+            + hex_remaining_time[0:2],
+            16,
+        )
+        return seconds_to_iso_time(int_remaining_time_seconds)

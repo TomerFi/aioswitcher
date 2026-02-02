@@ -170,7 +170,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -245,7 +245,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -385,7 +385,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -423,7 +423,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -451,13 +451,15 @@ python control_device.py stop_shutter -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw=
 ```shell title="scripts/control_device.py turn_off"
 $ poetry run control_device turn_off --help
 
-usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
+usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
 options:
   -h, --help            show this help message and exit
   -v, --verbose         include the raw message
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -470,6 +472,8 @@ example usage:
 python control_device.py turn_off -c "touch" -d ab1c2d -i "111.222.11.22"
 
 python control_device.py turn_off -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"
+
+python control_device.py turn_off -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -l 18 -i "192.168.50.98"
 ```
 
 ### Turn on
@@ -477,7 +481,7 @@ python control_device.py turn_off -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"
 ```shell title="scripts/control_device.py turn_on"
 $ poetry run control_device turn_on --help
 
-usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
+usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                  [-t [TIMER]]
 
 options:
@@ -485,6 +489,8 @@ options:
   -v, --verbose         include the raw message
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -501,6 +507,10 @@ python control_device.py turn_on -c "touch" -d ab1c2d -i "111.222.11.22"
 python control_device.py turn_on -c "touch" -d ab1c2d -l 18 -i "111.222.11.22"
 
 python control_device.py turn_on -c "touch" -d ab1c2d -i "111.222.11.22" -t 15
+
+python control_device.py turn_on -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -l 18 -i "192.168.50.98"
+
+python control_device.py turn_on -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -l 18 -i "192.168.50.98" -t 15
 ```
 
 ### Turn off light
@@ -516,7 +526,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -566,7 +576,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -616,7 +626,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -652,7 +662,7 @@ options:
   -c DEVICE_TYPE, --device-type DEVICE_TYPE
                         the type of the device
   -k TOKEN, --token TOKEN
-                        the token for communicating with the new switcher devices
+                        the token for communicating with switcher token-based devices
   -d DEVICE_ID, --device-id DEVICE_ID
                         the identification of the device
   -l DEVICE_KEY, --device-key DEVICE_KEY
@@ -673,6 +683,32 @@ python control_device.py turn_on_shutter_child_lock -c "runners11" -k "zvVvd7Jxt
 python control_device.py turn_on_shutter_child_lock -c "runners11" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22" -x 1
 
 python control_device.py turn_on_shutter_child_lock -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"
+```
+
+### Get heater state
+
+```shell title="scripts/control_device.py get_heater_state"
+$ poetry run control_device get_heater_state --help
+
+usage: control_device.py get_heater_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
+
+options:
+  -h, --help            show this help message and exit
+  -v, --verbose         include the raw message
+  -c DEVICE_TYPE, --device-type DEVICE_TYPE
+                        the type of the device
+  -k TOKEN, --token TOKEN
+                        the token for communicating with switcher token-based devices
+  -d DEVICE_ID, --device-id DEVICE_ID
+                        the identification of the device
+  -l DEVICE_KEY, --device-key DEVICE_KEY
+                        the login key of the device
+  -i IP_ADDRESS, --ip-address IP_ADDRESS
+                        the ip address assigned to the device
+
+example usage:
+
+python control_device.py get_heater_state -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2239a -i "192.168.50.98"
 ```
 
 ## Discover devices

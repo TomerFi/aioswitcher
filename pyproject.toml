@@ -57,6 +57,7 @@ pytz = "^2024.2"
 time-machine = "^2.16.0"
 yamllint = "^1.35.1"
 freezegun = "^1.5.1"
+sourcery = "^1.43.0"
 
 [tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.1"
@@ -81,6 +82,8 @@ mypy = "poetry run mypy src/ scripts/"
 yamllint = "poetry run yamllint --format colored --strict ."
 docs_build = "poetry run mkdocs build --strict"
 docs_serve = "poetry run mkdocs serve"
+sourcery = "poetry run sourcery review src/"
+sourcery_fix = "poetry run sourcery review --fix src/"
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
