@@ -53,6 +53,7 @@ DEVICES = {
     "light02": DeviceType.LIGHT_SL02,
     "light02mini": DeviceType.LIGHT_SL02_MINI,
     "light03": DeviceType.LIGHT_SL03,
+    "heater": DeviceType.HEATER,
 }
 
 # shared parse
@@ -78,7 +79,7 @@ shared_parser.add_argument(
     "--token",
     default=None,
     type=str,
-    help="the token for communicating with the new switcher devices",
+    help="the token for communicating with switcher token-based devices",
 )
 shared_parser.add_argument(
     "-d",
@@ -582,6 +583,18 @@ turn_on_light_parser.add_argument(
     help="the circuit number to turn on",
 )
 
+# get_heater_state parser
+_get_heater_state_examples = """example usage:
+
+poetry run control_device get_heater_state -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d ab1c2d -i "111.222.11.22"\n """  # noqa E501
+subparsers.add_parser(
+    "get_heater_state",
+    help="get the current state of a heater device",
+    epilog=_get_heater_state_examples,
+    formatter_class=RawDescriptionHelpFormatter,
+    parents=[shared_parser],
+)
+
 
 def asdict(dc: object, verbose: bool = False) -> Dict[str, Any]:
     """Use as custom implementation of the asdict utility method."""
@@ -671,9 +684,10 @@ async def turn_on(
     device_ip: str,
     timer: int,
     verbose: bool,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to launch a turn_on request."""
-    async with SwitcherApi(device_type, device_ip, device_id, device_key) as api:
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         printer.pprint(asdict(await api.control_device(Command.ON, timer), verbose))
 
 
@@ -683,9 +697,10 @@ async def turn_off(
     device_key: str,
     device_ip: str,
     verbose: bool,
+    token: Union[str, None] = None,
 ) -> None:
     """Use to launch a turn_off request."""
-    async with SwitcherApi(device_type, device_ip, device_id, device_key) as api:
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         printer.pprint(asdict(await api.control_device(Command.OFF), verbose))
 
 
@@ -889,6 +904,19 @@ async def turn_off_light(
         printer.pprint(asdict(await api.set_light(DeviceState.OFF, index), verbose))
 
 
+async def get_heater_state(
+    device_type: DeviceType,
+    device_id: str,
+    device_key: str,
+    device_ip: str,
+    verbose: bool,
+    token: Union[str, None] = None,
+) -> None:
+    """Use to launch a get_heater_state request."""
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
+        printer.pprint(asdict(await api.get_heater_state(), verbose))
+
+
 def main() -> None:
     """Run the device controller script."""
     try:
@@ -918,6 +946,7 @@ def main() -> None:
                     args.ip_address,
                     args.timer,
                     args.verbose,
+                    args.token,
                 )
             )
         elif args.action == "turn_off":
@@ -928,6 +957,7 @@ def main() -> None:
                     args.device_key,
                     args.ip_address,
                     args.verbose,
+                    args.token,
                 )
             )
         elif args.action == "set_name":
@@ -1118,6 +1148,18 @@ def main() -> None:
                     args.device_key,
                     args.ip_address,
                     args.index,
+                    args.verbose,
+                    args.token,
+                )
+            )
+
+        elif args.action == "get_heater_state":
+            asyncio.run(
+                get_heater_state(
+                    device_type,
+                    args.device_id,
+                    args.device_key,
+                    args.ip_address,
                     args.verbose,
                     args.token,
                 )

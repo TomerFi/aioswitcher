@@ -176,6 +176,50 @@ class StateMessageParser:
             else DeviceState.OFF
         )
 
+    def get_heater_power_consumption(self) -> int:
+        """Return the current power consumption of the heater device."""
+        hex_power = self._hex_response[168:176]
+        return int(hex_power[2:4] + hex_power[0:2], 16)
+
+    def get_heater_time_left(self) -> str:
+        """Return the time left for the heater device current run."""
+        hex_time_left = self._hex_response[208:216]
+        time_left_seconds = int(
+            hex_time_left[6:8]
+            + hex_time_left[4:6]
+            + hex_time_left[2:4]
+            + hex_time_left[0:2],
+            16,
+        )
+        return seconds_to_iso_time(time_left_seconds)
+
+    def get_heater_time_on(self) -> str:
+        """Return how long the heater device has been on."""
+        hex_time_on = self._hex_response[200:208]
+        time_on_seconds = int(
+            hex_time_on[6:8] + hex_time_on[4:6] + hex_time_on[2:4] + hex_time_on[0:2],
+            16,
+        )
+        return seconds_to_iso_time(time_on_seconds)
+
+    def get_heater_auto_shutdown(self) -> str:
+        """Return the value of the heater auto shutdown configuration."""
+        hex_auto_off = self._hex_response[192:200]
+        auto_off_seconds = int(
+            hex_auto_off[6:8]
+            + hex_auto_off[4:6]
+            + hex_auto_off[2:4]
+            + hex_auto_off[0:2],
+            16,
+        )
+        return seconds_to_iso_time(auto_off_seconds)
+
+    def get_heater_state(self) -> DeviceState:
+        """Return the current heater device state."""
+        hex_state = self._hex_response[152:154].decode()
+        states = dict(map(lambda s: (s.value, s), DeviceState))
+        return states[hex_state]
+
 
 @dataclass
 class SwitcherBaseResponse:
@@ -319,3 +363,27 @@ class SwitcherLightStateResponse(SwitcherBaseResponse):
         index = get_light_discovery_packet_index(self.device_type, self.index)
 
         self.state = parser.get_light_state(index)
+
+
+@final
+@dataclass
+class SwitcherHeaterStateResponse(SwitcherBaseResponse):
+    """Representation of the switcher heater state response message."""
+
+    state: DeviceState = field(init=False)
+    time_left: str = field(init=False)
+    time_on: str = field(init=False)
+    auto_shutdown: str = field(init=False)
+    power_consumption: int = field(init=False)
+    electric_current: float = field(init=False)
+
+    def __post_init__(self) -> None:
+        """Post initialization of the message."""
+        parser = StateMessageParser(self.unparsed_response)
+
+        self.state = parser.get_heater_state()
+        self.time_left = parser.get_heater_time_left()
+        self.time_on = parser.get_heater_time_on()
+        self.auto_shutdown = parser.get_heater_auto_shutdown()
+        self.power_consumption = parser.get_heater_power_consumption()
+        self.electric_current = watts_to_amps(self.power_consumption)

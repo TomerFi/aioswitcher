@@ -32,6 +32,7 @@ class DeviceCategory(Enum):
     SINGLE_SHUTTER_DUAL_LIGHT = auto()
     DUAL_SHUTTER_SINGLE_LIGHT = auto()
     LIGHT = auto()
+    HEATER = auto()
 
 
 @unique
@@ -96,6 +97,7 @@ class DeviceType(Enum):
         DeviceCategory.LIGHT,
         True,
     )
+    HEATER = "Switcher Heater", "031f", 2, DeviceCategory.HEATER, True
 
     def __new__(
         cls,
@@ -531,3 +533,19 @@ class SwitcherLight(SwitcherLightBase, SwitcherBase):
         if self.device_type.category != DeviceCategory.LIGHT:
             raise ValueError("only lights are allowed")
         return super().__post_init__()
+
+
+@final
+@dataclass
+class SwitcherHeater(SwitcherTimedBase, SwitcherPowerBase, SwitcherBase):
+    """Implementation of the Switcher Heater device.
+
+    Please Note the order of the inherited classes to understand the order of the
+    instantiation parameters and the super call.
+    """
+
+    def __post_init__(self) -> None:
+        """Post initialization validate device type category as HEATER."""
+        if self.device_type.category != DeviceCategory.HEATER:
+            raise ValueError("only heaters are allowed")
+        super().__post_init__()

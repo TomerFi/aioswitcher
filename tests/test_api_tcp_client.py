@@ -34,6 +34,7 @@ from aioswitcher.api import (
 from aioswitcher.api.messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
+    SwitcherHeaterStateResponse,
     SwitcherLightStateResponse,
     SwitcherLoginResponse,
     SwitcherShutterStateResponse,
@@ -54,9 +55,10 @@ from aioswitcher.device import (
     ThermostatSwing,
 )
 
-device_type_api1 = DeviceType.TOUCH
-device_type_api2 = DeviceType.RUNNER
-device_type_token_api2 = DeviceType.RUNNER_S11
+device_type_touch = DeviceType.TOUCH
+device_type_runner = DeviceType.RUNNER
+device_type_token_runner_s11 = DeviceType.RUNNER_S11
+device_type_token_heater = DeviceType.HEATER
 device_index = 0
 device_index2 = 1
 device_id = "aaaaaa"
@@ -93,7 +95,7 @@ def writer_mock(writer_write):
 @pytest_asyncio.fixture
 async def connected_api_type1(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherApi(device_type_api1, device_ip, device_id, device_key)
+        api = SwitcherApi(device_type_touch, device_ip, device_id, device_key)
         await api.connect()
         yield api
         await api.disconnect()
@@ -102,7 +104,7 @@ async def connected_api_type1(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherApi(device_type_api2, device_ip, device_id, device_key, token_empty)
+        api = SwitcherApi(device_type_runner, device_ip, device_id, device_key, token_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -111,7 +113,16 @@ async def connected_api_type2(reader_mock, writer_mock):
 @pytest_asyncio.fixture
 async def connected_api_token_type2(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        api = SwitcherApi(device_type_token_api2, device_ip, device_id, device_key, token_not_empty)
+        api = SwitcherApi(device_type_token_runner_s11, device_ip, device_id, device_key, token_not_empty)
+        await api.connect()
+        yield api
+        await api.disconnect()
+
+
+@pytest_asyncio.fixture
+async def connected_api_token_type2_2(reader_mock, writer_mock):
+    with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
+        api = SwitcherApi(device_type_token_heater, device_ip, device_id, device_key, token_not_empty)
         await api.connect()
         yield api
         await api.disconnect()
@@ -119,7 +130,7 @@ async def connected_api_token_type2(reader_mock, writer_mock):
 
 @patch("logging.Logger.info")
 async def test_stopping_before_started_and_connected_should_write_to_the_info_output(mock_info):
-    api = SwitcherApi(device_type_api1, device_ip, device_id, device_key)
+    api = SwitcherApi(device_type_touch, device_ip, device_id, device_key)
     assert_that(api.connected).is_false()
     await api.disconnect()
     mock_info.assert_called_with("switcher device not connected")
@@ -127,14 +138,14 @@ async def test_stopping_before_started_and_connected_should_write_to_the_info_ou
 
 async def test_api_as_a_context_manager(reader_mock, writer_mock):
     with patch("aioswitcher.api.open_connection", return_value=(reader_mock, writer_mock)):
-        async with SwitcherApi(device_type_api1, device_ip, device_id, device_key) as api:
+        async with SwitcherApi(device_type_touch, device_ip, device_id, device_key) as api:
             assert_that(api.connected).is_true()
 
 
 async def test_api_with_token_needed_but_missing_should_raise_error():
     with raises(RuntimeError, match="A token is needed but is missing"):
         with patch("aioswitcher.api.open_connection", return_value=b''):
-            await SwitcherApi(device_type_token_api2, device_ip, device_id, device_key, token_empty)
+            await SwitcherApi(device_type_token_runner_s11, device_ip, device_id, device_key, token_empty)
 
 
 async def test_login_function(reader_mock, writer_write, connected_api_type1, resource_path_root):
@@ -187,6 +198,31 @@ async def test_get_state_function_with_valid_packets(reader_mock, writer_write, 
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherStateResponse)
     assert_that(response.unparsed_response).is_equal_to(get_state_response_packet)
+
+
+async def test_get_heater_state_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "get_heater_state_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2_2.get_heater_state()
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherHeaterStateResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
+async def test_get_heater_state_function_with_a_faulty_login_response_should_raise_error(reader_mock, writer_write, connected_api_token_type2_2):
+    with raises(RuntimeError, match="login request was not successful"):
+        with patch.object(reader_mock, "read", return_value=b''):
+            await connected_api_token_type2_2.get_heater_state()
+    assert_that(writer_write.call_count).is_equal_to(2)
+
+
+async def test_get_heater_state_function_with_a_faulty_get_state_response_should_raise_error(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
+    login_response_packet = _load_dummy_packet(resource_path_root, "login_response")
+    login2_response_packet = _load_dummy_packet(resource_path_root, "login2_response")
+    with raises(RuntimeError, match="get heater state request was not successful"):
+        with patch.object(reader_mock, "read", side_effect=[login_response_packet, login2_response_packet, b'']):
+            await connected_api_token_type2_2.get_heater_state()
+    assert_that(writer_write.call_count).is_equal_to(3)
 
 
 async def test_get_breeze_state_function_with_valid_packets(reader_mock, writer_write, connected_api_type2, resource_path_root):
@@ -366,6 +402,15 @@ async def test_turn_on_with_timer_function_with_valid_packets(reader_mock, write
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
 
 
+async def test_turn_on_with_timer_token_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "turn_on_with_timer_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2_2.control_device(Command.ON, 15)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
+
+
 async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):
     two_packets = _get_dummy_packets(resource_path_root, "login_response", "turn_off_response")
     with patch.object(reader_mock, "read", side_effect=two_packets):
@@ -373,6 +418,15 @@ async def test_turn_off_function_with_valid_packets(reader_mock, writer_write, c
     assert_that(writer_write.call_count).is_equal_to(2)
     assert_that(response).is_instance_of(SwitcherBaseResponse)
     assert_that(response.unparsed_response).is_equal_to(two_packets[-1])
+
+
+async def test_turn_off_token_function_with_valid_packets(reader_mock, writer_write, connected_api_token_type2_2, resource_path_root):
+    three_packets = _get_dummy_packets(resource_path_root, "login_response", "login2_response", "turn_off_response")
+    with patch.object(reader_mock, "read", side_effect=three_packets):
+        response = await connected_api_token_type2_2.control_device(Command.OFF)
+    assert_that(writer_write.call_count).is_equal_to(3)
+    assert_that(response).is_instance_of(SwitcherBaseResponse)
+    assert_that(response.unparsed_response).is_equal_to(three_packets[-1])
 
 
 async def test_set_name_function_with_valid_packets(reader_mock, writer_write, connected_api_type1, resource_path_root):

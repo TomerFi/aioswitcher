@@ -141,3 +141,23 @@ asyncio.run(control_light(DeviceType.LIGHT_SL02, "111.222.11.22", "ab1c2d", "00"
 asyncio.run(control_light(DeviceType.LIGHT_SL02_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
 asyncio.run(control_light(DeviceType.LIGHT_SL03, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
 ```
+
+## Heater excerpt
+
+```python
+import asyncio
+from aioswitcher.api import Command, SwitcherApi
+from aioswitcher.device import DeviceType
+
+async def control_heater(device_type, device_ip, device_id, device_key, token) :
+    # for connecting to a device we need its type, id, login key, ip address and token
+    async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
+        # get the device's current state
+        await api.get_heater_state()
+        # turn the device on for 15 minutes
+        await api.control_device(Command.ON, 15)
+        # turn the device off
+        await api.control_device(Command.OFF)
+
+asyncio.run(control_heater(DeviceType.HEATER, "111.222.11.22", "ab1c2d" , "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+```

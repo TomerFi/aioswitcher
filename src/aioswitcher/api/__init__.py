@@ -48,6 +48,7 @@ from . import packets
 from .messages import (
     SwitcherBaseResponse,
     SwitcherGetSchedulesResponse,
+    SwitcherHeaterStateResponse,
     SwitcherLightStateResponse,
     SwitcherLoginResponse,
     SwitcherShutterStateResponse,
@@ -58,9 +59,9 @@ from .remotes import SwitcherBreezeRemote
 
 logger = getLogger(__name__)
 
-# Type 1 devices: Heaters (v2, touch, v4, Heater), Plug
+# Type 1 devices: Heaters (v2, touch, v4, Mini), Plug
 SWITCHER_TCP_PORT_TYPE1 = 9957
-# Type 2 devices: Breeze, Runners
+# Type 2 devices: Breeze, Runners, Heater
 SWITCHER_TCP_PORT_TYPE2 = 10000
 
 
@@ -245,13 +246,23 @@ class SwitcherApi:
             if minutes > 0
             else packets.NO_TIMER_REQUESTED
         )
-        packet = packets.SEND_CONTROL_PACKET.format(
-            login_resp.session_id,
-            timestamp,
-            self._device_id,
-            command.value,
-            timer,
-        )
+        if bool(self._token):
+            hex_pos = f"0{command.value}{timer}"
+            packet = packets.GENERAL_TOKEN_COMMAND.format(
+                timestamp,
+                self._device_id,
+                self._token,
+                packets.CONTROL_DEVICE_PRECOMMAND,
+                hex_pos,
+            )
+        else:
+            packet = packets.SEND_CONTROL_PACKET.format(
+                login_resp.session_id,
+                timestamp,
+                self._device_id,
+                command.value,
+                timer,
+            )
         response = await self._send_packet("control", packet)
         return SwitcherBaseResponse(response)
 
@@ -742,3 +753,26 @@ class SwitcherApi:
 
         response = await self._send_packet("control", packet)
         return SwitcherBaseResponse(response)
+
+    async def get_heater_state(self) -> SwitcherHeaterStateResponse:
+        """Use for sending the get state packet to the Heater device.
+
+        Returns:
+            An instance of ``SwitcherHeaterStateResponse``.
+
+        """
+        timestamp, login_resp = await self._login()
+        if login_resp.successful:
+            packet = packets.GET_STATE_PACKET2_TYPE2.format(
+                login_resp.session_id, timestamp, self._device_id
+            )
+            state_resp = await self._send_packet("get heater state", packet)
+            try:
+                response = SwitcherHeaterStateResponse(state_resp)
+                if response.successful:
+                    return response
+            except (KeyError, ValueError) as ve:
+                raise RuntimeError(
+                    "get heater state request was not successful"
+                ) from ve
+        raise RuntimeError("login request was not successful")
