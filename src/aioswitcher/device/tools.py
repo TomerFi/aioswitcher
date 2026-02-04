@@ -175,6 +175,7 @@ async def validate_token(username: str, token: str) -> bool:
     is_token_valid = False
     # Preload the SSL context
     ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    ssl_context.load_default_certs()
 
     logger.debug("calling API call for Switcher to validate the token")
 
