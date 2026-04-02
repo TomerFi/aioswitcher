@@ -63,7 +63,7 @@ sourcery = "^1.43.0"
 mkdocs = "^1.6.1"
 mkdocs-git-revision-date-plugin = "^0.3.2"
 mkdocs-material = "^9.5.49"
-mkdocstrings = "^0.27.0"
+mkdocstrings = "^1.0.3"
 mkdocstrings-python = "^1.12.2"
 poethepoet = "^0.32.1"
 
