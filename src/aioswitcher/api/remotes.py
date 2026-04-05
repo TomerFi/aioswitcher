@@ -235,8 +235,8 @@ class SwitcherBreezeRemote:
             )
         except KeyError:
             logger.error(
-                f'The special swing key "{key}"        \
-                    does not exist in the IRSet database!'
+                f'The special swing key "{key}"'
+                " does not exist in the IRSet database!"
             )
             raise RuntimeError(
                 f'The special swing key "{key}"'
