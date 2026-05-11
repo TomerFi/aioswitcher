@@ -67,7 +67,7 @@ jobs:
 
       - name: Determine version and create changelog
         id: bumper
-        uses: tomerfi/version-bumper-action@2.0.7
+        uses: tomerfi/version-bumper-action@2.0.8
         with:
           bump: '${{ github.event.inputs.bump }}'
 
