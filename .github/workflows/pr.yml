@@ -110,7 +110,7 @@ jobs:
           report_individual_runs: true
 
       - name: Push to CodeCov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         if: ${{ matrix.python == env.MAIN_PY_VER }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
