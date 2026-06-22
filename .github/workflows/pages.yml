@@ -16,7 +16,7 @@ jobs:
     name: Build documentation site and deploy to GH-Pages
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.ref }}
 

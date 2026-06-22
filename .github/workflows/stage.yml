@@ -22,7 +22,7 @@ jobs:
     name: Stage project
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup timezone
         uses: zcong1993/setup-timezone@v2.0.0
