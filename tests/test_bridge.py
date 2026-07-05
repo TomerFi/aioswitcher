@@ -84,11 +84,20 @@ async def test_bridge_callback_loading(udp_broadcast_server, unused_udp_broadcas
     assert_that(mock_callback.call_count).is_equal_to(2)
 
 
-async def test_malformed_datagram_is_skipped_not_raised():
+@patch("aioswitcher.bridge.logger.debug")
+async def test_malformed_datagram_is_skipped_and_logged(mock_debug):
     # A datagram whose parse raises (for example an unknown device model mapping
-    # to a KeyError) must be dropped rather than propagated into the event loop.
+    # to a KeyError) must be dropped rather than propagated into the event loop,
+    # and the debug log must identify the sender and the raw packet so a future
+    # malformed packet can be traced.
+    data = b"\xfe\xf0malformed"
+    addr = ("127.0.0.1", 20002)
     raising_callback = Mock(side_effect=KeyError("ffff"))
     protocol = UdpClientProtocol(raising_callback)
     # Must not raise.
-    protocol.datagram_received(b"\xfe\xf0malformed", ("127.0.0.1", 20002))
+    protocol.datagram_received(data, addr)
     raising_callback.assert_called_once()
+    mock_debug.assert_called_once()
+    logged_args = mock_debug.call_args.args
+    assert_that(logged_args).contains(addr)
+    assert_that(logged_args).contains(data.hex())

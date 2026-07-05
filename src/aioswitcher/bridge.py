@@ -481,8 +481,13 @@ class UdpClientProtocol(DatagramProtocol):
         """
         try:
             self._on_datagram(data)
-        except (KeyError, ValueError, IndexError, struct_error):
-            logger.debug("dropping an unparseable switcher datagram", exc_info=True)
+        except (KeyError, ValueError, IndexError, struct_error) as error:
+            logger.debug(
+                "failed to parse datagram from %s: %s (data=%s)",
+                addr,
+                error,
+                data.hex(),
+            )
 
     def error_received(self, exc: Optional[Exception]) -> None:
         """Call on exception received."""
