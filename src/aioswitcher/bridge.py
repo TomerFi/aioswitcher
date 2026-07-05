@@ -20,6 +20,7 @@ from dataclasses import dataclass
 from functools import partial
 from logging import getLogger
 from socket import AF_INET, inet_ntoa
+from struct import error as struct_error
 from struct import pack
 from types import TracebackType
 from typing import Any, Callable, Dict, Optional, Tuple, Type, final
@@ -470,8 +471,18 @@ class UdpClientProtocol(DatagramProtocol):
         self.transport = transport
 
     def datagram_received(self, data: bytes, addr: Tuple[Any, Any]) -> None:
-        """Call on datagram received."""
-        self._on_datagram(data)
+        """Call on datagram received.
+
+        A malformed or unknown-model datagram is logged at debug level and
+        skipped rather than raising into the event loop, where it would
+        otherwise interrupt reception for every other device on the socket. Only
+        the expected parse errors are caught, so a genuinely unexpected error
+        still propagates.
+        """
+        try:
+            self._on_datagram(data)
+        except (KeyError, ValueError, IndexError, struct_error):
+            logger.debug("dropping an unparseable switcher datagram", exc_info=True)
 
     def error_received(self, exc: Optional[Exception]) -> None:
         """Call on exception received."""

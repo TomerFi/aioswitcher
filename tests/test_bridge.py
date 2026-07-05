@@ -22,7 +22,7 @@ from unittest.mock import Mock, patch
 from assertpy import assert_that
 from pytest import fixture, mark
 
-from aioswitcher.bridge import SwitcherBridge
+from aioswitcher.bridge import SwitcherBridge, UdpClientProtocol
 
 pytestmark = mark.asyncio
 
@@ -82,3 +82,13 @@ async def test_bridge_callback_loading(udp_broadcast_server, unused_udp_broadcas
         await sleep(0.2)
 
     assert_that(mock_callback.call_count).is_equal_to(2)
+
+
+async def test_malformed_datagram_is_skipped_not_raised():
+    # A datagram whose parse raises (for example an unknown device model mapping
+    # to a KeyError) must be dropped rather than propagated into the event loop.
+    raising_callback = Mock(side_effect=KeyError("ffff"))
+    protocol = UdpClientProtocol(raising_callback)
+    # Must not raise.
+    protocol.datagram_received(b"\xfe\xf0malformed", ("127.0.0.1", 20002))
+    raising_callback.assert_called_once()
