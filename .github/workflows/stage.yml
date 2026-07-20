@@ -30,7 +30,7 @@ jobs:
           timezone: Asia/Jerusalem
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ env.MAIN_PY_VER }}
 
