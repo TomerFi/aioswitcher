@@ -101,3 +101,11 @@ async def test_malformed_datagram_is_skipped_and_logged(mock_debug):
     logged_args = mock_debug.call_args.args
     assert_that(logged_args).contains(addr)
     assert_that(logged_args).contains(data.hex())
+
+
+async def test_bridge_listener_socket_has_reuseaddr(unused_udp_broadcast_port, mock_callback):
+    port = unused_udp_broadcast_port
+    async with SwitcherBridge(mock_callback) as bridge:
+        sock = bridge._transports[port].get_extra_info("socket")
+        reuseaddr = sock.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR)
+        assert_that(reuseaddr).is_not_zero()

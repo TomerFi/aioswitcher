@@ -19,7 +19,14 @@ from binascii import hexlify
 from dataclasses import dataclass
 from functools import partial
 from logging import getLogger
-from socket import AF_INET, inet_ntoa
+from socket import (
+    AF_INET,
+    SO_REUSEADDR,
+    SOCK_DGRAM,
+    SOL_SOCKET,
+    inet_ntoa,
+    socket,
+)
 from struct import error as struct_error
 from struct import pack
 from types import TracebackType
@@ -428,10 +435,17 @@ class SwitcherBridge:
             protocol_factory = UdpClientProtocol(
                 partial(_parse_device_from_datagram, self._on_device)
             )
+            # Bind with SO_REUSEADDR so a reload can rebind the port while the
+            # previous socket is still lingering in TIME_WAIT, instead of failing
+            # with "address already in use" (errno 98) until a full restart. This
+            # follows the same pattern aioshelly uses for its CoAP listener.
+            sock = socket(AF_INET, SOCK_DGRAM)
+            sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+            sock.setblocking(False)
+            sock.bind(("0.0.0.0", broadcast_port))  # nosec
             transport, protocol = await get_running_loop().create_datagram_endpoint(
                 lambda: protocol_factory,
-                local_addr=("0.0.0.0", broadcast_port),  # nosec
-                family=AF_INET,
+                sock=sock,
             )
             self._transports[broadcast_port] = transport
             logger.debug("udp bridge on port %s started", broadcast_port)
