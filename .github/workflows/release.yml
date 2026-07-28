@@ -11,6 +11,12 @@ on:
         description: "Bump type (major/minor/patch) defaults to auto"
         default: "auto"
         required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+          - auto
 
 env:
   MAIN_PY_VER: "3.13"
