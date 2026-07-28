@@ -23,6 +23,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     environment: staging
+    permissions:
+      contents: read
     name: Stage project
     steps:
       - name: Checkout sources

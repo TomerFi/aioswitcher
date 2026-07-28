@@ -29,6 +29,8 @@ jobs:
   release:
     runs-on: ubuntu-latest
     environment: deployment
+    permissions:
+      contents: write
     name: Build, publish, and release
     steps:
       - name: Checkout sources

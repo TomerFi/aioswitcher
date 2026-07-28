@@ -17,6 +17,9 @@ jobs:
   deploy-pages:
     runs-on: ubuntu-latest
     environment: github-pages
+    permissions:
+      pages: write
+      contents: write
     name: Build documentation site and deploy to GH-Pages
     steps:
       - name: Checkout sources
