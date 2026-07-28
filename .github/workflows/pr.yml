@@ -32,13 +32,20 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
-      - name: Run lint checks
-        run: |
-          uv run black --check src/ docs/ scripts/
-          uv run flake8 src/ tests/ docs/ scripts/
-          uv run isort --check-only src/ tests/ docs/ scripts/
-          uv run mypy src/ scripts/
-          uv run yamllint --format colored --strict .
+      - name: Black
+        run: uv run black --check src/ docs/ scripts/
+
+      - name: Flake8
+        run: uv run flake8 src/ tests/ docs/ scripts/
+
+      - name: isort
+        run: uv run isort --check-only src/ tests/ docs/ scripts/
+
+      - name: mypy
+        run: uv run mypy src/ scripts/
+
+      - name: yamllint
+        run: uv run yamllint --format colored --strict .
 
   test:
     runs-on: ubuntu-latest
