@@ -83,7 +83,7 @@ jobs:
           git push origin ${{ steps.bumper.outputs.next }}
 
       - name: Verify documentation site build
-        run: uv run mkdocs build --strict
+        run: uv sync --group docs && uv run mkdocs build --strict
 
       - name: Publish build to PyPi
         run: |
