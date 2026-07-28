@@ -18,6 +18,10 @@ on:
           - patch
           - auto
 
+concurrency:
+  group: ${{workflow}}-${{github.ref}}
+  cancel-in-progress: false
+
 env:
   MAIN_PY_VER: "3.13"
 

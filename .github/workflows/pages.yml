@@ -6,6 +6,10 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: ${{workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
 env:
   MAIN_PY_VER: "3.13"
 
