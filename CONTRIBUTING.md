@@ -39,7 +39,7 @@ pip install --upgrade .
 With [Python >= 3.12][python-site] use [uv][uv-docs] to install all dependencies:
 
 ```shell
-  uv sync
+  uv sync --all-groups
 ```
 
 ### Get started
