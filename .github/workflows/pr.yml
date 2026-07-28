@@ -110,6 +110,7 @@ jobs:
           else poetry run poe test; fi
 
       - name: Report test summary
+        # yamllint disable-line rule:line-length
         uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3  # v2.24.0
         if: ${{ matrix.python == env.MAIN_PY_VER && always() }}
         with:
