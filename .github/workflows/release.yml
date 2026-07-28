@@ -31,6 +31,7 @@ jobs:
     environment: deployment
     permissions:
       contents: write
+      id-token: write
     name: Build, publish, and release
     steps:
       - name: Checkout sources
@@ -106,7 +107,10 @@ jobs:
       - name: Publish build to PyPi
         run: |
           rm -rf ./dist
-          poetry publish --build --no-interaction -u __token__ -p ${{ secrets.PYPI_TOKEN }}
+          poetry build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@2834a314042ef964da07689278dd1e9d773e8afd  # v1.14.1
 
       - name: Set development project version
         uses: 49b76fb8c351868945711489fd30ba3de29191a5  # 2.0.0
