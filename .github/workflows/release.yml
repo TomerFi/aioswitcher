@@ -41,7 +41,7 @@ jobs:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@24bcd0d2b6e5cf7e24e56480c0155099f042b4e0  # v6.5.0
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ env.MAIN_PY_VER }}
           enable-cache: true
