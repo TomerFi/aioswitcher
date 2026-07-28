@@ -22,20 +22,20 @@ jobs:
     name: Stage project
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v7
+        uses: 3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
       - name: Setup timezone
-        uses: zcong1993/setup-timezone@v2.0.0
+        uses: 040202c2ecba2d55edb016acf01bbeb42261dfc0  # v2.0.0
         with:
           timezone: Asia/Jerusalem
 
       - name: Set up Python
-        uses: actions/setup-python@v7
+        uses: 5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
           python-version: ${{ env.MAIN_PY_VER }}
 
       - name: Cache pip repository
-        uses: actions/cache@v6
+        uses: 55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
@@ -47,7 +47,7 @@ jobs:
           poetry config virtualenvs.in-project true
 
       - name: Cache poetry virtual environment
-        uses: actions/cache@v6
+        uses: 55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         with:
           path: .venv
           key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
@@ -60,7 +60,7 @@ jobs:
           poetry build
 
       - name: Push to CodeCov
-        uses: codecov/codecov-action@v7
+        uses: a99c28d3f0da835de33ff2feb2e15691c7b9641f  # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
