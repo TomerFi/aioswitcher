@@ -117,4 +117,4 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Build documentation site
-        run: uv sync --group docs && uv run --locked mkdocs build --strict
+        run: uv sync --locked --group docs && uv run --locked mkdocs build --strict
