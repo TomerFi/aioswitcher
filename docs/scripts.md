@@ -1,16 +1,26 @@
-Use the following helper CLI scripts to work with Swithcer devices. You can run the various scripts using the _poetry_
-scripts mechanism or Python.
+Use the following helper CLI scripts to work with Switcher devices. You can run the various scripts using Python.
 
-!!!note
-    If running with Python, don't forget to install the required aioswitcher version. If you're testing while
-    developing, install the work-in-progress version.
+## Installation
+
+Install aioswitcher from PyPI:
+
+```shell
+pip install aioswitcher
+```
+
+Clone the repository and change into the project directory:
+
+```shell
+git clone https://github.com/TomerFi/aioswitcher.git
+cd aioswitcher
+```
 
 ## Control device
 
 Use to control devices.
 
 ```shell title="scripts/control_device.py"
-$ poetry run control_device --help
+$ python scripts/control_device.py --help
 
 usage: control_device.py [-h]
                          {control_thermostat,create_schedule,delete_schedule,get_schedules,get_state,get_thermostat_state,set_auto_shutdown,set_name,set_shutter_position,stop_shutter,turn_off,turn_on}
@@ -48,7 +58,7 @@ subcommands:
 ### Create schedule
 
 ```shell title="scripts/control_device.py create_schedule"
-$ poetry run control_device create_schedule --help
+$ python scripts/control_device.py create_schedule --help
 
 usage: control_device.py create_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                          -n START_TIME -f END_TIME
@@ -82,7 +92,7 @@ python control_device.py create_schedule -c "touch" -d ab1c2d -i "111.222.11.22"
 ### Control thermostat
 
 ```shell title="scripts/control_device.py control_thermostat"
-$ poetry run control_device control_thermostat --help
+$ python scripts/control_device.py control_thermostat --help
 
 usage: control_device.py control_thermostat [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
                                             IP_ADDRESS -r REMOTE_ID
@@ -133,7 +143,7 @@ python control_device.py control_thermostat -c "breeze" -d 3a20b7 -i "192.168.50
 ### Delete schedule
 
 ```shell title="scripts/control_device.py delete_schedule"
-$ poetry run control_device delete_schedule --help
+$ python scripts/control_device.py delete_schedule --help
 
 usage: control_device.py delete_schedule [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                          -s SCHEDULE_ID
@@ -160,7 +170,7 @@ python control_device.py delete_schedule -c "touch" -d ab1c2d -i "111.222.11.22"
 ### Get light state
 
 ```shell title="scripts/control_device.py get_light_state"
-$ poetry run control_device get_light_state --help
+$ python scripts/control_device.py get_light_state --help
 
 usage: control_device.py get_light_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
@@ -210,7 +220,7 @@ python control_device.py get_light_state -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw
 ### Get schedules
 
 ```shell title="scripts/control_device.py get_schedules"
-$ poetry run control_device get_schedules --help
+$ python scripts/control_device.py get_schedules --help
 
 usage: control_device.py get_schedules [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
@@ -234,7 +244,7 @@ python control_device.py get_schedules -c "touch" -d ab1c2d -i "111.222.11.22"
 ### Get shutter state
 
 ```shell title="scripts/control_device.py get_shutter_state"
-$ poetry run control_device get_shutter_state --help
+$ python scripts/control_device.py get_shutter_state --help
 
 usage: control_device.py get_shutter_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                            [-x INDEX]
@@ -271,7 +281,7 @@ python control_device.py get_shutter_state -c "runners12" -k "zvVvd7JxtN7CgvkD1P
 ### Get state
 
 ```shell title="scripts/control_device.py get_state"
-$ poetry run control_device get_state --help
+$ python scripts/control_device.py get_state --help
 
 usage: control_device.py get_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
@@ -295,7 +305,7 @@ python control_device.py get_state -c "touch" -d ab1c2d -i "111.222.11.22"
 ### Get thermostat state
 
 ```shell title="scripts/control_device.py get_thermostat_state"
-$ poetry run control_device get_thermostat_state --help
+$ python scripts/control_device.py get_thermostat_state --help
 
 usage: control_device.py get_thermostat_state [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
                                               IP_ADDRESS
@@ -320,7 +330,7 @@ python control_device.py get_thermostat_state -c "breeze" -d 3a20b7 -i "192.168.
 ### Set auto shutdown
 
 ```shell title="scripts/control_device.py set_auto_shutdown"
-$ poetry run control_device set_auto_shutdown --help
+$ python scripts/control_device.py set_auto_shutdown --help
 
 usage: control_device.py set_auto_shutdown [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i
                                            IP_ADDRESS -r HOURS [-m [MINUTES]]
@@ -349,7 +359,7 @@ python control_device.py set_auto_shutdown -c "touch" -d ab1c2d -i "111.222.11.2
 ### Set name
 
 ```shell title="scripts/control_device.py set_name"
-$ poetry run control_device set_name --help
+$ python scripts/control_device.py set_name --help
 
 usage: control_device.py set_name [-h] [-v] -c DEVICE_TYPE -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS -n NAME
 
@@ -374,7 +384,7 @@ python control_device.py set_name -c "touch" -d ab1c2d -i "111.222.11.22" -n "My
 ### Set shutter position
 
 ```shell title="scripts/control_device.py set_shutter_position"
-$ poetry run control_device set_shutter_position --help
+$ python scripts/control_device.py set_shutter_position --help
 
 usage: control_device.py set_shutter_position [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i
                                               IP_ADDRESS -p POSITION [-x INDEX]
@@ -413,7 +423,7 @@ python control_device.py set_shutter_position -c "runners12" -k "zvVvd7JxtN7Cgvk
 ### Stop shutter
 
 ```shell title="scripts/control_device.py stop_shutter"
-$ poetry run control_device stop_shutter --help
+$ python scripts/control_device.py stop_shutter --help
 
 usage: control_device.py stop_shutter [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
@@ -449,7 +459,7 @@ python control_device.py stop_shutter -c "runners12" -k "zvVvd7JxtN7CgvkD1Psujw=
 ### Turn off
 
 ```shell title="scripts/control_device.py turn_off"
-$ poetry run control_device turn_off --help
+$ python scripts/control_device.py turn_off --help
 
 usage: control_device.py turn_off [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
@@ -479,7 +489,7 @@ python control_device.py turn_off -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f
 ### Turn on
 
 ```shell title="scripts/control_device.py turn_on"
-$ poetry run control_device turn_on --help
+$ python scripts/control_device.py turn_on --help
 
 usage: control_device.py turn_on [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
                                  [-t [TIMER]]
@@ -516,7 +526,7 @@ python control_device.py turn_on -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw==" -d f2
 ### Turn off light
 
 ```shell title="scripts/control_device.py turn_off_light"
-$ poetry run control_device turn_off_light --help
+$ python scripts/control_device.py turn_off_light --help
 
 usage: control_device.py turn_off_light [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
@@ -566,7 +576,7 @@ python control_device.py turn_off_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw=
 ### Turn on light
 
 ```shell title="scripts/control_device.py turn_on_light"
-$ poetry run control_device turn_on_light --help
+$ python scripts/control_device.py turn_on_light --help
 
 usage: control_device.py turn_on_light [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
@@ -616,7 +626,7 @@ python control_device.py turn_on_light -c "light03" -k "zvVvd7JxtN7CgvkD1Psujw==
 ### Turn off shutter child lock
 
 ```shell title="scripts/control_device.py turn_off_shutter_child_lock"
-$ poetry run control_device turn_off_shutter_child_lock --help
+$ python scripts/control_device.py turn_off_shutter_child_lock --help
 
 usage: control_device.py turn_off_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
@@ -652,7 +662,7 @@ python control_device.py turn_off_shutter_child_lock -c "runners12" -k "zvVvd7Jx
 ### Turn on shutter child lock
 
 ```shell title="scripts/control_device.py turn_on_shutter_child_lock"
-$ poetry run control_device turn_on_shutter_child_lock --help
+$ python scripts/control_device.py turn_on_shutter_child_lock --help
 
 usage: control_device.py turn_on_shutter_child_lock [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS [-x INDEX]
 
@@ -688,7 +698,7 @@ python control_device.py turn_on_shutter_child_lock -c "runners12" -k "zvVvd7Jxt
 ### Get heater state
 
 ```shell title="scripts/control_device.py get_heater_state"
-$ poetry run control_device get_heater_state --help
+$ python scripts/control_device.py get_heater_state --help
 
 usage: control_device.py get_heater_state [-h] [-v] -c DEVICE_TYPE [-k TOKEN] -d DEVICE_ID [-l DEVICE_KEY] -i IP_ADDRESS
 
@@ -716,7 +726,7 @@ python control_device.py get_heater_state -c "heater" -k "zvVvd7JxtN7CgvkD1Psujw
 Use to discover devices and their states.
 
 ```shell title="scripts/discover_devices.py"
-$ poetry run discover_devices --help
+$ python scripts/discover_devices.py --help
 
 usage: discover_devices.py [-h] [delay]
 
@@ -761,7 +771,7 @@ Print devices for 30 seconds:
 Use to fetch the login key from devices.
 
 ```shell title="scripts/get_device_login_key.py"
-$ poetry run get_device_login_key --help
+$ python scripts/get_device_login_key.py --help
 
 usage: get_device_login_key.py [-h] -i IP_ADDRESS -p {20002,10002,20003,10003}
 
@@ -783,7 +793,7 @@ python get_device_login_key.py -i "111.222.11.22" -p 10002
 Use to validate your device token.
 
 ```shell title="scripts/validate_token.py"
-$ poetry run validate_token --help
+$ python scripts/validate_token.py --help
 
 usage: validate_token.py [-h] -u USERNAME -t TOKEN
 

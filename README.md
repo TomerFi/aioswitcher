@@ -1,6 +1,6 @@
 # Switcher Python Integration
 
-[![pypi-ver-badge]][pypi-aioswitcher] [![pypi-down-badge]][pypi-aioswitcher] [![poetry-badge]][poetry-url] [![license-badge]][repo-aioswitcher]<br/>
+[![pypi-ver-badge]][pypi-aioswitcher] [![pypi-down-badge]][pypi-aioswitcher] [![license-badge]][repo-aioswitcher]<br/>
 [![gh-build-badge]][ci-stage] [![pages-badge]][docs-aioswitcher] [![codecov-badge]][codecov-aioswitcher]
 
 PyPi module integrating with various [Switcher][switcher] devices.</br>
@@ -25,9 +25,8 @@ Looking for a containerized solution? -Check [https://switcher-webapi.figenblat.
 [pages-badge]: https://github.com/TomerFi/aioswitcher/actions/workflows/pages.yml/badge.svg
 [codecov-aioswitcher]: https://codecov.io/gh/TomerFi/aioswitcher
 [docs-aioswitcher]: https://aioswitcher.figenblat.com/
-[poetry-url]: https://python-poetry.org/
-[pypi-aioswitcher]: https://pypi.org/project/aioswitcher
 [repo-aioswitcher]: https://github.com/TomerFi/aioswitcher
+[pypi-aioswitcher]: https://pypi.org/project/aioswitcher
 [switcher]: https://www.switcher.co.il/
 [switcher-v2-script]: https://github.com/NightRang3r/Switcher-V2-Python
 [switcher-webapi]: https://switcher-webapi.figenblat.com
@@ -35,6 +34,5 @@ Looking for a containerized solution? -Check [https://switcher-webapi.figenblat.
 [codecov-badge]: https://codecov.io/gh/TomerFi/aioswitcher/graph/badge.svg
 [gh-build-badge]: https://github.com/TomerFi/aioswitcher/actions/workflows/stage.yml/badge.svg
 [license-badge]: https://img.shields.io/github/license/tomerfi/aioswitcher
-[poetry-badge]: https://img.shields.io/endpoint?url=https://python-poetry.org/badge/v0.json
 [pypi-down-badge]: https://img.shields.io/pypi/dm/aioswitcher.svg?logo=pypi&color=1082C2
 [pypi-ver-badge]: https://img.shields.io/pypi/v/aioswitcher?logo=pypi
