@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  MAIN_PY_VER: "3.13"
+  MAIN_PY_VER: "3.14"
 
 jobs:
   test:
