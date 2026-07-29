@@ -33,19 +33,19 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Black
-        run: uv run black --check src/ docs/ scripts/
+        run: uv run --locked black --check src/ docs/ scripts/
 
       - name: Flake8
-        run: uv run flake8 src/ tests/ docs/ scripts/
+        run: uv run --locked flake8 src/ tests/ docs/ scripts/
 
       - name: isort
-        run: uv run isort --check-only src/ tests/ docs/ scripts/
+        run: uv run --locked isort --check-only src/ tests/ docs/ scripts/
 
       - name: mypy
-        run: uv run mypy src/ scripts/
+        run: uv run --locked mypy src/ scripts/
 
       - name: yamllint
-        run: uv run yamllint --format colored --strict .
+        run: uv run --locked yamllint --format colored --strict .
 
   test:
     runs-on: ubuntu-latest
@@ -78,8 +78,8 @@ jobs:
       - name: Test the project
         run: >
           if [ ${{ matrix.python }} == ${{ env.MAIN_PY_VER }} ];
-          then uv run pytest -v --cov --cov-report=xml:coverage.xml --junit-xml=junit.xml;
-          else uv run pytest -v; fi
+          then uv run --locked pytest -v --cov --cov-report=xml:coverage.xml --junit-xml=junit.xml;
+          else uv run --locked pytest -v; fi
 
       - name: Report test summary
         # yamllint disable-line rule:line-length
@@ -117,4 +117,4 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Build documentation site
-        run: uv sync --group docs && uv run mkdocs build --strict
+        run: uv sync --group docs && uv run --locked mkdocs build --strict

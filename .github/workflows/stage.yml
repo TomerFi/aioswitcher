@@ -46,7 +46,7 @@ jobs:
 
       - name: Install, test with coverage report, and build
         run: |
-          uv run pytest -v --cov --cov-report=xml:coverage.xml --junit-xml=junit.xml
+          uv run --locked pytest -v --cov --cov-report=xml:coverage.xml --junit-xml=junit.xml
           uv build
 
       - name: Push to CodeCov
