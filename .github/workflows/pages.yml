@@ -6,51 +6,40 @@ on:
   release:
     types: [published]
 
+concurrency:
+  group: ${{ github.workflow }}-${{github.ref}}
+  cancel-in-progress: true
+
 env:
-  MAIN_PY_VER: "3.13"
+  MAIN_PY_VER: "3.14"
 
 jobs:
   deploy-pages:
     runs-on: ubuntu-latest
     environment: github-pages
+    permissions:
+      pages: write
+      contents: write
     name: Build documentation site and deploy to GH-Pages
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           ref: ${{ github.ref }}
+          persist-credentials: false
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ env.MAIN_PY_VER }}
-
-      - name: Cache pip repository
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
-
-      - name: Prepare python environment
-        run: |
-          pip install -r requirements.txt
-          poetry config virtualenvs.create true
-          poetry config virtualenvs.in-project true
-
-      - name: Cache poetry virtual environment
-        uses: actions/cache@v5
-        with:
-          path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
       - name: Build documentation site
-        run: |
-          poetry lock
-          poetry install --no-interaction
-          poetry run poe docs_build
+        run: uv sync --locked --group docs && uv run --locked mkdocs build --strict
 
       - name: Deploy to GH-Pages
-        uses: peaceiris/actions-gh-pages@v4.0.0
+        uses: peaceiris/actions-gh-pages@1ef5a1b1df4c63fe21a2242edbee6cac921ece01  # v4.1.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./site

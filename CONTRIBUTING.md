@@ -36,44 +36,46 @@ pip install --upgrade .
 
 ### Prepare the development environment
 
-With [Python >= 3.10][python-site] use [pip][pip-docs] to install [poetry][poetry-site]:
+With [Python >= 3.14][python-site] use [uv][uv-docs] to install all dependencies:
 
 ```shell
-  pip install -r requirements.txt
+  uv sync --all-groups
 ```
 
-### Get started with poetry
+### Get started
 
-After installing, run [poe][poethepoet-site] for _help_, this will list the available tasks:
+After installing, run the testing or linting tools directly:
 
 ```shell
-poetry install # install all dependencies and the current project
-poetry run poe --help # display all available tasks
+uv run pytest --help # display test options
 ```
 
-Common [poe][poethepoet-site] tasks:
+Common tasks:
 
 ```shell
-poetry run poe test # will run all unit-tests
-poetry run poe lint # will lint the project using black, flake8, isort, mypy, and yamllint
-poetry run poe sourcery # will review the code using Sourcery AI
-poetry run poe sourcery_fix # will auto-fix issues found by Sourcery
-poetry run poe docs_serve # will build and serve a local version of the documentation site
+uv run pytest # will run all unit-tests
+
+# Lint the project
+uv run black --check src/ docs/ scripts/
+uv run flake8 src/ tests/ docs/ scripts/
+uv run isort --check-only src/ tests/ docs/ scripts/
+uv run mypy src/ scripts/
+uv run yamllint --format colored --strict .
+
+uv run mkdocs serve # will build and serve a local version of the documentation site
 ```
 
 ## Documentation
 
 We use [MkDocs][mkdocs-site] and [Material][material-site] for building our documentation site,
-https://aioswitcher.figenblat.com/. See [docs](docs) and [mkdocs.yml](mkdocs.yml). 
+https://aioswitcher.figenblat.com/. See [docs](docs) and [mkdocs.yml](mkdocs.yml).
 
-> [!NOTE]   
+> [!NOTE]
 > We're generating [code documentation][aioswitcher-code-docs] from _docstrings_.
 
 <!-- Links -->
 [aioswitcher-code-docs]: https://aioswitcher.figenblat.com/codedocs/
 [material-site]: https://squidfunk.github.io/mkdocs-material/
 [mkdocs-site]: https://www.mkdocs.org/
-[pip-docs]: https://pypi.org/project/pip/
-[poethepoet-site]: https://github.com/nat-n/poethepoet
-[poetry-site]: https://poetry.eustace.io/
 [python-site]: https://www.python.org/
+[uv-docs]: https://docs.astral.sh/uv/

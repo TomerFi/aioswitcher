@@ -10,57 +10,47 @@ on:
       - src/**
       - tests/**
       - pyproject.toml
-      - requirements.txt
+      - uv.lock
+
+concurrency:
+  group: ${{ github.workflow }}-${{github.ref}}
+  cancel-in-progress: true
 
 env:
-  MAIN_PY_VER: "3.13"
+  MAIN_PY_VER: "3.14"
 
 jobs:
   test:
     runs-on: ubuntu-latest
     environment: staging
+    permissions:
+      contents: read
     name: Stage project
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup timezone
-        uses: zcong1993/setup-timezone@v2.0.0
+        uses: zcong1993/setup-timezone@040202c2ecba2d55edb016acf01bbeb42261dfc0  # v2.0.0
         with:
           timezone: Asia/Jerusalem
 
-      - name: Set up Python
-        uses: actions/setup-python@v6
+      - name: Setup uv
+        uses: astral-sh/setup-uv@c771a70e6277c0a99b617c7a806ffedaca235ff9  # v9.0.0
         with:
           python-version: ${{ env.MAIN_PY_VER }}
-
-      - name: Cache pip repository
-        uses: actions/cache@v5
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ env.MAIN_PY_VER }}
-
-      - name: Prepare python environment
-        run: |
-          pip install -r requirements.txt
-          poetry config virtualenvs.create true
-          poetry config virtualenvs.in-project true
-
-      - name: Cache poetry virtual environment
-        uses: actions/cache@v5
-        with:
-          path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/pyproject.toml') }}-${{ env.MAIN_PY_VER }}
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
       - name: Install, test with coverage report, and build
         run: |
-          poetry lock
-          poetry install --no-interaction
-          poetry run poe test_rep
-          poetry build
+          uv run --locked pytest -v --cov --cov-report=xml:coverage.xml --junit-xml=junit.xml
+          uv build
 
       - name: Push to CodeCov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@a99c28d3f0da835de33ff2feb2e15691c7b9641f  # v7.0.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: coverage.xml
