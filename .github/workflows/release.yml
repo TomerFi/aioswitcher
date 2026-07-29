@@ -23,7 +23,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  MAIN_PY_VER: "3.13"
+  MAIN_PY_VER: "3.14"
 
 jobs:
   release:

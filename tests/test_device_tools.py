@@ -34,7 +34,7 @@ def test_seconds_to_iso_time_with_a_valid_seconds_value_should_return_a_time_str
 def test_seconds_to_iso_time_with_a_nagative_value_should_throw_an_error():
     assert_that(tools.seconds_to_iso_time).raises(
         ValueError
-    ).when_called_with(-1).is_equal_to("hour must be in 0..23")
+    ).when_called_with(-1).contains("hour must be in 0..23")
 
 
 def test_minutes_to_hexadecimal_seconds_with_correct_minutes_should_return_expected_hex_seconds():

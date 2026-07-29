@@ -36,7 +36,7 @@ pip install --upgrade .
 
 ### Prepare the development environment
 
-With [Python >= 3.12][python-site] use [uv][uv-docs] to install all dependencies:
+With [Python >= 3.14][python-site] use [uv][uv-docs] to install all dependencies:
 
 ```shell
   uv sync --all-groups
