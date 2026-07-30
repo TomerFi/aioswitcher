@@ -114,7 +114,7 @@ uv run mkdocs build                           # docs
 
 ## Pre-commit Hooks
 
-Hook repos are pinned to commit SHAs. The agent may remind users to update dependencies (`uv run pre-commit autoupdate --freeze`) and to update `additional_dependencies` manually. **Always use `--freeze`**; without it, autoupdate replaces SHAs with tags. The agent should check if hooks are installed (`.git/hooks/pre-commit`) and remind the user to install them if not.
+Hook repos are pinned to commit SHAs. The agent may remind users to update dependencies (`uv run prek update --freeze`) and to update `additional_dependencies` manually. **Always use `--freeze`**; without it, prek update replaces SHAs with tags. The agent should check if hooks are installed (`.git/hooks/pre-commit`) and remind the user to install them if not.
 
 ## Documentation (mkdocs)
 

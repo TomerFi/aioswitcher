@@ -52,7 +52,7 @@ dev = [
     "yamllint>=1.35.1",
     "freezegun>=1.5.1",
     "sourcery>=1.43.0",
-    "pre-commit>=4.6.1",
+    "prek>=0.4.11",
 ]
 
 docs = [
