@@ -82,7 +82,7 @@ uv run pre-commit run --all-files
 Update hook dependencies occasionally:
 
 ```shell
-pre-commit autoupdate --freeze
+uv run pre-commit autoupdate --freeze
 ```
 
 `additional_dependencies` in the config are pinned with exact versions — update them manually when needed.

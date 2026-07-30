@@ -8,6 +8,7 @@ repos:
       - id: check-merge-conflict
       - id: detect-private-key
       - id: no-commit-to-branch
+        args: ["--branch", "dev"]
       - id: trailing-whitespace
 
   - repo: https://github.com/psf/black
