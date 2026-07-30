@@ -17,7 +17,7 @@ When making API changes or renaming things, check if they impact these consumers
 
 ## Repo Structure
 
-```
+```text
 src/aioswitcher/
   __init__.py          # package entry, exports api, bridge, device, schedule
   bridge.py            # UDP broadcast discovery — SwitcherBridge + DatagramParser
@@ -71,7 +71,7 @@ Files:
 
 ## Adding a New Device Type
 
-When a new device type is announced, changes span ~6 files:
+When a new device type is announced, changes span ~8 files:
 
 1. **`device/__init__.py`**: Add enum member to `DeviceType` (hex representation, protocol type, category, token_needed). If it has unique fields, add a new base dataclass (e.g., `SwitcherLightBase`) and the concrete class (e.g., `SwitcherLight`) with `__post_init__` validation.
 2. **`bridge.py`**: Add a branch in `_parse_device_from_datagram` for the new category/type, instantiate the dataclass, wire `DatagramParser` helpers if needed.
