@@ -65,6 +65,28 @@ uv run yamllint --format colored --strict .
 uv run mkdocs serve # will build and serve a local version of the documentation site
 ```
 
+## Pre-commit Hooks
+
+Install hooks after cloning:
+
+```shell
+uv run pre-commit install
+```
+
+Hooks match CI commands. See `.pre-commit-config.yaml` for the full list. Test against all files with:
+
+```shell
+uv run pre-commit run --all-files
+```
+
+Update hook dependencies occasionally:
+
+```shell
+pre-commit autoupdate --freeze
+```
+
+`additional_dependencies` in the config are pinned with exact versions — update them manually when needed.
+
 ## Documentation
 
 We use [MkDocs][mkdocs-site] and [Material][material-site] for building our documentation site,
