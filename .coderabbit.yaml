@@ -5,7 +5,7 @@ reviews:
     - path: src/**/*.py
       instructions: |
         Review Python code for:
-        - Type annotations and mypy compatibility
+        - Type annotations and ty compatibility
         - Async/await patterns and proper coroutine usage
         - Docstrings following PEP 257 conventions
         - Code style conforming to black and isort standards

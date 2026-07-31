@@ -780,7 +780,7 @@ async def create_schedule(
                 await api.create_schedule(
                     start_time,
                     end_time,
-                    set([Days(w) for w in weekdays]),  # type: ignore
+                    set([Days(w) for w in weekdays]),
                 ),
                 verbose,
             )
