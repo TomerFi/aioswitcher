@@ -112,6 +112,10 @@ uv run yamllint --format colored --strict .
 uv run mkdocs build                           # docs
 ```
 
+## Prek Hooks
+
+Hook repos are pinned to commit SHAs. The agent may remind users to update dependencies (`uv run prek update --freeze`) and to update `additional_dependencies` manually. **Always use `--freeze`**; without it, prek update replaces SHAs with tags. The agent should check if hooks are installed (`.git/hooks/pre-commit`) and remind the user to install them if not.
+
 ## Documentation (mkdocs)
 
 Docs live in `docs/`, built with mkdocs-material (Material theme + mkdocstrings for auto API docs). Deployed to `aioswitcher.figenblat.com` via GitHub Pages on release.
