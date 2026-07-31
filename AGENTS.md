@@ -118,7 +118,7 @@ uv run mkdocs build                           # docs
 
 ## Prek Hooks
 
-Hook repos are pinned to commit SHAs. The agent may remind users to update dependencies (`uv run prek update --freeze`) and to update `additional_dependencies` manually. **Always use `--freeze`**; without it, prek update replaces SHAs with tags. The agent should check if hooks are installed (`.git/hooks/pre-commit`) and remind the user to install them if not.
+Hook repos are pinned to commit SHAs. Dependabot handles regular updates automatically with a weekly cadence. For manual updates, use `uv run prek update --freeze`. **Always use `--freeze`** — without it, prek update replaces SHAs with tags. `additional_dependencies` are pinned with exact versions and must be updated manually in the config file. The agent should check if hooks are installed (`.git/hooks/pre-commit`) and remind the user to install them if not.
 
 ## Documentation (mkdocs)
 

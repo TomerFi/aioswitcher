@@ -30,3 +30,22 @@ updates:
       - "TomerFi"
       - "thecode"
       - "YogevBokobza"
+
+  - package-ecosystem: "pre-commit"
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - "type: dependencies"
+    commit-message:
+      prefix: "ci"
+    rebase-strategy: disabled
+    assignees:
+      - "TomerFi"
+      - "thecode"
+      - "YogevBokobza"
+    groups:
+      pre-commit-hooks:
+        patterns:
+          - "*"
+        update-type: "all"
