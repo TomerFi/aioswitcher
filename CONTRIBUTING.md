@@ -59,7 +59,7 @@ uv run pytest # will run all unit-tests
 uv run black --check src/ docs/ scripts/
 uv run flake8 src/ tests/ docs/ scripts/
 uv run isort --check-only src/ tests/ docs/ scripts/
-uv run mypy src/ scripts/
+uv run ty check
 uv run yamllint --format colored --strict .
 
 uv run mkdocs serve # will build and serve a local version of the documentation site

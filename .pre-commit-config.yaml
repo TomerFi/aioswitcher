@@ -28,11 +28,10 @@ repos:
       - id: flake8
         additional_dependencies: ["Flake8-pyproject==1.2.4"]
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: 41e691678310dfd3833f7ab4e180ddb014310356  # frozen: v2.3.0
+  - repo: https://github.com/astral-sh/ty-pre-commit
+    rev: ac85803d0443afba1e0700690366fd2d39e02580  # frozen: v0.0.65
     hooks:
-      - id: mypy
-        files: "(src|scripts)/"
+      - id: ty
 
   - repo: https://github.com/adrienverge/yamllint
     rev: cba56bcde1fdd01c1deb3f945e69764c291a6530  # frozen: v1.38.0

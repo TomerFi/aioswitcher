@@ -111,7 +111,7 @@ uv run pytest                                 # all tests
 uv run black --check src/ docs/ scripts/
 uv run flake8 src/ tests/ docs/ scripts/
 uv run isort --check-only src/ tests/ docs/ scripts/
-uv run mypy src/ scripts/
+uv run ty check
 uv run yamllint --format colored --strict .
 uv run mkdocs build                           # docs
 ```
@@ -143,6 +143,6 @@ When adding a new device type, always update `supported.md` (table row + product
 - Apache 2.0 license header on every file.
 - `final` decorator on dataclasses and concrete classes that should not be subclassed.
 - Custom enum members use `__new__` with extra properties (`.value`, `.display`, `.hex_rep`, etc.).
-- Type annotations everywhere, mypy strict mode.
+- Type annotations everywhere, ty type checking.
 - Comments explain hex packet structure, not why code exists.
 - Variable names: `sut` for system under test in tests.
