@@ -68,7 +68,7 @@ jobs:
           bump: '${{ github.event.inputs.bump }}'
 
       - name: Set new project version
-        uses: sandstromviktor/toml-editor@49b76fb8c351868945711489fd30ba3de29191a5  # 2.0.0
+        uses: sandstromviktor/toml-editor@2596b2da64ea9aed1d4d4e77f0646ec30b9e88ea  # 2.0.0
         with:
           file: pyproject.toml
           key: project.version
@@ -94,7 +94,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@2834a314042ef964da07689278dd1e9d773e8afd  # v1.14.1
 
       - name: Set development project version
-        uses: sandstromviktor/toml-editor@49b76fb8c351868945711489fd30ba3de29191a5  # 2.0.0
+        uses: sandstromviktor/toml-editor@2596b2da64ea9aed1d4d4e77f0646ec30b9e88ea  # 2.0.0
         with:
           file: pyproject.toml
           key: project.version
