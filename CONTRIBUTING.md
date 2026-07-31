@@ -85,7 +85,7 @@ Update hook dependencies occasionally:
 uv run prek update --freeze
 ```
 
-`additional_dependencies` in the config are pinned with exact versions — update them manually when needed.
+`additional_dependencies` in the config are pinned with exact versions — update them manually in the config file when needed.
 
 ## AI Policy
 
