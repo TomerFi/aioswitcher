@@ -48,4 +48,3 @@ updates:
       pre-commit-hooks:
         patterns:
           - "*"
-        update-type: "all"
