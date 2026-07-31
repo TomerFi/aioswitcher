@@ -4,6 +4,10 @@
 
 aioswitcher is a Python 3.12+ async library for integrating with Switcher smart switches and outlets (power plugs, wall switches, curtain motor controllers, thermostat controllers, water heater controllers). It uses `uv` for dependency management and `pytest` with strict asyncio mode for testing.
 
+## AI Policy
+
+This project has an [AI policy](AI_POLICY.md). Always read it and ensure all suggestions, code, and contributions comply. If any behavior seems to conflict with the policy, warn the user and ask for guidance.
+
 ## Client Projects
 
 aioswitcher is a dependency for two major projects — always consider them when making changes, especially breaking ones.
