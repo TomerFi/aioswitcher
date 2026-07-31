@@ -10,7 +10,7 @@ The only expectation is this: **verify everything that comes out of your machine
 
 ## Quality Bar
 
-This is a community-driven project built on volunteer time. Wasting a contributor's free time chasing hallucinations, copy-pasted boilerplate, or obvious AI slop is unacceptable and will be called out.
+This is a community-driven project built on volunteer time. Wasting contributors' free time chasing hallucinations, copy-pasted boilerplate, or obvious AI slop is unacceptable and will be called out.
 
 Do not make autonomous contributions or file autonomous issues. Submit only what you have reviewed and stand behind.
 

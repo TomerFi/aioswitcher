@@ -89,7 +89,7 @@ uv run prek update --freeze
 
 ## AI Policy
 
-This project encourages and assumes the use of AI tools. See [AI_POLICY.md](AI_POLICY.md) for the full policy — the short version: use AI however you want, but verify everything before submitting and own what you contribute.
+This project encourages and assumes the use of AI tools. See [AI_POLICY.md](AI_POLICY.md) for the full policy — the short version: use AI however you want on your own work, but verify everything before submitting and own what you contribute. Do not make autonomous contributions or file autonomous issues.
 
 ## Documentation
 
