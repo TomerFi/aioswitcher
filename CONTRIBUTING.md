@@ -87,6 +87,10 @@ uv run prek update --freeze
 
 `additional_dependencies` in the config are pinned with exact versions — update them manually when needed.
 
+## AI Policy
+
+This project encourages and assumes the use of AI tools. See [AI_POLICY.md](AI_POLICY.md) for the full policy — the short version: use AI however you want, but verify everything before submitting and own what you contribute.
+
 ## Documentation
 
 We use [MkDocs][mkdocs-site] and [Material][material-site] for building our documentation site,
