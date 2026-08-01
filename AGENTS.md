@@ -108,13 +108,14 @@ Note: `discover_devices.py` needs no changes — the Bridge auto-discovers all b
 ```shell
 uv sync --all-groups                          # setup
 uv run pytest                                 # all tests
-uv run black --check src/ docs/ scripts/
-uv run flake8 src/ tests/ docs/ scripts/
-uv run isort --check-only src/ tests/ docs/ scripts/
+uv run ruff check src/ docs/ scripts/
+uv run ruff format --check src/ docs/ scripts/
 uv run ty check
 uv run yamllint --format colored --strict .
 uv run mkdocs build                           # docs
 ```
+
+When `ruff check` or `ruff format --check` fails, suggest `ruff check --fix` and `ruff format` to the user as ways to fix the issues.
 
 ## Prek Hooks
 

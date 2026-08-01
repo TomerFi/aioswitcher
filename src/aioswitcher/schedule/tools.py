@@ -115,6 +115,7 @@ def hexadecimale_timestamp_to_localtime(hex_timestamp: bytes) -> str:
 
     Return:
         Localtime string with %H:%M format. e.g. "20:30".
+
     """
     hex_time = (
         hex_timestamp[6:8]

@@ -163,6 +163,7 @@ class SwitcherApi:
 
         Returns:
             bytes: The response from the device.
+
         """
         packet = set_message_length(packet)
         signed_packet = sign_packet_with_crc_key(packet)

@@ -88,7 +88,7 @@ def _parse_device_from_datagram(
 
     Args:
         device_callback: callable for sending SwitcherBase devices parsed from message.
-        broadcast_message: the bytes message to parse.
+        datagram: the bytes message to parse.
 
     """
     parser = DatagramParser(datagram)

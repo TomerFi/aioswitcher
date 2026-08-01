@@ -56,11 +56,14 @@ Common tasks:
 uv run pytest # will run all unit-tests
 
 # Lint the project
-uv run black --check src/ docs/ scripts/
-uv run flake8 src/ tests/ docs/ scripts/
-uv run isort --check-only src/ tests/ docs/ scripts/
+uv run ruff check src/ docs/ scripts/
+uv run ruff format --check src/ docs/ scripts/
 uv run ty check
 uv run yamllint --format colored --strict .
+
+# Fix linting issues automatically
+uv run ruff check --fix src/ docs/ scripts/
+uv run ruff format src/ docs/ scripts/
 
 uv run mkdocs serve # will build and serve a local version of the documentation site
 ```

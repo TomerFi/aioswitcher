@@ -11,22 +11,13 @@ repos:
         args: ["--branch", "dev"]
       - id: trailing-whitespace
 
-  - repo: https://github.com/psf/black
-    rev: 87928e6d6761a4a6d22250e1fee5601b3998086e  # frozen: 26.5.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: 39d9ac5938dadb73df0564a45f163e25ff9fa6e2  # frozen: v0.16.1
     hooks:
-      - id: black
+      - id: ruff-check
         files: "(src|scripts|docs)/"
-
-  - repo: https://github.com/pycqa/isort
-    rev: 7f321d375f31a2f03833bc9a548e8783f2b5c420  # frozen: 9.0.0b1
-    hooks:
-      - id: isort
-
-  - repo: https://github.com/pycqa/flake8
-    rev: d93590f5be797aabb60e3b09f2f52dddb02f349f  # frozen: 7.3.0
-    hooks:
-      - id: flake8
-        additional_dependencies: ["Flake8-pyproject==1.2.4"]
+      - id: ruff-format
+        files: "(src|scripts|docs)/"
 
   - repo: https://github.com/astral-sh/ty-pre-commit
     rev: ac85803d0443afba1e0700690366fd2d39e02580  # frozen: v0.0.65

@@ -35,11 +35,6 @@ dependencies = [ "pycryptodome>=3.18.0,<4.0.0", "aiohttp>=3.10.3,<4.0.0" ]
 [dependency-groups]
 dev = [
     "assertpy>=1.1",
-    "black>=26.3.1",
-    "flake8>=7.1.1",
-    "flake8-docstrings>=1.7.0",
-    "Flake8-pyproject>=1.2.3",
-    "isort>=8.0.1",
     "pytest>=9.0.2",
     "pytest-asyncio>=1.3.0",
     "pytest-cov>=7.1.0",
@@ -53,6 +48,7 @@ dev = [
     "sourcery>=1.43.0",
     "prek>=0.4.11",
     "ty>=0.0.65",
+    "ruff>=0.16.1",
 ]
 
 docs = [
@@ -69,14 +65,19 @@ asyncio_mode = "strict"
 [tool.ty.src]
 include = ["aioswitcher", "scripts"]
 
-[tool.isort]
-profile = "black"
+[tool.ruff]
+line-length = 88
 
-[tool.flake8]
-max-line-length = 88
-per-file-ignores = "tests/*.py:E501,D103"
-count = true
-statistics = true
+[tool.ruff.lint]
+select = ["E", "W", "F", "D", "I"]
+ignore = ["D203", "D213"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["E501", "D103"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
 
 [tool.coverage.run]
 source = [ "aioswitcher" ]

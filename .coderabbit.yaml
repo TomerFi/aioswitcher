@@ -8,7 +8,7 @@ reviews:
         - Type annotations and ty compatibility
         - Async/await patterns and proper coroutine usage
         - Docstrings following PEP 257 conventions
-        - Code style conforming to black and isort standards
+        - Code style conforming to ruff standards
     - path: tests/**/*.py
       instructions: |
         Review test code for:
