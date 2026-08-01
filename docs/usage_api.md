@@ -86,8 +86,8 @@ async def control_runner(device_type, device_ip, device_id, device_key, token):
         await api.set_light(DeviceState.OFF, 0)
 
 
-asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00"))
-asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00"))
+asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00", None))
+asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00", None))
 asyncio.run(
     control_runner(
         DeviceType.RUNNER_S11,
