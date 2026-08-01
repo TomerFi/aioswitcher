@@ -18,6 +18,7 @@ repos:
         files: "(src|scripts|docs)/"
       - id: ruff-format
         files: "(src|scripts|docs)/"
+        args: ["--check"]
 
   - repo: https://github.com/astral-sh/ty-pre-commit
     rev: ac85803d0443afba1e0700690366fd2d39e02580  # frozen: v0.0.65
