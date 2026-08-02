@@ -91,7 +91,7 @@ jobs:
           uv build
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@2834a314042ef964da07689278dd1e9d773e8afd  # v1.14.1
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
 
       - name: Set development project version
         uses: sandstromviktor/toml-editor@2596b2da64ea9aed1d4d4e77f0646ec30b9e88ea  # 2.0.0
