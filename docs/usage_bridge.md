@@ -5,12 +5,14 @@ import asyncio
 from dataclasses import asdict
 from aioswitcher.bridge import SwitcherBridge
 
+
 async def print_devices(delay):
     def on_device_found_callback(device):
-        print(asdict(device)) # (1)
+        print(asdict(device))  # (1)
 
     async with SwitcherBridge(on_device_found_callback):
         await asyncio.sleep(delay)
+
 
 asyncio.run(print_devices(60))
 ```

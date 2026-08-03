@@ -32,14 +32,11 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
 
-      - name: Black
-        run: uv run --locked black --check src/ docs/ scripts/
+      - name: Ruff check
+        run: uv run --locked ruff check src/ docs/ scripts/
 
-      - name: Flake8
-        run: uv run --locked flake8 src/ tests/ docs/ scripts/
-
-      - name: isort
-        run: uv run --locked isort --check-only src/ tests/ docs/ scripts/
+      - name: Ruff format
+        run: uv run --locked ruff format --check src/ docs/ scripts/
 
       - name: ty
         run: uv run --locked ty check

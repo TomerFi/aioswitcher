@@ -7,7 +7,8 @@ import asyncio
 from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.device import DeviceType
 
-async def control_power_plug(device_type, device_ip, device_id, device_key) :
+
+async def control_power_plug(device_type, device_ip, device_id, device_key):
     # for connecting to a device we need its type, id, login key and ip address
     async with SwitcherApi(device_type, device_ip, device_id, device_key) as api:
         # get the device current state
@@ -18,6 +19,7 @@ async def control_power_plug(device_type, device_ip, device_id, device_key) :
         await api.control_device(Command.OFF)
         # set the device name to 'my new name'
         await api.set_device_name("my new name")
+
 
 asyncio.run(control_power_plug(DeviceType.POWER_PLUG, "111.222.11.22", "ab1c2d", "00"))
 ```
@@ -30,6 +32,7 @@ from datetime import timedelta
 from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.device import DeviceType
 from aioswitcher.schedule import Days
+
 
 async def control_water_heater(device_type, device_ip, device_id, device_key):
     # for connecting to a device we need its type, id, login key and ip address
@@ -45,18 +48,19 @@ async def control_water_heater(device_type, device_ip, device_id, device_key):
         # configure the device for 02:30 auto shutdown
         await api.set_auto_shutdown(timedelta(hours=2, minutes=30))
         # get the schedules from the device
-        await api.get_schedules() # (6)
+        await api.get_schedules()  # (6)
         # delete and existing schedule with id 1
         await api.delete_schedule("1")
         # create a new recurring schedule for 13:00-14:30
         # executing on sunday and friday
         await api.create_schedule("13:00", "14:30", {Days.SUNDAY, Days.FRIDAY})
 
-asyncio.run(control_water_heater(DeviceType.MINI, "111.222.11.22", "ab1c2d" , "00"))
-asyncio.run(control_water_heater(DeviceType.TOUCH, "111.222.11.22", "ab1c2d" , "00"))
-asyncio.run(control_water_heater(DeviceType.V2_ESP, "111.222.11.22", "ab1c2d" , "00"))
-asyncio.run(control_water_heater(DeviceType.V2_QCA, "111.222.11.22", "ab1c2d" , "00"))
-asyncio.run(control_water_heater(DeviceType.V4, "111.222.11.22", "ab1c2d" , "00"))
+
+asyncio.run(control_water_heater(DeviceType.MINI, "111.222.11.22", "ab1c2d", "00"))
+asyncio.run(control_water_heater(DeviceType.TOUCH, "111.222.11.22", "ab1c2d", "00"))
+asyncio.run(control_water_heater(DeviceType.V2_ESP, "111.222.11.22", "ab1c2d", "00"))
+asyncio.run(control_water_heater(DeviceType.V2_QCA, "111.222.11.22", "ab1c2d", "00"))
+asyncio.run(control_water_heater(DeviceType.V4, "111.222.11.22", "ab1c2d", "00"))
 ```
 
 ## Runner device excerpt
@@ -66,7 +70,8 @@ import asyncio
 from aioswitcher.api import SwitcherApi
 from aioswitcher.device import DeviceState, DeviceType
 
-async def control_runner(device_type, device_ip, device_id, device_key, token) :
+
+async def control_runner(device_type, device_ip, device_id, device_key, token):
     # for connecting to a device we need its type, id, login key and ip address
     async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         # get the shutter current state, circuit number is 0
@@ -80,10 +85,29 @@ async def control_runner(device_type, device_ip, device_id, device_key, token) :
         # turn off the light, circuit number is 0 (Only for Runner S11 and Runner S12)
         await api.set_light(DeviceState.OFF, 0)
 
-asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00"))
-asyncio.run(control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00"))
-asyncio.run(control_runner(DeviceType.RUNNER_S11, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
-asyncio.run(control_runner(DeviceType.RUNNER_S12, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+
+asyncio.run(control_runner(DeviceType.RUNNER, "111.222.11.22", "ab1c2d", "00", None))
+asyncio.run(
+    control_runner(DeviceType.RUNNER_MINI, "111.222.11.22", "ab1c2d", "00", None)
+)
+asyncio.run(
+    control_runner(
+        DeviceType.RUNNER_S11,
+        "111.222.11.22",
+        "ab1c2d",
+        "00",
+        "zvVvd7JxtN7CgvkD1Psujw==",
+    )
+)
+asyncio.run(
+    control_runner(
+        DeviceType.RUNNER_S12,
+        "111.222.11.22",
+        "ab1c2d",
+        "00",
+        "zvVvd7JxtN7CgvkD1Psujw==",
+    )
+)
 ```
 
 ## Breeze device excerpt
@@ -92,9 +116,18 @@ asyncio.run(control_runner(DeviceType.RUNNER_S12, "111.222.11.22", "ab1c2d", "00
 import asyncio
 from aioswitcher.api import SwitcherApi
 from aioswitcher.api.remotes import SwitcherBreezeRemoteManager
-from aioswitcher.device import DeviceState, DeviceType, ThermostatFanLevel, ThermostatMode, ThermostatSwing
+from aioswitcher.device import (
+    DeviceState,
+    DeviceType,
+    ThermostatFanLevel,
+    ThermostatMode,
+    ThermostatSwing,
+)
 
-async def control_breeze(device_type, device_ip, device_id, device_key, remote_manager, remote_id) :
+
+async def control_breeze(
+    device_type, device_ip, device_id, device_key, remote_manager, remote_id
+):
     # for connecting to a device we need its type, id, login key and ip address
     async with SwitcherApi(device_type, device_ip, device_id, device_key) as api:
         # get the device current state
@@ -113,9 +146,14 @@ async def control_breeze(device_type, device_ip, device_id, device_key, remote_m
             ThermostatSwing.ON,
         )
 
+
 # create the remote manager outside the context for re-using
 remote_manager = SwitcherBreezeRemoteManager()
-asyncio.run(control_breeze(DeviceType.BREEZE, "111.222.11.22", "ab1c2d", "00", remote_manager, "DLK65863"))
+asyncio.run(
+    control_breeze(
+        DeviceType.BREEZE, "111.222.11.22", "ab1c2d", "00", remote_manager, "DLK65863"
+    )
+)
 ```
 
 ## Light switch excerpt
@@ -125,7 +163,8 @@ import asyncio
 from aioswitcher.api import SwitcherApi
 from aioswitcher.device import DeviceState, DeviceType
 
-async def control_light(device_type, device_ip, device_id, device_key, token) :
+
+async def control_light(device_type, device_ip, device_id, device_key, token):
     # for connecting to a device we need its type, id, login key and ip address
     async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         # get the light current state, circuit number is 0
@@ -135,11 +174,52 @@ async def control_light(device_type, device_ip, device_id, device_key, token) :
         # turn off the light, circuit number is 0 (Only for Runner S11, Runner S12 and Lights)
         await api.set_light(DeviceState.OFF, 0)
 
-asyncio.run(control_light(DeviceType.LIGHT_SL01, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
-asyncio.run(control_light(DeviceType.LIGHT_SL01_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
-asyncio.run(control_light(DeviceType.LIGHT_SL02, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
-asyncio.run(control_light(DeviceType.LIGHT_SL02_MINI, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
-asyncio.run(control_light(DeviceType.LIGHT_SL03, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+
+asyncio.run(
+    control_light(
+        DeviceType.LIGHT_SL01,
+        "111.222.11.22",
+        "ab1c2d",
+        "00",
+        "zvVvd7JxtN7CgvkD1Psujw==",
+    )
+)
+asyncio.run(
+    control_light(
+        DeviceType.LIGHT_SL01_MINI,
+        "111.222.11.22",
+        "ab1c2d",
+        "00",
+        "zvVvd7JxtN7CgvkD1Psujw==",
+    )
+)
+asyncio.run(
+    control_light(
+        DeviceType.LIGHT_SL02,
+        "111.222.11.22",
+        "ab1c2d",
+        "00",
+        "zvVvd7JxtN7CgvkD1Psujw==",
+    )
+)
+asyncio.run(
+    control_light(
+        DeviceType.LIGHT_SL02_MINI,
+        "111.222.11.22",
+        "ab1c2d",
+        "00",
+        "zvVvd7JxtN7CgvkD1Psujw==",
+    )
+)
+asyncio.run(
+    control_light(
+        DeviceType.LIGHT_SL03,
+        "111.222.11.22",
+        "ab1c2d",
+        "00",
+        "zvVvd7JxtN7CgvkD1Psujw==",
+    )
+)
 ```
 
 ## Heater excerpt
@@ -149,7 +229,8 @@ import asyncio
 from aioswitcher.api import Command, SwitcherApi
 from aioswitcher.device import DeviceType
 
-async def control_heater(device_type, device_ip, device_id, device_key, token) :
+
+async def control_heater(device_type, device_ip, device_id, device_key, token):
     # for connecting to a device we need its type, id, login key, ip address and token
     async with SwitcherApi(device_type, device_ip, device_id, device_key, token) as api:
         # get the device's current state
@@ -159,5 +240,10 @@ async def control_heater(device_type, device_ip, device_id, device_key, token) :
         # turn the device off
         await api.control_device(Command.OFF)
 
-asyncio.run(control_heater(DeviceType.HEATER, "111.222.11.22", "ab1c2d" , "00", "zvVvd7JxtN7CgvkD1Psujw=="))
+
+asyncio.run(
+    control_heater(
+        DeviceType.HEATER, "111.222.11.22", "ab1c2d", "00", "zvVvd7JxtN7CgvkD1Psujw=="
+    )
+)
 ```

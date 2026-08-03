@@ -369,6 +369,7 @@ class SwitcherThermostatBase(ABC):
         fan_level: the current fan level in celsius.
         swing: the current swing state.
         remote_id: the id of the remote used to control this thermostat
+
     """
 
     mode: ThermostatMode
@@ -386,6 +387,7 @@ class SwitcherShutterBase(ABC):
     Args:
         position: the current array of position of the shutter (integer percentage).
         direction: the current array of direction of the shutter.
+
     """
 
     position: List[int]
@@ -401,6 +403,7 @@ class SwitcherSingleShutterDualLightBase(ABC):
         position: the current array of position of the shutter (integer percentage).
         direction: the current array of direction of the shutter.
         light: the current array of light state.
+
     """
 
     position: List[int]
@@ -417,6 +420,7 @@ class SwitcherDualShutterSingleLightBase(ABC):
         position: the current array of position of the shutter (integer percentage).
         direction: the current array of direction of the shutter.
         light: the current array of light state.
+
     """
 
     position: List[int]
@@ -431,6 +435,7 @@ class SwitcherLightBase(ABC):
 
     Args:
         light: the current array of light state.
+
     """
 
     light: List[DeviceState]
