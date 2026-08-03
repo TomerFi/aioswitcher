@@ -1,6 +1,6 @@
 [project]
 name = "aioswitcher"
-version = "6.1.4-dev"
+version = "6.2.0"
 description = "PyPi module integrating with various Switcher devices"
 readme = "README.md"
 requires-python = ">=3.12.0,<4.0"
@@ -34,50 +34,49 @@ dependencies = [ "pycryptodome>=3.18.0,<4.0.0", "aiohttp>=3.10.3,<4.0.0" ]
 
 [dependency-groups]
 dev = [
-    "assertpy>=1.1",
-    "pytest>=9.0.2",
-    "pytest-asyncio>=1.3.0",
-    "pytest-cov>=7.1.0",
-    "pytest-resource-path>=1.3.0",
-    "pytest-mockservers>=0.6.0",
-    "pytest-sugar>=1.0.0",
-    "pytz>=2026.1",
-    "time-machine>=3.2.0",
-    "yamllint>=1.35.1",
-    "freezegun>=1.5.1",
-    "sourcery>=1.43.0",
-    "prek>=0.4.11",
-    "ty>=0.0.65",
-    "ruff>=0.16.1",
+  "assertpy>=1.1",
+  "pytest>=9.0.2",
+  "pytest-asyncio>=1.3.0",
+  "pytest-cov>=7.1.0",
+  "pytest-resource-path>=1.3.0",
+  "pytest-mockservers>=0.6.0",
+  "pytest-sugar>=1.0.0",
+  "pytz>=2026.1",
+  "time-machine>=3.2.0",
+  "yamllint>=1.35.1",
+  "freezegun>=1.5.1",
+  "sourcery>=1.43.0",
+  "prek>=0.4.11",
+  "ty>=0.0.65",
+  "ruff>=0.16.1"
 ]
-
 docs = [
-    "mkdocs>=1.6.1",
-    "mkdocs-git-revision-date-plugin>=0.3.2",
-    "mkdocs-material>=9.5.49",
-    "mkdocstrings>=1.0.3",
-    "mkdocstrings-python>=2.0.3",
+  "mkdocs>=1.6.1",
+  "mkdocs-git-revision-date-plugin>=0.3.2",
+  "mkdocs-material>=9.5.49",
+  "mkdocstrings>=1.0.3",
+  "mkdocstrings-python>=2.0.3"
 ]
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
 
 [tool.ty.src]
-include = ["aioswitcher", "scripts"]
+include = [ "aioswitcher", "scripts" ]
 
 [tool.ruff]
 line-length = 88
 
-[tool.ruff.lint]
-select = ["E", "W", "F", "D", "I"]
-ignore = ["D203", "D213"]
+  [tool.ruff.lint]
+  select = [ "E", "W", "F", "D", "I" ]
+  ignore = [ "D203", "D213" ]
 
-[tool.ruff.lint.per-file-ignores]
-"tests/*.py" = ["E501", "D103"]
+    [tool.ruff.lint.per-file-ignores]
+    "tests/*.py" = [ "E501", "D103" ]
 
-[tool.ruff.format]
-quote-style = "double"
-indent-style = "space"
+  [tool.ruff.format]
+  quote-style = "double"
+  indent-style = "space"
 
 [tool.coverage.run]
 source = [ "aioswitcher" ]
