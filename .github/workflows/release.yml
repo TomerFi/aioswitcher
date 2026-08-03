@@ -103,9 +103,12 @@ jobs:
           key: project.version
           value: ${{ steps.bumper.outputs.dev }}
 
+      - name: Update lockfile for dev version
+        run: uv lock
+
       - name: Commit and push
         run: |
-          git add pyproject.toml
+          git add pyproject.toml uv.lock
           git commit -m "build: bump version to ${{ steps.bumper.outputs.dev }} [skip ci]"
           git push
 
