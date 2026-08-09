@@ -84,7 +84,7 @@ jobs:
         if: ${{ matrix.python == env.MAIN_PY_VER && always() }}
         with:
           test_changes_limit: 0
-          junit_files: ./junit.xml
+          files: ./junit.xml
           report_individual_runs: true
 
       - name: Push to CodeCov
