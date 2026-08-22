@@ -35,7 +35,7 @@ def test_seconds_to_iso_time_with_a_duration_longer_than_a_day_should_not_be_cap
     assert_that(tools.seconds_to_iso_time(702294)).is_equal_to("195:04:54")
 
 
-def test_seconds_to_iso_time_with_a_nagative_value_should_throw_an_error():
+def test_seconds_to_iso_time_with_a_negative_value_should_throw_an_error():
     assert_that(tools.seconds_to_iso_time).raises(
         ValueError
     ).when_called_with(-1).contains("seconds cannot be negative")
