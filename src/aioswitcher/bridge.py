@@ -55,7 +55,7 @@ from .device import (
 from .device.tools import (
     get_light_discovery_packet_index,
     get_shutter_discovery_packet_index,
-    seconds_to_iso_time,
+    seconds_to_duration_string,
     watts_to_amps,
 )
 
@@ -615,7 +615,7 @@ class DatagramParser:
             + hex_auto_shutdown_val[0:2],
             16,
         )
-        return seconds_to_iso_time(int_auto_shutdown_val_secs)
+        return seconds_to_duration_string(int_auto_shutdown_val_secs)
 
     def get_power_consumption(self) -> int:
         """Extract the power consumption from the broadcast message."""
@@ -632,7 +632,7 @@ class DatagramParser:
             + hex_remaining_time[0:2],
             16,
         )
-        return seconds_to_iso_time(int_remaining_time_seconds)
+        return seconds_to_duration_string(int_remaining_time_seconds)
 
     def get_device_type(self) -> DeviceType:
         """Extract the device type from the broadcast message."""
@@ -750,4 +750,4 @@ class DatagramParser:
             + hex_remaining_time[0:2],
             16,
         )
-        return seconds_to_iso_time(int_remaining_time_seconds)
+        return seconds_to_duration_string(int_remaining_time_seconds)

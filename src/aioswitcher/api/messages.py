@@ -30,7 +30,7 @@ from ..device import (
 from ..device.tools import (
     get_light_discovery_packet_index,
     get_shutter_discovery_packet_index,
-    seconds_to_iso_time,
+    seconds_to_duration_string,
     watts_to_amps,
 )
 from ..schedule.parser import SwitcherSchedule, get_schedules
@@ -62,7 +62,7 @@ class StateMessageParser:
             + hex_time_left[0:2],
             16,
         )
-        return seconds_to_iso_time(time_left_seconds)
+        return seconds_to_duration_string(time_left_seconds)
 
     def get_time_on(self) -> str:
         """Return how long the device has been on."""
@@ -71,7 +71,7 @@ class StateMessageParser:
             hex_time_on[6:8] + hex_time_on[4:6] + hex_time_on[2:4] + hex_time_on[0:2],
             16,
         )
-        return seconds_to_iso_time(time_on_seconds)
+        return seconds_to_duration_string(time_on_seconds)
 
     def get_auto_shutdown(self) -> str:
         """Return the value of the auto shutdown configuration."""
@@ -83,7 +83,7 @@ class StateMessageParser:
             + hex_auto_off[0:2],
             16,
         )
-        return seconds_to_iso_time(auto_off_seconds)
+        return seconds_to_duration_string(auto_off_seconds)
 
     def get_state(self) -> DeviceState:
         """Return the current device state."""
@@ -191,7 +191,7 @@ class StateMessageParser:
             + hex_time_left[0:2],
             16,
         )
-        return seconds_to_iso_time(time_left_seconds)
+        return seconds_to_duration_string(time_left_seconds)
 
     def get_heater_time_on(self) -> str:
         """Return how long the heater device has been on."""
@@ -200,7 +200,7 @@ class StateMessageParser:
             hex_time_on[6:8] + hex_time_on[4:6] + hex_time_on[2:4] + hex_time_on[0:2],
             16,
         )
-        return seconds_to_iso_time(time_on_seconds)
+        return seconds_to_duration_string(time_on_seconds)
 
     def get_heater_auto_shutdown(self) -> str:
         """Return the value of the heater auto shutdown configuration."""
@@ -212,7 +212,7 @@ class StateMessageParser:
             + hex_auto_off[0:2],
             16,
         )
-        return seconds_to_iso_time(auto_off_seconds)
+        return seconds_to_duration_string(auto_off_seconds)
 
     def get_heater_state(self) -> DeviceState:
         """Return the current heater device state."""
