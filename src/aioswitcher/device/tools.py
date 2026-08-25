@@ -30,21 +30,26 @@ from ..device import DeviceType
 logger = getLogger(__name__)
 
 
-def seconds_to_iso_time(all_seconds: int) -> str:
-    """Convert seconds to iso time.
+def seconds_to_duration_string(all_seconds: int) -> str:
+    """Convert seconds to an HH:MM:SS duration string.
 
     Args:
         all_seconds: the total number of seconds to convert.
 
     Return:
-        A string representing the converted iso time in %H:%M:%S format.
-        e.g. "02:24:37".
+        A string representing the converted duration in %H:%M:%S format.
+        e.g. "02:24:37". Unlike a time-of-day, the hours component is not
+        capped at 23, so durations of a day or longer are represented
+        correctly, e.g. "195:04:54".
 
     """
+    if all_seconds < 0:
+        raise ValueError("seconds cannot be negative")
+
     minutes, seconds = divmod(int(all_seconds), 60)
     hours, minutes = divmod(minutes, 60)
 
-    return datetime.time(hour=hours, minute=minutes, second=seconds).isoformat()
+    return f"{hours:02}:{minutes:02}:{seconds:02}"
 
 
 def sign_packet_with_crc_key(hex_packet: str) -> str:

@@ -27,14 +27,18 @@ from pytest import mark
 from aioswitcher.device import DeviceType, tools
 
 
-def test_seconds_to_iso_time_with_a_valid_seconds_value_should_return_a_time_string():
-    assert_that(tools.seconds_to_iso_time(86399)).is_equal_to("23:59:59")
+def test_seconds_to_duration_string_with_a_valid_seconds_value_should_return_a_time_string():
+    assert_that(tools.seconds_to_duration_string(86399)).is_equal_to("23:59:59")
 
 
-def test_seconds_to_iso_time_with_a_nagative_value_should_throw_an_error():
-    assert_that(tools.seconds_to_iso_time).raises(
+def test_seconds_to_duration_string_with_a_duration_longer_than_a_day_should_not_be_capped():
+    assert_that(tools.seconds_to_duration_string(702294)).is_equal_to("195:04:54")
+
+
+def test_seconds_to_duration_string_with_a_negative_value_should_throw_an_error():
+    assert_that(tools.seconds_to_duration_string).raises(
         ValueError
-    ).when_called_with(-1).contains("hour must be in 0..23")
+    ).when_called_with(-1).contains("seconds cannot be negative")
 
 
 def test_minutes_to_hexadecimal_seconds_with_correct_minutes_should_return_expected_hex_seconds():
