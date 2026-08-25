@@ -130,7 +130,7 @@ wheels = [
 
 [[package]]
 name = "aioswitcher"
-version = "6.3.0"
+version = "6.3.1.dev0"
 source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
