@@ -24,16 +24,24 @@ from aioswitcher.bridge import DatagramParser
 from aioswitcher.device import DeviceState, DeviceType
 
 
-@mark.parametrize("type_suffix, expected_type", [
-    ("mini", DeviceType.MINI),
-    ("power_plug", DeviceType.POWER_PLUG),
-    ("touch", DeviceType.TOUCH),
-    ("v2_esp", DeviceType.V2_ESP),
-    ("v2_qca", DeviceType.V2_QCA),
-    ("v4", DeviceType.V4),
-])
+@mark.parametrize(
+    "type_suffix, expected_type",
+    [
+        ("mini", DeviceType.MINI),
+        ("power_plug", DeviceType.POWER_PLUG),
+        ("touch", DeviceType.TOUCH),
+        ("v2_esp", DeviceType.V2_ESP),
+        ("v2_qca", DeviceType.V2_QCA),
+        ("v4", DeviceType.V4),
+    ],
+)
 def test_datagram_state_off(resource_path, type_suffix, expected_type):
-    sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = (
+        Path(f"{resource_path}_{type_suffix}.txt")
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
 
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
@@ -51,7 +59,7 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
 
 
 def test_datagram_state_off_heater(resource_path):
-    sut_datagram = Path(f'{resource_path}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
 
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
@@ -67,16 +75,24 @@ def test_datagram_state_off_heater(resource_path):
     assert_that(sut_parser.get_auto_shutdown()).is_equal_to("03:00:00")
 
 
-@mark.parametrize("type_suffix, expected_type", [
-    ("mini", DeviceType.MINI),
-    ("power_plug", DeviceType.POWER_PLUG),
-    ("touch", DeviceType.TOUCH),
-    ("v2_esp", DeviceType.V2_ESP),
-    ("v2_qca", DeviceType.V2_QCA),
-    ("v4", DeviceType.V4),
-])
+@mark.parametrize(
+    "type_suffix, expected_type",
+    [
+        ("mini", DeviceType.MINI),
+        ("power_plug", DeviceType.POWER_PLUG),
+        ("touch", DeviceType.TOUCH),
+        ("v2_esp", DeviceType.V2_ESP),
+        ("v2_qca", DeviceType.V2_QCA),
+        ("v4", DeviceType.V4),
+    ],
+)
 def test_datagram_state_on(resource_path, type_suffix, expected_type):
-    sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = (
+        Path(f"{resource_path}_{type_suffix}.txt")
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
 
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
@@ -94,7 +110,7 @@ def test_datagram_state_on(resource_path, type_suffix, expected_type):
 
 
 def test_datagram_state_on_heater(resource_path):
-    sut_datagram = Path(f'{resource_path}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
 
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
@@ -112,6 +128,41 @@ def test_datagram_state_on_heater(resource_path):
 
 @mark.parametrize("type_suffix", ["too_short", "wrong_start"])
 def test_a_faulty_datagram(resource_path, type_suffix):
-    sut_datagram = Path(f'{resource_path}_{type_suffix}.txt').read_text().replace('\n', '').encode()
+    sut_datagram = (
+        Path(f"{resource_path}_{type_suffix}.txt")
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
     sut_parser = DatagramParser(unhexlify(sut_datagram))
     assert_that(sut_parser.is_switcher_originator()).is_false()
+
+
+def test_datagram_custom_ip_address_override_type1(resource_path_root):
+    sut_datagram = (
+        (
+            resource_path_root
+            / "test_udp_datagram_parsing"
+            / "test_datagram_state_off_v2_esp.txt"
+        )
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
+    sut_parser = DatagramParser(unhexlify(sut_datagram), "192.168.0.200")
+    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.0.200")
+
+
+def test_datagram_custom_ip_address_override_type2(resource_path_root):
+    sut_datagram = (
+        (
+            resource_path_root
+            / "test_udp_datagram_parsing"
+            / "test_datagram_state_off_heater.txt"
+        )
+        .read_text()
+        .replace("\n", "")
+        .encode()
+    )
+    sut_parser = DatagramParser(unhexlify(sut_datagram), "192.168.0.200")
+    assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.0.200")
