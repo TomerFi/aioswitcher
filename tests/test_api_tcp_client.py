@@ -18,6 +18,7 @@ import os
 from asyncio.streams import StreamReader, StreamWriter
 from binascii import hexlify, unhexlify
 from datetime import timedelta
+from struct import unpack
 from unittest import skipUnless
 from unittest.mock import AsyncMock, Mock, patch
 
@@ -345,6 +346,17 @@ async def test_breeze_get_command_function_non_toggle_type_off_state(resource_pa
     command = remote.build_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7022_turn_off_cmd).decode())
+
+
+@mark.parametrize("command_length, expected_length", [
+    (77, "4d00"),
+    (179, "b300"),
+    (300, "2c01"),
+])
+async def test_breeze_command_length_should_be_little_endian(command_length, expected_length):
+    sut = SwitcherBreezeCommand("00" * command_length)
+    assert_that(sut.length).is_equal_to(expected_length)
+    assert_that(unpack("<H", unhexlify(sut.length))[0]).is_equal_to(command_length)
 
 
 async def test_breeze_get_command_function_toggle_type(resource_path_root):
