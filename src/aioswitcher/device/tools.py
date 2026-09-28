@@ -146,8 +146,9 @@ def watts_to_amps(watts: int) -> float:
 
 def set_message_length(message: str) -> str:
     """Set the message length."""
-    length = "{:x}".format(len(unhexlify(message + "00000000"))).ljust(4, "0")
-    return "fef0" + str(length) + message[8:]
+    # total length including the 4 CRC bytes, as a 2-byte little-endian value
+    length = len(unhexlify(message + "00000000"))
+    return "fef0" + length.to_bytes(2, "little").hex() + message[8:]
 
 
 def convert_token_to_packet(token: str) -> str:
