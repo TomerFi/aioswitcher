@@ -80,7 +80,9 @@ SWITCHER_UDP_BROADCAST_PORTS = [
 
 
 def _parse_device_from_datagram(
-    device_callback: Callable[[SwitcherBase], Any], datagram: bytes
+    device_callback: Callable[[SwitcherBase], Any],
+    datagram: bytes,
+    ip_address: Optional[str] = None,
 ) -> None:
     """Use as callback function to be called for every broadcast message.
 
@@ -89,9 +91,10 @@ def _parse_device_from_datagram(
     Args:
         device_callback: callable for sending SwitcherBase devices parsed from message.
         datagram: the bytes message to parse.
+        ip_address: optional sender IP address to use over payload IP.
 
     """
-    parser = DatagramParser(datagram)
+    parser = DatagramParser(datagram, ip_address)
     if not parser.is_switcher_originator():
         logger.debug("received datagram from an unknown source")
     else:
@@ -475,7 +478,7 @@ class SwitcherBridge:
 class UdpClientProtocol(DatagramProtocol):
     """Implementation of the Asyncio UDP DatagramProtocol."""
 
-    def __init__(self, on_datagram: Callable[[bytes], None]) -> None:
+    def __init__(self, on_datagram: Callable[[bytes, str], None]) -> None:
         """Initialize the protocol."""
         self.transport: Optional[BaseTransport] = None
         self._on_datagram = on_datagram
@@ -494,7 +497,7 @@ class UdpClientProtocol(DatagramProtocol):
         still propagates.
         """
         try:
-            self._on_datagram(data)
+            self._on_datagram(data, addr[0])
         except (KeyError, ValueError, IndexError, struct_error) as error:
             logger.debug(
                 "failed to parse datagram from %s: %s (data=%s)",
@@ -524,6 +527,7 @@ class DatagramParser:
     """Utility class for parsing a datagram into various device properties."""
 
     message: bytes
+    ip_address: Optional[str] = None
 
     def is_switcher_originator(self) -> bool:
         """Verify the broadcast message had originated from a switcher device."""
@@ -540,12 +544,16 @@ class DatagramParser:
 
     def get_ip_type1(self) -> str:
         """Extract the IP address from the type1 broadcast message (Heater, Plug)."""
+        if self.ip_address:
+            return self.ip_address
         hex_ip = hexlify(self.message)[152:160]
         ip_addr = int(hex_ip[6:8] + hex_ip[4:6] + hex_ip[2:4] + hex_ip[0:2], 16)
         return inet_ntoa(pack("<L", ip_addr))
 
     def get_ip_type2(self) -> str:
         """Extract the IP address from the broadcast message (Breeze, Runners)."""
+        if self.ip_address:
+            return self.ip_address
         hex_ip = hexlify(self.message)[154:162]
         ip_addr = int(hex_ip[0:2] + hex_ip[2:4] + hex_ip[4:6] + hex_ip[6:8], 16)
         return inet_ntoa(pack(">L", ip_addr))
