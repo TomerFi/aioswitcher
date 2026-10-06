@@ -52,15 +52,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Setup SSH signing
-        run: |
-          mkdir -p "$RUNNER_TEMP"
-          echo "${{ secrets.SIGNING_KEY }}" > "$RUNNER_TEMP/signing_key"
-          chmod 600 "$RUNNER_TEMP/signing_key"
-          git config gpg.format ssh
-          git config user.signingkey "$RUNNER_TEMP/signing_key"
-          git config commit.gpgsign true
-
       - name: Determine version and create changelog
         id: bumper
         uses: tomerfi/version-bumper-action@65a88e4f3bb22a000f965dc5dd9952bae7b54872  # 2.1.1
