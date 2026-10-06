@@ -41,6 +41,22 @@ def test_seconds_to_duration_string_with_a_negative_value_should_throw_an_error(
     ).when_called_with(-1).contains("seconds cannot be negative")
 
 
+@mark.parametrize("total_length, expected_header", [
+    (40, "2800"),
+    (164, "a400"),
+    (255, "ff00"),
+    (256, "0001"),
+    (266, "0a01"),
+])
+def test_set_message_length_should_write_the_total_length_as_little_endian(total_length, expected_header):
+    # the length covers the message and the 4 CRC bytes appended when signing
+    message = "fef00000" + "00" * (total_length - 8)
+    sut = tools.set_message_length(message)
+    assert_that(sut[4:8]).is_equal_to(expected_header)
+    assert_that(unpack("<H", unhexlify(sut[4:8]))[0]).is_equal_to(total_length)
+    assert_that(sut[8:]).is_equal_to(message[8:])
+
+
 def test_minutes_to_hexadecimal_seconds_with_correct_minutes_should_return_expected_hex_seconds():
     # TODO: replace the equality assertion with an unhexlified unpacked value
     hex_sut = tools.minutes_to_hexadecimal_seconds(90)
