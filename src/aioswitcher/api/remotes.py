@@ -80,7 +80,8 @@ class SwitcherBreezeCommand:
             function directly.
 
         """
-        return "{:x}".format(int(len(self.command) / 2)).ljust(4, "0")
+        # command length in bytes, as a 2-byte little-endian value
+        return (len(self.command) // 2).to_bytes(2, "little").hex()
 
 
 @final
