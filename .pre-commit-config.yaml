@@ -21,7 +21,7 @@ repos:
         args: ["--check"]
 
   - repo: https://github.com/astral-sh/ty-pre-commit
-    rev: 6972e4c5a7e9f45f05a2f30b668f221f43b770c9  # frozen: v0.0.84
+    rev: 55b90b9b17c398bf664dd80a913668780e29a812  # frozen: v0.0.85
     hooks:
       - id: ty
 
@@ -32,6 +32,6 @@ repos:
         args: ["--strict"]
 
   - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0f4b65a503cc866b9b5e62dda2020f7943b01a65  # frozen: 0.12.22
+    rev: a1785f8e81fe9936d828bef574e6db07e8c8c374  # frozen: 0.12.23
     hooks:
       - id: uv-lock
