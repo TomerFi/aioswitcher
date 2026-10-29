@@ -103,12 +103,12 @@ def test_calc_duration_with_greater_start_time_than_end_time_should_assume_next_
     assert_that(tools.calc_duration("14:00", "13:00")).is_equal_to("23:00:00")
 
 
-def test_hexadecimale_timestamp_to_localtime_with_the_current_timestamp_should_return_a_time_string():
-    sut_datetime = datetime.now()
-    hex_timestamp = hexlify(pack("<I", round(sut_datetime.timestamp())))
+def test_hexadecimale_timestamp_to_localtime_with_a_fixed_timestamp_should_return_a_time_string():
+    sut_datetime = datetime(2024, 1, 15, 13, 45, 30)
+    hex_timestamp = hexlify(pack("<I", int(sut_datetime.timestamp())))
     assert_that(
         tools.hexadecimale_timestamp_to_localtime(hex_timestamp)
-    ).is_equal_to(sut_datetime.time().strftime("%H:%M"))
+    ).is_equal_to("13:45")
 
 
 def test_hexadecimale_timestamp_to_localtime_with_wrong_value_should_throw_an_error():

@@ -117,8 +117,9 @@ def test_get_schedules_with_a_two_schedules_packet(resource_path):
 # local_time_for_time_in_timezone("17:00", "US/Pacific") will return 20:00
 # local_time_for_time_in_timezone("17:00", "EST") will return 17:00
 def local_time_for_time_in_timezone(val, tz):
-    local_ts = datetime.now().replace(tzinfo=None, second=0, microsecond=0)
-    remote_ts = (datetime.now(pytz.timezone(tz))
+    now = datetime.now(pytz.utc)
+    local_ts = now.astimezone().replace(tzinfo=None, second=0, microsecond=0)
+    remote_ts = (now.astimezone(pytz.timezone(tz))
                  .replace(tzinfo=None, second=0, microsecond=0))
 
     fmt = "%H:%M"
