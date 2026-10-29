@@ -48,7 +48,7 @@ def mock_device():
 @patch("logging.Logger.debug")
 @patch.object(DatagramParser, "is_switcher_originator", lambda s: False)
 def test_an_unknown_datagram_not_produces_device(mock_debug, mock_callback):
-    assert_that(_parse_device_from_datagram(mock_callback, "a moot datagram")).is_none()
+    assert_that(_parse_device_from_datagram(mock_callback, "a moot datagram", "192.168.1.33")).is_none()
     mock_debug.assert_called_once_with("received datagram from an unknown source")
     mock_callback.assert_not_called()
 
@@ -58,7 +58,7 @@ def test_an_unknown_datagram_not_produces_device(mock_debug, mock_callback):
 @patch.object(DatagramParser, "get_device_state", lambda s: DeviceState.OFF)
 def test_an_unknown_device_type_produces_a_warning(mock_callback):
     with warns(UserWarning, match="discovered an unknown switcher device"):
-        _parse_device_from_datagram(mock_callback, "a moot datagram")
+        _parse_device_from_datagram(mock_callback, "a moot datagram", "192.168.1.33")
         mock_callback.assert_not_called()
 
 
@@ -69,7 +69,7 @@ def test_a_water_heater_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -80,7 +80,7 @@ def test_a_power_plug_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -91,7 +91,7 @@ def test_a_breeze_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -102,7 +102,7 @@ def test_a_runner_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -113,7 +113,7 @@ def test_a_single_runner_dual_light_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -124,7 +124,7 @@ def test_a_dual_runner_single_light_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -135,7 +135,7 @@ def test_a_light_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -146,7 +146,7 @@ def test_a_dual_light_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -157,7 +157,7 @@ def test_a_triple_light_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -168,7 +168,7 @@ def test_a_heater_datagram_produces_device(
 ):
     mock_device_cls.return_value = mock_device
     sut_datagram = Path(f"{resource_path}.txt").read_text().replace("\n", "").encode()
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
+    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.1.33")
     mock_callback.assert_called_once_with(mock_device)
 
 
@@ -192,26 +192,6 @@ def test_water_heater_datagram_with_explicit_ip_address(
     assert_that(mock_device_cls.call_args.args[5]).is_equal_to("192.168.0.200")
 
 
-@patch.object(SwitcherWaterHeater, "__new__")
-@patch.object(DatagramParser, "is_switcher_originator", lambda s: True)
-def test_water_heater_datagram_fallback_to_payload_ip(
-    mock_device_cls, mock_device, resource_path_root, mock_callback
-):
-    mock_device_cls.return_value = mock_device
-    sut_datagram = (
-        (
-            resource_path_root
-            / "test_device_parsing"
-            / "test_a_water_heater_datagram_produces_device.txt"
-        )
-        .read_text()
-        .replace("\n", "")
-        .encode()
-    )
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
-    assert_that(mock_device_cls.call_args.args[5]).is_equal_to("192.168.1.33")
-
-
 @patch.object(SwitcherThermostat, "__new__")
 @patch.object(DatagramParser, "is_switcher_originator", lambda s: True)
 def test_breeze_datagram_with_explicit_ip_address(
@@ -230,23 +210,3 @@ def test_breeze_datagram_with_explicit_ip_address(
     )
     _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram), "192.168.0.200")
     assert_that(mock_device_cls.call_args.args[5]).is_equal_to("192.168.0.200")
-
-
-@patch.object(SwitcherThermostat, "__new__")
-@patch.object(DatagramParser, "is_switcher_originator", lambda s: True)
-def test_breeze_datagram_fallback_to_payload_ip(
-    mock_device_cls, mock_device, resource_path_root, mock_callback
-):
-    mock_device_cls.return_value = mock_device
-    sut_datagram = (
-        (
-            resource_path_root
-            / "test_device_parsing"
-            / "test_a_breeze_datagram_produces_device.txt"
-        )
-        .read_text()
-        .replace("\n", "")
-        .encode()
-    )
-    _parse_device_from_datagram(mock_callback, unhexlify(sut_datagram))
-    assert_that(mock_device_cls.call_args.args[5]).is_equal_to("192.168.50.77")

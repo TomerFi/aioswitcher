@@ -24,11 +24,9 @@ from socket import (
     SO_REUSEADDR,
     SOCK_DGRAM,
     SOL_SOCKET,
-    inet_ntoa,
     socket,
 )
 from struct import error as struct_error
-from struct import pack
 from types import TracebackType
 from typing import Any, Callable, Dict, Optional, Tuple, Type, final
 from warnings import warn
@@ -82,7 +80,7 @@ SWITCHER_UDP_BROADCAST_PORTS = [
 def _parse_device_from_datagram(
     device_callback: Callable[[SwitcherBase], Any],
     datagram: bytes,
-    ip_address: Optional[str] = None,
+    ip_address: str,
 ) -> None:
     """Use as callback function to be called for every broadcast message.
 
@@ -91,10 +89,10 @@ def _parse_device_from_datagram(
     Args:
         device_callback: callable for sending SwitcherBase devices parsed from message.
         datagram: the bytes message to parse.
-        ip_address: optional sender IP address to use over payload IP.
+        ip_address: the IP address the datagram was sent from.
 
     """
-    parser = DatagramParser(datagram, ip_address)
+    parser = DatagramParser(datagram)
     if not parser.is_switcher_originator():
         logger.debug("received datagram from an unknown source")
     else:
@@ -123,7 +121,7 @@ def _parse_device_from_datagram(
                     device_state,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type1(),
+                    ip_address,
                     parser.get_mac_type1(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -146,7 +144,7 @@ def _parse_device_from_datagram(
                     device_state,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type1(),
+                    ip_address,
                     parser.get_mac_type1(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -163,7 +161,7 @@ def _parse_device_from_datagram(
                     DeviceState.ON,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -196,7 +194,7 @@ def _parse_device_from_datagram(
                     DeviceState.ON,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -237,7 +235,7 @@ def _parse_device_from_datagram(
                     DeviceState.ON,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -281,7 +279,7 @@ def _parse_device_from_datagram(
                     device_state,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -306,7 +304,7 @@ def _parse_device_from_datagram(
                     DeviceState.ON,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -330,7 +328,7 @@ def _parse_device_from_datagram(
                     DeviceState.ON,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -357,7 +355,7 @@ def _parse_device_from_datagram(
                     DeviceState.ON,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -383,7 +381,7 @@ def _parse_device_from_datagram(
                     device_state,
                     parser.get_device_id(),
                     parser.get_device_key(),
-                    parser.get_ip_type2(),
+                    ip_address,
                     parser.get_mac_type2(),
                     parser.get_name(),
                     device_type.token_needed,
@@ -527,7 +525,6 @@ class DatagramParser:
     """Utility class for parsing a datagram into various device properties."""
 
     message: bytes
-    ip_address: Optional[str] = None
 
     def is_switcher_originator(self) -> bool:
         """Verify the broadcast message had originated from a switcher device."""
@@ -541,22 +538,6 @@ class DatagramParser:
             # Switcher Light SL02, Switcher Light SL02 Mini and Switcher Light SL03
             or len(self.message) == 171  # Switcher Heater
         )
-
-    def get_ip_type1(self) -> str:
-        """Extract the IP address from the type1 broadcast message (Heater, Plug)."""
-        if self.ip_address:
-            return self.ip_address
-        hex_ip = hexlify(self.message)[152:160]
-        ip_addr = int(hex_ip[6:8] + hex_ip[4:6] + hex_ip[2:4] + hex_ip[0:2], 16)
-        return inet_ntoa(pack("<L", ip_addr))
-
-    def get_ip_type2(self) -> str:
-        """Extract the IP address from the broadcast message (Breeze, Runners)."""
-        if self.ip_address:
-            return self.ip_address
-        hex_ip = hexlify(self.message)[154:162]
-        ip_addr = int(hex_ip[0:2] + hex_ip[2:4] + hex_ip[4:6] + hex_ip[6:8], 16)
-        return inet_ntoa(pack(">L", ip_addr))
 
     def get_mac_type1(self) -> str:
         """Extract the MAC address from the broadcast message (Heater, Plug)."""

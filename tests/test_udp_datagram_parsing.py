@@ -46,7 +46,6 @@ def test_datagram_state_off(resource_path, type_suffix, expected_type):
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
     assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
@@ -64,7 +63,6 @@ def test_datagram_state_off_heater(resource_path):
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.1.33")
     assert_that(sut_parser.get_mac_type2()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("Switcher Heater_96EC")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
@@ -97,7 +95,6 @@ def test_datagram_state_on(resource_path, type_suffix, expected_type):
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.1.33")
     assert_that(sut_parser.get_mac_type1()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("My Switcher Boiler")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
@@ -115,7 +112,6 @@ def test_datagram_state_on_heater(resource_path):
     sut_parser = DatagramParser(unhexlify(sut_datagram))
 
     assert_that(sut_parser.is_switcher_originator()).is_true()
-    assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.1.33")
     assert_that(sut_parser.get_mac_type2()).is_equal_to("12:A1:A2:1A:BC:1A")
     assert_that(sut_parser.get_name()).is_equal_to("Switcher Heater_96EC")
     assert_that(sut_parser.get_device_id()).is_equal_to("aaaaaa")
@@ -136,33 +132,3 @@ def test_a_faulty_datagram(resource_path, type_suffix):
     )
     sut_parser = DatagramParser(unhexlify(sut_datagram))
     assert_that(sut_parser.is_switcher_originator()).is_false()
-
-
-def test_datagram_custom_ip_address_override_type1(resource_path_root):
-    sut_datagram = (
-        (
-            resource_path_root
-            / "test_udp_datagram_parsing"
-            / "test_datagram_state_off_v2_esp.txt"
-        )
-        .read_text()
-        .replace("\n", "")
-        .encode()
-    )
-    sut_parser = DatagramParser(unhexlify(sut_datagram), "192.168.0.200")
-    assert_that(sut_parser.get_ip_type1()).is_equal_to("192.168.0.200")
-
-
-def test_datagram_custom_ip_address_override_type2(resource_path_root):
-    sut_datagram = (
-        (
-            resource_path_root
-            / "test_udp_datagram_parsing"
-            / "test_datagram_state_off_heater.txt"
-        )
-        .read_text()
-        .replace("\n", "")
-        .encode()
-    )
-    sut_parser = DatagramParser(unhexlify(sut_datagram), "192.168.0.200")
-    assert_that(sut_parser.get_ip_type2()).is_equal_to("192.168.0.200")
