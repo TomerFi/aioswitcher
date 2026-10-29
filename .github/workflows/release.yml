@@ -41,7 +41,7 @@ jobs:
           ssh-key: ${{ secrets.DEPLOY_KEY }}
 
       - name: Setup uv
-        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d  # v10.0.1
+        uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e  # v10.3.2
         with:
           python-version: ${{ env.MAIN_PY_VER }}
           enable-cache: true
@@ -52,18 +52,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Setup SSH signing
-        run: |
-          mkdir -p "$RUNNER_TEMP"
-          echo "${{ secrets.SIGNING_KEY }}" > "$RUNNER_TEMP/signing_key"
-          chmod 600 "$RUNNER_TEMP/signing_key"
-          git config gpg.format ssh
-          git config user.signingkey "$RUNNER_TEMP/signing_key"
-          git config commit.gpgsign true
-
       - name: Determine version and create changelog
         id: bumper
-        uses: tomerfi/version-bumper-action@e86a2f297e4fd485980773d83aabd1be35422ba1  # 2.1.0
+        uses: tomerfi/version-bumper-action@65a88e4f3bb22a000f965dc5dd9952bae7b54872  # 2.1.1
         with:
           bump: '${{ github.event.inputs.bump }}'
 
@@ -94,7 +85,7 @@ jobs:
           uv build
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33  # v1.14.2
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # v1.14.3
 
       - name: Set development project version
         uses: sandstromviktor/toml-editor@2596b2da64ea9aed1d4d4e77f0646ec30b9e88ea  # 2.0.0
