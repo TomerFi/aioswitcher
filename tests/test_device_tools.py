@@ -208,6 +208,30 @@ async def test_validate_token_json_error(username, token, return_value):
         assert_that(await tools.validate_token(username, token)).is_equal_to(return_value)
 
 
+@pytest.mark.asyncio
+@mark.parametrize("username, token, is_token_valid", [
+    ("test@switcher.com", "zvVvd7JxtN7CgvkD1Psujw==", True)
+    ])
+async def test_validate_token_with_injected_session_should_use_it_without_closing(username, token, is_token_valid):
+    """Test validate_token uses the given session and does not create or close one."""
+    mock_response = AsyncMock()
+    mock_response.status = 200
+    mock_response.json.return_value = {"result": "True"}
+
+    mock_session = AsyncMock(spec=ClientSession)
+    mock_session.post.return_value.__aenter__.return_value = mock_response
+
+    with patch("aioswitcher.device.tools.aiohttp.ClientSession") as mock_session_class:
+        assert_that(await tools.validate_token(username, token, mock_session)).is_equal_to(is_token_valid)
+
+    mock_session_class.assert_not_called()
+    mock_session.post.assert_called_once_with(
+        "https://switcher.co.il/ValidateToken/", data={"email": username, "token": token}
+    )
+    mock_session.close.assert_not_called()
+    mock_session.__aexit__.assert_not_called()
+
+
 @mark.parametrize("device_type, circuit_number, index", [
     (DeviceType.RUNNER, 0, 0),
     (DeviceType.RUNNER_MINI, 0, 0),

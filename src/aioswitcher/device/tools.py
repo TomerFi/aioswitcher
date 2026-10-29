@@ -173,27 +173,49 @@ def convert_token_to_packet(token: str) -> str:
         raise RuntimeError("convert token to packet was not successful") from ve
 
 
-async def validate_token(username: str, token: str) -> bool:
-    """Make an asynchronous API call to validate a Token by username and token."""
+async def validate_token(
+    username: str, token: str, session: aiohttp.ClientSession | None = None
+) -> bool:
+    """Make an asynchronous API call to validate a Token by username and token.
+
+    Args:
+        username: the username (Email address) of the user.
+        token: the token of the user sent by Email.
+        session: an optional aiohttp client session to use for the request.
+            If not provided, a new session will be created and closed internally.
+
+    Return:
+        True if the token is valid, False otherwise.
+
+    """
+    if session is None:
+        async with aiohttp.ClientSession() as new_session:
+            return await _validate_token(username, token, new_session)
+    return await _validate_token(username, token, session)
+
+
+async def _validate_token(
+    username: str, token: str, session: aiohttp.ClientSession
+) -> bool:
+    """Validate a Token by username and token using the given session."""
     request_url = "https://switcher.co.il/ValidateToken/"
     request_data = {"email": username, "token": token}
     is_token_valid = False
 
     logger.debug("calling API call for Switcher to validate the token")
 
-    async with aiohttp.ClientSession() as session:
-        async with session.post(request_url, data=request_data) as response:
-            if response.status == 200:
-                logger.debug("request successful")
-                try:
-                    response_json = await response.json()
-                    result = response_json.get("result", None)
-                    if result is not None:
-                        is_token_valid = result.lower() == "true"
-                except aiohttp.ContentTypeError:
-                    logger.debug("response content is not valid JSON")
-            else:
-                logger.debug("request failed with status code: %s", response.status)
+    async with session.post(request_url, data=request_data) as response:
+        if response.status == 200:
+            logger.debug("request successful")
+            try:
+                response_json = await response.json()
+                result = response_json.get("result", None)
+                if result is not None:
+                    is_token_valid = result.lower() == "true"
+            except aiohttp.ContentTypeError:
+                logger.debug("response content is not valid JSON")
+        else:
+            logger.debug("request failed with status code: %s", response.status)
 
     return is_token_valid
 
