@@ -222,8 +222,9 @@ async def test_validate_token_with_injected_session_should_use_it_without_closin
     mock_session.post.return_value.__aenter__.return_value = mock_response
 
     with patch("aioswitcher.device.tools.aiohttp.ClientSession") as mock_session_class:
-        assert_that(await tools.validate_token(username, token, mock_session)).is_equal_to(is_token_valid)
+        sut = await tools.validate_token(username, token, mock_session)
 
+    assert_that(sut).is_equal_to(is_token_valid)
     mock_session_class.assert_not_called()
     mock_session.post.assert_called_once_with(
         "https://switcher.co.il/ValidateToken/", data={"email": username, "token": token}
