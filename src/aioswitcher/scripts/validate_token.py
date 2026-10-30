@@ -23,11 +23,12 @@ from aioswitcher.device.tools import validate_token
 
 _examples = """example usage:
 
-python validate_token.py -u "email" -t "zvVvd7JxtN7CgvkD1Psujw=="\n
-python validate_token.py --username "email" --token "zvVvd7JxtN7CgvkD1Psujw=="\n
+switcher-validate-token -u "email" -t "YOUR_TOKEN"\n
+switcher-validate-token --username "email" --token "YOUR_TOKEN"\n
 """  # noqa E501
 
 parser = ArgumentParser(
+    prog="switcher-validate-token",
     description="Validate a Token from Switcher by username and token",
     epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
@@ -50,7 +51,7 @@ parser.add_argument(
 )
 
 
-async def main() -> None:
+async def async_main() -> None:
     """Validate the personal Token of the user."""
     try:
         args = parser.parse_args()
@@ -65,5 +66,10 @@ async def main() -> None:
         exit()
 
 
+def main() -> None:
+    """Run the token validation."""
+    asyncio.run(async_main())
+
+
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()

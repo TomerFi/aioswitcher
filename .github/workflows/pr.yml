@@ -33,10 +33,10 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Ruff check
-        run: uv run --locked ruff check src/ docs/ scripts/
+        run: uv run --locked ruff check src/ docs/
 
       - name: Ruff format
-        run: uv run --locked ruff format --check src/ docs/ scripts/
+        run: uv run --locked ruff format --check src/ docs/
 
       - name: ty
         run: uv run --locked ty check

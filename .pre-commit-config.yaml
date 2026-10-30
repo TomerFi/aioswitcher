@@ -15,9 +15,9 @@ repos:
     rev: 38bfb07c0c64c304f47eb52090f8288150c77730  # frozen: v0.17.1
     hooks:
       - id: ruff-check
-        files: "(src|scripts|docs)/"
+        files: "(src|docs)/"
       - id: ruff-format
-        files: "(src|scripts|docs)/"
+        files: "(src|docs)/"
         args: ["--check"]
 
   - repo: https://github.com/astral-sh/ty-pre-commit

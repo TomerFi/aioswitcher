@@ -37,22 +37,22 @@ src/aioswitcher/
     __init__.py        # Days enum, ScheduleState enum
     parser.py          # Schedule data parser
     tools.py           # Time/weekday helpers
+  scripts/             # CLI commands installed with the package (see Scripts below)
 tests/                 # pytest suite (strict asyncio mode)
-scripts/               # CLI helper scripts (discover, control, validate_token, get_login_key)
 docs/                  # mkdocs documentation
 ```
 
 ## Scripts
 
-CLI tools available only from the repository — they are not bundled with the `aioswitcher` PyPI package. **The `aioswitcher` package must be installed on the machine where you run them.**
+CLI tools shipped inside the package at `src/aioswitcher/scripts/` and installed as console commands via `[project.scripts]` in `pyproject.toml`, so they always match the installed library version. They use only the standard library and the package's own dependencies — do not add script-only dependencies.
 
 These scripts expose command-line interfaces for operations the library implements (device control, discovery) and for operations outside the library (fetching login keys from devices, validating cloud tokens).
 
-Files:
-- `discover_devices.py` — runs the Bridge and prints discovered devices (JSON via `dataclasses.asdict`). No code changes needed for new devices.
-- `control_device.py` — large `argparse` subcommand-based CLI (~1100 lines). The `DEVICES` dict maps human-readable names to `DeviceType` enum members. Each action has an argparser subcommand + a named async function + a dispatch case in `main()`. Token-based methods get a `-k` flag. New API methods need new subparsers, async functions, and dispatch cases. New device types need a `DEVICES` entry.
-- `get_device_login_key.py` — pings a device's UDP broadcast port to extract its login key.
-- `validate_token.py` — validates a Switcher cloud token via the device API.
+Files (command name in parentheses):
+- `discover_devices.py` (`switcher-discover-devices`) — runs the Bridge and prints discovered devices (JSON via `dataclasses.asdict`). No code changes needed for new devices.
+- `control_device.py` (`switcher-control-device`) — large `argparse` subcommand-based CLI (~1100 lines). The `DEVICES` dict maps human-readable names to `DeviceType` enum members. Each action has an argparser subcommand + a named async function + a dispatch case in `main()`. Token-based methods get a `-k` flag. New API methods need new subparsers, async functions, and dispatch cases. New device types need a `DEVICES` entry.
+- `get_device_login_key.py` (`switcher-get-device-login-key`) — pings a device's UDP broadcast port to extract its login key.
+- `validate_token.py` (`switcher-validate-token`) — validates a Switcher cloud token via the device API.
 
 ## Protocol Types
 
@@ -83,7 +83,7 @@ When a new device type is announced, changes span ~8 files:
 4. **`api/packets.py`**: Add new packet templates if the device uses commands not covered by existing templates.
 5. **`docs/supported.md`**: Add a row to the supported devices table with name, product link, minimum version, and token requirement. Update device links section.
 6. **`docs/usage_api.md`**: Add a code excerpt showing how to control the new device (state, on/off, any device-specific commands).
-7. **`scripts/control_device.py`**: Add the new device name to `DEVICES` dict. Add argparser subcommand(s) for each new action (state retrieval, control). Add async function(s) that call the new API methods. Add dispatch case in `main()`.
+7. **`scripts/control_device.py`** (under `src/aioswitcher/`): Add the new device name to `DEVICES` dict. Add argparser subcommand(s) for each new action (state retrieval, control). Add async function(s) that call the new API methods. Add dispatch case in `main()`.
 8. **`tests/`**:
    - `test_device_dataclasses.py` — test instantiation and validation errors.
    - `test_device_enum_helpers.py` — parametrize with new enum members.
@@ -108,8 +108,8 @@ Note: `discover_devices.py` needs no changes — the Bridge auto-discovers all b
 ```shell
 uv sync --all-groups                          # setup
 uv run pytest                                 # all tests
-uv run ruff check src/ docs/ scripts/
-uv run ruff format --check src/ docs/ scripts/
+uv run ruff check src/ docs/
+uv run ruff format --check src/ docs/
 uv run ty check
 uv run yamllint --format colored --strict .
 uv run mkdocs build                           # docs

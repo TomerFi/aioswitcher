@@ -4,7 +4,7 @@
 ignore:
   - tests/**
   - docs/**
-  - scripts/**
+  - src/aioswitcher/scripts/**
 
 rule_settings:
   python_version: "3.13"
