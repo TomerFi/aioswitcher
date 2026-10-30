@@ -32,10 +32,11 @@ printer = PrettyPrinter(indent=4)
 
 _examples = """example usage:
 
-python get_device_login_key.py -i "111.222.11.22" -p 10002\n
+switcher-get-device-login-key -i "111.222.11.22" -p 10002\n
 """  # noqa E501
 
 parser = ArgumentParser(
+    prog="switcher-get-device-login-key",
     description="Get the login key of your Switcher device",
     epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,

@@ -28,7 +28,7 @@ printer = PrettyPrinter(indent=4)
 
 _examples = """Executing this script will print a serialized version of the discovered Switcher
 devices broadcasting on the local network for 60 seconds.
-You can change the delay by passing an int argument: discover_devices.py 30
+You can change the delay by passing an int argument: switcher-discover-devices 30
 
 Note:
     WILL PRINT PRIVATE INFO SUCH AS DEVICE ID AND MAC.
@@ -51,10 +51,11 @@ Example output:
             'remaining_time': '00:00:00'}
     ```
 Print devices for 30 seconds:
-    python discover_devices.py 30\n
+    switcher-discover-devices 30\n
 """  # noqa E501
 
 parser = ArgumentParser(
+    prog="switcher-discover-devices",
     description="Discover and print info of Switcher devices",
     epilog=_examples,
     formatter_class=RawDescriptionHelpFormatter,
