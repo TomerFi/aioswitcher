@@ -15,7 +15,7 @@ reviews:
         - Proper use of pytest fixtures and async test patterns
         - Adequate test coverage and edge case handling
         - Clear test naming and organization
-    - path: scripts/**/*.py
+    - path: src/aioswitcher/scripts/**/*.py
       instructions: |
         Review utility scripts for:
         - Clear CLI argument handling

@@ -56,14 +56,14 @@ Common tasks:
 uv run pytest # will run all unit-tests
 
 # Lint the project
-uv run ruff check src/ docs/ scripts/
-uv run ruff format --check src/ docs/ scripts/
+uv run ruff check src/ docs/
+uv run ruff format --check src/ docs/
 uv run ty check
 uv run yamllint --format colored --strict .
 
 # Fix linting issues automatically
-uv run ruff check --fix src/ docs/ scripts/
-uv run ruff format src/ docs/ scripts/
+uv run ruff check --fix src/ docs/
+uv run ruff format src/ docs/
 
 uv run mkdocs serve # will build and serve a local version of the documentation site
 ```

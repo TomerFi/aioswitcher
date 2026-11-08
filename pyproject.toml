@@ -32,6 +32,12 @@ dependencies = [ "pycryptodome>=3.18.0,<5.0.0", "aiohttp>=3.10.3,<4.0.0" ]
   repository = "https://github.com/tomerfi/aioswitcher"
   documentation = "https://aioswitcher.figenblat.com"
 
+  [project.scripts]
+  switcher-control-device = "aioswitcher.scripts.control_device:main"
+  switcher-discover-devices = "aioswitcher.scripts.discover_devices:main"
+  switcher-get-device-login-key = "aioswitcher.scripts.get_device_login_key:main"
+  switcher-validate-token = "aioswitcher.scripts.validate_token:main"
+
 [dependency-groups]
 dev = [
   "assertpy>=1.1",
@@ -62,7 +68,7 @@ docs = [
 asyncio_mode = "strict"
 
 [tool.ty.src]
-include = [ "aioswitcher", "scripts" ]
+include = [ "src/aioswitcher/scripts" ]
 
 [tool.ruff]
 line-length = 88
@@ -80,6 +86,7 @@ line-length = 88
 
 [tool.coverage.run]
 source = [ "aioswitcher" ]
+omit = [ "*/aioswitcher/scripts/*" ]
 
 [tool.coverage.report]
 fail_under = 85
