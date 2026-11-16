@@ -22,3 +22,22 @@ asyncio.run(print_devices(60))
 
 !!!note
     Switcher devices broadcast a state message approximately every 4 seconds.
+
+## Discovery behind NAT
+
+By default, the bridge uses each UDP packet's source IP. This handles devices
+whose broadcast payload retains an old IP after a DHCP lease change.
+
+If a container runtime or UDP relay rewrites the sender to a gateway address
+(for example, Home Assistant running in OrbStack), use the address embedded in
+the device's broadcast instead:
+
+```python
+async with SwitcherBridge(on_device_found_callback, use_broadcast_ip=True):
+    await asyncio.sleep(60)
+```
+
+This discovers the device address without a fixed-IP override. Use it only when
+the sender is rewritten: the embedded address can be stale after DHCP changes
+until the device is restarted. Applications embedding this library must expose
+or pass this option; it is not a Home Assistant configuration option by itself.

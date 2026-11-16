@@ -24,6 +24,7 @@ from socket import (
     SO_REUSEADDR,
     SOCK_DGRAM,
     SOL_SOCKET,
+    inet_ntoa,
     socket,
 )
 from struct import error as struct_error
@@ -81,6 +82,8 @@ def _parse_device_from_datagram(
     device_callback: Callable[[SwitcherBase], Any],
     datagram: bytes,
     ip_address: str,
+    *,
+    use_broadcast_ip: bool = False,
 ) -> None:
     """Use as callback function to be called for every broadcast message.
 
@@ -90,6 +93,7 @@ def _parse_device_from_datagram(
         device_callback: callable for sending SwitcherBase devices parsed from message.
         datagram: the bytes message to parse.
         ip_address: the IP address the datagram was sent from.
+        use_broadcast_ip: use the embedded device IP instead of the UDP sender.
 
     """
     parser = DatagramParser(datagram)
@@ -97,6 +101,8 @@ def _parse_device_from_datagram(
         logger.debug("received datagram from an unknown source")
     else:
         device_type: DeviceType = parser.get_device_type()
+        if use_broadcast_ip and device_type:
+            ip_address = parser.get_ip_address(device_type.protocol_type)
         if device_type == DeviceType.BREEZE:
             device_state = parser.get_thermostat_state()
         elif device_type == DeviceType.HEATER:
@@ -406,12 +412,20 @@ class SwitcherBridge:
 
     Args:
         on_device: a callable to which every new SwitcherBase device found will be send.
+        use_broadcast_ip: use the embedded device IP when NAT rewrites UDP senders.
+            Defaults to False because embedded IPs can be stale after DHCP changes.
 
     """
 
-    def __init__(self, on_device: Callable[[SwitcherBase], Any]) -> None:
+    def __init__(
+        self,
+        on_device: Callable[[SwitcherBase], Any],
+        *,
+        use_broadcast_ip: bool = False,
+    ) -> None:
         """Initialize the switcher bridge."""
         self._on_device = on_device
+        self._use_broadcast_ip = use_broadcast_ip
         self._is_running = False
         self._transports: Dict[int, Optional[BaseTransport]] = {}
 
@@ -434,7 +448,11 @@ class SwitcherBridge:
         for broadcast_port in SWITCHER_UDP_BROADCAST_PORTS:
             logger.info("starting the udp bridge on port %s", broadcast_port)
             protocol_factory = UdpClientProtocol(
-                partial(_parse_device_from_datagram, self._on_device)
+                partial(
+                    _parse_device_from_datagram,
+                    self._on_device,
+                    use_broadcast_ip=self._use_broadcast_ip,
+                )
             )
             # Bind with SO_REUSEADDR so a reload can rebind the port while the
             # previous socket is still lingering in TIME_WAIT, instead of failing
@@ -538,6 +556,12 @@ class DatagramParser:
             # Switcher Light SL02, Switcher Light SL02 Mini and Switcher Light SL03
             or len(self.message) == 171  # Switcher Heater
         )
+
+    def get_ip_address(self, protocol_type: int) -> str:
+        """Extract the embedded IPv4 address for the device protocol type."""
+        # Type 1 stores IPv4 at bytes 76:80; type 2 uses bytes 77:81.
+        offset = 76 if protocol_type == 1 else 77
+        return inet_ntoa(self.message[offset : offset + 4])
 
     def get_mac_type1(self) -> str:
         """Extract the MAC address from the broadcast message (Heater, Plug)."""
