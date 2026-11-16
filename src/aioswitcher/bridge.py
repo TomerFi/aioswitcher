@@ -18,6 +18,7 @@ from asyncio import BaseTransport, DatagramProtocol, get_running_loop
 from binascii import hexlify
 from dataclasses import dataclass
 from functools import partial
+from ipaddress import IPv4Address, IPv4Network, ip_network
 from logging import getLogger
 from socket import (
     AF_INET,
@@ -83,7 +84,7 @@ def _parse_device_from_datagram(
     datagram: bytes,
     ip_address: str,
     *,
-    use_broadcast_ip: bool = False,
+    broadcast_ip_network: IPv4Network | None = None,
 ) -> None:
     """Use as callback function to be called for every broadcast message.
 
@@ -93,7 +94,7 @@ def _parse_device_from_datagram(
         device_callback: callable for sending SwitcherBase devices parsed from message.
         datagram: the bytes message to parse.
         ip_address: the IP address the datagram was sent from.
-        use_broadcast_ip: use the embedded device IP instead of the UDP sender.
+        broadcast_ip_network: allowed network for embedded device addresses.
 
     """
     parser = DatagramParser(datagram)
@@ -101,8 +102,14 @@ def _parse_device_from_datagram(
         logger.debug("received datagram from an unknown source")
     else:
         device_type: DeviceType = parser.get_device_type()
-        if use_broadcast_ip and device_type:
-            ip_address = parser.get_ip_address(device_type.protocol_type)
+        if broadcast_ip_network is not None and device_type:
+            embedded_ip = parser.get_ip_address(device_type.protocol_type)
+            if IPv4Address(embedded_ip) not in broadcast_ip_network:
+                logger.warning(
+                    "Ignoring Switcher broadcast with IP outside allowed network"
+                )
+                return
+            ip_address = embedded_ip
         if device_type == DeviceType.BREEZE:
             device_state = parser.get_thermostat_state()
         elif device_type == DeviceType.HEATER:
@@ -412,8 +419,8 @@ class SwitcherBridge:
 
     Args:
         on_device: a callable to which every new SwitcherBase device found will be send.
-        use_broadcast_ip: use the embedded device IP when NAT rewrites UDP senders.
-            Defaults to False because embedded IPs can be stale after DHCP changes.
+        broadcast_ip_network: CIDR network allowed for embedded device addresses.
+            Required to use payload IPs behind NAT. Defaults to UDP sender.
 
     """
 
@@ -421,11 +428,19 @@ class SwitcherBridge:
         self,
         on_device: Callable[[SwitcherBase], Any],
         *,
-        use_broadcast_ip: bool = False,
+        broadcast_ip_network: str | None = None,
     ) -> None:
         """Initialize the switcher bridge."""
         self._on_device = on_device
-        self._use_broadcast_ip = use_broadcast_ip
+        self._broadcast_ip_network = (
+            ip_network(broadcast_ip_network, strict=False)
+            if broadcast_ip_network is not None
+            else None
+        )
+        if self._broadcast_ip_network is not None and not isinstance(
+            self._broadcast_ip_network, IPv4Network
+        ):
+            raise ValueError("broadcast_ip_network must be an IPv4 network")
         self._is_running = False
         self._transports: Dict[int, Optional[BaseTransport]] = {}
 
@@ -451,7 +466,7 @@ class SwitcherBridge:
                 partial(
                     _parse_device_from_datagram,
                     self._on_device,
-                    use_broadcast_ip=self._use_broadcast_ip,
+                    broadcast_ip_network=self._broadcast_ip_network,
                 )
             )
             # Bind with SO_REUSEADDR so a reload can rebind the port while the

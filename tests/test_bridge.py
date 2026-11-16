@@ -111,19 +111,19 @@ async def test_bridge_listener_socket_has_reuseaddr(unused_udp_broadcast_port, m
         assert_that(reuseaddr).is_not_zero()
 
 
-@mark.parametrize("use_broadcast_ip", [False, True])
+@mark.parametrize("use_payload_ip", [False, True])
 async def test_bridge_selects_address_behind_nat(
-    unused_udp_broadcast_port, mock_callback, resource_path_root, use_broadcast_ip
+    unused_udp_broadcast_port, mock_callback, resource_path_root, use_payload_ip
 ):
     data = bytearray.fromhex(
         Path(resource_path_root, "test_bridge", "test_bridge_callback_loading_v2_off.txt")
         .read_text().replace("\n", "")
     )
     data[76:80] = socket.inet_aton("192.0.2.42")
-    async with SwitcherBridge(mock_callback, use_broadcast_ip=use_broadcast_ip) as sut:
+    async with SwitcherBridge(mock_callback, broadcast_ip_network="192.0.2.0/24" if use_payload_ip else None) as sut:
         protocol = sut._transports[unused_udp_broadcast_port].get_protocol()
         protocol.datagram_received(bytes(data), ("198.51.100.1", 20002))
 
     mock_callback.assert_called_once()
-    expected = "192.0.2.42" if use_broadcast_ip else "198.51.100.1"
+    expected = "192.0.2.42" if use_payload_ip else "198.51.100.1"
     assert_that(mock_callback.call_args.args[0].ip_address).is_equal_to(expected)

@@ -33,11 +33,14 @@ If a container runtime or UDP relay rewrites the sender to a gateway address
 the device's broadcast instead:
 
 ```python
-async with SwitcherBridge(on_device_found_callback, use_broadcast_ip=True):
+async with SwitcherBridge(
+    on_device_found_callback, broadcast_ip_network="192.168.0.0/24"
+):
     await asyncio.sleep(60)
 ```
 
-This discovers the device address without a fixed-IP override. Use it only when
+Only embedded addresses within the allowed network are accepted. This discovers
+the device address without a fixed-IP override. Use it only when
 the sender is rewritten: the embedded address can be stale after DHCP changes
 until the device is restarted. Applications embedding this library must expose
 or pass this option; it is not a Home Assistant configuration option by itself.
