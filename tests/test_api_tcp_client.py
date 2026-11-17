@@ -384,6 +384,13 @@ async def test_breeze_remote_manager_get_from_local_database():
     assert_that(remote_7022.remote_id).is_equal_to("ELEC7022")
 
 
+async def test_breeze_remote_manager_get_cool_only_remote_from_local_database():
+    sut = SwitcherBreezeRemoteManager().get_remote("ZM179056")
+    assert_that(sut.supported_modes).is_equal_to([ThermostatMode.COOL])
+    command = sut.build_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.OFF)
+    assert_that(command.command).starts_with("00000000")
+
+
 async def test_breeze_build_swing_command():
     remote_manager = SwitcherBreezeRemoteManager()
     remote_7022 = remote_manager.get_remote("ELEC7022")
