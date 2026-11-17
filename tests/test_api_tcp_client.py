@@ -388,7 +388,7 @@ async def test_breeze_remote_manager_get_cool_only_remote_from_local_database():
     sut = SwitcherBreezeRemoteManager().get_remote("ZM179056")
     assert_that(sut.supported_modes).is_equal_to([ThermostatMode.COOL])
     command = sut.build_command(DeviceState.ON, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.OFF)
-    assert_that(command.command).starts_with("00000000")
+    assert_that(command.command).is_equal_to("000000004e4543587c32367c33327c31352c31357c31352c34307c3132447c537c33387c30337c444434305b33385d7c3136313336344142464646463732")
 
 
 async def test_breeze_build_swing_command():
