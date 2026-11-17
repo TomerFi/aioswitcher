@@ -73,7 +73,7 @@ class SwitcherBreezeRemoteNotSupportedError(KeyError):
 
     def __init__(self, remote_id: str, reason: str) -> None:
         """Initialize the error."""
-        super().__init__(remote_id, reason)
+        super().__init__(remote_id)
         self.remote_id = remote_id
         self.reason = reason
 

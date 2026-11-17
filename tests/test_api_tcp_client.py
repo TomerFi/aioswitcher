@@ -398,6 +398,7 @@ async def test_breeze_remote_manager_get_unsupported_remote_raises_error(resourc
     with raises(SwitcherBreezeRemoteNotSupportedError) as exc_info:
         sut.get_remote(remote_id)
     assert_that(exc_info.value).is_instance_of(KeyError)
+    assert_that(exc_info.value.args).is_equal_to((remote_id,))
     assert_that(exc_info.value.remote_id).is_equal_to(remote_id)
     assert_that(exc_info.value.reason).is_equal_to(reason)
     assert_that(str(exc_info.value)).is_equal_to(f"Breeze remote {remote_id} is not supported: {reason}")
