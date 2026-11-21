@@ -39,8 +39,6 @@ markdown_extensions = [
 provider = "google"
 property = "G-8965F1P656"
 
-plugins = [ "search", "autorefs" ]
-
 [[plugins]]
 [plugins.llmstxt]
 full_output = "llms-full.txt"
@@ -48,7 +46,6 @@ markdown_description = "The complete documentation is also available as a single
 
 [plugins.llmstxt.sections]
 "Getting started" = [
-  { "index.md" = "Library overview and introduction" },
   { "install.md" = "Installation instructions" },
 ]
 "Usage" = [
