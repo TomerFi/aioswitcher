@@ -1,0 +1,26 @@
+# aioswitcher
+
+> PyPi module integrating with various Switcher devices.
+
+The complete documentation is also available as a single file: [llms-full.txt](https://aioswitcher.figenblat.com/llms-full.txt).
+
+## Getting started
+
+- [Install](<https://aioswitcher.figenblat.com/install/index.md>): Installation instructions
+
+## Usage
+
+- [Bridge](<https://aioswitcher.figenblat.com/usage_bridge/index.md>): Device discovery over UDP broadcast
+- [API](<https://aioswitcher.figenblat.com/usage_api/index.md>): Device control over TCP
+
+## Supported devices
+
+- [Supported devices](<https://aioswitcher.figenblat.com/supported/index.md>): Table of supported Switcher devices
+
+## Code documentation
+
+- [Code documentation](<https://aioswitcher.figenblat.com/codedocs/index.md>): Auto-generated API reference
+
+## Helper scripts
+
+- [Helper scripts](<https://aioswitcher.figenblat.com/scripts/index.md>): CLI helper scripts shipped with the package

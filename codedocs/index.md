@@ -1,0 +1,1507 @@
+# Code documentation
+
+Switcher integration main module.
+
+Modules:
+
+| Name | Description |
+| --- | --- |
+| `api` | Switcher integration TCP socket API module. |
+| `bridge` | Switcher integration, UDP Bridge module. |
+| `device` | Switcher integration device module. |
+| `schedule` | Switcher integration schedule module. |
+| `scripts` | Switcher integration helper CLI scripts. |
+
+Switcher integration TCP socket API module.
+
+Modules:
+
+| Name | Description |
+| --- | --- |
+| `messages` | Switcher integration TCP socket API messages. |
+| `packets` | Switcher integration TCP socket API packet formats. |
+| `remotes` | Switcher integration API remote related classes and functions. |
+
+## `Command`
+
+Bases: `Enum`
+
+Enum for turning the device on or off.
+
+## `SwitcherApi`
+
+Switcher TCP based API.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `device_type` | `DeviceType` | the type of the device. | *required* |
+| `ip_address` | `str` | the ip address assigned to the device. | *required* |
+| `device_id` | `str` | the id of the desired device. | *required* |
+| `device_key` | `str` | the login key of the device. | *required* |
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `connect` | Connect to asynchronous socket and get reader and writer object. |
+| `control_breeze_device` | Use for sending the control packet to the Breeze device. |
+| `control_device` | Use for sending the control packet to the device. |
+| `create_schedule` | Use for creating a new schedule in the next empty schedule slot. |
+| `delete_schedule` | Use for deleting a schedule from the device. |
+| `disconnect` | Disconnect from asynchronous socket. |
+| `get_breeze_state` | Use for sending the get state packet to the Breeze device. |
+| `get_heater_state` | Use for sending the get state packet to the Heater device. |
+| `get_light_state` | Use for sending the get state packet to the Light devices. |
+| `get_schedules` | Use for retrieval of the schedules from the device. |
+| `get_shutter_state` | Use for sending the get state packet to the Runners devices. |
+| `get_state` | Use for sending the get state packet to the device. |
+| `set_auto_shutdown` | Use for sending the set auto-off packet to the device. |
+| `set_device_name` | Use for sending the set name packet to the device. |
+| `set_light` | Use for turn on/off light. |
+| `set_position` | Use for setting the shutter position of the Runners devices. |
+| `set_shutter_child_lock` | Use for turn on/off shutter child lock. |
+| `stop_shutter` | Use for stopping the shutter. |
+
+### `connected`
+
+Return true if api is connected.
+
+### `connect()`
+
+Connect to asynchronous socket and get reader and writer object.
+
+### `control_breeze_device(remote, state=None, mode=None, target_temp=0, fan_level=None, swing=None, update_state=False)`
+
+Use for sending the control packet to the Breeze device.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `remote` | `SwitcherBreezeRemote` | the remote for the breeze device | *required* |
+| `state` | `Union[DeviceState, None]` | optionally the desired state of the device | `None` |
+| `mode` | `Union[ThermostatMode, None]` | optionally the desired mode of the device | `None` |
+| `target_temp` | `int` | optionally the target temperature | `0` |
+| `fan_level` | `Union[ThermostatFanLevel, None]` | optionally the desired fan level | `None` |
+| `swing` | `Union[ThermostatSwing, None]` | optionally the desired swing state | `None` |
+| `update_state` | `bool` | update the device state without controlling the device | `False` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `control_device(command, minutes=0)`
+
+Use for sending the control packet to the device.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `command` | `Command` | use the `aioswitcher.api.Command` enum. | *required* |
+| `minutes` | `int` | if turning-on optionally incorporate a timer. | `0` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `create_schedule(start_time, end_time, days=set())`
+
+Use for creating a new schedule in the next empty schedule slot.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `start_time` | `str` | a string start time in %H:%M format. e.g. 13:00. | *required* |
+| `end_time` | `str` | a string start time in %H:%M format. e.g. 13:00. | *required* |
+| `days` | `Set[Days]` | for recurring schedules, add `Days`. | `set()` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `delete_schedule(schedule_id)`
+
+Use for deleting a schedule from the device.
+
+Use `get_schedules` to retrieve the schedule instance.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `schedule_id` | `str` | the identification of the schedule for deletion. | *required* |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `disconnect()`
+
+Disconnect from asynchronous socket.
+
+### `get_breeze_state()`
+
+Use for sending the get state packet to the Breeze device.
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherThermostatStateResponse` | An instance of `SwitcherThermostatStateResponse`. |
+
+### `get_heater_state()`
+
+Use for sending the get state packet to the Heater device.
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherHeaterStateResponse` | An instance of `SwitcherHeaterStateResponse`. |
+
+### `get_light_state(index=0)`
+
+Use for sending the get state packet to the Light devices.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `index` | `int` | which light to set get state, default to 0. | `0` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherLightStateResponse` | An instance of `SwitcherLightStateResponse`. |
+
+### `get_schedules()`
+
+Use for retrieval of the schedules from the device.
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherGetSchedulesResponse` | An instance of `SwitcherGetSchedulesResponse`. |
+
+### `get_shutter_state(index=0)`
+
+Use for sending the get state packet to the Runners devices.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `index` | `int` | which runner to set get state, default to 0. | `0` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherShutterStateResponse` | An instance of `SwitcherShutterStateResponse`. |
+
+### `get_state()`
+
+Use for sending the get state packet to the device.
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherStateResponse` | An instance of `SwitcherStateResponse`. |
+
+### `set_auto_shutdown(full_time)`
+
+Use for sending the set auto-off packet to the device.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `full_time` | `timedelta` | timedelta value containing the configuration value for auto-shutdown. | *required* |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `set_device_name(name)`
+
+Use for sending the set name packet to the device.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `name` | `str` | string name with the length of 2 \>= x \>= 32. | *required* |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `set_light(command, index=0)`
+
+Use for turn on/off light.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `command` | `DeviceState` | use the `aioswitcher.api.DeviceState` enum. | *required* |
+| `index` | `int` | which light to turn on/off, default to 0. | `0` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `set_position(position=0, index=0)`
+
+Use for setting the shutter position of the Runners devices.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `position` | `int` | the position to set the device to, default to 0. | `0` |
+| `index` | `int` | which runner to set position, default to 0. | `0` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `set_shutter_child_lock(command, index=0)`
+
+Use for turn on/off shutter child lock.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `command` | `ShutterChildLock` | use the `aioswitcher.api.ShutterChildLock` enum. | *required* |
+| `index` | `int` | which shutter child lock to turn on/off, default to 0. | `0` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+### `stop_shutter(index=0)`
+
+Use for stopping the shutter.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `index` | `int` | which runner to stop position, default to 0. | `0` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBaseResponse` | An instance of `SwitcherBaseResponse`. |
+
+Switcher integration TCP socket API messages.
+
+## `StateMessageParser`
+
+Use for parsing api messages.
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `get_auto_shutdown` | Return the value of the auto shutdown configuration. |
+| `get_heater_auto_shutdown` | Return the value of the heater auto shutdown configuration. |
+| `get_heater_power_consumption` | Return the current power consumption of the heater device. |
+| `get_heater_state` | Return the current heater device state. |
+| `get_heater_time_left` | Return the time left for the heater device current run. |
+| `get_heater_time_on` | Return how long the heater device has been on. |
+| `get_light_state` | Return the current light state. |
+| `get_power_consumption` | Return the current power consumption of the device. |
+| `get_shutter_child_lock` | Return the current shutter child lock. |
+| `get_shutter_direction` | Return the current shutter direction. |
+| `get_shutter_position` | Return the current shutter position. |
+| `get_state` | Return the current device state. |
+| `get_thermostat_fan_level` | Return the current thermostat fan level. |
+| `get_thermostat_mode` | Return the current thermostat mode. |
+| `get_thermostat_remote_id` | Return the current thermostat remote. |
+| `get_thermostat_state` | Return the current thermostat state. |
+| `get_thermostat_swing` | Return the current thermostat fan swing. |
+| `get_thermostat_target_temp` | Return the current temperature of the thermostat. |
+| `get_thermostat_temp` | Return the current temp of the thermostat. |
+| `get_time_left` | Return the time left for the device current run. |
+| `get_time_on` | Return how long the device has been on. |
+
+### `get_auto_shutdown()`
+
+Return the value of the auto shutdown configuration.
+
+### `get_heater_auto_shutdown()`
+
+Return the value of the heater auto shutdown configuration.
+
+### `get_heater_power_consumption()`
+
+Return the current power consumption of the heater device.
+
+### `get_heater_state()`
+
+Return the current heater device state.
+
+### `get_heater_time_left()`
+
+Return the time left for the heater device current run.
+
+### `get_heater_time_on()`
+
+Return how long the heater device has been on.
+
+### `get_light_state(index)`
+
+Return the current light state.
+
+### `get_power_consumption()`
+
+Return the current power consumption of the device.
+
+### `get_shutter_child_lock(index)`
+
+Return the current shutter child lock.
+
+### `get_shutter_direction(index)`
+
+Return the current shutter direction.
+
+### `get_shutter_position(index)`
+
+Return the current shutter position.
+
+### `get_state()`
+
+Return the current device state.
+
+### `get_thermostat_fan_level()`
+
+Return the current thermostat fan level.
+
+### `get_thermostat_mode()`
+
+Return the current thermostat mode.
+
+### `get_thermostat_remote_id()`
+
+Return the current thermostat remote.
+
+### `get_thermostat_state()`
+
+Return the current thermostat state.
+
+### `get_thermostat_swing()`
+
+Return the current thermostat fan swing.
+
+### `get_thermostat_target_temp()`
+
+Return the current temperature of the thermostat.
+
+### `get_thermostat_temp()`
+
+Return the current temp of the thermostat.
+
+### `get_time_left()`
+
+Return the time left for the device current run.
+
+### `get_time_on()`
+
+Return how long the device has been on.
+
+## `SwitcherBaseResponse`
+
+Representation of the switcher base response message.
+
+Applicable for all messages that do no require post initialization. e.g. not applicable for SwitcherLoginResponse, SwitcherStateResponse, SwitcherGetScheduleResponse.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `unparsed_response` | `bytes` | the raw response from the device. | *required* |
+
+### `successful`
+
+Return true if the response is not empty.
+
+Partially indicating the request was successful.
+
+## `SwitcherGetSchedulesResponse`
+
+Bases: `SwitcherBaseResponse`
+
+Representation of the switcher get schedule message.
+
+### `found_schedules`
+
+Return true if found schedules in the response.
+
+## `SwitcherHeaterStateResponse`
+
+Bases: `SwitcherBaseResponse`
+
+Representation of the switcher heater state response message.
+
+## `SwitcherLightStateResponse`
+
+Bases: `SwitcherBaseResponse`
+
+Representation of the Switcher light devices state response message.
+
+## `SwitcherLoginResponse`
+
+Bases: `SwitcherBaseResponse`
+
+Representations of the switcher login response message.
+
+## `SwitcherShutterStateResponse`
+
+Bases: `SwitcherBaseResponse`
+
+Representation of the Switcher shutter devices state response message.
+
+## `SwitcherStateResponse`
+
+Bases: `SwitcherBaseResponse`
+
+Representation of the switcher state response message.
+
+## `SwitcherThermostatStateResponse`
+
+Bases: `SwitcherBaseResponse`
+
+Representation of the Switcher thermostat device state response message.
+
+Switcher integration API remote related classes and functions.
+
+## `SwitcherBreezeCommand`
+
+Representations of the Switcher Breeze command message.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `command` | `str` | a string command ready to be parsed and sent | *required* |
+
+## `SwitcherBreezeRemote`
+
+Class that represent a remote for a Breeze device/s.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `ir_set` | `Dict[str, Any]` | a dictionary for all supported remotes | *required* |
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `build_command` | Build command that controls the Breeze device. |
+| `build_swing_command` | Build a special command to control swing on special remotes. |
+
+### `max_temperature`
+
+Getter for Maximum supported temperature.
+
+### `min_temperature`
+
+Getter for Minimum supported temperature.
+
+### `modes_features`
+
+Getter for supported feature per mode.
+
+### `on_off_type`
+
+Getter for which indicates if the AC if on/off (toggle) type.
+
+### `remote_id`
+
+Getter for remote id.
+
+### `separated_swing_command`
+
+Getter for which indicates if the AC has a separated swing command.
+
+### `supported_modes`
+
+Getter for supported modes.
+
+### `build_command(state, mode, target_temp, fan_level, swing, current_state=None)`
+
+Build command that controls the Breeze device.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `state` | `DeviceState` | the desired state of the device | *required* |
+| `mode` | `ThermostatMode` | the desired mode of the device | *required* |
+| `target_temp` | `int` | the target temperature | *required* |
+| `fan_level` | `ThermostatFanLevel` | the desired fan level | *required* |
+| `swing` | `ThermostatSwing` | the desired swing state | *required* |
+| `current_state` | `Union[DeviceState, None]` | optionally, for toggle device, pass previous state to avoid redundant requests | `None` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBreezeCommand` | An instance of `SwitcherBreezeCommand` |
+
+### `build_swing_command(swing)`
+
+Build a special command to control swing on special remotes.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `swing` | `ThermostatSwing` | the desired swing state | *required* |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBreezeCommand` | An instance of `SwitcherBreezeCommand` |
+
+## `SwitcherBreezeRemoteManager`
+
+Class for managing Breeze remotes.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `remotes_db_path` | `str` | optional path of supported remote json file | `BREEZE_REMOTE_DB_FPATH` |
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `get_remote` | Get Breeze remote by the remote id. |
+
+### `get_remote(remote_id)`
+
+Get Breeze remote by the remote id.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `remote_id` | `str` | the id of the desired remote | *required* |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBreezeRemote` | an instance of `SwitcherBreezeRemote` |
+
+Raises:
+
+| Type | Description |
+| --- | --- |
+| `SwitcherBreezeRemoteNotSupportedError` | if the remote id is not in the remotes database or its entry has no IR codes |
+
+## `SwitcherBreezeRemoteNotSupportedError`
+
+Bases: `KeyError`
+
+Raised when a Breeze remote is unknown or has no IR codes.
+
+Subclasses `KeyError` for backward compatibility with callers that caught the `KeyError` previously raised for unknown remote ids.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `remote_id` | `str` | the id of the unsupported remote | *required* |
+| `reason` | `str` | a short description of why the remote is not supported | *required* |
+
+Switcher integration, UDP Bridge module.
+
+## `DatagramParser`
+
+Utility class for parsing a datagram into various device properties.
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `get_auto_shutdown` | Extract the auto shutdown value from the broadcast message. |
+| `get_device_id` | Extract the device id from the broadcast message. |
+| `get_device_key` | Extract the device id from the broadcast message. |
+| `get_device_state` | Extract the device state from the broadcast message. |
+| `get_device_type` | Extract the device type from the broadcast message. |
+| `get_heater_power_consumption` | Extract the heater power consumption from the broadcast message. |
+| `get_heater_remaining` | Extract the heater time remains for the current execution. |
+| `get_heater_state` | Extract the heater state from the broadcast message. |
+| `get_light_state` | Extract the light state from the broadcast message. |
+| `get_mac_type1` | Extract the MAC address from the broadcast message (Heater, Plug). |
+| `get_mac_type2` | Extract the MAC address from the broadcast message (Breeze, Runners). |
+| `get_name` | Extract the device name from the broadcast message. |
+| `get_power_consumption` | Extract the power consumption from the broadcast message. |
+| `get_remaining` | Extract the time remains for the current execution. |
+| `get_shutter_child_lock` | Extract the shutter child lock state from the broadcast message. |
+| `get_shutter_direction` | Return the current direction of the shutter (UP/DOWN/STOP). |
+| `get_shutter_position` | Return the current position of the shutter 0 \<= pos \<= 100. |
+| `get_thermostat_fan_level` | Return the current thermostat fan level. |
+| `get_thermostat_mode` | Return the current thermostat mode. |
+| `get_thermostat_remote_id` | Return the current thermostat remote. |
+| `get_thermostat_state` | Return the current thermostat state. |
+| `get_thermostat_swing` | Return the current thermostat fan swing. |
+| `get_thermostat_target_temp` | Return the current temp of the thermostat. |
+| `get_thermostat_temp` | Return the current temp of the thermostat. |
+| `is_switcher_originator` | Verify the broadcast message had originated from a switcher device. |
+
+### `get_auto_shutdown()`
+
+Extract the auto shutdown value from the broadcast message.
+
+### `get_device_id()`
+
+Extract the device id from the broadcast message.
+
+### `get_device_key()`
+
+Extract the device id from the broadcast message.
+
+### `get_device_state()`
+
+Extract the device state from the broadcast message.
+
+### `get_device_type()`
+
+Extract the device type from the broadcast message.
+
+### `get_heater_power_consumption()`
+
+Extract the heater power consumption from the broadcast message.
+
+### `get_heater_remaining()`
+
+Extract the heater time remains for the current execution.
+
+### `get_heater_state()`
+
+Extract the heater state from the broadcast message.
+
+### `get_light_state(index)`
+
+Extract the light state from the broadcast message.
+
+### `get_mac_type1()`
+
+Extract the MAC address from the broadcast message (Heater, Plug).
+
+### `get_mac_type2()`
+
+Extract the MAC address from the broadcast message (Breeze, Runners).
+
+### `get_name()`
+
+Extract the device name from the broadcast message.
+
+### `get_power_consumption()`
+
+Extract the power consumption from the broadcast message.
+
+### `get_remaining()`
+
+Extract the time remains for the current execution.
+
+### `get_shutter_child_lock(index)`
+
+Extract the shutter child lock state from the broadcast message.
+
+### `get_shutter_direction(index)`
+
+Return the current direction of the shutter (UP/DOWN/STOP).
+
+### `get_shutter_position(index)`
+
+Return the current position of the shutter 0 \<= pos \<= 100.
+
+### `get_thermostat_fan_level()`
+
+Return the current thermostat fan level.
+
+### `get_thermostat_mode()`
+
+Return the current thermostat mode.
+
+### `get_thermostat_remote_id()`
+
+Return the current thermostat remote.
+
+### `get_thermostat_state()`
+
+Return the current thermostat state.
+
+### `get_thermostat_swing()`
+
+Return the current thermostat fan swing.
+
+### `get_thermostat_target_temp()`
+
+Return the current temp of the thermostat.
+
+### `get_thermostat_temp()`
+
+Return the current temp of the thermostat.
+
+### `is_switcher_originator()`
+
+Verify the broadcast message had originated from a switcher device.
+
+## `SwitcherBridge`
+
+Use for running a UDP client for bridging Switcher devices broadcast messages.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `on_device` | `Callable[[SwitcherBase], Any]` | a callable to which every new SwitcherBase device found will be send. | *required* |
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `start` | Create an asynchronous listener and start the bridge. |
+| `stop` | Stop the asynchronous bridge. |
+
+### `is_running`
+
+bool: Return true if bridge is running.
+
+### `start()`
+
+Create an asynchronous listener and start the bridge.
+
+### `stop()`
+
+Stop the asynchronous bridge.
+
+## `UdpClientProtocol`
+
+Bases: `DatagramProtocol`
+
+Implementation of the Asyncio UDP DatagramProtocol.
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `connection_lost` | Call on connection lost. |
+| `connection_made` | Call on connection established. |
+| `datagram_received` | Call on datagram received. |
+| `error_received` | Call on exception received. |
+
+### `connection_lost(exc)`
+
+Call on connection lost.
+
+### `connection_made(transport)`
+
+Call on connection established.
+
+### `datagram_received(data, addr)`
+
+Call on datagram received.
+
+A malformed or unknown-model datagram is logged at debug level and skipped rather than raising into the event loop, where it would otherwise interrupt reception for every other device on the socket. Only the expected parse errors are caught, so a genuinely unexpected error still propagates.
+
+### `error_received(exc)`
+
+Call on exception received.
+
+Switcher integration device module.
+
+Modules:
+
+| Name | Description |
+| --- | --- |
+| `tools` | Switcher integration device module tools. |
+
+## `DeviceCategory`
+
+Bases: `Enum`
+
+Enum for relaying the device category.
+
+## `DeviceState`
+
+Bases: `Enum`
+
+Enum class representing the device's state.
+
+### `display`
+
+Return the display name of the state.
+
+### `value`
+
+Return the value of the state.
+
+## `DeviceType`
+
+Bases: `Enum`
+
+Enum for relaying the type of the switcher devices.
+
+### `category`
+
+Return the category of the device type.
+
+### `hex_rep`
+
+Return the hexadecimal representation of the device type.
+
+### `protocol_type`
+
+Return the protocol type of the device.
+
+### `token_needed`
+
+Return true if token in needed for the device.
+
+### `value`
+
+Return the value of the state.
+
+## `ShutterChildLock`
+
+Bases: `Enum`
+
+Enum class representing the shutter device's child lock state.
+
+### `display`
+
+Return the display name of the shutter child lock.
+
+### `value`
+
+Return the value of the shutter child lock.
+
+## `ShutterDirection`
+
+Bases: `Enum`
+
+Enum class representing the shutter device's position.
+
+### `display`
+
+Return the display name of the direction.
+
+### `value`
+
+Return the value of the direction.
+
+## `SwitcherBase`
+
+Bases: `ABC`
+
+Abstraction for all switcher devices.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `device_type` | `DeviceType` | the DeviceType appropriate member. | *required* |
+| `device_state` | `DeviceState` | the DeviceState appropriate member. | *required* |
+| `device_id` | `str` | the id retrieved from the device. | *required* |
+| `device_key` | `str` | the login key of the device. | *required* |
+| `ip_address` | `str` | the ip address assigned to the device. | *required* |
+| `mac_address` | `str` | the mac address assigned to the device. | *required* |
+| `name` | `str` | the name of the device. | *required* |
+
+## `SwitcherDualShutterSingleLight`
+
+Bases: `SwitcherDualShutterSingleLightBase`, `SwitcherBase`
+
+Implementation of the Switcher dual Shutter with single light device.
+
+## `SwitcherDualShutterSingleLightBase`
+
+Bases: `ABC`
+
+Abstraction for all switcher devices controlling dual shutter with single light.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `position` | `List[int]` | the current array of position of the shutter (integer percentage). | *required* |
+| `direction` | `List[ShutterDirection]` | the current array of direction of the shutter. | *required* |
+| `light` | `List[DeviceState]` | the current array of light state. | *required* |
+
+## `SwitcherHeater`
+
+Bases: `SwitcherTimedBase`, `SwitcherPowerBase`, `SwitcherBase`
+
+Implementation of the Switcher Heater device.
+
+Please Note the order of the inherited classes to understand the order of the instantiation parameters and the super call.
+
+## `SwitcherLight`
+
+Bases: `SwitcherLightBase`, `SwitcherBase`
+
+Implementation of the Switcher Light device.
+
+## `SwitcherLightBase`
+
+Bases: `ABC`
+
+Abstraction for all switcher devices controlling light.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `light` | `List[DeviceState]` | the current array of light state. | *required* |
+
+## `SwitcherPowerBase`
+
+Bases: `ABC`
+
+Abstraction for all switcher devices reporting power data.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `power_consumption` | `int` | the current power consumption in watts. | *required* |
+| `electric_current` | `float` | the current power consumption in amps. | *required* |
+
+## `SwitcherPowerPlug`
+
+Bases: `SwitcherPowerBase`, `SwitcherBase`
+
+Implementation of the Switcher Power Plug device.
+
+Please Note the order of the inherited classes to understand the order of the instantiation parameters and the super call.
+
+## `SwitcherShutter`
+
+Bases: `SwitcherShutterBase`, `SwitcherBase`
+
+Implementation of the Switcher Shutter device.
+
+## `SwitcherShutterBase`
+
+Bases: `ABC`
+
+Abstraction for all switcher devices controlling shutter.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `position` | `List[int]` | the current array of position of the shutter (integer percentage). | *required* |
+| `direction` | `List[ShutterDirection]` | the current array of direction of the shutter. | *required* |
+
+## `SwitcherSingleShutterDualLight`
+
+Bases: `SwitcherSingleShutterDualLightBase`, `SwitcherBase`
+
+Implementation of the Switcher Shutter with dual light device.
+
+## `SwitcherSingleShutterDualLightBase`
+
+Bases: `ABC`
+
+Abstraction for all switcher devices controlling shutter with dual light.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `position` | `List[int]` | the current array of position of the shutter (integer percentage). | *required* |
+| `direction` | `List[ShutterDirection]` | the current array of direction of the shutter. | *required* |
+| `light` | `List[DeviceState]` | the current array of light state. | *required* |
+
+## `SwitcherThermostat`
+
+Bases: `SwitcherThermostatBase`, `SwitcherBase`
+
+Implementation of the Switcher Thermostat device.
+
+## `SwitcherThermostatBase`
+
+Bases: `ABC`
+
+Abstraction for switcher thermostat devices.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `mode` | `ThermostatMode` | the mode of the thermostat. | *required* |
+| `temperature` | `float` | the current temperature in celsius. | *required* |
+| `target_temperature` | `int` | the current target temperature in celsius. | *required* |
+| `fan_level` | `ThermostatFanLevel` | the current fan level in celsius. | *required* |
+| `swing` | `ThermostatSwing` | the current swing state. | *required* |
+| `remote_id` | `str` | the id of the remote used to control this thermostat | *required* |
+
+## `SwitcherTimedBase`
+
+Bases: `ABC`
+
+Abstraction for all switcher devices supporting timed operations.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `remaining_time` | `str` | remaining time to current run. | *required* |
+| `auto_shutdown` | `str` | configured value for auto shutdown. | *required* |
+
+### `auto_off_set`
+
+Fix for backward compatibility issues with home assistant.
+
+## `SwitcherWaterHeater`
+
+Bases: `SwitcherTimedBase`, `SwitcherPowerBase`, `SwitcherBase`
+
+Implementation of the Switcher Water Heater device.
+
+Please Note the order of the inherited classes to understand the order of the instantiation parameters and the super call.
+
+## `ThermostatFanLevel`
+
+Bases: `Enum`
+
+Enum class representing the thermostat device's fan level.
+
+### `display`
+
+Return the display name of the fan level.
+
+### `value`
+
+Return the value of the fan level.
+
+## `ThermostatMode`
+
+Bases: `Enum`
+
+Enum class representing the thermostat device's position.
+
+### `display`
+
+Return the display name of the mode.
+
+### `value`
+
+Return the value of the mode.
+
+## `ThermostatSwing`
+
+Bases: `Enum`
+
+Enum class representing the thermostat device's swing state.
+
+### `display`
+
+Return the display name of the swing.
+
+### `value`
+
+Return the value of the swing.
+
+Switcher integration device module tools.
+
+Functions:
+
+| Name | Description |
+| --- | --- |
+| `convert_token_to_packet` | Convert a token to token packet. |
+| `current_timestamp_to_hexadecimal` | Generate hexadecimal representation of the current timestamp. |
+| `get_light_api_packet_index` | Return the correct light api packet index. |
+| `get_light_discovery_packet_index` | Return the correct light discovery packet index. |
+| `get_shutter_api_packet_index` | Return the correct shutter api packet index. |
+| `get_shutter_discovery_packet_index` | Return the correct shutter discovery packet index. |
+| `minutes_to_hexadecimal_seconds` | Encode minutes to an hexadecimal packed as little endian unsigned int. |
+| `seconds_to_duration_string` | Convert seconds to an HH:MM:SS duration string. |
+| `set_message_length` | Set the message length. |
+| `sign_packet_with_crc_key` | Sign the packets with the designated crc key. |
+| `string_to_hexadecimale_device_name` | Encode string device name to an appropriate hexadecimal value. |
+| `timedelta_to_hexadecimal_seconds` | Encode timedelta as seconds to an hexadecimal packed as little endian unsigned. |
+| `validate_token` | Make an asynchronous API call to validate a Token by username and token. |
+| `watts_to_amps` | Convert power consumption to watts to electric current in amps. |
+
+## `convert_token_to_packet(token)`
+
+Convert a token to token packet.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `token` | `str` | the token of the user sent by Email | *required* |
+
+**Return**
+
+Token packet if token is valid, otherwise empty string or raise error.
+
+## `current_timestamp_to_hexadecimal()`
+
+Generate hexadecimal representation of the current timestamp.
+
+**Return**
+
+Hexadecimal representation of the current unix time retrieved by `time.time`.
+
+## `get_light_api_packet_index(device_type, circuit_number)`
+
+Return the correct light api packet index.
+
+Used in sending the light on/off status with the packet (based of device type and circuit number).
+
+## `get_light_discovery_packet_index(device_type, circuit_number)`
+
+Return the correct light discovery packet index.
+
+Used in retriving the light on/off status from the packet (based of device type and circuit number).
+
+## `get_shutter_api_packet_index(device_type, circuit_number)`
+
+Return the correct shutter api packet index.
+
+Used in sending the shutter position/direction with the packet (based of device type and circuit number).
+
+## `get_shutter_discovery_packet_index(device_type, circuit_number)`
+
+Return the correct shutter discovery packet index.
+
+Used in retriving the shutter position/direction from the packet (based of device type and circuit number).
+
+## `minutes_to_hexadecimal_seconds(minutes)`
+
+Encode minutes to an hexadecimal packed as little endian unsigned int.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `minutes` | `int` | minutes to encode. | *required* |
+
+**Return**
+
+Hexadecimal representation of the minutes argument.
+
+## `seconds_to_duration_string(all_seconds)`
+
+Convert seconds to an HH:MM:SS duration string.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `all_seconds` | `int` | the total number of seconds to convert. | *required* |
+
+**Return**
+
+A string representing the converted duration in %H:%M:%S format. e.g. "02:24:37". Unlike a time-of-day, the hours component is not capped at 23, so durations of a day or longer are represented correctly, e.g. "195:04:54".
+
+## `set_message_length(message)`
+
+Set the message length.
+
+## `sign_packet_with_crc_key(hex_packet)`
+
+Sign the packets with the designated crc key.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `hex_packet` | `str` | packet to sign. | *required* |
+
+**Return**
+
+The calculated and signed packet.
+
+## `string_to_hexadecimale_device_name(name)`
+
+Encode string device name to an appropriate hexadecimal value.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `name` | `str` | the desired name for encoding. | *required* |
+
+**Return**
+
+Hexadecimal representation of the name argument.
+
+## `timedelta_to_hexadecimal_seconds(full_time)`
+
+Encode timedelta as seconds to an hexadecimal packed as little endian unsigned.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `full_time` | `timedelta` | timedelta time between 1 and 24 hours, seconds are ignored. | *required* |
+
+**Return**
+
+Hexadecimal representation of the seconds built fom the full\_time argument.
+
+## `validate_token(username, token, session=None)`
+
+Make an asynchronous API call to validate a Token by username and token.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `username` | `str` | the username (Email address) of the user. | *required* |
+| `token` | `str` | the token of the user sent by Email. | *required* |
+| `session` | `ClientSession \| None` | an optional aiohttp client session to use for the request. If not provided, a new session will be created and closed internally. | `None` |
+
+**Return**
+
+True if the token is valid, False otherwise.
+
+## `watts_to_amps(watts)`
+
+Convert power consumption to watts to electric current in amps.
+
+Switcher integration schedule module.
+
+Modules:
+
+| Name | Description |
+| --- | --- |
+| `parser` | Switcher integration schedule parser module. |
+| `tools` | Switcher integration schedule module tools. |
+
+## `Days`
+
+Bases: `Enum`
+
+Enum class representing the day entity.
+
+### `bit_rep`
+
+Return the bit representation of the day.
+
+### `hex_rep`
+
+Return the hexadecimal representation of the day.
+
+### `weekday`
+
+Return the weekday of the day.
+
+## `ScheduleState`
+
+Bases: `Enum`
+
+Enum representing the status of the schedule.
+
+Switcher integration schedule parser module.
+
+Functions:
+
+| Name | Description |
+| --- | --- |
+| `get_schedules` | Use to create a list of schedule from a response message from the device. |
+
+## `ScheduleParser`
+
+Schedule parsing tool.
+
+Methods:
+
+| Name | Description |
+| --- | --- |
+| `get_days` | Retun a set of the scheduled Days. |
+| `get_end_time` | Return the schedule end time in %H:%M format. |
+| `get_id` | Return the id of the schedule. |
+| `get_start_time` | Return the schedule start time in %H:%M format. |
+| `get_state` | Return the current state of the device. |
+| `is_enabled` | Return true if enbaled. |
+| `is_recurring` | Return true if a recurring schedule. |
+
+### `get_days()`
+
+Retun a set of the scheduled Days.
+
+### `get_end_time()`
+
+Return the schedule end time in %H:%M format.
+
+### `get_id()`
+
+Return the id of the schedule.
+
+### `get_start_time()`
+
+Return the schedule start time in %H:%M format.
+
+### `get_state()`
+
+Return the current state of the device.
+
+Not sure if this needs to be included in the schedule object.
+
+### `is_enabled()`
+
+Return true if enbaled.
+
+### `is_recurring()`
+
+Return true if a recurring schedule.
+
+## `SwitcherSchedule`
+
+representation of the Switcher schedule slot.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `schedule_id` | `str` | the id of the schedule | *required* |
+| `recurring` | `bool` | is a recurring schedule | *required* |
+| `days` | `Set[Days]` | a set of schedule days, or empty set for non recurring schedules | *required* |
+| `start_time` | `str` | the start time of the schedule | *required* |
+| `end_time` | `str` | the end time of the schedule | *required* |
+
+## `get_schedules(message)`
+
+Use to create a list of schedule from a response message from the device.
+
+Switcher integration schedule module tools.
+
+Functions:
+
+| Name | Description |
+| --- | --- |
+| `bit_summary_to_days` | Decode a weekdays bit summary to a set of weekdays. |
+| `calc_duration` | Use to calculate the delta between two time values formated as %H:%M. |
+| `hexadecimale_timestamp_to_localtime` | Decode an hexadecimale timestamp to localtime with the format %H:%M. |
+| `pretty_next_run` | Create a literal for displaying the next run time. |
+| `time_to_hexadecimal_timestamp` | Convert hours and minutes to a timestamp with the current date and encode. |
+| `weekdays_to_hexadecimal` | Sum the requested weekdays bit representation and return as hexadecimal value. |
+
+## `bit_summary_to_days(sum_weekdays_bit)`
+
+Decode a weekdays bit summary to a set of weekdays.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `sum_weekdays_bit` | `int` | the sum of all weekdays | *required* |
+
+**Return**
+
+Set of Weekday members decoded from the summary value.
+
+> [!NOTE]
+>
+> **Todo**
+>
+> Should an existing remainder in the sum value throw an error? E.g. 3 will result in a set of MONDAY and the remainder will be 1.
+
+## `calc_duration(start_time, end_time)`
+
+Use to calculate the delta between two time values formated as %H:%M.
+
+## `hexadecimale_timestamp_to_localtime(hex_timestamp)`
+
+Decode an hexadecimale timestamp to localtime with the format %H:%M.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `hex_timestamp` | `bytes` | the hexadecimale timestamp. | *required* |
+
+**Return**
+
+Localtime string with %H:%M format. e.g. "20:30".
+
+## `pretty_next_run(start_time, days=set())`
+
+Create a literal for displaying the next run time.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `start_time` | `str` | the start of the schedule in "%H:%M" format, e.g. "17:00". | *required* |
+| `days` | `Set[Days]` | for recurring schedules, a list of days when none, will be today. | `set()` |
+
+Returns:
+
+| Type | Description |
+| --- | --- |
+| `str` | A pretty string describing the next due run. |
+| `str` | e.g. "Due next Sunday at 17:00". |
+
+## `time_to_hexadecimal_timestamp(time_value)`
+
+Convert hours and minutes to a timestamp with the current date and encode.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `time_value` | `str` | time to convert. e.g. "21:00". | *required* |
+
+**Return**
+
+Hexadecimal representation of the timestamp.
+
+## `weekdays_to_hexadecimal(days)`
+
+Sum the requested weekdays bit representation and return as hexadecimal value.
+
+Parameters:
+
+| Name | Type | Description | Default |
+| --- | --- | --- | --- |
+| `days` | `Union[Days, Set[Days]]` | the requested Weekday members. | *required* |
+
+**Return**
+
+Hexadecimale representation of the sum of all requested days.
