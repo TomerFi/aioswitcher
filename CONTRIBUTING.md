@@ -97,7 +97,7 @@ This project encourages and assumes the use of AI tools. See [AI_POLICY.md](AI_P
 ## Documentation
 
 We use [MkDocs][mkdocs-site] and [Material][material-site] for building our documentation site,
-https://aioswitcher.figenblat.com/. See [docs](docs) and [mkdocs.yml](mkdocs.yml).
+https://aioswitcher.figenblat.com/. See [docs](docs) and [zensical.toml](zensical.toml).
 
 > [!NOTE]
 > We're generating [code documentation][aioswitcher-code-docs] from _docstrings_.

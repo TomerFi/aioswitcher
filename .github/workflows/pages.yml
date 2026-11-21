@@ -36,7 +36,7 @@ jobs:
           cache-dependency-glob: "uv.lock"
 
       - name: Build documentation site
-        run: uv sync --locked --group docs && uv run --locked mkdocs build --strict
+        run: uv sync --locked --group docs && uv run --locked zensical build --strict
 
       - name: Deploy to GH-Pages
         uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453  # v4.1.0

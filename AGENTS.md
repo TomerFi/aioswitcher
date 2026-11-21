@@ -39,7 +39,7 @@ src/aioswitcher/
     tools.py           # Time/weekday helpers
   scripts/             # CLI commands installed with the package (see Scripts below)
 tests/                 # pytest suite (strict asyncio mode)
-docs/                  # mkdocs documentation
+docs/                  # zensical documentation
 ```
 
 ## Scripts
@@ -112,7 +112,7 @@ uv run ruff check src/ docs/
 uv run ruff format --check src/ docs/
 uv run ty check
 uv run yamllint --format colored --strict .
-uv run mkdocs build                           # docs
+uv run zensical build                         # docs
 ```
 
 When `ruff check` or `ruff format --check` fails, suggest `ruff check --fix` and `ruff format` to the user as ways to fix the issues.
@@ -121,11 +121,11 @@ When `ruff check` or `ruff format --check` fails, suggest `ruff check --fix` and
 
 Hook repos are pinned to commit SHAs. Dependabot handles regular updates automatically with a weekly cadence. For manual updates, use `uv run prek update --freeze`. **Always use `--freeze`** — without it, prek update replaces SHAs with tags. `additional_dependencies` are pinned with exact versions and must be updated manually in the config file. The agent should check if hooks are installed (`.git/hooks/pre-commit`) and remind the user to install them if not.
 
-## Documentation (mkdocs)
+## Documentation (Zensical)
 
-Docs live in `docs/`, built with mkdocs-material (Material theme + mkdocstrings for auto API docs). Deployed to `aioswitcher.figenblat.com` via GitHub Pages on release.
+Docs live in `docs/`, built with Zensical (`zensical.toml` config, serves `llms.txt` + per-page markdown for AI agents) and mkdocstrings for auto API docs. Deployed to `aioswitcher.figenblat.com` via GitHub Pages on release.
 
-Build: `uv sync --group docs && uv run mkdocs build --strict`
+Build: `uv sync --group docs && uv run zensical build --strict`
 
 Structure:
 - `index.md` — root page, includes other docs via markdown includes (`--8<--`)
