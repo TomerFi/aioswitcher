@@ -59,6 +59,30 @@ SPECIAL_SWING_COMMAND_REMOTE_IDS = [
 
 
 @final
+class SwitcherBreezeRemoteNotSupportedError(KeyError):
+    """Raised when a Breeze remote is unknown or has no IR codes.
+
+    Subclasses ``KeyError`` for backward compatibility with callers that
+    caught the ``KeyError`` previously raised for unknown remote ids.
+
+    Args:
+        remote_id: the id of the unsupported remote
+        reason: a short description of why the remote is not supported
+
+    """
+
+    def __init__(self, remote_id: str, reason: str) -> None:
+        """Initialize the error."""
+        super().__init__(remote_id)
+        self.remote_id = remote_id
+        self.reason = reason
+
+    def __str__(self) -> str:
+        """Return a readable message instead of the KeyError quoted repr."""
+        return f"Breeze remote {self.remote_id} is not supported: {self.reason}"
+
+
+@final
 class SwitcherBreezeCommand:
     """Representations of the Switcher Breeze command message.
 
@@ -415,13 +439,24 @@ class SwitcherBreezeRemoteManager:
         Returns:
             an instance of ``SwitcherBreezeRemote``
 
+        Raises:
+            SwitcherBreezeRemoteNotSupportedError: if the remote id is not in the
+                remotes database or its entry has no IR codes
+
         """
         # check if the remote was already loaded
         if remote_id not in self._remotes_db:
             # load the remote into the memory
             with open(self._remotes_db_fpath) as remotes_fd:
-                self._remotes_db[remote_id] = SwitcherBreezeRemote(
-                    load(remotes_fd)[remote_id]
+                ir_set = load(remotes_fd).get(remote_id)
+            if ir_set is None:
+                raise SwitcherBreezeRemoteNotSupportedError(
+                    remote_id, "not found in the remotes database"
                 )
+            if not ir_set.get("IRWaveList"):
+                raise SwitcherBreezeRemoteNotSupportedError(
+                    remote_id, "no IR codes in the remotes database"
+                )
+            self._remotes_db[remote_id] = SwitcherBreezeRemote(ir_set)
 
         return self._remotes_db[remote_id]
