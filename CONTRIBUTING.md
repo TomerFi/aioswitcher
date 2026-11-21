@@ -65,7 +65,7 @@ uv run yamllint --format colored --strict .
 uv run ruff check --fix src/ docs/
 uv run ruff format src/ docs/
 
-uv run mkdocs serve # will build and serve a local version of the documentation site
+uv run zensical serve # will build and serve a local version of the documentation site
 ```
 
 ## Prek Hooks
@@ -96,7 +96,7 @@ This project encourages and assumes the use of AI tools. See [AI_POLICY.md](AI_P
 
 ## Documentation
 
-We use [MkDocs][mkdocs-site] and [Material][material-site] for building our documentation site,
+We use [Zensical][zensical-site] for building our documentation site,
 https://aioswitcher.figenblat.com/. See [docs](docs) and [zensical.toml](zensical.toml).
 
 > [!NOTE]
@@ -104,7 +104,6 @@ https://aioswitcher.figenblat.com/. See [docs](docs) and [zensical.toml](zensica
 
 <!-- Links -->
 [aioswitcher-code-docs]: https://aioswitcher.figenblat.com/codedocs/
-[material-site]: https://squidfunk.github.io/mkdocs-material/
-[mkdocs-site]: https://www.mkdocs.org/
+[zensical-site]: https://zensical.org/
 [python-site]: https://www.python.org/
 [uv-docs]: https://docs.astral.sh/uv/
