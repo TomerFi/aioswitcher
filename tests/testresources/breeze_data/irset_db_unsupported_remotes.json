@@ -1,0 +1,11 @@
+{
+  "EMPTY001": {
+    "IRSetID": "EMPTY001",
+    "OnOffType": 0,
+    "IRWaveList": []
+  },
+  "NOWAVES1": {
+    "IRSetID": "NOWAVES1",
+    "OnOffType": 0
+  }
+}

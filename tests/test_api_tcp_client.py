@@ -46,6 +46,7 @@ from aioswitcher.api.remotes import (
     SwitcherBreezeCommand,
     SwitcherBreezeRemote,
     SwitcherBreezeRemoteManager,
+    SwitcherBreezeRemoteNotSupportedError,
 )
 from aioswitcher.device import (
     DeviceState,
@@ -382,6 +383,31 @@ async def test_breeze_remote_manager_get_from_local_database():
     remote_7022 = remote_manager.get_remote("ELEC7022")
     assert_that(remote_7022).is_type_of(SwitcherBreezeRemote)
     assert_that(remote_7022.remote_id).is_equal_to("ELEC7022")
+
+
+@mark.parametrize(
+    "remote_id, reason",
+    [
+        ("UNKNOWN1", "not found in the remotes database"),
+        ("EMPTY001", "no IR codes in the remotes database"),
+        ("NOWAVES1", "no IR codes in the remotes database"),
+    ],
+)
+async def test_breeze_remote_manager_get_unsupported_remote_raises_error(resource_path_root, remote_id, reason):
+    sut = SwitcherBreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_unsupported_remotes.json")
+    with raises(SwitcherBreezeRemoteNotSupportedError) as exc_info:
+        sut.get_remote(remote_id)
+    assert_that(exc_info.value).is_instance_of(KeyError)
+    assert_that(exc_info.value.args).is_equal_to((remote_id,))
+    assert_that(exc_info.value.remote_id).is_equal_to(remote_id)
+    assert_that(exc_info.value.reason).is_equal_to(reason)
+    assert_that(str(exc_info.value)).is_equal_to(f"Breeze remote {remote_id} is not supported: {reason}")
+    assert_that(sut._remotes_db).does_not_contain_key(remote_id)
+
+
+async def test_breeze_remote_manager_get_remote_with_empty_ir_codes_from_local_database():
+    with raises(SwitcherBreezeRemoteNotSupportedError, match="TOSHIBA1"):
+        SwitcherBreezeRemoteManager().get_remote("TOSHIBA1")
 
 
 async def test_breeze_remote_manager_get_cool_only_remote_from_local_database():
