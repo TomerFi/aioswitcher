@@ -1,0 +1,120 @@
+site_name = "aioswitcher"
+site_url = "https://aioswitcher.figenblat.com"
+site_author = "Tomer Figenblat"
+site_description = "PyPi module integrating with various Switcher devices."
+
+repo_name = "TomerFi/aioswitcher"
+repo_url = "https://github.com/TomerFi/aioswitcher"
+edit_uri = ""
+
+nav = [
+  { Home = "index.md" },
+  { Install = "install.md" },
+  { Usage = [ { Bridge = "usage_bridge.md" }, { API = "usage_api.md" } ] },
+  { "Supported devices" = "supported.md" },
+  { "Code documentation" = "codedocs.md" },
+  { "Helper scripts" = "scripts.md" },
+]
+
+markdown_extensions = [
+  "admonition",
+  "def_list",
+  "pymdownx.betterem",
+  "pymdownx.caret",
+  "pymdownx.critic",
+  "pymdownx.details",
+  "pymdownx.mark",
+  { "pymdownx.highlight" = { anchor_linenums = true, line_spans = "__span", pygments_lang_class = true } },
+  "pymdownx.inlinehilite",
+  "pymdownx.magiclink",
+  "pymdownx.smartsymbols",
+  { "pymdownx.snippets" = { base_path = [ "docs" ] } },
+  "pymdownx.superfences",
+  { "pymdownx.tabbed" = { alternate_style = true } },
+  "tables",
+  { toc = { permalink = "⚓︎" } },
+]
+
+[extra.analytics]
+provider = "google"
+property = "G-8965F1P656"
+
+[[plugins]]
+[plugins.llmstxt]
+full_output = "llms-full.txt"
+markdown_description = "The complete documentation is also available as a single file: [llms-full.txt](https://aioswitcher.figenblat.com/llms-full.txt)."
+
+[plugins.llmstxt.sections]
+"Getting started" = [
+  { "install.md" = "Installation instructions" },
+]
+"Usage" = [
+  { "usage_bridge.md" = "Device discovery over UDP broadcast" },
+  { "usage_api.md" = "Device control over TCP" },
+]
+"Supported devices" = [
+  { "supported.md" = "Table of supported Switcher devices" },
+]
+"Code documentation" = [
+  { "codedocs.md" = "Auto-generated API reference" },
+]
+"Helper scripts" = [
+  { "scripts.md" = "CLI helper scripts shipped with the package" },
+]
+
+[[plugins]]
+[plugins.mkdocstrings.handlers.python.options]
+filters = [ "!^_" ]
+
+[plugins.mkdocstrings.handlers.python.options.summary]
+attributes = false
+functions = true
+modules = true
+
+[theme]
+name = "material"
+logo = "img/logo.png"
+favicon = "img/favicon.ico"
+features = [
+  "content.code.annotate",
+  "header.autohide",
+  "navigation.indexes",
+  "navigation.instant",
+  "navigation.instant.progress",
+  "navigation.instant.preview",
+  "navigation.tracking",
+  "navigation.top",
+  "toc.follow",
+  "search.highlight",
+  "content.code.copy",
+]
+
+[theme.font]
+code = "Fira Code"
+text = "Open Sans"
+
+[[theme.palette]]
+media = "(prefers-color-scheme)"
+primary = "red"
+
+[theme.palette.toggle]
+icon = "material/brightness-auto"
+name = "Switch to system preference"
+
+[[theme.palette]]
+media = "(prefers-color-scheme: light)"
+primary = "red"
+scheme = "default"
+
+[theme.palette.toggle]
+icon = "material/brightness-7"
+name = "Switch to dark mode"
+
+[[theme.palette]]
+media = "(prefers-color-scheme: dark)"
+primary = "red"
+scheme = "slate"
+
+[theme.palette.toggle]
+icon = "material/brightness-4"
+name = "Switch to light mode"
