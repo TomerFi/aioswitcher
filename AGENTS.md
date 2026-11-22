@@ -141,7 +141,7 @@ When adding a new device type, always update `supported.md` (table row + product
 ## Conventions
 
 - Docstrings on ALL public functions and classes (project has ~100% coverage).
-- Apache 2.0 license header on every file.
+- Apache 2.0 license header on every Python file (`src/` and `tests/`). Do not add license headers to markdown, YAML, TOML, or other non-Python files.
 - `final` decorator on dataclasses and concrete classes that should not be subclassed.
 - Custom enum members use `__new__` with extra properties (`.value`, `.display`, `.hex_rep`, etc.).
 - Type annotations everywhere, ty type checking.
