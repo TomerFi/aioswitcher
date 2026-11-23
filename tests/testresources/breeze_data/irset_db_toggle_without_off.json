@@ -1,0 +1,18 @@
+{
+  "TOGGLE01": {
+    "IRSetID": "TOGGLE01",
+    "OnOffType": 1,
+    "IRWaveList": [
+      {
+        "Key": "ar24_f3",
+        "Para": "TEST|01",
+        "HexCode": "0A24F3"
+      },
+      {
+        "Key": "on_ar24_f3",
+        "Para": "TEST|01",
+        "HexCode": "8A24F3"
+      }
+    ]
+  }
+}

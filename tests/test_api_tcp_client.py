@@ -364,7 +364,7 @@ async def test_breeze_get_command_function_toggle_type(resource_path_root):
     elec7001_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7001_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
 
     remote = SwitcherBreezeRemoteManager().get_remote('ELEC7001')
-    command = remote.build_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
+    command = remote.build_command(DeviceState.ON, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
 
@@ -373,9 +373,34 @@ async def test_breeze_get_command_function_should_raise_command_does_not_exist(r
     elec7001_turn_off_cmd = unhexlify((resource_path_root / ("breeze_data/" + "breeze_elec7001_turn_off_command" + ".txt")).read_text().replace('\n', '').encode())
 
     remote = SwitcherBreezeRemoteManager().get_remote('ELEC7001')
-    command = remote.build_command(DeviceState.OFF, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
+    command = remote.build_command(DeviceState.ON, ThermostatMode.DRY, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
     assert_that(command).is_instance_of(SwitcherBreezeCommand)
     assert_that(command.command).is_equal_to(hexlify(elec7001_turn_off_cmd).decode())
+
+
+@mark.parametrize("remote_id, expected_command", [
+    ("FUJI7001", "000000004e4543587c32367c33327c31302c31307c31302c32457c31307c537c38307c30317c374534305b38305d7c3238433630303038303834304246304338313830383030303030303030344234"),
+    ("ELEC7001", "00000000524337327c32317c33327c32367c34437c39387c537c32327c30337c373237325b32325d7c39303132303030303830"),
+    ("FUJI7003", "000000004e4543587c32317c33327c31302c31307c31302c32457c31307c537c33387c30317c374534305b33385d7c3238433630303038303834304246"),
+])
+async def test_breeze_get_command_function_toggle_type_turn_off_uses_off_key(remote_id, expected_command):
+    sut = SwitcherBreezeRemoteManager().get_remote(remote_id)
+    command = sut.build_command(DeviceState.OFF, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.OFF, DeviceState.ON)
+    assert_that(command.command).is_equal_to(expected_command)
+
+
+@mark.parametrize("current_state", [DeviceState.OFF, None])
+async def test_breeze_get_command_function_toggle_type_turn_off_when_not_on_skips_off_key(current_state):
+    fuji7001_ar24_f3_cmd = "000000004e4543587c32367c33327c31302c31307c31302c32457c31307c537c38307c30317c374534305b38305d7c3238433630303038303837463930304330313830383030303030303030343734"
+    sut = SwitcherBreezeRemoteManager().get_remote("FUJI7001")
+    command = sut.build_command(DeviceState.OFF, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.OFF, current_state)
+    assert_that(command.command).is_equal_to(fuji7001_ar24_f3_cmd)
+
+
+async def test_breeze_get_command_function_toggle_type_without_off_key_toggles_power(resource_path_root):
+    sut = SwitcherBreezeRemoteManager(str(resource_path_root) + "/breeze_data/irset_db_toggle_without_off.json").get_remote("TOGGLE01")
+    command = sut.build_command(DeviceState.OFF, ThermostatMode.COOL, 24, ThermostatFanLevel.HIGH, ThermostatSwing.OFF, DeviceState.ON)
+    assert_that(command.command).is_equal_to("00000000544553547c30317c384132344633")
 
 
 async def test_breeze_remote_manager_get_from_local_database():
@@ -434,7 +459,7 @@ async def test_breeze_build_command_function_invalid_mode(resource_path_root):
 async def test_breeze_build_command_function_specific_case():
     remote_manager = SwitcherBreezeRemoteManager()
     remote_7001 = remote_manager.get_remote("ELEC7001")
-    command = remote_7001.build_command(DeviceState.OFF, ThermostatMode.COOL, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.ON)
+    command = remote_7001.build_command(DeviceState.ON, ThermostatMode.COOL, 20, ThermostatFanLevel.HIGH, ThermostatSwing.ON, DeviceState.OFF)
     assert_that(command.command).is_equal_to("00000000524337327c32317c33327c32367c34437c39387c537c32327c30337c373237325b32325d7c39383841303030303830")
 
 
