@@ -572,7 +572,7 @@ Parameters:
 | `target_temp` | `int` | the target temperature | *required* |
 | `fan_level` | `ThermostatFanLevel` | the desired fan level | *required* |
 | `swing` | `ThermostatSwing` | the desired swing state | *required* |
-| `current_state` | `Union[DeviceState, None]` | optionally, for toggle device, pass previous state to avoid redundant requests | `None` |
+| `current_state` | `Union[DeviceState, None]` | optionally, for toggle device, pass previous state to avoid redundant requests. When turning off a toggle device that is on, the remote's dedicated off key is used if it has one | `None` |
 
 Returns:
 
