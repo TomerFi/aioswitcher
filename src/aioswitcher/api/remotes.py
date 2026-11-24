@@ -288,7 +288,8 @@ class SwitcherBreezeRemote:
             fan_level: the desired fan level
             swing: the desired swing state
             current_state: optionally, for toggle device, pass previous state to avoid
-                redundant requests
+                redundant requests. When turning off a toggle device that is on, the
+                remote's dedicated off key is used if it has one
 
         Returns:
             An instance of ``SwitcherBreezeCommand``
@@ -312,6 +313,14 @@ class SwitcherBreezeRemote:
 
         # non toggle AC, just turn it off
         if not self._on_off_type and state == DeviceState.OFF:
+            key.append("off")
+        # toggle AC that is currently on and has a dedicated off key
+        elif (
+            self._on_off_type
+            and state == DeviceState.OFF
+            and current_state == DeviceState.ON
+            and "off" in self._ir_wave_map
+        ):
             key.append("off")
         else:
             # This is a toggle mode AC, we determine here whether the first bit should
