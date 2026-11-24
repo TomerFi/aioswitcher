@@ -17,12 +17,18 @@ import socket
 from asyncio import sleep
 from binascii import unhexlify
 from pathlib import Path
-from unittest.mock import Mock, patch
+from struct import pack
+from unittest.mock import ANY, Mock, patch
 
 from assertpy import assert_that
 from pytest import fixture, mark
 
-from aioswitcher.bridge import SwitcherBridge, UdpClientProtocol
+from aioswitcher.bridge import (
+    SWITCHER_UDP_MULTICAST_GROUP,
+    SwitcherBridge,
+    UdpClientProtocol,
+    _join_multicast_group,
+)
 
 pytestmark = mark.asyncio
 
@@ -109,3 +115,59 @@ async def test_bridge_listener_socket_has_reuseaddr(unused_udp_broadcast_port, m
         sock = bridge._transports[port].get_extra_info("socket")
         reuseaddr = sock.getsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR)
         assert_that(reuseaddr).is_not_zero()
+
+
+async def test_join_multicast_group_configures_the_socket():
+    sock = Mock()
+    _join_multicast_group(sock, "239.145.145.145")
+    sock.setsockopt.assert_called_once_with(
+        socket.IPPROTO_IP,
+        socket.IP_ADD_MEMBERSHIP,
+        pack(
+            "4s4s",
+            socket.inet_aton("239.145.145.145"),
+            socket.inet_aton("0.0.0.0"),
+        ),
+    )
+
+
+async def test_bridge_joins_the_multicast_group_on_new_version_ports(
+    unused_udp_broadcast_port, mock_callback
+):
+    port = unused_udp_broadcast_port
+    with (
+        patch("aioswitcher.bridge.SWITCHER_UDP_MULTICAST_PORTS", [port]),
+        patch("aioswitcher.bridge._join_multicast_group") as mock_join,
+    ):
+        async with SwitcherBridge(mock_callback):
+            mock_join.assert_called_once_with(ANY, SWITCHER_UDP_MULTICAST_GROUP)
+
+
+async def test_bridge_does_not_join_the_multicast_group_on_legacy_ports(
+    unused_udp_broadcast_port, mock_callback
+):
+    with (
+        patch("aioswitcher.bridge.SWITCHER_UDP_MULTICAST_PORTS", []),
+        patch("aioswitcher.bridge._join_multicast_group") as mock_join,
+    ):
+        async with SwitcherBridge(mock_callback):
+            mock_join.assert_not_called()
+
+
+@patch("aioswitcher.bridge.logger.warning")
+async def test_bridge_keeps_running_when_the_multicast_join_fails(
+    mock_warning, unused_udp_broadcast_port, mock_callback
+):
+    port = unused_udp_broadcast_port
+    with (
+        patch("aioswitcher.bridge.SWITCHER_UDP_MULTICAST_PORTS", [port]),
+        patch(
+            "aioswitcher.bridge._join_multicast_group",
+            side_effect=OSError("no multicast route"),
+        ),
+    ):
+        bridge = SwitcherBridge(mock_callback)
+        await bridge.start()
+        assert_that(bridge.is_running).is_true()
+        mock_warning.assert_called_once()
+        await bridge.stop()

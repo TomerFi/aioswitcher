@@ -21,12 +21,16 @@ from functools import partial
 from logging import getLogger
 from socket import (
     AF_INET,
+    IP_ADD_MEMBERSHIP,
+    IPPROTO_IP,
     SO_REUSEADDR,
     SOCK_DGRAM,
     SOL_SOCKET,
+    inet_aton,
     socket,
 )
 from struct import error as struct_error
+from struct import pack
 from types import TracebackType
 from typing import Any, Callable, Dict, Optional, Tuple, Type, final
 from warnings import warn
@@ -75,6 +79,27 @@ SWITCHER_UDP_BROADCAST_PORTS = [
     SWITCHER_UDP_PORT_TYPE2,
     SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
 ]
+
+# Newer firmware devices send their state to this multicast group on the new
+# version ports. Binding the port is not enough: without an explicit group
+# membership the kernel drops the datagrams before they reach the socket.
+SWITCHER_UDP_MULTICAST_GROUP = "239.145.145.145"
+SWITCHER_UDP_MULTICAST_PORTS = [
+    SWITCHER_UDP_PORT_TYPE1_NEW_VERSION,
+    SWITCHER_UDP_PORT_TYPE2_NEW_VERSION,
+]
+
+
+def _join_multicast_group(sock: socket, group: str) -> None:
+    """Join the given multicast group on the given socket.
+
+    Args:
+        sock: the bound socket to join the multicast group on.
+        group: the multicast group address.
+
+    """
+    membership = pack("4s4s", inet_aton(group), inet_aton("0.0.0.0"))
+    sock.setsockopt(IPPROTO_IP, IP_ADD_MEMBERSHIP, membership)
 
 
 def _parse_device_from_datagram(
@@ -444,6 +469,16 @@ class SwitcherBridge:
             sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
             sock.setblocking(False)
             sock.bind(("0.0.0.0", broadcast_port))  # nosec
+            if broadcast_port in SWITCHER_UDP_MULTICAST_PORTS:
+                try:
+                    _join_multicast_group(sock, SWITCHER_UDP_MULTICAST_GROUP)
+                except OSError as error:
+                    logger.warning(
+                        "failed to join multicast group %s on port %s: %s",
+                        SWITCHER_UDP_MULTICAST_GROUP,
+                        broadcast_port,
+                        error,
+                    )
             transport, protocol = await get_running_loop().create_datagram_endpoint(
                 lambda: protocol_factory,
                 sock=sock,
